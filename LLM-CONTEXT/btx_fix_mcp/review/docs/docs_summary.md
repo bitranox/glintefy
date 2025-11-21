@@ -18,7 +18,7 @@
 ## Overview
 
 **Files Analyzed**: 62
-**Docstring Coverage**: 97.7% (minimum: 80%)
+**Docstring Coverage**: 97.8% (minimum: 80%)
 **Missing Docstrings**: 54
 **Total Issues**: 54
 

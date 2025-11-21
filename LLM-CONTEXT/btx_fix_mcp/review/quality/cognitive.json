@@ -1130,90 +1130,118 @@
     "file": "src/btx_fix_mcp/subservers/review/deps.py",
     "name": "execute",
     "line": 163,
-    "complexity": 7,
+    "complexity": 2,
+    "exceeds_threshold": false
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/deps.py",
+    "name": "_run_vulnerability_scan",
+    "line": 230,
+    "complexity": 1,
+    "exceeds_threshold": false
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/deps.py",
+    "name": "_run_outdated_check",
+    "line": 243,
+    "complexity": 1,
+    "exceeds_threshold": false
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/deps.py",
+    "name": "_run_license_check",
+    "line": 256,
+    "complexity": 1,
+    "exceeds_threshold": false
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/deps.py",
+    "name": "_determine_status",
+    "line": 275,
+    "complexity": 2,
     "exceeds_threshold": false
   },
   {
     "file": "src/btx_fix_mcp/subservers/review/deps.py",
     "name": "_detect_project_type",
-    "line": 259,
+    "line": 299,
     "complexity": 7,
     "exceeds_threshold": false
   },
   {
     "file": "src/btx_fix_mcp/subservers/review/deps.py",
     "name": "_check_licenses",
-    "line": 277,
+    "line": 317,
     "complexity": 7,
     "exceeds_threshold": false
   },
   {
     "file": "src/btx_fix_mcp/subservers/review/deps.py",
     "name": "_get_dependency_tree",
-    "line": 299,
+    "line": 339,
     "complexity": 5,
     "exceeds_threshold": false
   },
   {
     "file": "src/btx_fix_mcp/subservers/review/deps.py",
     "name": "_count_direct_deps",
-    "line": 322,
+    "line": 362,
     "complexity": 7,
     "exceeds_threshold": false
   },
   {
     "file": "src/btx_fix_mcp/subservers/review/deps.py",
     "name": "_vulnerabilities_to_issues",
-    "line": 348,
+    "line": 388,
     "complexity": 1,
     "exceeds_threshold": false
   },
   {
     "file": "src/btx_fix_mcp/subservers/review/deps.py",
     "name": "_outdated_to_issues",
-    "line": 363,
+    "line": 403,
     "complexity": 1,
     "exceeds_threshold": false
   },
   {
     "file": "src/btx_fix_mcp/subservers/review/deps.py",
     "name": "_licenses_to_issues",
-    "line": 378,
+    "line": 418,
     "complexity": 7,
     "exceeds_threshold": false
   },
   {
     "file": "src/btx_fix_mcp/subservers/review/deps.py",
     "name": "_save_results",
-    "line": 403,
+    "line": 443,
     "complexity": 5,
     "exceeds_threshold": false
   },
   {
     "file": "src/btx_fix_mcp/subservers/review/deps.py",
     "name": "_format_vulnerabilities_section",
-    "line": 532,
+    "line": 572,
     "complexity": 5,
     "exceeds_threshold": false
   },
   {
     "file": "src/btx_fix_mcp/subservers/review/deps.py",
     "name": "_format_outdated_section",
-    "line": 552,
+    "line": 592,
     "complexity": 5,
     "exceeds_threshold": false
   },
   {
     "file": "src/btx_fix_mcp/subservers/review/deps.py",
     "name": "_format_license_section",
-    "line": 572,
+    "line": 612,
     "complexity": 3,
     "exceeds_threshold": false
   },
   {
     "file": "src/btx_fix_mcp/subservers/review/deps.py",
     "name": "_format_approval_section",
-    "line": 587,
+    "line": 627,
     "complexity": 3,
     "exceeds_threshold": false
   },
@@ -1842,15 +1870,36 @@
   },
   {
     "file": "src/btx_fix_mcp/subservers/review/report.py",
-    "name": "_generate_report",
-    "line": 296,
-    "complexity": 22,
-    "exceeds_threshold": true
+    "name": "_format_header",
+    "line": 311,
+    "complexity": 3,
+    "exceeds_threshold": false
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/report.py",
+    "name": "_format_subserver_results",
+    "line": 353,
+    "complexity": 1,
+    "exceeds_threshold": false
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/report.py",
+    "name": "_format_single_subserver",
+    "line": 362,
+    "complexity": 4,
+    "exceeds_threshold": false
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/report.py",
+    "name": "_format_critical_issues",
+    "line": 397,
+    "complexity": 9,
+    "exceeds_threshold": false
   },
   {
     "file": "src/btx_fix_mcp/subservers/review/report.py",
     "name": "_save_report",
-    "line": 407,
+    "line": 430,
     "complexity": 4,
     "exceeds_threshold": false
   },
@@ -1954,10 +2003,31 @@
   },
   {
     "file": "src/btx_fix_mcp/subservers/review/security.py",
-    "name": "_generate_summary",
-    "line": 352,
-    "complexity": 16,
-    "exceeds_threshold": true
+    "name": "_format_high_severity_issues",
+    "line": 432,
+    "complexity": 3,
+    "exceeds_threshold": false
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/security.py",
+    "name": "_format_medium_severity_issues",
+    "line": 454,
+    "complexity": 3,
+    "exceeds_threshold": false
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/security.py",
+    "name": "_format_recommendations",
+    "line": 475,
+    "complexity": 3,
+    "exceeds_threshold": false
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/security.py",
+    "name": "_format_approval_status",
+    "line": 497,
+    "complexity": 3,
+    "exceeds_threshold": false
   },
   {
     "file": "src/btx_fix_mcp/tools_venv.py",

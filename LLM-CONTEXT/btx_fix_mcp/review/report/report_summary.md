@@ -1,12 +1,12 @@
 # Code Review Report
 
-**Generated**: 2025-11-21T20:07:09.108444
+**Generated**: 2025-11-21T20:23:15.730986
 
 ---
 
 ## Overall Verdict
 
-### ❌ Code review failed - 5 critical issues found
+### ❌ Code review failed - 3 critical issues found
 
 **Status**: `REJECTED`
 
@@ -21,9 +21,9 @@
 - **Sub-servers passed**: 3
 - **Sub-servers failed**: 0
 - **Files analyzed**: 62
-- **Total issues**: 333
-- **Critical issues**: 5
-- **Warnings**: 284
+- **Total issues**: 325
+- **Critical issues**: 3
+- **Warnings**: 278
 
 ---
 
@@ -34,11 +34,11 @@
 **Status**: `SUCCESS`
 
 **Key Metrics:**
-- total_files: 3294
+- total_files: 3431
 - code_files: 62
 - test_files: 65
 - doc_files: 60
-- config_files: 972
+- config_files: 971
 
 ### ⚠️ Quality
 
@@ -48,10 +48,10 @@
 - files_analyzed: 62
 - python_files: 62
 - js_files: 0
-- total_functions: 501
-- high_complexity_count: 26
+- total_functions: 521
+- high_complexity_count: 23
 
-**Issues**: 226 (3 critical, 179 warnings)
+**Issues**: 218 (1 critical, 173 warnings)
 
 ### ✅ Security
 
@@ -83,7 +83,7 @@
 
 **Key Metrics:**
 - files_analyzed: 62
-- coverage_percent: 97.7
+- coverage_percent: 97.8
 - missing_docstrings: 54
 - project_docs_found: 3
 - total_issues: 54
@@ -106,11 +106,9 @@
 
 ## Critical Issues (Must Fix)
 
-- **[quality]** `src/btx_fix_mcp/subservers/review/report.py:296` Function '_generate_report' is 109 lines (max: 50)
-- **[quality]** `src/btx_fix_mcp/subservers/review/security.py:352` Function '_generate_summary' is 116 lines (max: 50)
-- **[quality]** `src/btx_fix_mcp/subservers/review/deps.py:46` Class 'DepsSubServer' is a god object (19 methods, 550 lines)
-- **[perf]**  Slow test: tests/subservers/review/test_deps.py::TestDepsSubServer::test_execute_python_project takes 6.16s
-- **[perf]**  Slow test: tests/subservers/review/test_deps.py::TestDepsSubServer::test_summary_includes_mindset takes 5.92s
+- **[quality]** `src/btx_fix_mcp/subservers/review/deps.py:46` Class 'DepsSubServer' is a god object (27 methods, 590 lines)
+- **[perf]**  Slow test: tests/subservers/review/test_deps.py::TestDepsSubServer::test_summary_includes_mindset takes 7.16s
+- **[perf]**  Slow test: tests/subservers/review/test_deps.py::TestDepsSubServer::test_execute_python_project takes 6.11s
 
 ---
 

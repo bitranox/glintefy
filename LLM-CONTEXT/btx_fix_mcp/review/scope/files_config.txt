@@ -969,4 +969,3 @@ pyproject.toml
 src/btx_fix_mcp/config.py
 src/btx_fix_mcp/defaultconfig.toml
 src/btx_fix_mcp/subservers/review/quality/config.py
-src/defaultconfig.toml

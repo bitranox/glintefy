@@ -4,8 +4,8 @@
       "file": "src/btx_fix_mcp/subservers/review/deps.py",
       "class": "DepsSubServer",
       "line": 46,
-      "methods": 19,
-      "lines": 550,
+      "methods": 27,
+      "lines": 590,
       "methods_threshold": 20,
       "lines_threshold": 500
     }

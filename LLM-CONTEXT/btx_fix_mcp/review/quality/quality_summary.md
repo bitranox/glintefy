@@ -11,29 +11,29 @@
 
 **🔧 NEEDS WORK**
 
-- Critical issues: 3 (4.8%)
-- Warnings: 179 (288.7%)
+- Critical issues: 1 (1.6%)
+- Warnings: 173 (279.0%)
 - Total items analyzed: 62
 
 ## Overview
 
 **Files Analyzed**: 62 (62 Python, 0 JS/TS)
-**Functions Analyzed**: 501
-**Total Issues Found**: 226
-**Critical Issues**: 3
+**Functions Analyzed**: 521
+**Total Issues Found**: 218
+**Critical Issues**: 1
 
 ## Code Metrics
 
-- Total LOC: **12,206**
-- Source LOC (SLOC): **7,749**
-- Comments: **420**
-- Comment Ratio: **5.4%**
+- Total LOC: **12,307**
+- Source LOC (SLOC): **7,820**
+- Comments: **406**
+- Comment Ratio: **5.2%**
 
 ## Quality Issues Summary
 
-- Functions >50 lines: **31**
-- High cyclomatic complexity (>10): **26**
-- High cognitive complexity (>15): **21**
+- Functions >50 lines: **28**
+- High cyclomatic complexity (>10): **23**
+- High cognitive complexity (>15): **19**
 - Functions with nesting >3: **32**
 - Code duplication blocks: **66**
 - God objects: **1**
@@ -62,15 +62,13 @@
 
 ## Critical Issues (Must Fix)
 
-- 🔴 `src/btx_fix_mcp/subservers/review/report.py`: Function '_generate_report' is 109 lines (max: 50)
-- 🔴 `src/btx_fix_mcp/subservers/review/security.py`: Function '_generate_summary' is 116 lines (max: 50)
-- 🔴 `src/btx_fix_mcp/subservers/review/deps.py`: Class 'DepsSubServer' is a god object (19 methods, 550 lines)
+- 🔴 `src/btx_fix_mcp/subservers/review/deps.py`: Class 'DepsSubServer' is a god object (27 methods, 590 lines)
 
 ## Refactoring Recommendations
 
-1. **Break Down Long Functions**: 31 functions exceed 50 lines
-2. **Reduce Cyclomatic Complexity**: 26 functions exceed threshold
-3. **Reduce Cognitive Complexity**: 21 functions are too complex
+1. **Break Down Long Functions**: 28 functions exceed 50 lines
+2. **Reduce Cyclomatic Complexity**: 23 functions exceed threshold
+3. **Reduce Cognitive Complexity**: 19 functions are too complex
 4. **Extract Duplicated Code**: 66 duplicate blocks found
 5. **Refactor God Objects**: 1 classes need decomposition
 6. **Add Type Annotations**: Coverage is 0%

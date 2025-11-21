@@ -144,15 +144,6 @@
     "message": "Function '__init__' is 57 lines (max: 50)"
   },
   {
-    "file": "src/btx_fix_mcp/subservers/review/deps.py",
-    "function": "execute",
-    "line": 163,
-    "issue_type": "TOO_LONG",
-    "value": 94,
-    "threshold": 50,
-    "message": "Function 'execute' is 94 lines (max: 50)"
-  },
-  {
     "file": "src/btx_fix_mcp/subservers/review/deps_scanners.py",
     "function": "run_pip_audit",
     "line": 31,
@@ -486,15 +477,6 @@
     "message": "Function '_compile_overall_metrics' has nesting depth 4 (max: 3)"
   },
   {
-    "file": "src/btx_fix_mcp/subservers/review/report.py",
-    "function": "_generate_report",
-    "line": 296,
-    "issue_type": "TOO_LONG",
-    "value": 109,
-    "threshold": 50,
-    "message": "Function '_generate_report' is 109 lines (max: 50)"
-  },
-  {
     "file": "src/btx_fix_mcp/subservers/review/scope.py",
     "function": "execute",
     "line": 107,
@@ -538,15 +520,6 @@
     "value": 5,
     "threshold": 3,
     "message": "Function '_run_bandit' has nesting depth 5 (max: 3)"
-  },
-  {
-    "file": "src/btx_fix_mcp/subservers/review/security.py",
-    "function": "_generate_summary",
-    "line": 352,
-    "issue_type": "TOO_LONG",
-    "value": 116,
-    "threshold": 50,
-    "message": "Function '_generate_summary' is 116 lines (max: 50)"
   },
   {
     "file": "src/btx_fix_mcp/tools_venv.py",

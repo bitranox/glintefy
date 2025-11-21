@@ -401,13 +401,13 @@
   },
   {
     "file": "src/btx_fix_mcp/subservers/review/deps.py",
-    "loc": 596,
-    "lloc": 295,
-    "sloc": 446,
-    "comments": 26,
+    "loc": 636,
+    "lloc": 324,
+    "sloc": 477,
+    "comments": 21,
     "multi": 25,
-    "blank": 80,
-    "single_comments": 45
+    "blank": 86,
+    "single_comments": 48
   },
   {
     "file": "src/btx_fix_mcp/subservers/review/deps_scanners.py",
@@ -571,13 +571,13 @@
   },
   {
     "file": "src/btx_fix_mcp/subservers/review/report.py",
-    "loc": 444,
-    "lloc": 245,
-    "sloc": 303,
-    "comments": 30,
+    "loc": 467,
+    "lloc": 265,
+    "sloc": 318,
+    "comments": 26,
     "multi": 25,
-    "blank": 76,
-    "single_comments": 40
+    "blank": 82,
+    "single_comments": 42
   },
   {
     "file": "src/btx_fix_mcp/subservers/review/scope.py",
@@ -591,13 +591,13 @@
   },
   {
     "file": "src/btx_fix_mcp/subservers/review/security.py",
-    "loc": 468,
-    "lloc": 214,
-    "sloc": 320,
-    "comments": 28,
+    "loc": 506,
+    "lloc": 242,
+    "sloc": 345,
+    "comments": 23,
     "multi": 40,
-    "blank": 71,
-    "single_comments": 37
+    "blank": 83,
+    "single_comments": 38
   },
   {
     "file": "src/btx_fix_mcp/tools/__init__.py",

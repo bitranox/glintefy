@@ -52,16 +52,6 @@
   {
     "type": "high_complexity",
     "severity": "warning",
-    "message": "Function 'execute' has complexity 12 (threshold: 10)",
-    "file": "src/btx_fix_mcp/subservers/review/deps.py",
-    "line": 0,
-    "value": 12,
-    "threshold": 10,
-    "name": "execute"
-  },
-  {
-    "type": "high_complexity",
-    "severity": "warning",
     "message": "Function '_generate_summary' has complexity 18 (threshold: 10)",
     "file": "src/btx_fix_mcp/subservers/review/docs.py",
     "line": 0,
@@ -218,26 +208,6 @@
     "value": 11,
     "threshold": 10,
     "name": "_save_dict_results"
-  },
-  {
-    "type": "high_complexity",
-    "severity": "warning",
-    "message": "Function '_generate_report' has complexity 18 (threshold: 10)",
-    "file": "src/btx_fix_mcp/subservers/review/report.py",
-    "line": 0,
-    "value": 18,
-    "threshold": 10,
-    "name": "_generate_report"
-  },
-  {
-    "type": "high_complexity",
-    "severity": "warning",
-    "message": "Function '_generate_summary' has complexity 14 (threshold: 10)",
-    "file": "src/btx_fix_mcp/subservers/review/security.py",
-    "line": 0,
-    "value": 14,
-    "threshold": 10,
-    "name": "_generate_summary"
   },
   {
     "type": "high_complexity",
@@ -428,16 +398,6 @@
     "value": 57,
     "threshold": 50,
     "name": "__init__"
-  },
-  {
-    "type": "too_long",
-    "severity": "warning",
-    "message": "Function 'execute' is 94 lines (max: 50)",
-    "file": "src/btx_fix_mcp/subservers/review/deps.py",
-    "line": 163,
-    "value": 94,
-    "threshold": 50,
-    "name": "execute"
   },
   {
     "type": "too_nested",
@@ -811,16 +771,6 @@
   },
   {
     "type": "too_long",
-    "severity": "error",
-    "message": "Function '_generate_report' is 109 lines (max: 50)",
-    "file": "src/btx_fix_mcp/subservers/review/report.py",
-    "line": 296,
-    "value": 109,
-    "threshold": 50,
-    "name": "_generate_report"
-  },
-  {
-    "type": "too_long",
     "severity": "warning",
     "message": "Function 'execute' is 66 lines (max: 50)",
     "file": "src/btx_fix_mcp/subservers/review/scope.py",
@@ -868,16 +818,6 @@
     "value": 5,
     "threshold": 3,
     "name": "_run_bandit"
-  },
-  {
-    "type": "too_long",
-    "severity": "error",
-    "message": "Function '_generate_summary' is 116 lines (max: 50)",
-    "file": "src/btx_fix_mcp/subservers/review/security.py",
-    "line": 352,
-    "value": 116,
-    "threshold": 50,
-    "name": "_generate_summary"
   },
   {
     "type": "too_long",
@@ -1090,32 +1030,12 @@
     "name": "_compile_overall_metrics"
   },
   {
-    "type": "high_cognitive_complexity",
-    "severity": "warning",
-    "message": "Function '_generate_report' has cognitive complexity 0 (threshold: 15)",
-    "file": "src/btx_fix_mcp/subservers/review/report.py",
-    "line": 296,
-    "value": 0,
-    "threshold": 15,
-    "name": "_generate_report"
-  },
-  {
-    "type": "high_cognitive_complexity",
-    "severity": "warning",
-    "message": "Function '_generate_summary' has cognitive complexity 0 (threshold: 15)",
-    "file": "src/btx_fix_mcp/subservers/review/security.py",
-    "line": 352,
-    "value": 0,
-    "threshold": 15,
-    "name": "_generate_summary"
-  },
-  {
     "type": "god_object",
     "severity": "error",
-    "message": "Class 'DepsSubServer' is a god object (19 methods, 550 lines)",
+    "message": "Class 'DepsSubServer' is a god object (27 methods, 590 lines)",
     "file": "src/btx_fix_mcp/subservers/review/deps.py",
     "line": 46,
-    "value": "19 methods, 550 lines",
+    "value": "27 methods, 590 lines",
     "threshold": 0,
     "name": "DepsSubServer"
   },
@@ -1404,7 +1324,7 @@
     "severity": "info",
     "message": "Function '_save_results' has 1 runtime checks that could be module-level constants",
     "file": "src/btx_fix_mcp/subservers/review/deps.py",
-    "line": 403,
+    "line": 443,
     "value": 1,
     "threshold": 0,
     "name": "_save_results"
@@ -1414,7 +1334,7 @@
     "severity": "info",
     "message": "Function '_compile_metrics' has 2 runtime checks that could be module-level constants",
     "file": "src/btx_fix_mcp/subservers/review/deps.py",
-    "line": 442,
+    "line": 482,
     "value": 2,
     "threshold": 0,
     "name": "_compile_metrics"
@@ -1424,7 +1344,7 @@
     "severity": "info",
     "message": "Function '_format_header_section' has 2 runtime checks that could be module-level constants",
     "file": "src/btx_fix_mcp/subservers/review/deps.py",
-    "line": 488,
+    "line": 528,
     "value": 2,
     "threshold": 0,
     "name": "_format_header_section"
@@ -1607,7 +1527,7 @@
   {
     "type": "code_duplication",
     "severity": "warning",
-    "message": "\"\"\"Run Bandit security scanner on files.\"\"\" (duplicate-code)",
+    "message": "\"\"\"Check docstring coverage using interrogate.\"\"\" (duplicate-code)",
     "file": "",
     "line": 0
   },
@@ -1621,35 +1541,7 @@
   {
     "type": "code_duplication",
     "severity": "warning",
-    "message": "\"\", (duplicate-code)",
-    "file": "",
-    "line": 0
-  },
-  {
-    "type": "code_duplication",
-    "severity": "warning",
-    "message": "src/btx_fix_mcp/tools_venv.py:1:0: R0801: Similar lines in 2 files",
-    "file": "",
-    "line": 0
-  },
-  {
-    "type": "code_duplication",
-    "severity": "warning",
-    "message": "\"\"\"Detect project type from dependency files.\"\"\" (duplicate-code)",
-    "file": "",
-    "line": 0
-  },
-  {
-    "type": "code_duplication",
-    "severity": "warning",
-    "message": "src/btx_fix_mcp/tools_venv.py:1:0: R0801: Similar lines in 2 files",
-    "file": "",
-    "line": 0
-  },
-  {
-    "type": "code_duplication",
-    "severity": "warning",
-    "message": ") (duplicate-code)",
+    "message": "\"\"\"Get Python files to analyze.\"\"\" (duplicate-code)",
     "file": "",
     "line": 0
   },
@@ -1691,6 +1583,20 @@
   {
     "type": "code_duplication",
     "severity": "warning",
+    "message": "\"\"\"Get Python files to analyze.\"\"\" (duplicate-code)",
+    "file": "",
+    "line": 0
+  },
+  {
+    "type": "code_duplication",
+    "severity": "warning",
+    "message": "src/btx_fix_mcp/tools_venv.py:1:0: R0801: Similar lines in 2 files",
+    "file": "",
+    "line": 0
+  },
+  {
+    "type": "code_duplication",
+    "severity": "warning",
     "message": "# Load config using extracted config module (duplicate-code)",
     "file": "",
     "line": 0
@@ -1719,7 +1625,7 @@
   {
     "type": "code_duplication",
     "severity": "warning",
-    "message": "\"\"\" (duplicate-code)",
+    "message": "\"\"\"Detect project type from dependency files.\"\"\" (duplicate-code)",
     "file": "",
     "line": 0
   },
@@ -1747,7 +1653,7 @@
   {
     "type": "code_duplication",
     "severity": "warning",
-    "message": "\"\"\"Check docstring coverage using interrogate.\"\"\" (duplicate-code)",
+    "message": "\"\"\" (duplicate-code)",
     "file": "",
     "line": 0
   },
@@ -1817,7 +1723,35 @@
   {
     "type": "code_duplication",
     "severity": "warning",
+    "message": "return lines (duplicate-code)",
+    "file": "",
+    "line": 0
+  },
+  {
+    "type": "code_duplication",
+    "severity": "warning",
+    "message": "src/btx_fix_mcp/tools_venv.py:1:0: R0801: Similar lines in 2 files",
+    "file": "",
+    "line": 0
+  },
+  {
+    "type": "code_duplication",
+    "severity": "warning",
     "message": "# Load config (duplicate-code)",
+    "file": "",
+    "line": 0
+  },
+  {
+    "type": "code_duplication",
+    "severity": "warning",
+    "message": "src/btx_fix_mcp/tools_venv.py:1:0: R0801: Similar lines in 2 files",
+    "file": "",
+    "line": 0
+  },
+  {
+    "type": "code_duplication",
+    "severity": "warning",
+    "message": "artifacts=artifacts, (duplicate-code)",
     "file": "",
     "line": 0
   },
@@ -1845,7 +1779,7 @@
   {
     "type": "code_duplication",
     "severity": "warning",
-    "message": "(duplicate-code)",
+    "message": "# Validate thresholds (duplicate-code)",
     "file": "",
     "line": 0
   },
@@ -1859,21 +1793,7 @@
   {
     "type": "code_duplication",
     "severity": "warning",
-    "message": "return \"\\n\".join(lines) (duplicate-code)",
-    "file": "",
-    "line": 0
-  },
-  {
-    "type": "code_duplication",
-    "severity": "warning",
-    "message": "src/btx_fix_mcp/tools_venv.py:1:0: R0801: Similar lines in 2 files",
-    "file": "",
-    "line": 0
-  },
-  {
-    "type": "code_duplication",
-    "severity": "warning",
-    "message": "(duplicate-code)",
+    "message": "# Step 2: Pattern-based detection (duplicate-code)",
     "file": "",
     "line": 0
   },
@@ -1901,7 +1821,7 @@
   {
     "type": "code_duplication",
     "severity": "warning",
-    "message": "tree = ast.parse(content) (duplicate-code)",
+    "message": "(duplicate-code)",
     "file": "",
     "line": 0
   },
@@ -1971,7 +1891,7 @@
   {
     "type": "code_duplication",
     "severity": "warning",
-    "message": "\"\"\" (duplicate-code)",
+    "message": "# Load config (duplicate-code)",
     "file": "",
     "line": 0
   },
@@ -1999,7 +1919,7 @@
   {
     "type": "code_duplication",
     "severity": "warning",
-    "message": "self.mcp_mode = mcp_mode (duplicate-code)",
+    "message": "# Initialize logger (duplicate-code)",
     "file": "",
     "line": 0
   },
@@ -2027,7 +1947,7 @@
   {
     "type": "code_duplication",
     "severity": "warning",
-    "message": "# Check that at least one sub-server has run (duplicate-code)",
+    "message": "# Check repository exists (duplicate-code)",
     "file": "",
     "line": 0
   },

@@ -10,6 +10,24 @@
       "churn_score": 4
     },
     {
+      "file": "src/btx_fix_mcp/subservers/review/deps.py",
+      "commits": 3,
+      "authors": 1,
+      "lines_added": 720,
+      "lines_deleted": 84,
+      "total_changes": 804,
+      "churn_score": 3
+    },
+    {
+      "file": "src/btx_fix_mcp/subservers/review/security.py",
+      "commits": 3,
+      "authors": 1,
+      "lines_added": 621,
+      "lines_deleted": 115,
+      "total_changes": 736,
+      "churn_score": 3
+    },
+    {
       "file": "src/btx_fix_mcp/subservers/review/quality/metrics.py",
       "commits": 3,
       "authors": 1,
@@ -19,12 +37,12 @@
       "churn_score": 3
     },
     {
-      "file": "src/btx_fix_mcp/subservers/review/deps.py",
+      "file": "src/btx_fix_mcp/subservers/review/report.py",
       "commits": 2,
       "authors": 1,
-      "lines_added": 613,
-      "lines_deleted": 17,
-      "total_changes": 630,
+      "lines_added": 532,
+      "lines_deleted": 65,
+      "total_changes": 597,
       "churn_score": 2
     },
     {
@@ -151,15 +169,6 @@
       "lines_added": 305,
       "lines_deleted": 16,
       "total_changes": 321,
-      "churn_score": 2
-    },
-    {
-      "file": "src/btx_fix_mcp/subservers/review/security.py",
-      "commits": 2,
-      "authors": 1,
-      "lines_added": 532,
-      "lines_deleted": 64,
-      "total_changes": 596,
       "churn_score": 2
     },
     {
@@ -295,15 +304,6 @@
       "lines_added": 230,
       "lines_deleted": 0,
       "total_changes": 230,
-      "churn_score": 1
-    },
-    {
-      "file": "src/btx_fix_mcp/subservers/review/report.py",
-      "commits": 1,
-      "authors": 1,
-      "lines_added": 444,
-      "lines_deleted": 0,
-      "total_changes": 444,
       "churn_score": 1
     },
     {
@@ -560,6 +560,6 @@
     }
   ],
   "high_churn_files": [],
-  "total_commits_analyzed": 4,
+  "total_commits_analyzed": 5,
   "analysis_period_days": 90
 }

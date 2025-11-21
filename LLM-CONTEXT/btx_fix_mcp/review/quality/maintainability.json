@@ -201,7 +201,7 @@
   },
   {
     "file": "src/btx_fix_mcp/subservers/review/deps.py",
-    "mi": 29.23650303433417,
+    "mi": 26.073782851013913,
     "rank": "A"
   },
   {
@@ -286,7 +286,7 @@
   },
   {
     "file": "src/btx_fix_mcp/subservers/review/report.py",
-    "mi": 41.56046406003866,
+    "mi": 38.938058265797984,
     "rank": "A"
   },
   {
@@ -296,7 +296,7 @@
   },
   {
     "file": "src/btx_fix_mcp/subservers/review/security.py",
-    "mi": 42.77180995744766,
+    "mi": 39.45340739268113,
     "rank": "A"
   },
   {

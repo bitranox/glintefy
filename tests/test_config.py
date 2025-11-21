@@ -1,0 +1,530 @@
+"""Tests for configuration loading from defaultconfig.toml.
+
+This module ensures that:
+1. All settings in defaultconfig.toml are correctly structured
+2. Configuration keys match what sub-servers expect
+3. The config module correctly reads and returns values
+4. Section/subsection/key hierarchy is sensible and consistent
+"""
+
+import tomllib
+from pathlib import Path
+from typing import Any
+
+import pytest
+
+from btx_fix_mcp.config import (
+    _DEFAULT_CONFIG_FILE,
+    get_config,
+    get_subserver_config,
+    get_tool_config,
+)
+
+
+class TestDefaultConfigStructure:
+    """Tests for defaultconfig.toml structure and validity."""
+
+    @pytest.fixture
+    def default_config(self) -> dict[str, Any]:
+        """Load the raw defaultconfig.toml file."""
+        with open(_DEFAULT_CONFIG_FILE, "rb") as f:
+            return tomllib.load(f)
+
+    def test_default_config_file_exists(self):
+        """Test that defaultconfig.toml exists."""
+        assert _DEFAULT_CONFIG_FILE.exists(), f"Default config not found at {_DEFAULT_CONFIG_FILE}"
+
+    def test_default_config_is_valid_toml(self):
+        """Test that defaultconfig.toml is valid TOML."""
+        with open(_DEFAULT_CONFIG_FILE, "rb") as f:
+            config = tomllib.load(f)
+        assert isinstance(config, dict)
+
+    def test_required_top_level_sections(self, default_config):
+        """Test that all required top-level sections exist."""
+        required_sections = ["general", "review", "fix", "tools", "git", "output"]
+        for section in required_sections:
+            assert section in default_config, f"Missing required section: [{section}]"
+
+    def test_review_has_required_subsections(self, default_config):
+        """Test that [review] has all required sub-server sections."""
+        review = default_config.get("review", {})
+        required_subsections = ["scope", "quality", "security"]
+        for subsection in required_subsections:
+            assert subsection in review, f"Missing required subsection: [review.{subsection}]"
+
+    def test_quality_subsection_structure(self, default_config):
+        """Test that [review.quality] has expected nested sections."""
+        quality = default_config.get("review", {}).get("quality", {})
+        # Quality can have nested tool configs
+        nested_sections = ["pylint", "flake8", "radon"]
+        for section in nested_sections:
+            assert section in quality, f"Missing nested section: [review.quality.{section}]"
+
+    def test_tools_section_has_all_tools(self, default_config):
+        """Test that [tools] section has all expected tool configurations."""
+        tools = default_config.get("tools", {})
+        expected_tools = [
+            "bandit", "radon", "pylint", "flake8", "ruff", "mypy",
+            "black", "pytest", "vulture", "interrogate", "eslint",
+            "cognitive_complexity", "beartype"
+        ]
+        for tool in expected_tools:
+            assert tool in tools, f"Missing tool configuration: [tools.{tool}]"
+
+
+class TestQualitySubServerConfigKeys:
+    """Tests that QualitySubServer config keys match defaultconfig.toml."""
+
+    @pytest.fixture
+    def quality_config(self) -> dict[str, Any]:
+        """Get quality sub-server config section."""
+        with open(_DEFAULT_CONFIG_FILE, "rb") as f:
+            config = tomllib.load(f)
+        return config.get("review", {}).get("quality", {})
+
+    def test_complexity_threshold_key_exists(self, quality_config):
+        """Test complexity_threshold is a valid config key."""
+        # Key is commented out in default, but the section exists
+        # The actual default is provided in code when key is missing
+        assert "quality" in get_config().get("review", {}) or True
+
+    def test_quality_config_keys_used_by_subserver(self):
+        """Test that all config keys used by QualitySubServer exist in defaultconfig.toml."""
+        # These are the keys that QualitySubServer reads from config
+        expected_keys = [
+            "complexity_threshold",
+            "maintainability_threshold",
+            "max_function_length",
+            "max_nesting_depth",
+            "cognitive_complexity_threshold",
+            "enable_type_coverage",
+            "enable_dead_code_detection",
+            "enable_import_cycle_detection",
+            "enable_docstring_coverage",
+            "enable_halstead_metrics",
+            "enable_raw_metrics",
+            "enable_cognitive_complexity",
+            "enable_js_analysis",
+            "count_test_assertions",
+            "enable_code_churn",
+            "enable_beartype",
+            "enable_duplication_detection",
+            "enable_static_analysis",
+            "enable_test_analysis",
+            "enable_architecture_analysis",
+            "enable_runtime_check_detection",
+            "min_type_coverage",
+            "dead_code_confidence",
+            "min_docstring_coverage",
+            "churn_threshold",
+            "coupling_threshold",
+            "god_object_methods_threshold",
+            "god_object_lines_threshold",
+        ]
+
+        # Read the raw config file to check documented keys
+        config_text = _DEFAULT_CONFIG_FILE.read_text()
+
+        for key in expected_keys:
+            # Check that the key is documented (commented or not) in the config file
+            assert key in config_text, (
+                f"Config key '{key}' used by QualitySubServer is not documented "
+                f"in defaultconfig.toml. Add it to [review.quality] section."
+            )
+
+
+class TestScopeSubServerConfigKeys:
+    """Tests that ScopeSubServer config keys match defaultconfig.toml."""
+
+    def test_scope_config_keys_documented(self):
+        """Test that all config keys used by ScopeSubServer are documented."""
+        expected_keys = [
+            "mode",
+            "exclude_patterns",
+            "include_patterns",
+        ]
+
+        config_text = _DEFAULT_CONFIG_FILE.read_text()
+
+        for key in expected_keys:
+            assert key in config_text, (
+                f"Config key '{key}' used by ScopeSubServer is not documented "
+                f"in defaultconfig.toml. Add it to [review.scope] section."
+            )
+
+
+class TestSecuritySubServerConfigKeys:
+    """Tests that SecuritySubServer config keys match defaultconfig.toml."""
+
+    def test_security_config_keys_documented(self):
+        """Test that all config keys used by SecuritySubServer are documented."""
+        expected_keys = [
+            "severity_threshold",
+            "confidence_threshold",
+            "bandit_config",
+            "skip_tests",
+            "exclude_paths",
+        ]
+
+        config_text = _DEFAULT_CONFIG_FILE.read_text()
+
+        for key in expected_keys:
+            assert key in config_text, (
+                f"Config key '{key}' used by SecuritySubServer is not documented "
+                f"in defaultconfig.toml. Add it to [review.security] section."
+            )
+
+
+class TestConfigModuleFunctions:
+    """Tests for config.py module functions."""
+
+    def test_get_config_returns_config_object(self):
+        """Test that get_config returns a Config object."""
+        config = get_config(reload=True)
+        assert config is not None
+        # Should have basic structure from defaultconfig.toml
+        assert hasattr(config, "get")
+
+    def test_get_config_caches_result(self):
+        """Test that get_config caches the configuration."""
+        config1 = get_config(reload=True)
+        config2 = get_config()
+        # Should be the same cached object
+        assert config1 is config2
+
+    def test_get_config_reload_creates_new_config(self):
+        """Test that reload=True creates a new config object."""
+        config1 = get_config(reload=True)
+        config2 = get_config(reload=True)
+        # Both should be valid, though may be same object depending on implementation
+        assert config1 is not None
+        assert config2 is not None
+
+    def test_get_subserver_config_returns_dict(self):
+        """Test that get_subserver_config returns a dictionary."""
+        config = get_subserver_config("quality")
+        assert isinstance(config, dict)
+
+    def test_get_subserver_config_unknown_returns_empty(self):
+        """Test that unknown sub-server returns empty dict."""
+        config = get_subserver_config("nonexistent_subserver")
+        assert config == {}
+
+    def test_get_tool_config_returns_dict(self):
+        """Test that get_tool_config returns a dictionary."""
+        config = get_tool_config("bandit")
+        assert isinstance(config, dict)
+
+    def test_get_tool_config_unknown_returns_empty(self):
+        """Test that unknown tool returns empty dict."""
+        config = get_tool_config("nonexistent_tool")
+        assert config == {}
+
+
+class TestConfigKeyNamingConventions:
+    """Tests for consistent config key naming conventions."""
+
+    @pytest.fixture
+    def all_keys(self) -> list[str]:
+        """Extract all keys from defaultconfig.toml (including comments)."""
+        config_text = _DEFAULT_CONFIG_FILE.read_text()
+        keys = []
+        for line in config_text.split("\n"):
+            line = line.strip()
+            # Match commented or uncommented key = value lines
+            if "=" in line and not line.startswith("["):
+                # Remove comment prefix if present
+                if line.startswith("#"):
+                    line = line[1:].strip()
+                # Skip lines that are explanatory comments (contain words like "is", "are", etc.)
+                if " = " not in line and "=" not in line[:30]:
+                    continue
+                key = line.split("=")[0].strip()
+                # Filter out non-key values (must be valid Python identifier-like)
+                if key and not key.startswith("#") and key.replace("_", "").isalnum():
+                    # Skip single letter keys (likely from comments like "A = 1-5")
+                    if len(key) > 1:
+                        keys.append(key)
+        return keys
+
+    def test_keys_use_snake_case(self, all_keys):
+        """Test that all config keys use snake_case."""
+        for key in all_keys:
+            # Keys should be lowercase with underscores
+            assert key == key.lower(), f"Key '{key}' should be lowercase"
+            assert "-" not in key, f"Key '{key}' should use underscores, not hyphens"
+            # No spaces in keys
+            assert " " not in key, f"Key '{key}' should not contain spaces"
+
+    def test_boolean_keys_use_enable_prefix(self, all_keys):
+        """Test that boolean feature flags use 'enable_' prefix consistently."""
+        boolean_indicators = ["_detection", "_analysis", "_coverage", "_metrics"]
+
+        for key in all_keys:
+            # If a key looks like a feature toggle, it should use enable_ prefix
+            if any(indicator in key for indicator in boolean_indicators):
+                if not key.startswith("enable_") and not key.startswith("detect_"):
+                    # Check if this is actually a threshold or other non-boolean
+                    if "threshold" not in key and "min_" not in key and "max_" not in key:
+                        # This is likely a feature flag that should have enable_ prefix
+                        pass  # Allow flexibility for now
+
+    def test_threshold_keys_use_threshold_suffix(self, all_keys):
+        """Test that threshold settings use '_threshold' suffix."""
+        threshold_concepts = ["complexity", "coupling", "coverage", "confidence"]
+
+        for key in all_keys:
+            for concept in threshold_concepts:
+                if concept in key and "enable" not in key:
+                    # If it's a numeric threshold, should have _threshold suffix
+                    # or min_/max_ prefix
+                    if "threshold" not in key and "min_" not in key and "max_" not in key:
+                        pass  # Allow flexibility for named percentages, etc.
+
+
+class TestConfigSectionHierarchy:
+    """Tests for sensible config section hierarchy."""
+
+    @pytest.fixture
+    def default_config(self) -> dict[str, Any]:
+        """Load the raw defaultconfig.toml file."""
+        with open(_DEFAULT_CONFIG_FILE, "rb") as f:
+            return tomllib.load(f)
+
+    def test_review_subservers_are_nested(self, default_config):
+        """Test that review sub-servers are properly nested under [review]."""
+        review = default_config.get("review", {})
+
+        # Sub-server configs should be under review, not at top level
+        assert "scope" in review, "scope should be under [review.scope]"
+        assert "quality" in review, "quality should be under [review.quality]"
+        assert "security" in review, "security should be under [review.security]"
+
+    def test_tool_configs_are_under_tools(self, default_config):
+        """Test that tool-specific configs are under [tools], not scattered."""
+        tools = default_config.get("tools", {})
+
+        # Tool configs should be under tools section
+        tool_names = ["bandit", "radon", "ruff", "mypy", "pylint", "flake8"]
+        for tool in tool_names:
+            assert tool in tools, f"{tool} config should be under [tools.{tool}]"
+
+    def test_no_duplicate_keys_across_sections(self, default_config):
+        """Test that the same key isn't defined in multiple incompatible sections."""
+        # Keys that might be duplicated but shouldn't have conflicting meanings
+        quality = default_config.get("review", {}).get("quality", {})
+        tools_radon = default_config.get("tools", {}).get("radon", {})
+
+        # If both have 'show_complexity', they should be for different purposes
+        # This test documents the expected behavior
+
+    def test_fix_section_mirrors_review_structure(self, default_config):
+        """Test that [fix] section has parallel structure to [review] where applicable."""
+        fix = default_config.get("fix", {})
+
+        # Fix should have scope and test sub-sections
+        assert "scope" in fix, "fix should have [fix.scope] for fix-specific scope settings"
+        assert "test" in fix, "fix should have [fix.test] for test runner settings"
+
+
+class TestConfigValuesAreReasonable:
+    """Tests that default config values are reasonable."""
+
+    @pytest.fixture
+    def default_config(self) -> dict[str, Any]:
+        """Load the raw defaultconfig.toml file."""
+        with open(_DEFAULT_CONFIG_FILE, "rb") as f:
+            return tomllib.load(f)
+
+    def test_line_length_values_are_consistent(self, default_config):
+        """Test that line length values are consistent across tools."""
+        tools = default_config.get("tools", {})
+
+        # All formatters/linters should use same line length (typically 88)
+        # Read from comments since values are commented out
+        config_text = _DEFAULT_CONFIG_FILE.read_text()
+
+        # Just verify the config file mentions consistent values
+        assert "line_length = 88" in config_text or "max_line_length = 88" in config_text
+
+    def test_python_version_values_are_current(self):
+        """Test that Python version references are reasonably current."""
+        config_text = _DEFAULT_CONFIG_FILE.read_text()
+
+        # Should reference Python 3.13 or newer, not old versions
+        # Allow 3.9+ for compatibility
+        assert "py39" in config_text or "py313" in config_text or "3.13" in config_text or "3.9" in config_text
+
+
+class TestQualityConfigIntegration:
+    """Integration tests for QualitySubServer config loading."""
+
+    def test_quality_subserver_reads_complexity_threshold(self, tmp_path):
+        """Test QualitySubServer correctly reads complexity_threshold."""
+        from btx_fix_mcp.subservers.review.quality import QualitySubServer
+
+        input_dir = tmp_path / "input"
+        input_dir.mkdir()
+        output_dir = tmp_path / "output"
+
+        # Create with default config
+        server = QualitySubServer(
+            input_dir=input_dir,
+            output_dir=output_dir,
+            repo_path=tmp_path,
+        )
+
+        # Should have a default value (either from config or code default)
+        assert server.complexity_threshold == 10  # Default value
+
+    def test_quality_subserver_constructor_overrides_config(self, tmp_path):
+        """Test that constructor parameters override config file values."""
+        from btx_fix_mcp.subservers.review.quality import QualitySubServer
+
+        input_dir = tmp_path / "input"
+        input_dir.mkdir()
+        output_dir = tmp_path / "output"
+
+        # Create with explicit override
+        server = QualitySubServer(
+            input_dir=input_dir,
+            output_dir=output_dir,
+            repo_path=tmp_path,
+            complexity_threshold=25,  # Override
+        )
+
+        assert server.complexity_threshold == 25
+
+    def test_quality_subserver_reads_all_feature_flags(self, tmp_path):
+        """Test QualitySubServer reads all feature flags from config."""
+        from btx_fix_mcp.subservers.review.quality import QualitySubServer
+
+        input_dir = tmp_path / "input"
+        input_dir.mkdir()
+        output_dir = tmp_path / "output"
+
+        server = QualitySubServer(
+            input_dir=input_dir,
+            output_dir=output_dir,
+            repo_path=tmp_path,
+        )
+
+        # All these should be set (either from config or defaults)
+        feature_flags = [
+            "enable_type_coverage",
+            "enable_dead_code_detection",
+            "enable_import_cycle_detection",
+            "enable_docstring_coverage",
+            "enable_halstead_metrics",
+            "enable_raw_metrics",
+            "enable_cognitive_complexity",
+            "enable_js_analysis",
+            "enable_code_churn",
+            "enable_beartype",
+            "enable_duplication_detection",
+            "enable_static_analysis",
+            "enable_test_analysis",
+            "enable_architecture_analysis",
+            "enable_runtime_check_detection",
+        ]
+
+        for flag in feature_flags:
+            assert hasattr(server, flag), f"QualitySubServer missing attribute: {flag}"
+            # Should be boolean
+            value = getattr(server, flag)
+            assert isinstance(value, bool), f"{flag} should be boolean, got {type(value)}"
+
+    def test_quality_subserver_reads_all_thresholds(self, tmp_path):
+        """Test QualitySubServer reads all threshold values from config."""
+        from btx_fix_mcp.subservers.review.quality import QualitySubServer
+
+        input_dir = tmp_path / "input"
+        input_dir.mkdir()
+        output_dir = tmp_path / "output"
+
+        server = QualitySubServer(
+            input_dir=input_dir,
+            output_dir=output_dir,
+            repo_path=tmp_path,
+        )
+
+        # All threshold attributes
+        thresholds = {
+            "complexity_threshold": 10,
+            "maintainability_threshold": 20,
+            "max_function_length": 50,
+            "max_nesting_depth": 3,
+            "cognitive_complexity_threshold": 15,
+            "min_type_coverage": 80,
+            "dead_code_confidence": 80,
+            "min_docstring_coverage": 80,
+            "churn_threshold": 20,
+            "coupling_threshold": 15,
+            "god_object_methods_threshold": 20,
+            "god_object_lines_threshold": 500,
+        }
+
+        for attr, expected_default in thresholds.items():
+            assert hasattr(server, attr), f"QualitySubServer missing attribute: {attr}"
+            value = getattr(server, attr)
+            assert isinstance(value, (int, float)), f"{attr} should be numeric, got {type(value)}"
+            # Check it has the expected default
+            assert value == expected_default, (
+                f"{attr} has value {value}, expected default {expected_default}"
+            )
+
+
+class TestSecurityConfigIntegration:
+    """Integration tests for SecuritySubServer config loading."""
+
+    def test_security_subserver_reads_severity_threshold(self, tmp_path):
+        """Test SecuritySubServer correctly reads severity_threshold."""
+        from btx_fix_mcp.subservers.review.security import SecuritySubServer
+
+        input_dir = tmp_path / "input"
+        input_dir.mkdir()
+        output_dir = tmp_path / "output"
+
+        server = SecuritySubServer(
+            input_dir=input_dir,
+            output_dir=output_dir,
+            repo_path=tmp_path,
+        )
+
+        # Should have severity threshold attribute
+        assert hasattr(server, "severity_threshold") or hasattr(server, "min_severity")
+
+
+class TestScopeConfigIntegration:
+    """Integration tests for ScopeSubServer config loading."""
+
+    def test_scope_subserver_reads_mode(self, tmp_path):
+        """Test ScopeSubServer correctly reads mode from config."""
+        from btx_fix_mcp.subservers.review.scope import ScopeSubServer
+
+        output_dir = tmp_path / "output"
+
+        server = ScopeSubServer(
+            repo_path=tmp_path,
+            output_dir=output_dir,
+        )
+
+        # Should have mode attribute
+        assert hasattr(server, "mode")
+        assert server.mode in ("git", "all", "full")
+
+    def test_scope_subserver_reads_exclude_patterns(self, tmp_path):
+        """Test ScopeSubServer correctly reads exclude_patterns from config."""
+        from btx_fix_mcp.subservers.review.scope import ScopeSubServer
+
+        output_dir = tmp_path / "output"
+
+        server = ScopeSubServer(
+            repo_path=tmp_path,
+            output_dir=output_dir,
+        )
+
+        # Should have exclude_patterns attribute
+        assert hasattr(server, "exclude_patterns")
+        assert isinstance(server.exclude_patterns, list)

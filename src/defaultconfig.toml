@@ -1,0 +1,552 @@
+# BTX Fix MCP - Default Configuration
+# ====================================
+# This file provides default configuration values for all tools and sub-servers.
+# It is read by lib_layered_config and can be overridden by:
+#   1. User config file (~/.config/btx-fix-mcp/config.toml)
+#   2. Project config file (.btx-review.yaml or .btx-fix.yaml)
+#   3. Environment variables (BTX_FIX_MCP_*)
+#   4. Command-line arguments
+#
+# Configuration Priority (lowest to highest):
+#   defaults < user config < project config < env vars < CLI args
+
+
+# =============================================================================
+# GENERAL SETTINGS
+# =============================================================================
+
+[general]
+# Working directory for analysis output
+# output_dir = "LLM-CONTEXT"
+
+# Log level: DEBUG, INFO, WARNING, ERROR, CRITICAL
+# log_level = "INFO"
+
+# Enable verbose output
+# verbose = false
+
+# Maximum parallel sub-server processes
+# max_workers = 4
+
+
+# =============================================================================
+# REVIEW ANALYSIS SETTINGS
+# =============================================================================
+
+[review]
+# Base output directory for review analysis
+# output_dir = "LLM-CONTEXT/review-anal"
+
+# Sub-servers to run (in order)
+# subservers = ["scope", "quality", "security", "deps", "docs", "perf"]
+
+# Stop on first failure
+# stop_on_failure = false
+
+
+# -----------------------------------------------------------------------------
+# Scope Sub-Server
+# -----------------------------------------------------------------------------
+[review.scope]
+# Scope detection mode: "git" (uncommitted changes) or "all" (full repo)
+# mode = "git"
+
+# Patterns to exclude from analysis
+# These patterns are normalized for pathlib.match():
+#   - "vendor/" becomes "*/vendor/*" (matches vendor dir anywhere)
+#   - "*.min.js" stays as-is (glob patterns unchanged)
+# exclude_patterns = [
+#     "vendor/",
+#     "node_modules/",
+#     ".venv/",
+#     "__pycache__/",
+#     "dist/",
+#     "build/",
+#     ".git/",
+#     "LLM-CONTEXT/",
+#     "*.pyc",
+#     "*.pyo",
+#     "*.lock",
+#     "*.min.js",
+#     "*.min.css",
+# ]
+
+# Patterns to include (default: all files)
+# include_patterns = ["**/*"]
+
+
+# -----------------------------------------------------------------------------
+# Quality Sub-Server
+# -----------------------------------------------------------------------------
+[review.quality]
+# Maximum cyclomatic complexity before flagging as issue
+# A = 1-5 (low risk), B = 6-10 (moderate), C = 11-20 (complex), D = 21+ (high risk)
+# complexity_threshold = 10
+
+# Minimum maintainability index before flagging as issue
+# A = 20+ (good), B = 10-19 (moderate), C = 0-9 (poor)
+# maintainability_threshold = 20
+
+# Maximum function length in lines before flagging
+# function_length_threshold = 50
+
+# Maximum nesting depth before flagging
+# nesting_depth_threshold = 3
+
+# Enable code duplication detection
+# detect_duplication = true
+
+# Minimum duplicate lines to report
+# min_duplicate_lines = 6
+
+# Enable god object detection (classes with too many methods/lines)
+# detect_god_objects = true
+
+# Maximum methods per class before flagging as god object
+# god_object_methods_threshold = 20
+
+# Maximum lines per class before flagging as god object
+# god_object_lines_threshold = 500
+
+# Enable coupling analysis
+# detect_high_coupling = true
+
+# Maximum imports per module before flagging high coupling
+# coupling_threshold = 15
+
+
+# -----------------------------------------------------------------------------
+# Security Sub-Server
+# -----------------------------------------------------------------------------
+[review.security]
+# Minimum severity to report: "low", "medium", "high"
+# severity_threshold = "low"
+
+# Minimum confidence to report: "low", "medium", "high"
+# confidence_threshold = "low"
+
+# Bandit configuration file path (optional)
+# bandit_config = ""
+
+# Skip specific Bandit test IDs (e.g., ["B101", "B102"])
+# skip_tests = []
+
+# Additional paths to exclude from security scan
+# exclude_paths = []
+
+
+# -----------------------------------------------------------------------------
+# Pylint Integration (for quality analysis)
+# -----------------------------------------------------------------------------
+[review.quality.pylint]
+# Enable pylint integration
+# enabled = true
+
+# Pylint configuration file path (optional, auto-detected if not set)
+# config_file = ""
+
+# Minimum pylint score to pass (0-10)
+# min_score = 7.0
+
+# Pylint message categories to include
+# Enable: convention (C), refactor (R), warning (W), error (E), fatal (F)
+# categories = ["W", "E", "F"]
+
+# Specific pylint checks to disable
+# disable = []
+
+# Specific pylint checks to enable
+# enable = []
+
+
+# -----------------------------------------------------------------------------
+# Flake8 Integration (for quality analysis)
+# -----------------------------------------------------------------------------
+[review.quality.flake8]
+# Enable flake8 integration
+# enabled = true
+
+# Flake8 configuration file path (optional, auto-detected if not set)
+# config_file = ""
+
+# Maximum line length
+# max_line_length = 88
+
+# Error codes to ignore
+# ignore = ["E501", "W503"]
+
+# Error codes to select (empty = all)
+# select = []
+
+# Maximum complexity threshold
+# max_complexity = 10
+
+
+# -----------------------------------------------------------------------------
+# Radon Integration (for quality analysis)
+# -----------------------------------------------------------------------------
+[review.quality.radon]
+# Enable radon complexity analysis
+# enabled = true
+
+# Minimum rank to show: A, B, C, D, E, F
+# show_complexity = "A"
+
+# Include closures in complexity calculation
+# include_closures = true
+
+# Output format: "json", "text"
+# output_format = "json"
+
+
+# -----------------------------------------------------------------------------
+# Dependencies Sub-Server
+# -----------------------------------------------------------------------------
+[review.deps]
+# Enable vulnerability scanning
+# scan_vulnerabilities = true
+
+# Enable license compliance checking
+# check_licenses = true
+
+# Allowed licenses (SPDX identifiers)
+# allowed_licenses = [
+#     "MIT",
+#     "Apache-2.0",
+#     "BSD-2-Clause",
+#     "BSD-3-Clause",
+#     "ISC",
+#     "MPL-2.0",
+#     "LGPL-2.1",
+#     "LGPL-3.0",
+# ]
+
+# Disallowed licenses (SPDX identifiers)
+# disallowed_licenses = ["GPL-3.0", "AGPL-3.0"]
+
+# Check for outdated packages
+# check_outdated = true
+
+# Maximum allowed age for dependencies (days, 0 = no limit)
+# max_age_days = 365
+
+
+# -----------------------------------------------------------------------------
+# Documentation Sub-Server
+# -----------------------------------------------------------------------------
+[review.docs]
+# Check for missing docstrings
+# check_docstrings = true
+
+# Docstring style: "google", "numpy", "sphinx"
+# docstring_style = "google"
+
+# Minimum docstring coverage percentage
+# min_coverage = 80
+
+# Check README exists
+# require_readme = true
+
+# Check CHANGELOG exists
+# require_changelog = false
+
+# Required sections in README
+# required_readme_sections = ["Installation", "Usage"]
+
+
+# -----------------------------------------------------------------------------
+# Performance Sub-Server
+# -----------------------------------------------------------------------------
+[review.perf]
+# Enable runtime performance estimation
+# estimate_runtime = true
+
+# Enable memory usage estimation
+# estimate_memory = true
+
+# Flag functions with estimated high runtime (milliseconds)
+# runtime_threshold_ms = 100
+
+# Flag modules with estimated high memory (MB)
+# memory_threshold_mb = 50
+
+# Enable algorithm complexity detection (O(n^2), O(n!), etc.)
+# detect_complexity = true
+
+# Flag nested loops deeper than threshold
+# nested_loop_threshold = 2
+
+
+# =============================================================================
+# FIX ANALYSIS SETTINGS
+# =============================================================================
+
+[fix]
+# Base output directory for fix operations
+# output_dir = "LLM-CONTEXT/fix-anal"
+
+# Enable evidence-based fixing (measure -> fix -> verify)
+# evidence_based = true
+
+# Number of verification attempts before accepting fix
+# verification_attempts = 3
+
+# Auto-revert on failed verification
+# auto_revert = true
+
+
+# -----------------------------------------------------------------------------
+# Fix Scope Settings
+# -----------------------------------------------------------------------------
+[fix.scope]
+# Scope mode for fix operations: "single", "related", "module"
+# mode = "single"
+
+# Include related test files
+# include_tests = true
+
+# Maximum files to include in fix scope
+# max_files = 10
+
+
+# -----------------------------------------------------------------------------
+# Test Runner Settings
+# -----------------------------------------------------------------------------
+[fix.test]
+# Test framework: "pytest", "unittest", "nose"
+# framework = "pytest"
+
+# Test command (if not using framework auto-detection)
+# command = ""
+
+# Test timeout in seconds
+# timeout = 300
+
+# Run tests in parallel
+# parallel = true
+
+# Stop on first test failure
+# fail_fast = false
+
+# Coverage threshold for pass (percentage, 0 = disabled)
+# min_coverage = 0
+
+
+# -----------------------------------------------------------------------------
+# Linter Settings
+# -----------------------------------------------------------------------------
+[fix.lint]
+# Linters to run: "ruff", "pylint", "flake8", "mypy"
+# linters = ["ruff", "mypy"]
+
+# Auto-fix safe linting issues
+# auto_fix = true
+
+# Fail on any linting error
+# strict = false
+
+
+# =============================================================================
+# TOOL-SPECIFIC SETTINGS
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# Bandit (Security Scanner)
+# -----------------------------------------------------------------------------
+[tools.bandit]
+# Bandit severity levels: 1 (LOW), 2 (MEDIUM), 3 (HIGH)
+# min_severity = 1
+
+# Bandit confidence levels: 1 (LOW), 2 (MEDIUM), 3 (HIGH)
+# min_confidence = 1
+
+# Output format: "json", "txt", "html", "csv"
+# format = "json"
+
+# Recursive scan
+# recursive = true
+
+# Number of parallel processes
+# processes = 4
+
+
+# -----------------------------------------------------------------------------
+# Radon (Complexity Analyzer)
+# -----------------------------------------------------------------------------
+[tools.radon]
+# Show complexity for all ranks (A through F)
+# show_all = true
+
+# Include average complexity in output
+# show_average = true
+
+# Sort by: "score", "filename", "line"
+# sort_by = "score"
+
+
+# -----------------------------------------------------------------------------
+# Pylint (Code Analyzer)
+# -----------------------------------------------------------------------------
+[tools.pylint]
+# Jobs for parallel execution (0 = auto)
+# jobs = 0
+
+# Output format: "text", "json", "colorized"
+# output_format = "json"
+
+# Reports to generate
+# reports = false
+
+# Maximum line length
+# max_line_length = 88
+
+# Good variable names (regex)
+# good_names = ["i", "j", "k", "ex", "Run", "_", "id", "pk"]
+
+
+# -----------------------------------------------------------------------------
+# Flake8 (Style Checker)
+# -----------------------------------------------------------------------------
+[tools.flake8]
+# Maximum line length
+# max_line_length = 88
+
+# Maximum doc line length
+# max_doc_length = 88
+
+# Indent size
+# indent_size = 4
+
+# Output format
+# format = "default"
+
+
+# -----------------------------------------------------------------------------
+# Ruff (Fast Linter)
+# -----------------------------------------------------------------------------
+[tools.ruff]
+# Line length
+# line_length = 88
+
+# Target Python version
+# target_version = "py313"
+
+# Rules to enable (use "ALL" for all rules)
+# select = ["E", "F", "W", "I", "N", "UP", "B", "C4", "SIM"]
+
+# Rules to ignore
+# ignore = ["E501"]
+
+# Auto-fix
+# fix = true
+
+# Unsafe fixes allowed
+# unsafe_fixes = false
+
+
+# -----------------------------------------------------------------------------
+# MyPy (Type Checker)
+# -----------------------------------------------------------------------------
+[tools.mypy]
+# Python version
+# python_version = "3.13"
+
+# Strict mode
+# strict = false
+
+# Ignore missing imports
+# ignore_missing_imports = true
+
+# Show error codes
+# show_error_codes = true
+
+# Pretty output
+# pretty = true
+
+
+# -----------------------------------------------------------------------------
+# Black (Formatter)
+# -----------------------------------------------------------------------------
+[tools.black]
+# Line length
+# line_length = 88
+
+# Target Python versions
+# target_version = ["py313"]
+
+# String normalization
+# skip_string_normalization = false
+
+# Magic trailing comma
+# skip_magic_trailing_comma = false
+
+
+# -----------------------------------------------------------------------------
+# Pytest (Test Runner)
+# -----------------------------------------------------------------------------
+[tools.pytest]
+# Test paths
+# testpaths = ["tests"]
+
+# Python files pattern
+# python_files = ["test_*.py", "*_test.py"]
+
+# Python classes pattern
+# python_classes = ["Test*"]
+
+# Python functions pattern
+# python_functions = ["test_*"]
+
+# Minimum coverage percentage
+# cov_fail_under = 80
+
+# Coverage report format
+# cov_report = ["term-missing", "html"]
+
+# Markers to run
+# markers = []
+
+# Plugins to disable
+# disabled_plugins = []
+
+
+# =============================================================================
+# GIT SETTINGS
+# =============================================================================
+
+[git]
+# Commit message prefix for automated commits
+# commit_prefix = "[btx-fix]"
+
+# Auto-commit fixes
+# auto_commit = false
+
+# Sign commits with GPG
+# sign_commits = false
+
+# Create branch for fixes
+# create_branch = false
+
+# Branch name template
+# branch_template = "fix/{issue_id}"
+
+
+# =============================================================================
+# OUTPUT SETTINGS
+# =============================================================================
+
+[output]
+# Output format: "markdown", "json", "html"
+# format = "markdown"
+
+# Colorized terminal output
+# color = true
+
+# Progress indicators
+# show_progress = true
+
+# Summary style: "brief", "detailed", "verbose"
+# summary_style = "detailed"
+
+# Maximum issues to display in summary
+# max_issues_display = 50

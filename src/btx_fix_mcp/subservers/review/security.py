@@ -1,0 +1,410 @@
+"""Security sub-server: Scan for security vulnerabilities.
+
+This sub-server scans code for security issues using:
+- Bandit (Python security linter)
+- Pattern matching for common vulnerabilities
+"""
+
+import json
+import subprocess
+from pathlib import Path
+from typing import Any
+
+import yaml
+
+from btx_fix_mcp.subservers.base import BaseSubServer, SubServerResult
+from btx_fix_mcp.subservers.common.logging import (
+    LogContext,
+    log_file_list,
+    log_result,
+    log_section,
+    log_step,
+    setup_logger,
+)
+
+
+class SecuritySubServer(BaseSubServer):
+    """Scan code for security vulnerabilities.
+
+    Uses Bandit to detect common security issues:
+    - SQL injection
+    - Command injection
+    - Hardcoded passwords
+    - Insecure cryptography
+    - And many more...
+
+    Args:
+        name: Sub-server name (default: "security")
+        input_dir: Input directory (containing files_to_review.txt from scope)
+        output_dir: Output directory for results
+        repo_path: Repository path (default: current directory)
+        severity_threshold: Minimum severity to report ("low", "medium", "high")
+        confidence_threshold: Minimum confidence ("low", "medium", "high")
+        config_file: Path to config file
+
+    Example:
+        >>> server = SecuritySubServer(
+        ...     input_dir=Path("LLM-CONTEXT/review-anal/scope"),
+        ...     output_dir=Path("LLM-CONTEXT/review-anal/security"),
+        ...     severity_threshold="medium"
+        ... )
+        >>> result = server.run()
+    """
+
+    SEVERITY_LEVELS = {"low": 1, "medium": 2, "high": 3}
+
+    def __init__(
+        self,
+        name: str = "security",
+        input_dir: Path | None = None,
+        output_dir: Path | None = None,
+        repo_path: Path | None = None,
+        severity_threshold: str = "low",
+        confidence_threshold: str = "low",
+        config_file: Path | None = None,
+    ):
+        """Initialize security sub-server."""
+        if input_dir is None:
+            input_dir = Path.cwd() / "LLM-CONTEXT" / "review-anal" / "scope"
+        if output_dir is None:
+            output_dir = Path.cwd() / "LLM-CONTEXT" / "review-anal" / name
+
+        super().__init__(name=name, input_dir=input_dir, output_dir=output_dir)
+        self.repo_path = repo_path or Path.cwd()
+
+        # Initialize logger
+        self.logger = setup_logger(
+            name, log_file=self.output_dir / f"{name}.log", level=20
+        )
+
+        # Load config
+        config = self._load_config(config_file)
+
+        # Apply config with parameter priority
+        self.severity_threshold = (
+            severity_threshold
+            if severity_threshold != "low" or config is None
+            else config.get("severity_threshold", "low")
+        )
+        self.confidence_threshold = (
+            confidence_threshold
+            if confidence_threshold != "low" or config is None
+            else config.get("confidence_threshold", "low")
+        )
+
+    def _load_config(self, config_file: Path | None) -> dict | None:
+        """Load configuration from file."""
+        if config_file and config_file.exists():
+            try:
+                with open(config_file) as f:
+                    full_config = yaml.safe_load(f)
+                    return full_config.get("security", {}) if full_config else {}
+            except Exception as e:
+                self.logger.warning(f"Failed to load config: {e}")
+                return None
+
+        default_config = self.repo_path / ".btx-review.yaml"
+        if default_config.exists():
+            try:
+                with open(default_config) as f:
+                    full_config = yaml.safe_load(f)
+                    return full_config.get("security", {}) if full_config else {}
+            except Exception as e:
+                self.logger.warning(f"Failed to load config: {e}")
+                return None
+
+        return None
+
+    def validate_inputs(self) -> tuple[bool, list[str]]:
+        """Validate inputs for security analysis."""
+        missing = []
+
+        # Check for files to analyze
+        files_list = self.input_dir / "files_to_review.txt"
+        if not files_list.exists():
+            files_list = self.input_dir / "files_code.txt"
+            if not files_list.exists():
+                missing.append(
+                    f"No files list found in {self.input_dir}. "
+                    "Run scope sub-server first."
+                )
+
+        # Validate thresholds
+        if self.severity_threshold not in self.SEVERITY_LEVELS:
+            missing.append(
+                f"Invalid severity_threshold: {self.severity_threshold}. "
+                "Must be 'low', 'medium', or 'high'"
+            )
+        if self.confidence_threshold not in self.SEVERITY_LEVELS:
+            missing.append(
+                f"Invalid confidence_threshold: {self.confidence_threshold}. "
+                "Must be 'low', 'medium', or 'high'"
+            )
+
+        return len(missing) == 0, missing
+
+    def execute(self) -> SubServerResult:
+        """Execute security analysis."""
+        log_section(self.logger, "SECURITY ANALYSIS")
+
+        try:
+            # Step 1: Get files to analyze
+            log_step(self.logger, 1, "Loading files to analyze")
+            python_files = self._get_python_files()
+
+            if not python_files:
+                log_result(self.logger, True, "No Python files to analyze")
+                return SubServerResult(
+                    status="SUCCESS",
+                    summary="# Security Analysis\n\nNo Python files to analyze.",
+                    artifacts={},
+                    metrics={"files_scanned": 0, "issues_found": 0},
+                )
+
+            log_file_list(self.logger, python_files, "Python files", max_display=10)
+
+            # Step 2: Run Bandit analysis
+            log_step(self.logger, 2, "Running Bandit security scan")
+            with LogContext(self.logger, "Bandit analysis"):
+                bandit_results = self._run_bandit(python_files)
+
+            # Step 3: Filter by threshold
+            log_step(self.logger, 3, "Filtering results by threshold")
+            filtered_issues = self._filter_issues(bandit_results)
+
+            # Step 4: Categorize by severity
+            log_step(self.logger, 4, "Categorizing issues")
+            categorized = self._categorize_issues(filtered_issues)
+
+            # Step 5: Save results
+            log_step(self.logger, 5, "Saving results")
+            artifacts = self._save_results(bandit_results, filtered_issues)
+
+            # Step 6: Generate summary
+            summary = self._generate_summary(
+                python_files, filtered_issues, categorized
+            )
+
+            # Determine status
+            high_severity = [i for i in filtered_issues if i.get("issue_severity") == "HIGH"]
+            status = "SUCCESS" if not high_severity else "PARTIAL"
+
+            log_result(
+                self.logger,
+                status == "SUCCESS",
+                f"Scan complete: {len(filtered_issues)} issues found",
+            )
+
+            return SubServerResult(
+                status=status,
+                summary=summary,
+                artifacts=artifacts,
+                metrics={
+                    "files_scanned": len(python_files),
+                    "issues_found": len(filtered_issues),
+                    "high_severity": len(categorized.get("HIGH", [])),
+                    "medium_severity": len(categorized.get("MEDIUM", [])),
+                    "low_severity": len(categorized.get("LOW", [])),
+                },
+            )
+
+        except Exception as e:
+            self.logger.error(f"Security analysis failed: {e}", exc_info=True)
+            return SubServerResult(
+                status="FAILED",
+                summary=f"# Security Analysis Failed\n\n**Error**: {e}",
+                artifacts={},
+                errors=[str(e)],
+            )
+
+    def _get_python_files(self) -> list[str]:
+        """Get Python files to analyze."""
+        files_list = self.input_dir / "files_code.txt"
+        if not files_list.exists():
+            files_list = self.input_dir / "files_to_review.txt"
+
+        if not files_list.exists():
+            return []
+
+        all_files = files_list.read_text().strip().split("\n")
+        python_files = [f for f in all_files if f.endswith(".py") and f]
+
+        # Convert to absolute paths
+        return [str(self.repo_path / f) for f in python_files]
+
+    def _run_bandit(self, files: list[str]) -> list[dict[str, Any]]:
+        """Run Bandit security scanner on files."""
+        results = []
+
+        # Filter to existing files only
+        existing_files = [f for f in files if Path(f).exists()]
+        if not existing_files:
+            return results
+
+        try:
+            # Run bandit on all files at once for efficiency
+            result = subprocess.run(
+                ["bandit", "-f", "json", "-r"] + existing_files,
+                capture_output=True,
+                text=True,
+                timeout=60,
+            )
+
+            # Bandit returns non-zero if it finds issues
+            if result.stdout.strip():
+                data = json.loads(result.stdout)
+                results = data.get("results", [])
+
+                # Add relative file paths
+                for issue in results:
+                    if "filename" in issue:
+                        try:
+                            issue["relative_file"] = str(
+                                Path(issue["filename"]).relative_to(self.repo_path)
+                            )
+                        except ValueError:
+                            issue["relative_file"] = issue["filename"]
+
+        except subprocess.TimeoutExpired:
+            self.logger.warning("Bandit scan timed out")
+        except json.JSONDecodeError as e:
+            self.logger.warning(f"Invalid JSON from Bandit: {e}")
+        except FileNotFoundError:
+            self.logger.error("Bandit not found. Install with: pip install bandit")
+        except Exception as e:
+            self.logger.warning(f"Error running Bandit: {e}")
+
+        return results
+
+    def _filter_issues(self, issues: list[dict]) -> list[dict]:
+        """Filter issues by severity and confidence thresholds."""
+        severity_min = self.SEVERITY_LEVELS.get(self.severity_threshold, 1)
+        confidence_min = self.SEVERITY_LEVELS.get(self.confidence_threshold, 1)
+
+        filtered = []
+        for issue in issues:
+            issue_severity = self.SEVERITY_LEVELS.get(
+                issue.get("issue_severity", "").lower(), 0
+            )
+            issue_confidence = self.SEVERITY_LEVELS.get(
+                issue.get("issue_confidence", "").lower(), 0
+            )
+
+            if issue_severity >= severity_min and issue_confidence >= confidence_min:
+                filtered.append(issue)
+
+        return filtered
+
+    def _categorize_issues(self, issues: list[dict]) -> dict[str, list[dict]]:
+        """Categorize issues by severity."""
+        categorized: dict[str, list[dict]] = {
+            "HIGH": [],
+            "MEDIUM": [],
+            "LOW": [],
+        }
+
+        for issue in issues:
+            severity = issue.get("issue_severity", "LOW").upper()
+            if severity in categorized:
+                categorized[severity].append(issue)
+            else:
+                categorized["LOW"].append(issue)
+
+        return categorized
+
+    def _save_results(
+        self,
+        all_results: list[dict],
+        filtered_results: list[dict],
+    ) -> dict[str, Path]:
+        """Save analysis results to files."""
+        artifacts = {}
+
+        # Save all results (unfiltered)
+        all_file = self.output_dir / "bandit_full.json"
+        all_file.write_text(json.dumps(all_results, indent=2))
+        artifacts["bandit_full"] = all_file
+
+        # Save filtered results
+        filtered_file = self.output_dir / "security_issues.json"
+        filtered_file.write_text(json.dumps(filtered_results, indent=2))
+        artifacts["security_issues"] = filtered_file
+
+        return artifacts
+
+    def _generate_summary(
+        self,
+        files: list[str],
+        issues: list[dict],
+        categorized: dict[str, list[dict]],
+    ) -> str:
+        """Generate markdown summary."""
+        lines = [
+            "# Security Analysis Report",
+            "",
+            "## Overview",
+            "",
+            f"**Files Scanned**: {len(files)}",
+            f"**Issues Found**: {len(issues)}",
+            "",
+            "## Configuration",
+            "",
+            f"- Severity Threshold: {self.severity_threshold}",
+            f"- Confidence Threshold: {self.confidence_threshold}",
+            "",
+            "## Issues by Severity",
+            "",
+            f"- 🔴 **High**: {len(categorized.get('HIGH', []))}",
+            f"- 🟠 **Medium**: {len(categorized.get('MEDIUM', []))}",
+            f"- 🟡 **Low**: {len(categorized.get('LOW', []))}",
+            "",
+        ]
+
+        # High severity issues (always show)
+        high_issues = categorized.get("HIGH", [])
+        if high_issues:
+            lines.extend([
+                "## 🔴 High Severity Issues",
+                "",
+            ])
+            for issue in high_issues[:10]:
+                file_path = issue.get("relative_file", issue.get("filename", "unknown"))
+                line_num = issue.get("line_number", "?")
+                test_id = issue.get("test_id", "")
+                message = issue.get("issue_text", "Unknown issue")
+                lines.append(f"- **{file_path}:{line_num}** [{test_id}] {message}")
+
+            if len(high_issues) > 10:
+                lines.append(f"- ... and {len(high_issues) - 10} more")
+            lines.append("")
+
+        # Medium severity issues
+        medium_issues = categorized.get("MEDIUM", [])
+        if medium_issues:
+            lines.extend([
+                "## 🟠 Medium Severity Issues",
+                "",
+            ])
+            for issue in medium_issues[:10]:
+                file_path = issue.get("relative_file", issue.get("filename", "unknown"))
+                line_num = issue.get("line_number", "?")
+                message = issue.get("issue_text", "Unknown issue")
+                lines.append(f"- `{file_path}:{line_num}`: {message}")
+
+            if len(medium_issues) > 10:
+                lines.append(f"- ... and {len(medium_issues) - 10} more")
+            lines.append("")
+
+        # Recommendations
+        lines.extend([
+            "## Recommendations",
+            "",
+        ])
+        if high_issues:
+            lines.append("1. **Fix high severity issues immediately** - These represent significant security risks")
+        if medium_issues:
+            lines.append("2. **Review medium severity issues** - Address before production deployment")
+        if not issues:
+            lines.append("✅ No security issues detected!")
+
+        return "\n".join(lines)

@@ -1,0 +1,517 @@
+# Review Analysis - Log Analyzer Subagent
+
+**Purpose**: Analyze ONLY the .log files in LLM-CONTEXT/review-anal/logs/ to identify errors, warnings, and issues that occurred during review execution. This is NOT about code review findings - only about execution errors in the log files.
+
+**Scope**: ONLY analyze files ending in .log in the logs directory
+- orchestrator.log
+- scope.log
+- quality.log
+- security.log
+- perf.log
+- cache.log
+- docs.log
+- cicd.log
+- refactor_tests.log
+- report.log
+- etc.
+
+**When to use**:
+- After review orchestrator completes (success or failure)
+- When debugging review execution issues
+- To understand what went wrong during the review process itself (not code findings)
+
+**Outputs**:
+- `LLM-CONTEXT/review-anal/logs/log_analysis_report.md` - Analysis of log file errors
+- `LLM-CONTEXT/review-anal/logs/error_summary.json` - Structured error data from logs
+- `LLM-CONTEXT/review-anal/logs/recommendations.txt` - How to fix execution errors
+
+---
+
+## Step 1: Initialize
+
+```bash
+#!/bin/bash
+
+
+echo "════════════════════════════════════════════════════════════════"
+echo "Review Log Analyzer"
+echo "════════════════════════════════════════════════════════════════"
+echo ""
+log_info "Starting review log analysis"
+
+# Create output directory
+mkdir -p LLM-CONTEXT/review-anal/logs
+
+# Set status
+echo "IN_PROGRESS" > LLM-CONTEXT/review-anal/logs/log_analyzer_status.txt
+
+# Check if logs directory exists
+if [ ! -d "LLM-CONTEXT/review-anal/logs" ]; then
+    log_error "Logs directory not found - review may not have run"
+    echo "ERROR: No logs found to analyze"
+    echo "FAILED" > LLM-CONTEXT/review-anal/logs/log_analyzer_status.txt
+    exit 1
+fi
+
+echo "✓ Logs directory found"
+log_info "Found logs directory"
+```
+
+---
+
+## Step 2: Scan All Log Files
+
+```bash
+log_info "Scanning all review log files"
+
+cat > LLM-CONTEXT/review-anal/logs/scan_logs.py << 'EOF'
+"""Scan and analyze all review log files.
+
+Executed with: $PYTHON_CMD scan_logs.py
+Requires: Python 3.13+
+"""
+
+import re
+import json
+from pathlib import Path
+from collections import defaultdict
+from datetime import datetime
+
+class LogAnalyzer:
+    def __init__(self):
+        self.errors = []
+        self.warnings = []
+        self.failures = []
+        self.subagent_status = {}
+        self.patterns = {
+            'error': re.compile(r'\[ERROR\]|ERROR:|Error:|❌|FAILED', re.IGNORECASE),
+            'warning': re.compile(r'\[WARNING\]|WARNING:|Warning:|⚠', re.IGNORECASE),
+            'failure': re.compile(r'exit code [1-9]|command failed|not found|No such file', re.IGNORECASE),
+            'success': re.compile(r'✓|SUCCESS|completed successfully', re.IGNORECASE),
+            'timeout': re.compile(r'timeout|timed out', re.IGNORECASE),
+            'permission': re.compile(r'permission denied|not permitted', re.IGNORECASE),
+            'missing': re.compile(r'not found|does not exist|no such', re.IGNORECASE),
+            'network': re.compile(r'connection refused|network error|could not resolve', re.IGNORECASE),
+        }
+
+    def analyze_log_file(self, log_path):
+        """Analyze a single log file."""
+        try:
+            content = log_path.read_text(errors='ignore')
+            lines = content.split('\n')
+
+            result = {
+                'file': str(log_path),
+                'errors': [],
+                'warnings': [],
+                'failures': [],
+                'line_count': len(lines),
+                'error_count': 0,
+                'warning_count': 0,
+            }
+
+            for i, line in enumerate(lines, 1):
+                # Check for errors
+                if self.patterns['error'].search(line):
+                    result['errors'].append({
+                        'line': i,
+                        'text': line.strip(),
+                        'type': self._classify_error(line)
+                    })
+                    result['error_count'] += 1
+
+                # Check for warnings
+                if self.patterns['warning'].search(line):
+                    result['warnings'].append({
+                        'line': i,
+                        'text': line.strip(),
+                    })
+                    result['warning_count'] += 1
+
+                # Check for failures
+                if self.patterns['failure'].search(line):
+                    result['failures'].append({
+                        'line': i,
+                        'text': line.strip(),
+                    })
+
+            return result
+        except Exception as e:
+            return {
+                'file': str(log_path),
+                'error': f"Failed to analyze: {e}",
+            }
+
+    def _classify_error(self, line):
+        """Classify error type based on content."""
+        if self.patterns['timeout'].search(line):
+            return 'timeout'
+        elif self.patterns['permission'].search(line):
+            return 'permission'
+        elif self.patterns['missing'].search(line):
+            return 'missing_resource'
+        elif self.patterns['network'].search(line):
+            return 'network'
+        else:
+            return 'general'
+
+    def analyze_subagent_status(self):
+        """Check status files for each subagent."""
+        status_files = [
+            'scope/status.txt',
+            'security/status.txt',
+            'quality/status.txt',
+            'perf/status.txt',
+            'cache/status.txt',
+            'docs/status.txt',
+            'deps/status.txt',
+            'cicd/status.txt',
+            'refactor-tests/status.txt',
+            'report/status.txt',
+        ]
+
+        results = {}
+        for status_file in status_files:
+            path = Path(f'LLM-CONTEXT/review-anal/{status_file}')
+            subagent = status_file.split('/')[0]
+
+            if path.exists():
+                try:
+                    status = path.read_text().strip()
+                    results[subagent] = status
+                except Exception as e:
+                    results[subagent] = f'ERROR_READING: {e}'
+            else:
+                results[subagent] = 'MISSING'
+
+        return results
+
+    def generate_report(self, log_results, status_results):
+        """Generate comprehensive analysis report."""
+        report = []
+        report.append("# Review Command Log Analysis Report")
+        report.append(f"\n**Generated**: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+        report.append("\n---\n")
+
+        # Summary
+        total_errors = sum(r.get('error_count', 0) for r in log_results)
+        total_warnings = sum(r.get('warning_count', 0) for r in log_results)
+        total_failures = sum(len(r.get('failures', [])) for r in log_results)
+
+        report.append("## Summary")
+        report.append(f"\n- **Total Errors**: {total_errors}")
+        report.append(f"- **Total Warnings**: {total_warnings}")
+        report.append(f"- **Total Failures**: {total_failures}")
+        report.append(f"- **Log Files Analyzed**: {len(log_results)}")
+
+        # Subagent Status
+        report.append("\n\n## Subagent Status\n")
+        failed_subagents = []
+        missing_subagents = []
+        success_subagents = []
+
+        for subagent, status in sorted(status_results.items()):
+            if status == 'SUCCESS':
+                success_subagents.append(subagent)
+                report.append(f"- ✅ **{subagent}**: {status}")
+            elif status == 'FAILED':
+                failed_subagents.append(subagent)
+                report.append(f"- ❌ **{subagent}**: {status}")
+            elif status == 'MISSING':
+                missing_subagents.append(subagent)
+                report.append(f"- ⚠️  **{subagent}**: Status file not found")
+            else:
+                report.append(f"- ❓ **{subagent}**: {status}")
+
+        # Error Details
+        if total_errors > 0:
+            report.append("\n\n## Error Details\n")
+
+            for result in log_results:
+                if result.get('error_count', 0) > 0:
+                    log_name = Path(result['file']).name
+                    report.append(f"\n### {log_name}")
+                    report.append(f"\n**Errors found**: {result['error_count']}\n")
+
+                    # Group errors by type
+                    errors_by_type = defaultdict(list)
+                    for error in result['errors'][:20]:  # Limit to first 20
+                        error_type = error.get('type', 'general')
+                        errors_by_type[error_type].append(error)
+
+                    for error_type, errors in errors_by_type.items():
+                        report.append(f"\n**{error_type.upper()} Errors** ({len(errors)}):")
+                        for error in errors[:5]:  # Show first 5 of each type
+                            report.append(f"\n- Line {error['line']}: `{error['text'][:100]}`")
+
+        # Warnings
+        if total_warnings > 0:
+            report.append("\n\n## Warnings\n")
+
+            warning_count = 0
+            for result in log_results:
+                if result.get('warning_count', 0) > 0 and warning_count < 10:
+                    log_name = Path(result['file']).name
+                    report.append(f"\n### {log_name}\n")
+
+                    for warning in result['warnings'][:5]:
+                        report.append(f"- Line {warning['line']}: `{warning['text'][:100]}`")
+                        warning_count += 1
+                        if warning_count >= 10:
+                            break
+
+        # Recommendations
+        report.append("\n\n## Recommendations\n")
+
+        if failed_subagents:
+            report.append(f"\n### Failed Subagents ({len(failed_subagents)})\n")
+            for subagent in failed_subagents:
+                report.append(f"\n**{subagent}**:")
+                report.append(f"- Check log: `LLM-CONTEXT/review-anal/logs/{subagent}.log`")
+                report.append(f"- Review output: `LLM-CONTEXT/review-anal/{subagent}/`")
+                report.append(f"- Look for ERROR messages indicating root cause")
+
+        if missing_subagents:
+            report.append(f"\n### Missing Status Files ({len(missing_subagents)})\n")
+            for subagent in missing_subagents:
+                report.append(f"\n**{subagent}**:")
+                report.append(f"- Subagent may not have run")
+                report.append(f"- Check orchestrator log: `LLM-CONTEXT/review-anal/logs/orchestrator.log`")
+                report.append(f"- May have been skipped or crashed before completion")
+
+        # Common issues
+        report.append("\n\n## Common Issues and Solutions\n")
+
+        # Analyze error types
+        error_types = defaultdict(int)
+        for result in log_results:
+            for error in result.get('errors', []):
+                error_types[error.get('type', 'general')] += 1
+
+        if error_types.get('missing_resource', 0) > 0:
+            report.append("\n### Missing Resources")
+            report.append("\n**Issue**: Files or commands not found")
+            report.append("\n**Solutions**:")
+            report.append("- Install missing dependencies (see deps subagent)")
+            report.append("- Check if required tools are in PATH")
+            report.append("- Verify file paths are correct")
+
+        if error_types.get('permission', 0) > 0:
+            report.append("\n### Permission Errors")
+            report.append("\n**Issue**: Permission denied errors")
+            report.append("\n**Solutions**:")
+            report.append("- Check file/directory permissions")
+            report.append("- Run with appropriate user privileges")
+            report.append("- Verify write access to LLM-CONTEXT directory")
+
+        if error_types.get('timeout', 0) > 0:
+            report.append("\n### Timeouts")
+            report.append("\n**Issue**: Operations timed out")
+            report.append("\n**Solutions**:")
+            report.append("- Increase timeout values")
+            report.append("- Check network connectivity")
+            report.append("- Review large file processing")
+
+        if error_types.get('network', 0) > 0:
+            report.append("\n### Network Errors")
+            report.append("\n**Issue**: Network connectivity issues")
+            report.append("\n**Solutions**:")
+            report.append("- Check internet connection")
+            report.append("- Verify proxy settings")
+            report.append("- Check firewall rules")
+
+        return '\n'.join(report)
+
+    def generate_json_summary(self, log_results, status_results):
+        """Generate JSON summary for programmatic use."""
+        summary = {
+            'timestamp': datetime.now().isoformat(),
+            'total_errors': sum(r.get('error_count', 0) for r in log_results),
+            'total_warnings': sum(r.get('warning_count', 0) for r in log_results),
+            'total_failures': sum(len(r.get('failures', [])) for r in log_results),
+            'logs_analyzed': len(log_results),
+            'subagent_status': status_results,
+            'failed_subagents': [k for k, v in status_results.items() if v == 'FAILED'],
+            'missing_subagents': [k for k, v in status_results.items() if v == 'MISSING'],
+            'error_details': []
+        }
+
+        for result in log_results:
+            if result.get('error_count', 0) > 0:
+                summary['error_details'].append({
+                    'log_file': Path(result['file']).name,
+                    'error_count': result['error_count'],
+                    'warning_count': result['warning_count'],
+                    'errors': result['errors'][:10]  # First 10 errors
+                })
+
+        return summary
+
+def main():
+    analyzer = LogAnalyzer()
+
+    # Find all log files - ONLY .log files, nothing else
+    log_dir = Path('LLM-CONTEXT/review-anal/logs')
+    if not log_dir.exists():
+        print("ERROR: Logs directory not found")
+        return
+
+    log_files = [f for f in log_dir.glob('*.log') if f.is_file() and f.suffix == '.log']
+
+    # DO NOT analyze any other files - only .log files
+    print(f"Found {len(log_files)} .log files to analyze")
+    print("SCOPE: Only analyzing execution log files, NOT review findings")
+
+    # Analyze each log file
+    log_results = []
+    for log_file in log_files:
+        print(f"Analyzing: {log_file.name}")
+        result = analyzer.analyze_log_file(log_file)
+        log_results.append(result)
+
+    # Analyze subagent status files
+    print("Checking subagent status files...")
+    status_results = analyzer.analyze_subagent_status()
+
+    # Generate reports
+    print("Generating analysis report...")
+    report = analyzer.generate_report(log_results, status_results)
+
+    report_path = Path('LLM-CONTEXT/review-anal/logs/log_analysis_report.md')
+    report_path.write_text(report)
+    print(f"✓ Report written to: {report_path}")
+
+    # Generate JSON summary
+    print("Generating JSON summary...")
+    summary = analyzer.generate_json_summary(log_results, status_results)
+
+    summary_path = Path('LLM-CONTEXT/review-anal/logs/error_summary.json')
+    summary_path.write_text(json.dumps(summary, indent=2))
+    print(f"✓ Summary written to: {summary_path}")
+
+    # Generate recommendations file
+    recommendations = []
+    if summary['failed_subagents']:
+        recommendations.append("FAILED SUBAGENTS:")
+        for subagent in summary['failed_subagents']:
+            recommendations.append(f"  - Check {subagent}: LLM-CONTEXT/review-anal/logs/{subagent}.log")
+
+    if summary['total_errors'] > 0:
+        recommendations.append(f"\nTOTAL ERRORS: {summary['total_errors']}")
+        recommendations.append("  - Review log_analysis_report.md for details")
+        recommendations.append("  - Check error_summary.json for structured data")
+
+    if summary['total_errors'] == 0 and not summary['failed_subagents']:
+        recommendations.append("✓ No errors detected in review execution")
+        recommendations.append("✓ All subagents completed successfully")
+
+    rec_path = Path('LLM-CONTEXT/review-anal/logs/recommendations.txt')
+    rec_path.write_text('\n'.join(recommendations))
+    print(f"✓ Recommendations written to: {rec_path}")
+
+    # Summary output
+    print("\n" + "="*60)
+    print("ANALYSIS SUMMARY")
+    print("="*60)
+    print(f"Errors:   {summary['total_errors']}")
+    print(f"Warnings: {summary['total_warnings']}")
+    print(f"Failed:   {len(summary['failed_subagents'])} subagents")
+    print(f"Missing:  {len(summary['missing_subagents'])} status files")
+    print("="*60)
+
+if __name__ == '__main__':
+    main()
+EOF
+
+python3 LLM-CONTEXT/review-anal/logs/scan_logs.py 2>&1 | tee -a LLM-CONTEXT/review-anal/logs/log_analyzer.log
+
+if [ $? -eq 0 ]; then
+    log_info "Log analysis completed successfully"
+    echo "SUCCESS" > LLM-CONTEXT/review-anal/logs/log_analyzer_status.txt
+else
+    log_error "Log analysis failed"
+    echo "FAILED" > LLM-CONTEXT/review-anal/logs/log_analyzer_status.txt
+    exit 1
+fi
+
+echo ""
+echo "⚠️  IMPORTANT: This analysis is ONLY about .log file errors"
+echo "⚠️  DO NOT analyze review findings from other directories"
+echo "⚠️  DO NOT read files outside LLM-CONTEXT/review-anal/logs/*.log"
+echo ""
+```
+
+---
+
+## Step 3: Present Results
+
+```bash
+echo ""
+echo "════════════════════════════════════════════════════════════════"
+echo "Log Analysis Complete"
+echo "════════════════════════════════════════════════════════════════"
+echo ""
+
+# Show quick summary
+if [ -f "LLM-CONTEXT/review-anal/logs/error_summary.json" ]; then
+    echo "📊 Summary:"
+    python3 << 'EOF'
+import json
+from pathlib import Path
+
+try:
+    summary = json.loads(Path('LLM-CONTEXT/review-anal/logs/error_summary.json').read_text())
+    print(f"  Errors:   {summary['total_errors']}")
+    print(f"  Warnings: {summary['total_warnings']}")
+    print(f"  Failed:   {len(summary['failed_subagents'])} subagents")
+
+    if summary['failed_subagents']:
+        print(f"\n  Failed subagents: {', '.join(summary['failed_subagents'])}")
+except Exception as e:
+    print(f"  Error reading summary: {e}")
+EOF
+fi
+
+echo ""
+echo "📄 Reports generated:"
+echo "  - LLM-CONTEXT/review-anal/logs/log_analysis_report.md"
+echo "  - LLM-CONTEXT/review-anal/logs/error_summary.json"
+echo "  - LLM-CONTEXT/review-anal/logs/recommendations.txt"
+echo ""
+
+# Show recommendations
+if [ -f "LLM-CONTEXT/review-anal/logs/recommendations.txt" ]; then
+    echo "💡 Recommendations:"
+    cat LLM-CONTEXT/review-anal/logs/recommendations.txt | head -20
+    echo ""
+fi
+
+log_info "Log analysis subagent completed"
+```
+
+---
+
+## Notes
+
+- **Runs after review**: Should be final step in review orchestrator
+- **Non-blocking**: Errors in log analysis don't fail the review
+- **Comprehensive**: Analyzes all log files and status files
+- **Actionable**: Provides specific recommendations for fixing issues
+- **Structured output**: JSON for programmatic access, Markdown for humans
+
+**Usage**:
+```bash
+/bx_review_anal_sub_analyze_command_logs
+# Mark as complete
+echo "SUCCESS" > LLM-CONTEXT/review-anal/logs/status.txt
+log_info "Analyze Command Logs subagent completed successfully"
+echo "✓ Analyze Command Logs analysis complete"
+echo "✓ Status: SUCCESS"
+```
+
+**Output files**:
+- `log_analysis_report.md` - Detailed human-readable report
+- `error_summary.json` - Machine-readable error data
+- `recommendations.txt` - Quick actionable fixes
+- `log_analyzer.log` - Log of the analysis itself
+- `log_analyzer_status.txt` - SUCCESS/FAILED status

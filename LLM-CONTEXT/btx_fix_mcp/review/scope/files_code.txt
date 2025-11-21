@@ -46,11 +46,15 @@ src/btx_fix_mcp/subservers/review/quality/__init__.py
 src/btx_fix_mcp/subservers/review/quality/architecture.py
 src/btx_fix_mcp/subservers/review/quality/base.py
 src/btx_fix_mcp/subservers/review/quality/complexity.py
+src/btx_fix_mcp/subservers/review/quality/files.py
 src/btx_fix_mcp/subservers/review/quality/issues.py
 src/btx_fix_mcp/subservers/review/quality/metrics.py
+src/btx_fix_mcp/subservers/review/quality/orchestrator.py
+src/btx_fix_mcp/subservers/review/quality/results.py
 src/btx_fix_mcp/subservers/review/quality/static.py
 src/btx_fix_mcp/subservers/review/quality/summary.py
 src/btx_fix_mcp/subservers/review/quality/types.py
+src/btx_fix_mcp/subservers/review/quality/writer.py
 src/btx_fix_mcp/subservers/review/report.py
 src/btx_fix_mcp/subservers/review/scope.py
 src/btx_fix_mcp/subservers/review/security.py

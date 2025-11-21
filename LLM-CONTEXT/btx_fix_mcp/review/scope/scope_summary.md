@@ -5,16 +5,16 @@
 **Mode**: full
 **Repository**: /media/srv-main-softdev/projects/MCP/btx_fix_mcp
 **Branch**: master
-**Total Files**: 2459
+**Total Files**: 3294
 
 ## File Breakdown by Category
 
-- **CODE**: 58 files
-- **TEST**: 60 files
+- **CODE**: 62 files
+- **TEST**: 65 files
 - **DOCS**: 60 files
-- **CONFIG**: 318 files
+- **CONFIG**: 972 files
 - **BUILD**: 1 files
-- **OTHER**: 1962 files
+- **OTHER**: 2134 files
 
 ## Sample Files (first 10)
 
@@ -28,7 +28,7 @@
 - `.git/hooks/commit-msg.sample`
 - `.git/hooks/fsmonitor-watchman.sample`
 - `.git/hooks/post-update.sample`
-- ... and 2449 more
+- ... and 3284 more
 
 ## Next Steps
 

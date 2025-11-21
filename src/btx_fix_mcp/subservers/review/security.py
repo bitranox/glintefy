@@ -356,20 +356,45 @@ class SecuritySubServer(BaseSubServer):
         categorized: dict[str, list[dict]],
     ) -> str:
         """Generate markdown summary with mindset evaluation."""
-        # Evaluate results with mindset
+        verdict = self._evaluate_mindset(files, categorized)
+
+        lines = []
+        lines.extend(self._format_security_header(verdict, files, issues, categorized))
+        lines.extend(self._format_high_severity_issues(categorized))
+        lines.extend(self._format_medium_severity_issues(categorized))
+        lines.extend(self._format_recommendations(issues, categorized))
+        lines.extend(self._format_approval_status(verdict))
+
+        return "\n".join(lines)
+
+    def _evaluate_mindset(
+        self, files: list[str], categorized: dict[str, list[dict]]
+    ) -> Any:
+        """Evaluate results using mindset."""
         high_issues = categorized.get("HIGH", [])
         medium_issues = categorized.get("MEDIUM", [])
         critical_issues = [{"severity": "critical"} for _ in high_issues]
         warning_issues = [{"severity": "warning"} for _ in medium_issues]
 
-        verdict = evaluate_results(
+        return evaluate_results(
             self.mindset,
             critical_issues,
             warning_issues,
             max(len(files), 1),
         )
 
-        lines = [
+    def _format_security_header(
+        self,
+        verdict: Any,
+        files: list[str],
+        issues: list[dict],
+        categorized: dict[str, list[dict]],
+    ) -> list[str]:
+        """Format security report header."""
+        high_issues = categorized.get("HIGH", [])
+        medium_issues = categorized.get("MEDIUM", [])
+
+        return [
             "# Security Analysis Report",
             "",
             "## Reviewer Mindset",
@@ -404,65 +429,78 @@ class SecuritySubServer(BaseSubServer):
             "",
         ]
 
-        # High severity issues (always show)
+    def _format_high_severity_issues(
+        self, categorized: dict[str, list[dict]]
+    ) -> list[str]:
+        """Format high severity issues section."""
         high_issues = categorized.get("HIGH", [])
-        if high_issues:
-            lines.extend(
-                [
-                    "## 🔴 High Severity Issues",
-                    "",
-                ]
-            )
-            for issue in high_issues[:10]:
-                file_path = issue.get("relative_file", issue.get("filename", "unknown"))
-                line_num = issue.get("line_number", "?")
-                test_id = issue.get("test_id", "")
-                message = issue.get("issue_text", "Unknown issue")
-                lines.append(f"- **{file_path}:{line_num}** [{test_id}] {message}")
+        if not high_issues:
+            return []
 
-            if len(high_issues) > 10:
-                lines.append(f"- ... and {len(high_issues) - 10} more")
-            lines.append("")
+        lines = ["## 🔴 High Severity Issues", ""]
+        for issue in high_issues[:10]:
+            file_path = issue.get("relative_file", issue.get("filename", "unknown"))
+            line_num = issue.get("line_number", "?")
+            test_id = issue.get("test_id", "")
+            message = issue.get("issue_text", "Unknown issue")
+            lines.append(f"- **{file_path}:{line_num}** [{test_id}] {message}")
 
-        # Medium severity issues
+        if len(high_issues) > 10:
+            lines.append(f"- ... and {len(high_issues) - 10} more")
+        lines.append("")
+
+        return lines
+
+    def _format_medium_severity_issues(
+        self, categorized: dict[str, list[dict]]
+    ) -> list[str]:
+        """Format medium severity issues section."""
         medium_issues = categorized.get("MEDIUM", [])
-        if medium_issues:
-            lines.extend(
-                [
-                    "## 🟠 Medium Severity Issues",
-                    "",
-                ]
-            )
-            for issue in medium_issues[:10]:
-                file_path = issue.get("relative_file", issue.get("filename", "unknown"))
-                line_num = issue.get("line_number", "?")
-                message = issue.get("issue_text", "Unknown issue")
-                lines.append(f"- `{file_path}:{line_num}`: {message}")
+        if not medium_issues:
+            return []
 
-            if len(medium_issues) > 10:
-                lines.append(f"- ... and {len(medium_issues) - 10} more")
-            lines.append("")
+        lines = ["## 🟠 Medium Severity Issues", ""]
+        for issue in medium_issues[:10]:
+            file_path = issue.get("relative_file", issue.get("filename", "unknown"))
+            line_num = issue.get("line_number", "?")
+            message = issue.get("issue_text", "Unknown issue")
+            lines.append(f"- `{file_path}:{line_num}`: {message}")
 
-        # Recommendations
-        lines.extend(
-            [
-                "## Recommendations",
-                "",
-            ]
-        )
+        if len(medium_issues) > 10:
+            lines.append(f"- ... and {len(medium_issues) - 10} more")
+        lines.append("")
+
+        return lines
+
+    def _format_recommendations(
+        self, issues: list[dict], categorized: dict[str, list[dict]]
+    ) -> list[str]:
+        """Format recommendations section."""
+        lines = ["## Recommendations", ""]
+
+        high_issues = categorized.get("HIGH", [])
+        medium_issues = categorized.get("MEDIUM", [])
+
         if high_issues:
-            lines.append("1. **Fix high severity issues immediately** - These represent significant security risks")
+            lines.append(
+                "1. **Fix high severity issues immediately** - These represent significant security risks"
+            )
         if medium_issues:
-            lines.append("2. **Review medium severity issues** - Address before production deployment")
+            lines.append(
+                "2. **Review medium severity issues** - Address before production deployment"
+            )
         if not issues:
             lines.append("✅ No security issues detected!")
 
-        # Approval status (using mindset verdict)
-        lines.extend(["", "## Approval Status", ""])
-        lines.append(f"**{verdict.verdict_text}**")
+        return lines
+
+    def _format_approval_status(self, verdict: Any) -> list[str]:
+        """Format approval status section."""
+        lines = ["", "## Approval Status", "", f"**{verdict.verdict_text}**"]
+
         if verdict.recommendations:
             lines.append("")
             for rec in verdict.recommendations:
                 lines.append(f"- {rec}")
 
-        return "\n".join(lines)
+        return lines

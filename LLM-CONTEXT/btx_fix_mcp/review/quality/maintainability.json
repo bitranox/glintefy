@@ -201,7 +201,7 @@
   },
   {
     "file": "src/btx_fix_mcp/subservers/review/deps.py",
-    "mi": 32.06842607855388,
+    "mi": 29.23650303433417,
     "rank": "A"
   },
   {
@@ -221,7 +221,7 @@
   },
   {
     "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",
-    "mi": 20.997774084581636,
+    "mi": 65.52251551802715,
     "rank": "A"
   },
   {
@@ -240,13 +240,28 @@
     "rank": "A"
   },
   {
+    "file": "src/btx_fix_mcp/subservers/review/quality/files.py",
+    "mi": 76.9289118670954,
+    "rank": "A"
+  },
+  {
     "file": "src/btx_fix_mcp/subservers/review/quality/issues.py",
     "mi": 53.39098890429878,
     "rank": "A"
   },
   {
     "file": "src/btx_fix_mcp/subservers/review/quality/metrics.py",
-    "mi": 50.09407722759608,
+    "mi": 42.860901181618644,
+    "rank": "A"
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/orchestrator.py",
+    "mi": 64.39735065453733,
+    "rank": "A"
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/results.py",
+    "mi": 75.65783550328001,
     "rank": "A"
   },
   {
@@ -262,6 +277,11 @@
   {
     "file": "src/btx_fix_mcp/subservers/review/quality/types.py",
     "mi": 54.10868440459744,
+    "rank": "A"
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/writer.py",
+    "mi": 73.40411173079089,
     "rank": "A"
   },
   {

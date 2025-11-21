@@ -300,6 +300,16 @@ class ReportSubServer(BaseSubServer):
         verdict: Verdict,
     ) -> str:
         """Generate consolidated markdown report."""
+        lines = []
+        lines.extend(self._format_header(metrics, verdict))
+        lines.extend(self._format_summary_statistics(metrics))
+        lines.extend(self._format_subserver_results(results))
+        lines.extend(self._format_critical_issues(results))
+        lines.extend(self._format_footer())
+        return "\n".join(lines)
+
+    def _format_header(self, metrics: ReportMetrics, verdict: Verdict) -> list[str]:
+        """Format report header with verdict."""
         lines = [
             "# Code Review Report",
             "",
@@ -321,60 +331,71 @@ class ReportSubServer(BaseSubServer):
                 lines.append(f"- {rec}")
             lines.append("")
 
-        # Summary statistics
-        lines.extend(
-            [
-                "---",
-                "",
-                "## Summary Statistics",
-                "",
-                f"- **Sub-servers run**: {len(metrics.subservers_run)}",
-                f"- **Sub-servers passed**: {len(metrics.subservers_passed)}",
-                f"- **Sub-servers failed**: {len(metrics.subservers_failed)}",
-                f"- **Files analyzed**: {metrics.files_analyzed}",
-                f"- **Total issues**: {metrics.total_issues}",
-                f"- **Critical issues**: {metrics.critical_issues}",
-                f"- **Warnings**: {metrics.warning_issues}",
-                "",
-            ]
-        )
+        return lines
 
-        # Individual sub-server results
-        lines.extend(["---", "", "## Sub-Server Results", ""])
+    def _format_summary_statistics(self, metrics: ReportMetrics) -> list[str]:
+        """Format summary statistics section."""
+        return [
+            "---",
+            "",
+            "## Summary Statistics",
+            "",
+            f"- **Sub-servers run**: {len(metrics.subservers_run)}",
+            f"- **Sub-servers passed**: {len(metrics.subservers_passed)}",
+            f"- **Sub-servers failed**: {len(metrics.subservers_failed)}",
+            f"- **Files analyzed**: {metrics.files_analyzed}",
+            f"- **Total issues**: {metrics.total_issues}",
+            f"- **Critical issues**: {metrics.critical_issues}",
+            f"- **Warnings**: {metrics.warning_issues}",
+            "",
+        ]
+
+    def _format_subserver_results(self, results: dict[str, dict]) -> list[str]:
+        """Format individual sub-server results section."""
+        lines = ["---", "", "## Sub-Server Results", ""]
 
         for name in self.SUBSERVERS:
-            result = results.get(name, {"status": "NOT_RUN"})
-            status = result["status"]
+            lines.extend(self._format_single_subserver(name, results.get(name, {"status": "NOT_RUN"})))
 
-            status_icon = {
-                "SUCCESS": "✅",
-                "PARTIAL": "⚠️",
-                "FAILED": "❌",
-                "NOT_RUN": "⏭️",
-            }.get(status, "❓")
+        return lines
 
-            lines.append(f"### {status_icon} {name.title()}")
+    def _format_single_subserver(self, name: str, result: dict) -> list[str]:
+        """Format a single sub-server's results."""
+        status = result["status"]
+        status_icon = {
+            "SUCCESS": "✅",
+            "PARTIAL": "⚠️",
+            "FAILED": "❌",
+            "NOT_RUN": "⏭️",
+        }.get(status, "❓")
+
+        lines = [
+            f"### {status_icon} {name.title()}",
+            "",
+            f"**Status**: `{status}`",
+            "",
+        ]
+
+        # Show key metrics
+        sub_metrics = result.get("metrics", {})
+        if sub_metrics:
+            lines.append("**Key Metrics:**")
+            for key, value in list(sub_metrics.items())[:5]:
+                lines.append(f"- {key}: {value}")
             lines.append("")
-            lines.append(f"**Status**: `{status}`")
+
+        # Show issue count
+        issues = result.get("issues", [])
+        if issues:
+            critical = len([i for i in issues if i.get("severity") in ("critical", "error")])
+            warnings = len([i for i in issues if i.get("severity") == "warning"])
+            lines.append(f"**Issues**: {len(issues)} ({critical} critical, {warnings} warnings)")
             lines.append("")
 
-            # Show key metrics
-            sub_metrics = result.get("metrics", {})
-            if sub_metrics:
-                lines.append("**Key Metrics:**")
-                for key, value in list(sub_metrics.items())[:5]:
-                    lines.append(f"- {key}: {value}")
-                lines.append("")
+        return lines
 
-            # Show issue count
-            issues = result.get("issues", [])
-            if issues:
-                critical = len([i for i in issues if i.get("severity") in ("critical", "error")])
-                warnings = len([i for i in issues if i.get("severity") == "warning"])
-                lines.append(f"**Issues**: {len(issues)} ({critical} critical, {warnings} warnings)")
-                lines.append("")
-
-        # Critical issues summary
+    def _format_critical_issues(self, results: dict[str, dict]) -> list[str]:
+        """Format critical issues summary section."""
         all_critical = []
         for name, result in results.items():
             for issue in result.get("issues", []):
@@ -382,27 +403,29 @@ class ReportSubServer(BaseSubServer):
                     issue["source"] = name
                     all_critical.append(issue)
 
-        if all_critical:
-            lines.extend(["---", "", "## Critical Issues (Must Fix)", ""])
-            for issue in all_critical[:20]:
-                source = issue.get("source", "unknown")
-                message = issue.get("message", "No description")
-                file_info = f"`{issue.get('file', '')}:{issue.get('line', '')}`" if issue.get("file") else ""
-                lines.append(f"- **[{source}]** {file_info} {message}")
-            if len(all_critical) > 20:
-                lines.append(f"- ... and {len(all_critical) - 20} more critical issues")
-            lines.append("")
+        if not all_critical:
+            return []
 
-        # Footer
-        lines.extend(
-            [
-                "---",
-                "",
-                "*Report generated by btx_fix_mcp Review MCP Server*",
-            ]
-        )
+        lines = ["---", "", "## Critical Issues (Must Fix)", ""]
+        for issue in all_critical[:20]:
+            source = issue.get("source", "unknown")
+            message = issue.get("message", "No description")
+            file_info = f"`{issue.get('file', '')}:{issue.get('line', '')}`" if issue.get("file") else ""
+            lines.append(f"- **[{source}]** {file_info} {message}")
 
-        return "\n".join(lines)
+        if len(all_critical) > 20:
+            lines.append(f"- ... and {len(all_critical) - 20} more critical issues")
+        lines.append("")
+
+        return lines
+
+    def _format_footer(self) -> list[str]:
+        """Format report footer."""
+        return [
+            "---",
+            "",
+            "*Report generated by btx_fix_mcp Review MCP Server*",
+        ]
 
     def _save_report(
         self,

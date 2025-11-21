@@ -1,6 +1,6 @@
 {
   "status": "PARTIAL",
-  "summary": "# Performance Analysis Report\n\n## Reviewer Mindset\n\n**You are a perf reviewer** - thorough, precise.\n\n**Your approach:**\n- \u2713 **Verify:** Verify all claims with evidence\n\n## Verdict\n\n**\ud83d\udd27 NEEDS WORK**\n\n- Critical issues: 2\n- Warnings: 46\n- Files analyzed: 58\n\n## Overview\n\n**Files Analyzed**: 58\n**Pattern Issues**: 8\n**Performance Hotspots**: 5\n**Total Issues**: 48\n\n## Performance Hotspots\n\n- **tests/subservers/review/test_deps.py::TestDepsSubServer::test_execute_python_project**: 6.49s\n- **tests/subservers/review/test_deps.py::TestDepsSubServer::test_summary_includes_mindset**: 5.97s\n- **tests/servers/test_review.py::TestReviewMCPServer::test_run_all**: 1.25s\n- **tests/servers/test_review.py::TestReviewMCPServer::test_run_quality**: 1.25s\n- **tests/subservers/review/test_quality.py::TestQualitySubServer::test_execute_with_simple_code**: 1.08s\n\n## Anti-Pattern Detections\n\n- `/media/srv-main-softdev/projects/MCP/btx_fix_mcp/scripts/clean.py:34` - Nested loop detected\n- `/media/srv-main-softdev/projects/MCP/btx_fix_mcp/src/btx_fix_mcp/subservers/review/deps_scanners.py:47` - Nested loop detected\n- `/media/srv-main-softdev/projects/MCP/btx_fix_mcp/src/btx_fix_mcp/subservers/review/perf.py:224` - Nested loop detected\n- `/media/srv-main-softdev/projects/MCP/btx_fix_mcp/src/btx_fix_mcp/subservers/review/perf.py:240` - Using range(len()) - consider enumerate() or direct iteration\n- `/media/srv-main-softdev/projects/MCP/btx_fix_mcp/src/btx_fix_mcp/subservers/review/quality/__init__.py:574` - Nested loop detected\n- `/media/srv-main-softdev/projects/MCP/btx_fix_mcp/src/btx_fix_mcp/subservers/review/quality/complexity.py:54` - Nested loop detected\n- `/media/srv-main-softdev/projects/MCP/btx_fix_mcp/src/btx_fix_mcp/subservers/review/report.py:379` - Nested loop detected\n- `/media/srv-main-softdev/projects/MCP/btx_fix_mcp/src/btx_fix_mcp/subservers/review/report.py:434` - Nested loop detected\n\n## Approval Status\n\n**\ud83d\udd27 NEEDS WORK**\n\n- Address critical issues before merging\n- Ask yourself: Is this correct? Let me check.",
+  "summary": "# Performance Analysis Report\n\n## Reviewer Mindset\n\n**You are a perf reviewer** - thorough, precise.\n\n**Your approach:**\n- \u2713 **Verify:** Verify all claims with evidence\n\n## Verdict\n\n**\ud83d\udd27 NEEDS WORK**\n\n- Critical issues: 2\n- Warnings: 44\n- Files analyzed: 62\n\n## Overview\n\n**Files Analyzed**: 62\n**Pattern Issues**: 7\n**Performance Hotspots**: 3\n**Total Issues**: 46\n\n## Performance Hotspots\n\n- **tests/subservers/review/test_deps.py::TestDepsSubServer::test_execute_python_project**: 6.16s\n- **tests/subservers/review/test_deps.py::TestDepsSubServer::test_summary_includes_mindset**: 5.92s\n- **tests/servers/test_review.py::TestReviewMCPServer::test_run_all**: 1.01s\n\n## Anti-Pattern Detections\n\n- `/media/srv-main-softdev/projects/MCP/btx_fix_mcp/scripts/clean.py:34` - Nested loop detected\n- `/media/srv-main-softdev/projects/MCP/btx_fix_mcp/src/btx_fix_mcp/subservers/review/deps_scanners.py:47` - Nested loop detected\n- `/media/srv-main-softdev/projects/MCP/btx_fix_mcp/src/btx_fix_mcp/subservers/review/perf.py:224` - Nested loop detected\n- `/media/srv-main-softdev/projects/MCP/btx_fix_mcp/src/btx_fix_mcp/subservers/review/perf.py:240` - Using range(len()) - consider enumerate() or direct iteration\n- `/media/srv-main-softdev/projects/MCP/btx_fix_mcp/src/btx_fix_mcp/subservers/review/quality/complexity.py:54` - Nested loop detected\n- `/media/srv-main-softdev/projects/MCP/btx_fix_mcp/src/btx_fix_mcp/subservers/review/report.py:379` - Nested loop detected\n- `/media/srv-main-softdev/projects/MCP/btx_fix_mcp/src/btx_fix_mcp/subservers/review/report.py:434` - Nested loop detected\n\n## Approval Status\n\n**\ud83d\udd27 NEEDS WORK**\n\n- Address critical issues before merging\n- Ask yourself: Is this correct? Let me check.",
   "artifacts": {
     "pattern_issues": "/media/srv-main-softdev/projects/MCP/btx_fix_mcp/LLM-CONTEXT/btx_fix_mcp/review/perf/pattern_issues.json",
     "hotspots": "/media/srv-main-softdev/projects/MCP/btx_fix_mcp/LLM-CONTEXT/btx_fix_mcp/review/perf/hotspots.json",
@@ -8,11 +8,11 @@
     "issues": "/media/srv-main-softdev/projects/MCP/btx_fix_mcp/LLM-CONTEXT/btx_fix_mcp/review/perf/issues.json"
   },
   "metrics": {
-    "files_analyzed": 58,
-    "patterns_found": 8,
-    "hotspots_found": 5,
-    "total_issues": 48
+    "files_analyzed": 62,
+    "patterns_found": 7,
+    "hotspots_found": 3,
+    "total_issues": 46
   },
   "errors": [],
-  "timestamp": "2025-11-21T19:41:50.343307"
+  "timestamp": "2025-11-21T20:07:04.311750"
 }

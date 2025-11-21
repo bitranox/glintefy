@@ -1,17 +1,17 @@
 {
   "status": "SUCCESS",
-  "summary": "# Security Analysis Report\n\n## Reviewer Mindset\n\n**You are a security reviewer** - thorough, precise.\n\n**Your approach:**\n- \u2713 **Verify:** Verify all claims with evidence\n\n## Verdict\n\n**\u2705 APPROVED**\n\n- High severity: 0\n- Medium severity: 0\n- Files scanned: 58\n\n## Overview\n\n**Files Scanned**: 58\n**Issues Found**: 0\n\n## Configuration\n\n- Severity Threshold: low\n- Confidence Threshold: low\n\n## Issues by Severity\n\n- \ud83d\udd34 **High**: 0\n- \ud83d\udfe0 **Medium**: 0\n- \ud83d\udfe1 **Low**: 0\n\n## Recommendations\n\n\u2705 No security issues detected!\n\n## Approval Status\n\n**\u2705 APPROVED**",
+  "summary": "# Security Analysis Report\n\n## Reviewer Mindset\n\n**You are a security reviewer** - thorough, precise.\n\n**Your approach:**\n- \u2713 **Verify:** Verify all claims with evidence\n\n## Verdict\n\n**\u2705 APPROVED**\n\n- High severity: 0\n- Medium severity: 0\n- Files scanned: 62\n\n## Overview\n\n**Files Scanned**: 62\n**Issues Found**: 0\n\n## Configuration\n\n- Severity Threshold: low\n- Confidence Threshold: low\n\n## Issues by Severity\n\n- \ud83d\udd34 **High**: 0\n- \ud83d\udfe0 **Medium**: 0\n- \ud83d\udfe1 **Low**: 0\n\n## Recommendations\n\n\u2705 No security issues detected!\n\n## Approval Status\n\n**\u2705 APPROVED**",
   "artifacts": {
     "bandit_full": "/media/srv-main-softdev/projects/MCP/btx_fix_mcp/LLM-CONTEXT/btx_fix_mcp/review/security/bandit_full.json",
     "security_issues": "/media/srv-main-softdev/projects/MCP/btx_fix_mcp/LLM-CONTEXT/btx_fix_mcp/review/security/security_issues.json"
   },
   "metrics": {
-    "files_scanned": 58,
+    "files_scanned": 62,
     "issues_found": 0,
     "high_severity": 0,
     "medium_severity": 0,
     "low_severity": 0
   },
   "errors": [],
-  "timestamp": "2025-11-21T19:41:25.677832"
+  "timestamp": "2025-11-21T20:06:42.805023"
 }

@@ -12,15 +12,15 @@
 **🔧 NEEDS WORK**
 
 - Critical issues: 0
-- Warnings: 82
-- Files analyzed: 58
+- Warnings: 54
+- Files analyzed: 62
 
 ## Overview
 
-**Files Analyzed**: 58
-**Docstring Coverage**: 90.7% (minimum: 80%)
-**Missing Docstrings**: 82
-**Total Issues**: 82
+**Files Analyzed**: 62
+**Docstring Coverage**: 97.7% (minimum: 80%)
+**Missing Docstrings**: 54
+**Total Issues**: 54
 
 ## Project Documentation
 
@@ -46,7 +46,7 @@
 - `/media/srv-main-softdev/projects/MCP/btx_fix_mcp/scripts/cli.py:145` - function `coverage_command`
 - `/media/srv-main-softdev/projects/MCP/btx_fix_mcp/scripts/cli.py:150` - function `build_command`
 - `/media/srv-main-softdev/projects/MCP/btx_fix_mcp/scripts/cli.py:156` - function `release_command`
-- ... and 67 more
+- ... and 39 more
 
 ## Approval Status
 

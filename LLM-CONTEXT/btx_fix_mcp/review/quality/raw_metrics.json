@@ -401,13 +401,13 @@
   },
   {
     "file": "src/btx_fix_mcp/subservers/review/deps.py",
-    "loc": 549,
-    "lloc": 272,
-    "sloc": 411,
-    "comments": 30,
+    "loc": 596,
+    "lloc": 295,
+    "sloc": 446,
+    "comments": 26,
     "multi": 25,
-    "blank": 70,
-    "single_comments": 43
+    "blank": 80,
+    "single_comments": 45
   },
   {
     "file": "src/btx_fix_mcp/subservers/review/deps_scanners.py",
@@ -441,13 +441,13 @@
   },
   {
     "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",
-    "loc": 786,
-    "lloc": 422,
-    "sloc": 566,
-    "comments": 50,
-    "multi": 48,
-    "blank": 110,
-    "single_comments": 62
+    "loc": 260,
+    "lloc": 93,
+    "sloc": 168,
+    "comments": 18,
+    "multi": 39,
+    "blank": 33,
+    "single_comments": 20
   },
   {
     "file": "src/btx_fix_mcp/subservers/review/quality/architecture.py",
@@ -480,6 +480,16 @@
     "single_comments": 9
   },
   {
+    "file": "src/btx_fix_mcp/subservers/review/quality/files.py",
+    "loc": 64,
+    "lloc": 36,
+    "sloc": 32,
+    "comments": 0,
+    "multi": 17,
+    "blank": 13,
+    "single_comments": 2
+  },
+  {
     "file": "src/btx_fix_mcp/subservers/review/quality/issues.py",
     "loc": 420,
     "lloc": 154,
@@ -491,13 +501,33 @@
   },
   {
     "file": "src/btx_fix_mcp/subservers/review/quality/metrics.py",
-    "loc": 246,
-    "lloc": 130,
-    "sloc": 186,
-    "comments": 10,
+    "loc": 292,
+    "lloc": 160,
+    "sloc": 223,
+    "comments": 4,
     "multi": 16,
-    "blank": 31,
+    "blank": 39,
+    "single_comments": 14
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/orchestrator.py",
+    "loc": 216,
+    "lloc": 86,
+    "sloc": 142,
+    "comments": 9,
+    "multi": 28,
+    "blank": 33,
     "single_comments": 13
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/results.py",
+    "loc": 198,
+    "lloc": 53,
+    "sloc": 105,
+    "comments": 0,
+    "multi": 59,
+    "blank": 32,
+    "single_comments": 2
   },
   {
     "file": "src/btx_fix_mcp/subservers/review/quality/static.py",
@@ -528,6 +558,16 @@
     "multi": 10,
     "blank": 23,
     "single_comments": 8
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/writer.py",
+    "loc": 185,
+    "lloc": 78,
+    "sloc": 94,
+    "comments": 10,
+    "multi": 45,
+    "blank": 34,
+    "single_comments": 12
   },
   {
     "file": "src/btx_fix_mcp/subservers/review/report.py",

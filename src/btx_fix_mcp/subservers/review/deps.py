@@ -165,75 +165,38 @@ class DepsSubServer(BaseSubServer):
         log_section(self.logger, "DEPENDENCY ANALYSIS")
 
         try:
-            # Ensure tools venv
-            log_step(self.logger, 0, "Ensuring tools venv")
             ensure_tools_venv()
+            log_step(self.logger, 0, "Ensuring tools venv")
 
-            results: dict[str, Any] = {
-                "project_type": None,
-                "vulnerabilities": [],
-                "outdated": [],
-                "licenses": [],
-                "dependency_tree": DependencyTree(),
-            }
+            # Initialize results
+            results = self._init_results()
             all_issues: list[BaseIssue] = []
 
-            # Step 1: Detect project type
+            # Detect project type
             log_step(self.logger, 1, "Detecting project type")
             project_type = self._detect_project_type()
             results["project_type"] = project_type
 
             if not project_type:
-                return SubServerResult(
-                    status="SUCCESS",
-                    summary="# Dependency Analysis\n\nNo supported dependency files found.",
-                    artifacts={},
-                    metrics={"project_type": None, "total_dependencies": 0},
-                )
+                return self._create_no_deps_result()
 
-            # Step 2: Vulnerability scanning
-            if self.scan_vulnerabilities:
-                log_step(self.logger, 2, "Scanning for vulnerabilities")
-                with LogContext(self.logger, "Vulnerability scan"):
-                    vuln_results = scan_vulnerabilities(project_type, self.repo_path, self.logger)
-                    results["vulnerabilities"] = vuln_results
-                    all_issues.extend(self._vulnerabilities_to_issues(vuln_results))
+            # Run analysis steps
+            self._run_vulnerability_scan(project_type, results, all_issues)
+            self._run_outdated_check(project_type, results, all_issues)
+            self._run_license_check(project_type, results, all_issues)
+            self._run_dependency_tree(project_type, results)
 
-            # Step 3: Outdated package detection
-            if self.check_outdated:
-                log_step(self.logger, 3, "Checking for outdated packages")
-                with LogContext(self.logger, "Outdated check"):
-                    outdated = check_outdated_packages(project_type, self.repo_path, self.logger)
-                    results["outdated"] = outdated
-                    all_issues.extend(self._outdated_to_issues(outdated))
-
-            # Step 4: License compliance
-            if self.check_licenses:
-                log_step(self.logger, 4, "Checking license compliance")
-                with LogContext(self.logger, "License check"):
-                    licenses = self._check_licenses(project_type)
-                    results["licenses"] = licenses
-                    all_issues.extend(self._licenses_to_issues(licenses))
-
-            # Step 5: Dependency tree
-            log_step(self.logger, 5, "Analyzing dependency tree")
-            with LogContext(self.logger, "Dependency tree"):
-                results["dependency_tree"] = self._get_dependency_tree(project_type)
-
-            # Step 6: Save results
+            # Save and generate results
             log_step(self.logger, 6, "Saving results")
             artifacts = self._save_results(results, all_issues)
-
-            # Step 7: Generate summary
             summary = self._generate_summary(results, all_issues)
+            status = self._determine_status(all_issues)
 
-            # Determine status
-            critical_count = len([i for i in all_issues if i.severity == "critical"])
-            status = "FAILED" if critical_count > 0 else "SUCCESS"
-            if not critical_count and any(i.severity == "warning" for i in all_issues):
-                status = "PARTIAL"
-
-            log_result(self.logger, status != "FAILED", f"Analysis complete: {len(all_issues)} issues found")
+            log_result(
+                self.logger,
+                status != "FAILED",
+                f"Analysis complete: {len(all_issues)} issues found",
+            )
 
             return SubServerResult(
                 status=status,
@@ -243,18 +206,95 @@ class DepsSubServer(BaseSubServer):
             )
 
         except Exception as e:
-            log_error_detailed(
-                self.logger,
-                e,
-                context={"repo_path": str(self.repo_path)},
-                include_traceback=True,
-            )
-            return SubServerResult(
-                status="FAILED",
-                summary=f"# Dependency Analysis Failed\n\n**Error**: {e}",
-                artifacts={},
-                errors=[str(e)],
-            )
+            return self._handle_error(e)
+
+    def _init_results(self) -> dict[str, Any]:
+        """Initialize results dictionary."""
+        return {
+            "project_type": None,
+            "vulnerabilities": [],
+            "outdated": [],
+            "licenses": [],
+            "dependency_tree": DependencyTree(),
+        }
+
+    def _create_no_deps_result(self) -> SubServerResult:
+        """Create result when no dependencies found."""
+        return SubServerResult(
+            status="SUCCESS",
+            summary="# Dependency Analysis\n\nNo supported dependency files found.",
+            artifacts={},
+            metrics={"project_type": None, "total_dependencies": 0},
+        )
+
+    def _run_vulnerability_scan(
+        self, project_type: str, results: dict[str, Any], all_issues: list[BaseIssue]
+    ) -> None:
+        """Run vulnerability scanning if enabled."""
+        if not self.scan_vulnerabilities:
+            return
+
+        log_step(self.logger, 2, "Scanning for vulnerabilities")
+        with LogContext(self.logger, "Vulnerability scan"):
+            vuln_results = scan_vulnerabilities(project_type, self.repo_path, self.logger)
+            results["vulnerabilities"] = vuln_results
+            all_issues.extend(self._vulnerabilities_to_issues(vuln_results))
+
+    def _run_outdated_check(
+        self, project_type: str, results: dict[str, Any], all_issues: list[BaseIssue]
+    ) -> None:
+        """Run outdated package check if enabled."""
+        if not self.check_outdated:
+            return
+
+        log_step(self.logger, 3, "Checking for outdated packages")
+        with LogContext(self.logger, "Outdated check"):
+            outdated = check_outdated_packages(project_type, self.repo_path, self.logger)
+            results["outdated"] = outdated
+            all_issues.extend(self._outdated_to_issues(outdated))
+
+    def _run_license_check(
+        self, project_type: str, results: dict[str, Any], all_issues: list[BaseIssue]
+    ) -> None:
+        """Run license compliance check if enabled."""
+        if not self.check_licenses:
+            return
+
+        log_step(self.logger, 4, "Checking license compliance")
+        with LogContext(self.logger, "License check"):
+            licenses = self._check_licenses(project_type)
+            results["licenses"] = licenses
+            all_issues.extend(self._licenses_to_issues(licenses))
+
+    def _run_dependency_tree(self, project_type: str, results: dict[str, Any]) -> None:
+        """Analyze dependency tree."""
+        log_step(self.logger, 5, "Analyzing dependency tree")
+        with LogContext(self.logger, "Dependency tree"):
+            results["dependency_tree"] = self._get_dependency_tree(project_type)
+
+    def _determine_status(self, all_issues: list[BaseIssue]) -> str:
+        """Determine analysis status from issues."""
+        critical_count = len([i for i in all_issues if i.severity == "critical"])
+        if critical_count > 0:
+            return "FAILED"
+        if any(i.severity == "warning" for i in all_issues):
+            return "PARTIAL"
+        return "SUCCESS"
+
+    def _handle_error(self, e: Exception) -> SubServerResult:
+        """Handle analysis error."""
+        log_error_detailed(
+            self.logger,
+            e,
+            context={"repo_path": str(self.repo_path)},
+            include_traceback=True,
+        )
+        return SubServerResult(
+            status="FAILED",
+            summary=f"# Dependency Analysis Failed\n\n**Error**: {e}",
+            artifacts={},
+            errors=[str(e)],
+        )
 
     def _detect_project_type(self) -> str | None:
         """Detect project type from dependency files."""

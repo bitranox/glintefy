@@ -1,6 +1,6 @@
 {
   "status": "REJECTED",
-  "message": "\u274c Code review failed - 13 critical issues found",
+  "message": "\u274c Code review failed - 5 critical issues found",
   "recommendations": [
     "Address all critical issues before merging"
   ]

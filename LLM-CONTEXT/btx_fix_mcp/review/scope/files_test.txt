@@ -1,5 +1,9 @@
 .idea/inspectionProfiles/Project_Default.xml
 .idea/inspectionProfiles/profiles_settings.xml
+.mypy_cache/3.13/inspect.data.json
+.mypy_cache/3.13/inspect.meta.json
+.mypy_cache/3.13/scripts/test.data.json
+.mypy_cache/3.13/scripts/test.meta.json
 .mypy_cache/3.13/test.data.json
 .mypy_cache/3.13/test.meta.json
 .mypy_cache/3.13/tests/__init__.data.json
@@ -17,6 +21,7 @@ LLM-CONTEXT/btx_fix_mcp/review/scope/files_test.txt
 old_commands/bx_fix_anal_sub_refactor_tests.md
 old_commands/bx_review_anal_sub_refactor_tests.md
 scripts/test.py
+src/btx_fix_mcp/subservers/review/quality/special_analyzers.py
 src/btx_fix_mcp/subservers/review/quality/tests.py
 tests/__init__.py
 tests/conftest.py

@@ -2449,14 +2449,6 @@
   },
   {
     "file": "src/btx_fix_mcp/subservers/review/deps.py",
-    "name": "_generate_summary",
-    "type": "method",
-    "complexity": 21,
-    "rank": "D",
-    "line": 459
-  },
-  {
-    "file": "src/btx_fix_mcp/subservers/review/deps.py",
     "name": "execute",
     "type": "method",
     "complexity": 12,
@@ -2478,14 +2470,6 @@
     "complexity": 9,
     "rank": "B",
     "line": 442
-  },
-  {
-    "file": "src/btx_fix_mcp/subservers/review/deps.py",
-    "name": "DepsSubServer",
-    "type": "class",
-    "complexity": 8,
-    "rank": "B",
-    "line": 46
   },
   {
     "file": "src/btx_fix_mcp/subservers/review/deps.py",
@@ -2513,6 +2497,14 @@
   },
   {
     "file": "src/btx_fix_mcp/subservers/review/deps.py",
+    "name": "DepsSubServer",
+    "type": "class",
+    "complexity": 6,
+    "rank": "B",
+    "line": 46
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/deps.py",
     "name": "_check_licenses",
     "type": "method",
     "complexity": 5,
@@ -2537,6 +2529,46 @@
   },
   {
     "file": "src/btx_fix_mcp/subservers/review/deps.py",
+    "name": "_evaluate_mindset",
+    "type": "method",
+    "complexity": 5,
+    "rank": "A",
+    "line": 473
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/deps.py",
+    "name": "_format_header_section",
+    "type": "method",
+    "complexity": 5,
+    "rank": "A",
+    "line": 488
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/deps.py",
+    "name": "_format_license_section",
+    "type": "method",
+    "complexity": 5,
+    "rank": "A",
+    "line": 572
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/deps.py",
+    "name": "_format_vulnerabilities_section",
+    "type": "method",
+    "complexity": 4,
+    "rank": "A",
+    "line": 532
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/deps.py",
+    "name": "_format_outdated_section",
+    "type": "method",
+    "complexity": 4,
+    "rank": "A",
+    "line": 552
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/deps.py",
     "name": "validate_inputs",
     "type": "method",
     "complexity": 3,
@@ -2553,11 +2585,27 @@
   },
   {
     "file": "src/btx_fix_mcp/subservers/review/deps.py",
+    "name": "_format_approval_section",
+    "type": "method",
+    "complexity": 3,
+    "rank": "A",
+    "line": 587
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/deps.py",
     "name": "_outdated_to_issues",
     "type": "method",
     "complexity": 2,
     "rank": "A",
     "line": 363
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/deps.py",
+    "name": "_generate_summary",
+    "type": "method",
+    "complexity": 1,
+    "rank": "A",
+    "line": 459
   },
   {
     "file": "src/btx_fix_mcp/subservers/review/deps_scanners.py",
@@ -2795,57 +2843,17 @@
     "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",
     "name": "execute",
     "type": "method",
-    "complexity": 34,
-    "rank": "E",
-    "line": 396
-  },
-  {
-    "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",
-    "name": "_run_analyzers_parallel",
-    "type": "method",
-    "complexity": 21,
-    "rank": "D",
-    "line": 272
-  },
-  {
-    "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",
-    "name": "_save_all_results",
-    "type": "method",
-    "complexity": 16,
-    "rank": "C",
-    "line": 650
-  },
-  {
-    "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",
-    "name": "_compile_metrics",
-    "type": "method",
-    "complexity": 13,
-    "rank": "C",
-    "line": 740
-  },
-  {
-    "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",
-    "name": "_run_beartype_check",
-    "type": "method",
     "complexity": 12,
     "rank": "C",
-    "line": 593
+    "line": 164
   },
   {
     "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",
-    "name": "_analyze_js_files",
-    "type": "method",
-    "complexity": 9,
-    "rank": "B",
-    "line": 558
-  },
-  {
-    "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",
-    "name": "_get_python_files",
-    "type": "method",
+    "name": "QualitySubServer",
+    "type": "class",
     "complexity": 7,
     "rank": "B",
-    "line": 537
+    "line": 72
   },
   {
     "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",
@@ -2853,279 +2861,15 @@
     "type": "method",
     "complexity": 6,
     "rank": "B",
-    "line": 76
-  },
-  {
-    "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",
-    "name": "_get_js_files",
-    "type": "method",
-    "complexity": 6,
-    "rank": "B",
-    "line": 548
-  },
-  {
-    "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",
-    "name": "QualitySubServer",
-    "type": "class",
-    "complexity": 4,
-    "rank": "A",
-    "line": 69
+    "line": 79
   },
   {
     "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",
     "name": "validate_inputs",
     "type": "method",
-    "complexity": 3,
-    "rank": "A",
-    "line": 386
-  },
-  {
-    "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",
-    "name": "_init_analyzers",
-    "type": "method",
     "complexity": 1,
     "rank": "A",
-    "line": 147
-  },
-  {
-    "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",
-    "name": "complexity_threshold",
-    "type": "method",
-    "complexity": 1,
-    "rank": "A",
-    "line": 161
-  },
-  {
-    "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",
-    "name": "maintainability_threshold",
-    "type": "method",
-    "complexity": 1,
-    "rank": "A",
-    "line": 165
-  },
-  {
-    "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",
-    "name": "max_function_length",
-    "type": "method",
-    "complexity": 1,
-    "rank": "A",
-    "line": 169
-  },
-  {
-    "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",
-    "name": "max_nesting_depth",
-    "type": "method",
-    "complexity": 1,
-    "rank": "A",
-    "line": 173
-  },
-  {
-    "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",
-    "name": "cognitive_complexity_threshold",
-    "type": "method",
-    "complexity": 1,
-    "rank": "A",
-    "line": 177
-  },
-  {
-    "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",
-    "name": "min_type_coverage",
-    "type": "method",
-    "complexity": 1,
-    "rank": "A",
-    "line": 181
-  },
-  {
-    "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",
-    "name": "dead_code_confidence",
-    "type": "method",
-    "complexity": 1,
-    "rank": "A",
-    "line": 185
-  },
-  {
-    "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",
-    "name": "min_docstring_coverage",
-    "type": "method",
-    "complexity": 1,
-    "rank": "A",
-    "line": 189
-  },
-  {
-    "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",
-    "name": "churn_threshold",
-    "type": "method",
-    "complexity": 1,
-    "rank": "A",
-    "line": 193
-  },
-  {
-    "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",
-    "name": "coupling_threshold",
-    "type": "method",
-    "complexity": 1,
-    "rank": "A",
-    "line": 197
-  },
-  {
-    "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",
-    "name": "god_object_methods_threshold",
-    "type": "method",
-    "complexity": 1,
-    "rank": "A",
-    "line": 201
-  },
-  {
-    "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",
-    "name": "god_object_lines_threshold",
-    "type": "method",
-    "complexity": 1,
-    "rank": "A",
-    "line": 205
-  },
-  {
-    "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",
-    "name": "enable_type_coverage",
-    "type": "method",
-    "complexity": 1,
-    "rank": "A",
-    "line": 209
-  },
-  {
-    "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",
-    "name": "enable_dead_code_detection",
-    "type": "method",
-    "complexity": 1,
-    "rank": "A",
-    "line": 213
-  },
-  {
-    "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",
-    "name": "enable_import_cycle_detection",
-    "type": "method",
-    "complexity": 1,
-    "rank": "A",
-    "line": 217
-  },
-  {
-    "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",
-    "name": "enable_docstring_coverage",
-    "type": "method",
-    "complexity": 1,
-    "rank": "A",
-    "line": 221
-  },
-  {
-    "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",
-    "name": "enable_halstead_metrics",
-    "type": "method",
-    "complexity": 1,
-    "rank": "A",
-    "line": 225
-  },
-  {
-    "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",
-    "name": "enable_raw_metrics",
-    "type": "method",
-    "complexity": 1,
-    "rank": "A",
-    "line": 229
-  },
-  {
-    "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",
-    "name": "enable_cognitive_complexity",
-    "type": "method",
-    "complexity": 1,
-    "rank": "A",
-    "line": 233
-  },
-  {
-    "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",
-    "name": "enable_js_analysis",
-    "type": "method",
-    "complexity": 1,
-    "rank": "A",
-    "line": 237
-  },
-  {
-    "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",
-    "name": "count_test_assertions",
-    "type": "method",
-    "complexity": 1,
-    "rank": "A",
-    "line": 241
-  },
-  {
-    "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",
-    "name": "enable_code_churn",
-    "type": "method",
-    "complexity": 1,
-    "rank": "A",
-    "line": 245
-  },
-  {
-    "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",
-    "name": "enable_beartype",
-    "type": "method",
-    "complexity": 1,
-    "rank": "A",
-    "line": 249
-  },
-  {
-    "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",
-    "name": "enable_duplication_detection",
-    "type": "method",
-    "complexity": 1,
-    "rank": "A",
-    "line": 253
-  },
-  {
-    "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",
-    "name": "enable_static_analysis",
-    "type": "method",
-    "complexity": 1,
-    "rank": "A",
-    "line": 257
-  },
-  {
-    "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",
-    "name": "enable_test_analysis",
-    "type": "method",
-    "complexity": 1,
-    "rank": "A",
-    "line": 261
-  },
-  {
-    "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",
-    "name": "enable_architecture_analysis",
-    "type": "method",
-    "complexity": 1,
-    "rank": "A",
-    "line": 265
-  },
-  {
-    "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",
-    "name": "enable_runtime_check_detection",
-    "type": "method",
-    "complexity": 1,
-    "rank": "A",
-    "line": 269
-  },
-  {
-    "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",
-    "name": "_compile_all_issues",
-    "type": "method",
-    "complexity": 1,
-    "rank": "A",
-    "line": 646
-  },
-  {
-    "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",
-    "name": "_generate_comprehensive_summary",
-    "type": "method",
-    "complexity": 1,
-    "rank": "A",
-    "line": 777
+    "line": 160
   },
   {
     "file": "src/btx_fix_mcp/subservers/review/quality/architecture.py",
@@ -3270,6 +3014,46 @@
     "complexity": 1,
     "rank": "A",
     "line": 24
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/files.py",
+    "name": "load_python_files",
+    "type": "method",
+    "complexity": 7,
+    "rank": "B",
+    "line": 35
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/files.py",
+    "name": "load_js_files",
+    "type": "method",
+    "complexity": 6,
+    "rank": "B",
+    "line": 51
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/files.py",
+    "name": "FileManager",
+    "type": "class",
+    "complexity": 5,
+    "rank": "A",
+    "line": 6
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/files.py",
+    "name": "validate_inputs",
+    "type": "method",
+    "complexity": 3,
+    "rank": "A",
+    "line": 19
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/files.py",
+    "name": "__init__",
+    "type": "method",
+    "complexity": 1,
+    "rank": "A",
+    "line": 9
   },
   {
     "file": "src/btx_fix_mcp/subservers/review/quality/issues.py",
@@ -3433,22 +3217,6 @@
   },
   {
     "file": "src/btx_fix_mcp/subservers/review/quality/metrics.py",
-    "name": "_analyze_code_churn",
-    "type": "method",
-    "complexity": 21,
-    "rank": "D",
-    "line": 124
-  },
-  {
-    "file": "src/btx_fix_mcp/subservers/review/quality/metrics.py",
-    "name": "MetricsAnalyzer",
-    "type": "class",
-    "complexity": 12,
-    "rank": "C",
-    "line": 19
-  },
-  {
-    "file": "src/btx_fix_mcp/subservers/review/quality/metrics.py",
     "name": "_analyze_halstead",
     "type": "method",
     "complexity": 12,
@@ -3465,11 +3233,211 @@
   },
   {
     "file": "src/btx_fix_mcp/subservers/review/quality/metrics.py",
+    "name": "_analyze_code_churn",
+    "type": "method",
+    "complexity": 7,
+    "rank": "B",
+    "line": 124
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/metrics.py",
+    "name": "MetricsAnalyzer",
+    "type": "class",
+    "complexity": 6,
+    "rank": "B",
+    "line": 19
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/metrics.py",
+    "name": "_parse_git_log",
+    "type": "method",
+    "complexity": 6,
+    "rank": "B",
+    "line": 219
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/metrics.py",
+    "name": "_process_numstat_line",
+    "type": "method",
+    "complexity": 6,
+    "rank": "B",
+    "line": 242
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/metrics.py",
+    "name": "_is_git_repository",
+    "type": "method",
+    "complexity": 3,
+    "rank": "A",
+    "line": 168
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/metrics.py",
+    "name": "_convert_to_relative_paths",
+    "type": "method",
+    "complexity": 3,
+    "rank": "A",
+    "line": 186
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/metrics.py",
+    "name": "_compile_churn_results",
+    "type": "method",
+    "complexity": 3,
+    "rank": "A",
+    "line": 271
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/metrics.py",
+    "name": "_run_git_log",
+    "type": "method",
+    "complexity": 2,
+    "rank": "A",
+    "line": 197
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/metrics.py",
     "name": "analyze",
     "type": "method",
     "complexity": 1,
     "rank": "A",
     "line": 22
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/metrics.py",
+    "name": "_create_empty_churn_results",
+    "type": "method",
+    "complexity": 1,
+    "rank": "A",
+    "line": 159
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/orchestrator.py",
+    "name": "build_analyzer_tasks",
+    "type": "method",
+    "complexity": 14,
+    "rank": "C",
+    "line": 61
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/orchestrator.py",
+    "name": "execute_tasks",
+    "type": "method",
+    "complexity": 9,
+    "rank": "B",
+    "line": 154
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/orchestrator.py",
+    "name": "AnalyzerOrchestrator",
+    "type": "class",
+    "complexity": 6,
+    "rank": "B",
+    "line": 17
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/orchestrator.py",
+    "name": "initialize_analyzers",
+    "type": "method",
+    "complexity": 2,
+    "rank": "A",
+    "line": 33
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/orchestrator.py",
+    "name": "__init__",
+    "type": "method",
+    "complexity": 1,
+    "rank": "A",
+    "line": 20
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/orchestrator.py",
+    "name": "run_all",
+    "type": "method",
+    "complexity": 1,
+    "rank": "A",
+    "line": 205
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/results.py",
+    "name": "_compile_complexity_metrics",
+    "type": "method",
+    "complexity": 11,
+    "rank": "C",
+    "line": 82
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/results.py",
+    "name": "ResultsCompiler",
+    "type": "class",
+    "complexity": 3,
+    "rank": "A",
+    "line": 10
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/results.py",
+    "name": "_compile_issue_metrics",
+    "type": "method",
+    "complexity": 3,
+    "rank": "A",
+    "line": 181
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/results.py",
+    "name": "__init__",
+    "type": "method",
+    "complexity": 1,
+    "rank": "A",
+    "line": 13
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/results.py",
+    "name": "compile_issues",
+    "type": "method",
+    "complexity": 1,
+    "rank": "A",
+    "line": 23
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/results.py",
+    "name": "compile_metrics",
+    "type": "method",
+    "complexity": 1,
+    "rank": "A",
+    "line": 37
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/results.py",
+    "name": "_compile_file_metrics",
+    "type": "method",
+    "complexity": 1,
+    "rank": "A",
+    "line": 64
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/results.py",
+    "name": "_compile_test_metrics",
+    "type": "method",
+    "complexity": 1,
+    "rank": "A",
+    "line": 125
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/results.py",
+    "name": "_compile_architecture_metrics",
+    "type": "method",
+    "complexity": 1,
+    "rank": "A",
+    "line": 141
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/results.py",
+    "name": "_compile_coverage_metrics",
+    "type": "method",
+    "complexity": 1,
+    "rank": "A",
+    "line": 157
   },
   {
     "file": "src/btx_fix_mcp/subservers/review/quality/static.py",
@@ -3622,6 +3590,78 @@
     "complexity": 1,
     "rank": "A",
     "line": 20
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/writer.py",
+    "name": "_save_dict_results",
+    "type": "method",
+    "complexity": 11,
+    "rank": "C",
+    "line": 78
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/writer.py",
+    "name": "ResultsWriter",
+    "type": "class",
+    "complexity": 4,
+    "rank": "A",
+    "line": 8
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/writer.py",
+    "name": "_save_list_results",
+    "type": "method",
+    "complexity": 4,
+    "rank": "A",
+    "line": 40
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/writer.py",
+    "name": "_save_text_results",
+    "type": "method",
+    "complexity": 2,
+    "rank": "A",
+    "line": 63
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/writer.py",
+    "name": "_save_issues",
+    "type": "method",
+    "complexity": 2,
+    "rank": "A",
+    "line": 146
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/writer.py",
+    "name": "__init__",
+    "type": "method",
+    "complexity": 1,
+    "rank": "A",
+    "line": 11
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/writer.py",
+    "name": "save_all_results",
+    "type": "method",
+    "complexity": 1,
+    "rank": "A",
+    "line": 19
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/writer.py",
+    "name": "_save_json",
+    "type": "method",
+    "complexity": 1,
+    "rank": "A",
+    "line": 159
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/writer.py",
+    "name": "_save_text",
+    "type": "method",
+    "complexity": 1,
+    "rank": "A",
+    "line": 173
   },
   {
     "file": "src/btx_fix_mcp/subservers/review/report.py",

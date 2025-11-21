@@ -39,15 +39,6 @@
     "type": "nested_loop",
     "severity": "warning",
     "message": "Nested loop detected",
-    "file": "/media/srv-main-softdev/projects/MCP/btx_fix_mcp/src/btx_fix_mcp/subservers/review/quality/__init__.py",
-    "line": 574,
-    "pattern": "for .+ in .+:\\s*for .+ in .+:",
-    "impact": ""
-  },
-  {
-    "type": "nested_loop",
-    "severity": "warning",
-    "message": "Nested loop detected",
     "file": "/media/srv-main-softdev/projects/MCP/btx_fix_mcp/src/btx_fix_mcp/subservers/review/quality/complexity.py",
     "line": 54,
     "pattern": "for .+ in .+:\\s*for .+ in .+:",
@@ -74,19 +65,19 @@
   {
     "type": "slow_test",
     "severity": "critical",
-    "message": "Slow test: tests/subservers/review/test_deps.py::TestDepsSubServer::test_execute_python_project takes 6.49s",
+    "message": "Slow test: tests/subservers/review/test_deps.py::TestDepsSubServer::test_execute_python_project takes 6.16s",
     "file": "",
     "function": "tests/subservers/review/test_deps.py::TestDepsSubServer::test_execute_python_project",
-    "time_percent": 6.49,
+    "time_percent": 6.16,
     "calls": 0
   },
   {
     "type": "slow_test",
     "severity": "critical",
-    "message": "Slow test: tests/subservers/review/test_deps.py::TestDepsSubServer::test_summary_includes_mindset takes 5.97s",
+    "message": "Slow test: tests/subservers/review/test_deps.py::TestDepsSubServer::test_summary_includes_mindset takes 5.92s",
     "file": "",
     "function": "tests/subservers/review/test_deps.py::TestDepsSubServer::test_summary_includes_mindset",
-    "time_percent": 5.97,
+    "time_percent": 5.92,
     "calls": 0
   },
   {
@@ -157,7 +148,7 @@
     "severity": "warning",
     "message": "Nested iteration detected - potential O(n\u00b2) complexity",
     "file": "/media/srv-main-softdev/projects/MCP/btx_fix_mcp/src/btx_fix_mcp/subservers/review/deps.py",
-    "line": 509,
+    "line": 539,
     "pattern": "",
     "impact": ""
   },
@@ -221,24 +212,6 @@
     "message": "Nested iteration detected - potential O(n\u00b2) complexity",
     "file": "/media/srv-main-softdev/projects/MCP/btx_fix_mcp/src/btx_fix_mcp/subservers/review/perf.py",
     "line": 447,
-    "pattern": "",
-    "impact": ""
-  },
-  {
-    "type": "nested_iteration",
-    "severity": "warning",
-    "message": "Nested iteration detected - potential O(n\u00b2) complexity",
-    "file": "/media/srv-main-softdev/projects/MCP/btx_fix_mcp/src/btx_fix_mcp/subservers/review/quality/__init__.py",
-    "line": 375,
-    "pattern": "",
-    "impact": ""
-  },
-  {
-    "type": "nested_iteration",
-    "severity": "warning",
-    "message": "Nested iteration detected - potential O(n\u00b2) complexity",
-    "file": "/media/srv-main-softdev/projects/MCP/btx_fix_mcp/src/btx_fix_mcp/subservers/review/quality/__init__.py",
-    "line": 575,
     "pattern": "",
     "impact": ""
   },
@@ -356,6 +329,15 @@
     "message": "Nested iteration detected - potential O(n\u00b2) complexity",
     "file": "/media/srv-main-softdev/projects/MCP/btx_fix_mcp/src/btx_fix_mcp/subservers/review/quality/metrics.py",
     "line": 99,
+    "pattern": "",
+    "impact": ""
+  },
+  {
+    "type": "nested_iteration",
+    "severity": "warning",
+    "message": "Nested iteration detected - potential O(n\u00b2) complexity",
+    "file": "/media/srv-main-softdev/projects/MCP/btx_fix_mcp/src/btx_fix_mcp/subservers/review/quality/orchestrator.py",
+    "line": 194,
     "pattern": "",
     "impact": ""
   },

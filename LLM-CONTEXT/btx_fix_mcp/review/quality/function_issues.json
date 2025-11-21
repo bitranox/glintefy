@@ -153,15 +153,6 @@
     "message": "Function 'execute' is 94 lines (max: 50)"
   },
   {
-    "file": "src/btx_fix_mcp/subservers/review/deps.py",
-    "function": "_generate_summary",
-    "line": 459,
-    "issue_type": "TOO_LONG",
-    "value": 90,
-    "threshold": 50,
-    "message": "Function '_generate_summary' is 90 lines (max: 50)"
-  },
-  {
     "file": "src/btx_fix_mcp/subservers/review/deps_scanners.py",
     "function": "run_pip_audit",
     "line": 31,
@@ -299,83 +290,20 @@
   {
     "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",
     "function": "__init__",
-    "line": 76,
+    "line": 79,
     "issue_type": "TOO_LONG",
-    "value": 69,
+    "value": 79,
     "threshold": 50,
-    "message": "Function '__init__' is 69 lines (max: 50)"
-  },
-  {
-    "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",
-    "function": "_run_analyzers_parallel",
-    "line": 272,
-    "issue_type": "TOO_LONG",
-    "value": 112,
-    "threshold": 50,
-    "message": "Function '_run_analyzers_parallel' is 112 lines (max: 50)"
-  },
-  {
-    "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",
-    "function": "_run_analyzers_parallel",
-    "line": 272,
-    "issue_type": "TOO_NESTED",
-    "value": 6,
-    "threshold": 3,
-    "message": "Function '_run_analyzers_parallel' has nesting depth 6 (max: 3)"
+    "message": "Function '__init__' is 79 lines (max: 50)"
   },
   {
     "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",
     "function": "execute",
-    "line": 396,
+    "line": 164,
     "issue_type": "TOO_LONG",
-    "value": 139,
+    "value": 96,
     "threshold": 50,
-    "message": "Function 'execute' is 139 lines (max: 50)"
-  },
-  {
-    "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",
-    "function": "execute",
-    "line": 396,
-    "issue_type": "TOO_NESTED",
-    "value": 4,
-    "threshold": 3,
-    "message": "Function 'execute' has nesting depth 4 (max: 3)"
-  },
-  {
-    "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",
-    "function": "_analyze_js_files",
-    "line": 558,
-    "issue_type": "TOO_NESTED",
-    "value": 5,
-    "threshold": 3,
-    "message": "Function '_analyze_js_files' has nesting depth 5 (max: 3)"
-  },
-  {
-    "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",
-    "function": "_run_beartype_check",
-    "line": 593,
-    "issue_type": "TOO_LONG",
-    "value": 51,
-    "threshold": 50,
-    "message": "Function '_run_beartype_check' is 51 lines (max: 50)"
-  },
-  {
-    "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",
-    "function": "_run_beartype_check",
-    "line": 593,
-    "issue_type": "TOO_NESTED",
-    "value": 4,
-    "threshold": 3,
-    "message": "Function '_run_beartype_check' has nesting depth 4 (max: 3)"
-  },
-  {
-    "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",
-    "function": "_save_all_results",
-    "line": 650,
-    "issue_type": "TOO_LONG",
-    "value": 88,
-    "threshold": 50,
-    "message": "Function '_save_all_results' is 88 lines (max: 50)"
+    "message": "Function 'execute' is 96 lines (max: 50)"
   },
   {
     "file": "src/btx_fix_mcp/subservers/review/quality/architecture.py",
@@ -495,22 +423,22 @@
     "message": "Function '_analyze_raw_metrics' has nesting depth 4 (max: 3)"
   },
   {
-    "file": "src/btx_fix_mcp/subservers/review/quality/metrics.py",
-    "function": "_analyze_code_churn",
-    "line": 124,
+    "file": "src/btx_fix_mcp/subservers/review/quality/orchestrator.py",
+    "function": "build_analyzer_tasks",
+    "line": 61,
     "issue_type": "TOO_LONG",
-    "value": 122,
+    "value": 91,
     "threshold": 50,
-    "message": "Function '_analyze_code_churn' is 122 lines (max: 50)"
+    "message": "Function 'build_analyzer_tasks' is 91 lines (max: 50)"
   },
   {
-    "file": "src/btx_fix_mcp/subservers/review/quality/metrics.py",
-    "function": "_analyze_code_churn",
-    "line": 124,
+    "file": "src/btx_fix_mcp/subservers/review/quality/orchestrator.py",
+    "function": "execute_tasks",
+    "line": 154,
     "issue_type": "TOO_NESTED",
     "value": 6,
     "threshold": 3,
-    "message": "Function '_analyze_code_churn' has nesting depth 6 (max: 3)"
+    "message": "Function 'execute_tasks' has nesting depth 6 (max: 3)"
   },
   {
     "file": "src/btx_fix_mcp/subservers/review/quality/types.py",
@@ -538,6 +466,15 @@
     "value": 4,
     "threshold": 3,
     "message": "Function '_analyze_docstring_coverage' has nesting depth 4 (max: 3)"
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/writer.py",
+    "function": "_save_dict_results",
+    "line": 78,
+    "issue_type": "TOO_LONG",
+    "value": 66,
+    "threshold": 50,
+    "message": "Function '_save_dict_results' is 66 lines (max: 50)"
   },
   {
     "file": "src/btx_fix_mcp/subservers/review/report.py",

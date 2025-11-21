@@ -1,12 +1,12 @@
 # Code Review Report
 
-**Generated**: 2025-11-21T19:42:05.823643
+**Generated**: 2025-11-21T20:07:09.108444
 
 ---
 
 ## Overall Verdict
 
-### ❌ Code review failed - 13 critical issues found
+### ❌ Code review failed - 5 critical issues found
 
 **Status**: `REJECTED`
 
@@ -20,10 +20,10 @@
 - **Sub-servers run**: 6
 - **Sub-servers passed**: 3
 - **Sub-servers failed**: 0
-- **Files analyzed**: 58
-- **Total issues**: 375
-- **Critical issues**: 13
-- **Warnings**: 318
+- **Files analyzed**: 62
+- **Total issues**: 333
+- **Critical issues**: 5
+- **Warnings**: 284
 
 ---
 
@@ -34,31 +34,31 @@
 **Status**: `SUCCESS`
 
 **Key Metrics:**
-- total_files: 2459
-- code_files: 58
-- test_files: 60
+- total_files: 3294
+- code_files: 62
+- test_files: 65
 - doc_files: 60
-- config_files: 318
+- config_files: 972
 
 ### ⚠️ Quality
 
 **Status**: `PARTIAL`
 
 **Key Metrics:**
-- files_analyzed: 58
-- python_files: 58
+- files_analyzed: 62
+- python_files: 62
 - js_files: 0
-- total_functions: 496
-- high_complexity_count: 30
+- total_functions: 501
+- high_complexity_count: 26
 
-**Issues**: 238 (11 critical, 183 warnings)
+**Issues**: 226 (3 critical, 179 warnings)
 
 ### ✅ Security
 
 **Status**: `SUCCESS`
 
 **Key Metrics:**
-- files_scanned: 58
+- files_scanned: 62
 - issues_found: 0
 - high_severity: 0
 - medium_severity: 0
@@ -82,43 +82,35 @@
 **Status**: `SUCCESS`
 
 **Key Metrics:**
-- files_analyzed: 58
-- coverage_percent: 90.7
-- missing_docstrings: 82
+- files_analyzed: 62
+- coverage_percent: 97.7
+- missing_docstrings: 54
 - project_docs_found: 3
-- total_issues: 82
+- total_issues: 54
 
-**Issues**: 82 (0 critical, 82 warnings)
+**Issues**: 54 (0 critical, 54 warnings)
 
 ### ⚠️ Perf
 
 **Status**: `PARTIAL`
 
 **Key Metrics:**
-- files_analyzed: 58
-- patterns_found: 8
-- hotspots_found: 5
-- total_issues: 48
+- files_analyzed: 62
+- patterns_found: 7
+- hotspots_found: 3
+- total_issues: 46
 
-**Issues**: 48 (2 critical, 46 warnings)
+**Issues**: 46 (2 critical, 44 warnings)
 
 ---
 
 ## Critical Issues (Must Fix)
 
-- **[quality]** `src/btx_fix_mcp/subservers/review/deps.py:0` Function '_generate_summary' has complexity 21 (threshold: 10)
-- **[quality]** `src/btx_fix_mcp/subservers/review/quality/__init__.py:0` Function 'execute' has complexity 34 (threshold: 10)
-- **[quality]** `src/btx_fix_mcp/subservers/review/quality/__init__.py:0` Function '_run_analyzers_parallel' has complexity 21 (threshold: 10)
-- **[quality]** `src/btx_fix_mcp/subservers/review/quality/metrics.py:0` Function '_analyze_code_churn' has complexity 21 (threshold: 10)
-- **[quality]** `src/btx_fix_mcp/subservers/review/quality/__init__.py:272` Function '_run_analyzers_parallel' is 112 lines (max: 50)
-- **[quality]** `src/btx_fix_mcp/subservers/review/quality/__init__.py:396` Function 'execute' is 139 lines (max: 50)
-- **[quality]** `src/btx_fix_mcp/subservers/review/quality/metrics.py:124` Function '_analyze_code_churn' is 122 lines (max: 50)
 - **[quality]** `src/btx_fix_mcp/subservers/review/report.py:296` Function '_generate_report' is 109 lines (max: 50)
 - **[quality]** `src/btx_fix_mcp/subservers/review/security.py:352` Function '_generate_summary' is 116 lines (max: 50)
-- **[quality]** `src/btx_fix_mcp/subservers/review/deps.py:46` Class 'DepsSubServer' is a god object (13 methods, 503 lines)
-- **[quality]** `src/btx_fix_mcp/subservers/review/quality/__init__.py:69` Class 'QualitySubServer' is a god object (41 methods, 717 lines)
-- **[perf]**  Slow test: tests/subservers/review/test_deps.py::TestDepsSubServer::test_execute_python_project takes 6.49s
-- **[perf]**  Slow test: tests/subservers/review/test_deps.py::TestDepsSubServer::test_summary_includes_mindset takes 5.97s
+- **[quality]** `src/btx_fix_mcp/subservers/review/deps.py:46` Class 'DepsSubServer' is a god object (19 methods, 550 lines)
+- **[perf]**  Slow test: tests/subservers/review/test_deps.py::TestDepsSubServer::test_execute_python_project takes 6.16s
+- **[perf]**  Slow test: tests/subservers/review/test_deps.py::TestDepsSubServer::test_summary_includes_mindset takes 5.92s
 
 ---
 

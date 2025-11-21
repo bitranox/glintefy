@@ -442,6 +442,7 @@ class ReviewMCPServer:
             """Create a task function for parallel execution."""
 
             def task() -> tuple[str, dict[str, Any] | None, str | None]:
+                """Execute the analysis task and return results."""
                 try:
                     result = runner()
                     error = f"{name.title()} analysis failed" if result["status"] == "FAILED" else None

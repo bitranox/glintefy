@@ -344,7 +344,7 @@ class LogContext:
         self.logger.log(self.level, f"Starting: {self.operation}")
         return self
 
-    def __exit__(self, exc_type, exc_val, exc_tb):
+    def __exit__(self, exc_type, exc_val, _exc_tb):
         """Exit context."""
         import time
 
@@ -497,8 +497,10 @@ def debug_log(logger: logging.Logger) -> Callable[[F], F]:
     """
 
     def decorator(func: F) -> F:
+        """Wrap function with debug logging."""
         @wraps(func)
         def wrapper(*args: Any, **kwargs: Any) -> Any:
+            """Execute function with logging."""
             import time
 
             start = time.perf_counter()
@@ -537,6 +539,7 @@ def log_config_loaded(
     sensitive_keys = {"password", "secret", "token", "key", "api_key", "auth"}
 
     def redact_value(key: str, value: Any) -> Any:
+        """Redact sensitive values based on key name."""
         key_lower = key.lower()
         if any(s in key_lower for s in sensitive_keys):
             return "***REDACTED***"

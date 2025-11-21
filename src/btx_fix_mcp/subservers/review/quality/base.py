@@ -27,6 +27,7 @@ class BaseAnalyzer(ABC):
         logger: logging.Logger,
         config: dict[str, Any],
     ):
+        """Initialize analyzer with repository path, logger, and configuration."""
         self.repo_path = repo_path
         self.logger = logger
         self.config = config

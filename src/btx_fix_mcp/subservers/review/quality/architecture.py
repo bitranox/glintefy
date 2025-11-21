@@ -118,6 +118,7 @@ class ArchitectureAnalyzer(BaseAnalyzer):
 
         # Simple cycle detection using DFS
         def find_cycle(start: str, current: str, visited: set, path: list) -> list | None:
+            """Detect import cycles using depth-first search."""
             if current in path:
                 cycle_start = path.index(current)
                 return path[cycle_start:] + [current]

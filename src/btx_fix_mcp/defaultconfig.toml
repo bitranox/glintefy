@@ -55,21 +55,22 @@ output_dir = "LLM-CONTEXT/btx_fix_mcp/review"
 # These patterns are normalized for pathlib.match():
 #   - "vendor/" becomes "*/vendor/*" (matches vendor dir anywhere)
 #   - "*.min.js" stays as-is (glob patterns unchanged)
-# exclude_patterns = [
-#     "vendor/",
-#     "node_modules/",
-#     ".venv/",
-#     "__pycache__/",
-#     "dist/",
-#     "build/",
-#     ".git/",
-#     "LLM-CONTEXT/",
-#     "*.pyc",
-#     "*.pyo",
-#     "*.lock",
-#     "*.min.js",
-#     "*.min.css",
-# ]
+exclude_patterns = [
+    "vendor/",
+    "node_modules/",
+    ".venv/",
+    "__pycache__/",
+    "dist/",
+    "build/",
+    ".git/",
+    "LLM-CONTEXT/",
+    "*.pyc",
+    "*.pyo",
+    "*.lock",
+    "*.min.js",
+    "*.min.css",
+    "scripts/",
+]
 
 # Patterns to include (default: all files)
 # include_patterns = ["**/*"]

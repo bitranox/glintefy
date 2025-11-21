@@ -7,15 +7,15 @@ It can work in two modes:
 """
 
 from pathlib import Path
-from typing import Optional
 
 from btx_fix_mcp.subservers.base import BaseSubServer, SubServerResult
 from btx_fix_mcp.subservers.common.files import categorize_files, find_files
 from btx_fix_mcp.subservers.common.git import GitOperationError, GitOperations
 from btx_fix_mcp.subservers.common.logging import (
     LogContext,
+    get_mcp_logger,
     log_dict,
-    log_file_list,
+    log_error_detailed,
     log_result,
     log_section,
     log_step,
@@ -41,7 +41,7 @@ class ScopeSubServer(BaseSubServer):
     Example:
         >>> from pathlib import Path
         >>> server = ScopeSubServer(
-        ...     output_dir=Path("LLM-CONTEXT/review-anal/scope"),
+        ...     output_dir=Path("LLM-CONTEXT/btx_fix_mcp/review/scope"),
         ...     mode="git"
         ... )
         >>> result = server.run()
@@ -55,6 +55,7 @@ class ScopeSubServer(BaseSubServer):
         output_dir: Path | None = None,
         repo_path: Path | None = None,
         mode: str = "git",
+        mcp_mode: bool = False,
     ):
         """Initialize scope sub-server.
 
@@ -64,13 +65,21 @@ class ScopeSubServer(BaseSubServer):
             output_dir: Output directory
             repo_path: Repository path
             mode: "git" or "full"
+            mcp_mode: If True, log to stderr only (MCP protocol compatible).
+                      If False, log to stdout and optional log file (standalone mode).
         """
         super().__init__(name=name, input_dir=input_dir, output_dir=output_dir)
         self.repo_path = repo_path or Path.cwd()
         self.mode = mode
-        self.logger = setup_logger(
-            name, log_file=self.output_dir / f"{name}.log", level=20  # INFO
-        )
+        self.mcp_mode = mcp_mode
+
+        # Setup logging based on mode
+        if mcp_mode:
+            # MCP mode: stderr only (MCP protocol uses stdout)
+            self.logger = get_mcp_logger(f"btx_fix_mcp.{name}")
+        else:
+            # Standalone mode: stdout only (no file logging)
+            self.logger = setup_logger(name, log_file=None, level=20)  # INFO
 
     def validate_inputs(self) -> tuple[bool, list[str]]:
         """Validate inputs for scope analysis.
@@ -150,7 +159,12 @@ class ScopeSubServer(BaseSubServer):
             )
 
         except Exception as e:
-            self.logger.error(f"Scope analysis failed: {e}", exc_info=True)
+            log_error_detailed(
+                self.logger,
+                e,
+                context={"mode": self.mode, "repo_path": str(self.repo_path)},
+                include_traceback=True,
+            )
             return SubServerResult(
                 status="FAILED",
                 summary=f"# Scope Analysis Failed\n\n**Error**: {e}",
@@ -184,9 +198,7 @@ class ScopeSubServer(BaseSubServer):
         """
         return find_files(self.repo_path, pattern="**/*")
 
-    def _save_results(
-        self, files: list[Path], categorized: dict[str, list[Path]]
-    ) -> dict[str, Path]:
+    def _save_results(self, files: list[Path], categorized: dict[str, list[Path]]) -> dict[str, Path]:
         """Save results to files.
 
         Args:
@@ -208,17 +220,13 @@ class ScopeSubServer(BaseSubServer):
         for category, cat_files in categorized.items():
             if cat_files:
                 cat_path = self.output_dir / f"files_{category.lower()}.txt"
-                relative_cat = [
-                    str(f.relative_to(self.repo_path)) for f in cat_files
-                ]
+                relative_cat = [str(f.relative_to(self.repo_path)) for f in cat_files]
                 cat_path.write_text("\n".join(sorted(relative_cat)))
                 artifacts[f"files_{category.lower()}"] = cat_path
 
         return artifacts
 
-    def _generate_summary(
-        self, files: list[Path], categorized: dict[str, list[Path]]
-    ) -> str:
+    def _generate_summary(self, files: list[Path], categorized: dict[str, list[Path]]) -> str:
         """Generate markdown summary.
 
         Args:

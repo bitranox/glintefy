@@ -157,3 +157,167 @@ def test_help_option_displays_help(cli_runner: CliRunner) -> None:
     assert result.exit_code == 0
     assert "Usage:" in result.output
     assert "--traceback" in result.output
+
+
+# =============================================================================
+# Review Command Tests
+# =============================================================================
+
+
+class TestReviewCommands:
+    """Tests for review CLI commands."""
+
+    def test_review_group_help(self, cli_runner: CliRunner) -> None:
+        """Review group should display available subcommands."""
+        result = cli_runner.invoke(cli_mod.cli, ["review", "--help"])
+
+        assert result.exit_code == 0
+        assert "scope" in result.output
+        assert "quality" in result.output
+        assert "security" in result.output
+
+    def test_review_scope_command(self, cli_runner: CliRunner, tmp_path) -> None:
+        """Review scope command should execute without error."""
+        from unittest.mock import patch
+
+        mock_result = {"status": "SUCCESS", "summary": "# Scope Analysis\n\nTest summary."}
+
+        with patch("btx_fix_mcp.servers.review.ReviewMCPServer") as mock_server:
+            mock_server.return_value.run_scope.return_value = mock_result
+
+            result = cli_runner.invoke(
+                cli_mod.cli,
+                ["review", "--repo", str(tmp_path), "scope", "--mode", "full"],
+            )
+
+            assert result.exit_code == 0
+            mock_server.return_value.run_scope.assert_called_once_with(mode="full")
+
+    def test_review_quality_command(self, cli_runner: CliRunner, tmp_path) -> None:
+        """Review quality command should pass options correctly."""
+        from unittest.mock import patch
+
+        mock_result = {"status": "SUCCESS", "summary": "# Quality Analysis\n\nTest summary."}
+
+        with patch("btx_fix_mcp.servers.review.ReviewMCPServer") as mock_server:
+            mock_server.return_value.run_quality.return_value = mock_result
+
+            result = cli_runner.invoke(
+                cli_mod.cli,
+                ["review", "--repo", str(tmp_path), "quality", "-c", "15", "-m", "25"],
+            )
+
+            assert result.exit_code == 0
+            mock_server.return_value.run_quality.assert_called_once_with(
+                complexity_threshold=15,
+                maintainability_threshold=25,
+            )
+
+    def test_review_security_command(self, cli_runner: CliRunner, tmp_path) -> None:
+        """Review security command should pass thresholds correctly."""
+        from unittest.mock import patch
+
+        mock_result = {"status": "SUCCESS", "summary": "# Security Analysis\n\nTest summary."}
+
+        with patch("btx_fix_mcp.servers.review.ReviewMCPServer") as mock_server:
+            mock_server.return_value.run_security.return_value = mock_result
+
+            result = cli_runner.invoke(
+                cli_mod.cli,
+                ["review", "--repo", str(tmp_path), "security", "-s", "high", "-c", "medium"],
+            )
+
+            assert result.exit_code == 0
+            mock_server.return_value.run_security.assert_called_once_with(
+                severity_threshold="high",
+                confidence_threshold="medium",
+            )
+
+    def test_review_deps_command(self, cli_runner: CliRunner, tmp_path) -> None:
+        """Review deps command should pass flags correctly."""
+        from unittest.mock import patch
+
+        mock_result = {"status": "SUCCESS", "summary": "# Deps Analysis\n\nTest summary."}
+
+        with patch("btx_fix_mcp.servers.review.ReviewMCPServer") as mock_server:
+            mock_server.return_value.run_deps.return_value = mock_result
+
+            result = cli_runner.invoke(
+                cli_mod.cli,
+                ["review", "--repo", str(tmp_path), "deps", "--no-vulnerabilities"],
+            )
+
+            assert result.exit_code == 0
+            mock_server.return_value.run_deps.assert_called_once_with(
+                scan_vulnerabilities=False,
+                check_licenses=True,
+                check_outdated=True,
+            )
+
+    def test_review_docs_command(self, cli_runner: CliRunner, tmp_path) -> None:
+        """Review docs command should pass coverage option."""
+        from unittest.mock import patch
+
+        mock_result = {"status": "SUCCESS", "summary": "# Docs Analysis\n\nTest summary."}
+
+        with patch("btx_fix_mcp.servers.review.ReviewMCPServer") as mock_server:
+            mock_server.return_value.run_docs.return_value = mock_result
+
+            result = cli_runner.invoke(
+                cli_mod.cli,
+                ["review", "--repo", str(tmp_path), "docs", "--min-coverage", "90"],
+            )
+
+            assert result.exit_code == 0
+            mock_server.return_value.run_docs.assert_called_once_with(min_coverage=90)
+
+    def test_review_perf_command(self, cli_runner: CliRunner, tmp_path) -> None:
+        """Review perf command should pass profiling flag."""
+        from unittest.mock import patch
+
+        mock_result = {"status": "SUCCESS", "summary": "# Perf Analysis\n\nTest summary."}
+
+        with patch("btx_fix_mcp.servers.review.ReviewMCPServer") as mock_server:
+            mock_server.return_value.run_perf.return_value = mock_result
+
+            result = cli_runner.invoke(
+                cli_mod.cli,
+                ["review", "--repo", str(tmp_path), "perf", "--no-profiling"],
+            )
+
+            assert result.exit_code == 0
+            mock_server.return_value.run_perf.assert_called_once_with(run_profiling=False)
+
+    def test_review_report_command(self, cli_runner: CliRunner, tmp_path) -> None:
+        """Review report command should generate report."""
+        from unittest.mock import patch
+
+        mock_result = {"status": "SUCCESS", "summary": "# Report\n\nConsolidated report."}
+
+        with patch("btx_fix_mcp.servers.review.ReviewMCPServer") as mock_server:
+            mock_server.return_value.run_report.return_value = mock_result
+
+            result = cli_runner.invoke(
+                cli_mod.cli,
+                ["review", "--repo", str(tmp_path), "report"],
+            )
+
+            assert result.exit_code == 0
+            mock_server.return_value.run_report.assert_called_once()
+
+    def test_review_all_command(self, cli_runner: CliRunner, tmp_path) -> None:
+        """Review all command should run all analyses."""
+        from unittest.mock import patch
+
+        mock_result = {"status": "SUCCESS", "summary": "# Full Analysis\n\nAll analyses complete."}
+
+        with patch("btx_fix_mcp.servers.review.ReviewMCPServer") as mock_server:
+            mock_server.return_value.run_all.return_value = mock_result
+
+            result = cli_runner.invoke(
+                cli_mod.cli,
+                ["review", "--repo", str(tmp_path), "all"],
+            )
+
+            assert result.exit_code == 0
+            mock_server.return_value.run_all.assert_called_once()

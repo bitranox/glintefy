@@ -25,7 +25,6 @@ import shutil
 import subprocess
 import sys
 from pathlib import Path
-from typing import Optional
 
 # Module-level state
 _venv_initialized = False

@@ -1,7 +1,6 @@
 """Integration protocol validation for sub-servers."""
 
 from pathlib import Path
-from typing import Optional
 
 
 class ProtocolViolation(Exception):
@@ -44,7 +43,7 @@ class IntegrationProtocol:
         Example:
             >>> from pathlib import Path
             >>> valid, violations = IntegrationProtocol.validate_outputs(
-            ...     Path("LLM-CONTEXT/review-anal/scope"),
+            ...     Path("LLM-CONTEXT/btx_fix_mcp/review/scope"),
             ...     "scope"
             ... )
             >>> if not valid:
@@ -55,15 +54,13 @@ class IntegrationProtocol:
         # Check status.txt
         status_file = output_dir / "status.txt"
         if not status_file.exists():
-            violations.append(f"Missing required file: status.txt")
+            violations.append("Missing required file: status.txt")
         else:
             # Validate status content
             try:
                 status = status_file.read_text().strip()
                 if status not in IntegrationProtocol.VALID_STATUSES:
-                    violations.append(
-                        f"Invalid status '{status}'. Must be one of: {', '.join(IntegrationProtocol.VALID_STATUSES)}"
-                    )
+                    violations.append(f"Invalid status '{status}'. Must be one of: {', '.join(IntegrationProtocol.VALID_STATUSES)}")
             except Exception as e:
                 violations.append(f"Cannot read status.txt: {e}")
 
@@ -78,16 +75,14 @@ class IntegrationProtocol:
                 if not content:
                     violations.append(f"{subagent_name}_summary.md is empty")
                 elif not content.startswith("#"):
-                    violations.append(
-                        f"{subagent_name}_summary.md should start with markdown heading (#)"
-                    )
+                    violations.append(f"{subagent_name}_summary.md should start with markdown heading (#)")
             except Exception as e:
                 violations.append(f"Cannot read {subagent_name}_summary.md: {e}")
 
         # Check result.json (optional unless required)
         result_file = output_dir / "result.json"
         if require_result_json and not result_file.exists():
-            violations.append(f"Missing required file: result.json")
+            violations.append("Missing required file: result.json")
 
         return len(violations) == 0, violations
 
@@ -106,7 +101,7 @@ class IntegrationProtocol:
         Example:
             >>> from pathlib import Path
             >>> valid, error = IntegrationProtocol.validate_status_file(
-            ...     Path("LLM-CONTEXT/review-anal/scope/status.txt")
+            ...     Path("LLM-CONTEXT/btx_fix_mcp/review/scope/status.txt")
             ... )
         """
         if not status_file.exists():
@@ -140,7 +135,7 @@ class IntegrationProtocol:
         Example:
             >>> from pathlib import Path
             >>> valid, error = IntegrationProtocol.validate_summary_file(
-            ...     Path("LLM-CONTEXT/review-anal/scope/scope_summary.md")
+            ...     Path("LLM-CONTEXT/btx_fix_mcp/review/scope/scope_summary.md")
             ... )
         """
         if not summary_file.exists():
@@ -180,9 +175,7 @@ class IntegrationProtocol:
             ... )
         """
         if status not in IntegrationProtocol.VALID_STATUSES:
-            raise ValueError(
-                f"Invalid status '{status}'. Must be one of: {', '.join(IntegrationProtocol.VALID_STATUSES)}"
-            )
+            raise ValueError(f"Invalid status '{status}'. Must be one of: {', '.join(IntegrationProtocol.VALID_STATUSES)}")
 
         output_dir.mkdir(parents=True, exist_ok=True)
         status_file = output_dir / "status.txt"
@@ -244,7 +237,7 @@ class IntegrationProtocol:
         Example:
             >>> from pathlib import Path
             >>> status = IntegrationProtocol.get_status(
-            ...     Path("LLM-CONTEXT/review-anal/scope")
+            ...     Path("LLM-CONTEXT/btx_fix_mcp/review/scope")
             ... )
             >>> print(status)
             SUCCESS
@@ -269,7 +262,7 @@ class IntegrationProtocol:
         """Check protocol compliance for multiple sub-servers.
 
         Args:
-            workspace: Workspace directory (e.g., LLM-CONTEXT/review-anal/)
+            workspace: Workspace directory (e.g., LLM-CONTEXT/btx_fix_mcp/review/)
             subserver_names: List of sub-server names to check
 
         Returns:
@@ -286,7 +279,7 @@ class IntegrationProtocol:
         Example:
             >>> from pathlib import Path
             >>> results = IntegrationProtocol.check_all_subservers(
-            ...     Path("LLM-CONTEXT/review-anal"),
+            ...     Path("LLM-CONTEXT/btx_fix_mcp/review"),
             ...     ["scope", "quality", "security"]
             ... )
             >>> for name, result in results.items():
@@ -328,7 +321,7 @@ class IntegrationProtocol:
         Example:
             >>> from pathlib import Path
             >>> completed, status = IntegrationProtocol.wait_for_completion(
-            ...     Path("LLM-CONTEXT/review-anal/scope"),
+            ...     Path("LLM-CONTEXT/btx_fix_mcp/review/scope"),
             ...     timeout_seconds=60
             ... )
             >>> if completed:

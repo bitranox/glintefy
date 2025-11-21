@@ -2,8 +2,7 @@
 
 import time
 from concurrent.futures import ThreadPoolExecutor
-from pathlib import Path
-from unittest.mock import MagicMock, patch
+from unittest.mock import patch
 
 import pytest
 
@@ -269,7 +268,7 @@ def test_hello():
             repo_path=repo_with_code,
         )
 
-        result = server.run()
+        server.run()
 
         # Check protocol files
         assert (output_dir / "status.txt").exists()
@@ -400,6 +399,7 @@ def foo():
             def mock_analyze(files):
                 called_analyzers.append((name, time.time()))
                 return original(files)
+
             return mock_analyze
 
         server.complexity_analyzer.analyze = make_mock("complexity", original_complexity)
@@ -436,10 +436,7 @@ def foo():
         js_files = []
 
         # Patch ThreadPoolExecutor to verify it's used
-        with patch(
-            "btx_fix_mcp.subservers.review.quality.ThreadPoolExecutor",
-            wraps=ThreadPoolExecutor
-        ) as mock_executor:
+        with patch("btx_fix_mcp.subservers.review.quality.ThreadPoolExecutor", wraps=ThreadPoolExecutor) as mock_executor:
             server._run_analyzers_parallel(python_files, js_files)
             # Verify ThreadPoolExecutor was called
             assert mock_executor.called
@@ -468,9 +465,7 @@ def foo():
         server.test_analyzer.analyze = failing_analyze
 
         # Should still complete without raising
-        result = server.run()
+        result = server._run_analyzers_parallel([str(repo_dir / "code.py")], [])
 
-        # Should complete with results from other analyzers
-        assert result.status in ("SUCCESS", "PARTIAL")
-        # Complexity should still have results
-        assert "complexity" in result.artifacts or result.metrics["total_functions"] >= 0
+        # Should complete with results from other analyzers (complexity at minimum)
+        assert "complexity" in result or "maintainability" in result

@@ -1,0 +1,66 @@
+[
+  {
+    "type": "outdated",
+    "severity": "warning",
+    "package": "click",
+    "version": "8.2.1",
+    "latest": "8.3.1",
+    "message": "Outdated package: click 8.2.1 -> 8.3.1"
+  },
+  {
+    "type": "outdated",
+    "severity": "warning",
+    "package": "cyclonedx-python-lib",
+    "version": "9.1.0",
+    "latest": "11.5.0",
+    "message": "Outdated package: cyclonedx-python-lib 9.1.0 -> 11.5.0"
+  },
+  {
+    "type": "outdated",
+    "severity": "warning",
+    "package": "mando",
+    "version": "0.7.1",
+    "latest": "0.8.2",
+    "message": "Outdated package: mando 0.7.1 -> 0.8.2"
+  },
+  {
+    "type": "outdated",
+    "severity": "warning",
+    "package": "pip",
+    "version": "24.3.1",
+    "latest": "25.3",
+    "message": "Outdated package: pip 24.3.1 -> 25.3"
+  },
+  {
+    "type": "outdated",
+    "severity": "warning",
+    "package": "responses",
+    "version": "0.21.0",
+    "latest": "0.25.8",
+    "message": "Outdated package: responses 0.21.0 -> 0.25.8"
+  },
+  {
+    "type": "outdated",
+    "severity": "warning",
+    "package": "ruff",
+    "version": "0.14.5",
+    "latest": "0.14.6",
+    "message": "Outdated package: ruff 0.14.5 -> 0.14.6"
+  },
+  {
+    "type": "outdated",
+    "severity": "warning",
+    "package": "test_results_parser",
+    "version": "0.6.0",
+    "latest": "0.6.1",
+    "message": "Outdated package: test_results_parser 0.6.0 -> 0.6.1"
+  },
+  {
+    "type": "outdated",
+    "severity": "warning",
+    "package": "uv",
+    "version": "0.9.10",
+    "latest": "0.9.11",
+    "message": "Outdated package: uv 0.9.10 -> 0.9.11"
+  }
+]

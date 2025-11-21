@@ -1,7 +1,6 @@
 """File I/O utilities for sub-servers."""
 
 from pathlib import Path
-from typing import Optional
 
 
 def read_file(path: Path) -> str:
@@ -55,7 +54,7 @@ def ensure_dir(path: Path) -> None:
 def find_files(
     root: Path,
     pattern: str = "*",
-    exclude_patterns: Optional[list[str]] = None,
+    exclude_patterns: list[str] | None = None,
 ) -> list[Path]:
     """Find files matching pattern.
 
@@ -167,10 +166,7 @@ def categorize_files(files: list[Path]) -> dict[str, list[Path]]:
         name = file_path.name.lower()
 
         # Test files
-        if any(
-            keyword in path_str
-            for keyword in ["test", "spec", "__tests__", "tests/"]
-        ) or name.startswith("test_"):
+        if any(keyword in path_str for keyword in ["test", "spec", "__tests__", "tests/"]) or name.startswith("test_"):
             categories["TEST"].append(file_path)
 
         # Documentation
@@ -178,10 +174,7 @@ def categorize_files(files: list[Path]) -> dict[str, list[Path]]:
             categories["DOCS"].append(file_path)
 
         # Config files
-        elif any(
-            keyword in name
-            for keyword in ["config", ".json", ".yml", ".yaml", ".toml", ".ini"]
-        ):
+        elif any(keyword in name for keyword in ["config", ".json", ".yml", ".yaml", ".toml", ".ini"]):
             categories["CONFIG"].append(file_path)
 
         # Build files

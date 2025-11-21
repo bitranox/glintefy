@@ -2,7 +2,7 @@
 
 import sys
 from pathlib import Path
-from unittest.mock import MagicMock, patch
+from unittest.mock import patch
 
 import pytest
 
@@ -217,3 +217,179 @@ class TestCleanupToolsVenv:
         with patch("btx_fix_mcp.tools_venv.get_venv_path", return_value=tmp_path / "nonexistent"):
             # Should not raise
             cleanup_tools_venv()
+
+
+class TestGetToolsFromPyprojectAdvanced:
+    """Additional tests for pyproject.toml reading."""
+
+    def test_get_tools_with_valid_pyproject(self, tmp_path):
+        """Test reading tools from a valid pyproject.toml."""
+        # The function uses Path(__file__) which we can't easily mock
+        # Just test that the function returns a list
+        tools = _get_tools_from_pyproject()
+        assert isinstance(tools, list)
+        assert len(tools) > 0
+
+    def test_get_tools_exception_handling(self):
+        """Test exception handling returns DEFAULT_TOOLS."""
+        with patch("btx_fix_mcp.tools_venv.Path", side_effect=Exception("test error")):
+            tools = _get_tools_from_pyproject()
+            assert tools == DEFAULT_TOOLS
+
+
+class TestInstallUvIfNeeded:
+    """Tests for _install_uv_if_needed function."""
+
+    def test_install_uv_system_found(self, tmp_path):
+        """Test uv found in system PATH."""
+        from btx_fix_mcp.tools_venv import _install_uv_if_needed
+
+        uv_path = tmp_path / "uv"
+        uv_path.touch()
+
+        with patch("shutil.which", return_value=str(uv_path)):
+            result = _install_uv_if_needed()
+            assert result == uv_path
+
+    def test_install_uv_in_venv(self, tmp_path):
+        """Test uv found in tools venv."""
+        from btx_fix_mcp.tools_venv import _install_uv_if_needed
+
+        venv_path = tmp_path / "tools-venv"
+        bin_dir = venv_path / "bin"
+        bin_dir.mkdir(parents=True)
+        uv_path = bin_dir / "uv"
+        uv_path.touch()
+
+        with patch("shutil.which", return_value=None):
+            with patch("btx_fix_mcp.tools_venv.get_tool_path", return_value=uv_path):
+                result = _install_uv_if_needed()
+                assert result == uv_path
+
+    def test_install_uv_via_pip_in_venv(self, tmp_path):
+        """Test installing uv via pip in existing venv."""
+        from btx_fix_mcp.tools_venv import _install_uv_if_needed
+
+        venv_path = tmp_path / "tools-venv"
+        bin_dir = venv_path / "bin"
+        bin_dir.mkdir(parents=True)
+        pip_path = bin_dir / "pip"
+        pip_path.touch()
+        uv_path = bin_dir / "uv"
+
+        with patch("shutil.which", return_value=None):
+            with patch("btx_fix_mcp.tools_venv.get_venv_path", return_value=venv_path):
+                with patch("btx_fix_mcp.tools_venv.get_tool_path", return_value=uv_path):
+                    with patch.object(sys, "platform", "linux"):
+                        with patch("subprocess.run") as mock_run:
+                            mock_run.return_value.returncode = 0
+                            _install_uv_if_needed()
+                            # Should call pip install uv
+                            mock_run.assert_called_once()
+                            assert "uv" in mock_run.call_args[0][0]
+
+
+class TestRunToolSuccess:
+    """Tests for run_tool success path."""
+
+    def test_run_tool_success(self, tmp_path):
+        """Test run_tool with existing tool."""
+        from btx_fix_mcp.tools_venv import run_tool
+        import subprocess
+
+        tool_path = tmp_path / "mytool"
+        tool_path.touch()
+        tool_path.chmod(0o755)
+
+        mock_result = subprocess.CompletedProcess(args=[], returncode=0, stdout="output", stderr="")
+
+        with patch("btx_fix_mcp.tools_venv.ensure_tools_venv"):
+            with patch("btx_fix_mcp.tools_venv.get_tool_path", return_value=tool_path):
+                with patch("subprocess.run", return_value=mock_result) as mock_run:
+                    result = run_tool("mytool", ["--version"], capture_output=True)
+                    assert result.returncode == 0
+                    mock_run.assert_called_once()
+
+
+class TestGetToolVersion:
+    """Tests for get_tool_version function."""
+
+    def test_get_tool_version_success(self):
+        """Test getting tool version successfully."""
+        from btx_fix_mcp.tools_venv import get_tool_version
+        import subprocess
+
+        mock_result = subprocess.CompletedProcess(args=[], returncode=0, stdout="ruff 0.14.0", stderr="")
+
+        with patch("btx_fix_mcp.tools_venv.run_tool", return_value=mock_result):
+            version = get_tool_version("ruff")
+            assert version == "0.14.0"
+
+    def test_get_tool_version_just_number(self):
+        """Test getting version when output is just the number."""
+        from btx_fix_mcp.tools_venv import get_tool_version
+        import subprocess
+
+        mock_result = subprocess.CompletedProcess(args=[], returncode=0, stdout="1.2.3", stderr="")
+
+        with patch("btx_fix_mcp.tools_venv.run_tool", return_value=mock_result):
+            version = get_tool_version("mytool")
+            assert version == "1.2.3"
+
+    def test_get_tool_version_failure(self):
+        """Test version extraction when tool fails."""
+        from btx_fix_mcp.tools_venv import get_tool_version
+        import subprocess
+
+        mock_result = subprocess.CompletedProcess(args=[], returncode=1, stdout="", stderr="error")
+
+        with patch("btx_fix_mcp.tools_venv.run_tool", return_value=mock_result):
+            version = get_tool_version("mytool")
+            assert version is None
+
+    def test_get_tool_version_exception(self):
+        """Test version extraction when exception occurs."""
+        from btx_fix_mcp.tools_venv import get_tool_version
+
+        with patch("btx_fix_mcp.tools_venv.run_tool", side_effect=Exception("error")):
+            version = get_tool_version("mytool")
+            assert version is None
+
+    def test_get_tool_version_no_digit_start(self):
+        """Test version extraction when no part starts with digit."""
+        from btx_fix_mcp.tools_venv import get_tool_version
+        import subprocess
+
+        mock_result = subprocess.CompletedProcess(args=[], returncode=0, stdout="version unknown", stderr="")
+
+        with patch("btx_fix_mcp.tools_venv.run_tool", return_value=mock_result):
+            version = get_tool_version("mytool")
+            assert version == "version unknown"
+
+
+class TestFindPythonAdvanced:
+    """Additional tests for Python discovery."""
+
+    def test_find_python_specific_version(self):
+        """Test finding specific Python version."""
+
+        def which_side_effect(name):
+            if name == "python3.13":
+                return "/usr/bin/python3.13"
+            return None
+
+        with patch("shutil.which", side_effect=which_side_effect):
+            python = _find_python()
+            assert python == "/usr/bin/python3.13"
+
+    def test_find_python_fallback_to_python3(self):
+        """Test fallback to generic python3."""
+
+        def which_side_effect(name):
+            if name == "python3":
+                return "/usr/bin/python3"
+            return None
+
+        with patch("shutil.which", side_effect=which_side_effect):
+            python = _find_python()
+            assert python == "/usr/bin/python3"

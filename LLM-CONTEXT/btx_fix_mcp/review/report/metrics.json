@@ -1,0 +1,21 @@
+{
+  "timestamp": "2025-11-21T15:27:03.602919",
+  "subservers_run": [
+    "scope",
+    "quality",
+    "security",
+    "deps",
+    "docs",
+    "perf"
+  ],
+  "subservers_passed": [
+    "scope",
+    "security",
+    "docs"
+  ],
+  "subservers_failed": [],
+  "total_issues": 420,
+  "critical_issues": 17,
+  "warning_issues": 370,
+  "files_analyzed": 55
+}

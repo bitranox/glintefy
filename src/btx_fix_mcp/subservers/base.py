@@ -1,12 +1,18 @@
 """Base sub-server class for MCP agents."""
 
 from abc import ABC, abstractmethod
+from dataclasses import dataclass, field, asdict
 from datetime import datetime
 from pathlib import Path
-from typing import Optional
+from typing import Literal
 import json
 
+# Valid status values for sub-server results
+StatusType = Literal["SUCCESS", "FAILED", "PARTIAL"]
+VALID_STATUSES: frozenset[str] = frozenset({"SUCCESS", "FAILED", "PARTIAL"})
 
+
+@dataclass(slots=True)
 class SubServerResult:
     """Standard result format for sub-servers.
 
@@ -16,45 +22,33 @@ class SubServerResult:
     - Artifacts (file paths)
     - Metrics (quantifiable data)
     - Errors (if any)
+
+    Attributes:
+        status: "SUCCESS", "FAILED", or "PARTIAL"
+        summary: Human-readable markdown summary
+        artifacts: Dict mapping artifact names to file paths
+        metrics: Quantifiable metrics dictionary
+        errors: List of error messages
+        timestamp: ISO format timestamp of result creation
     """
 
-    def __init__(
-        self,
-        status: str,
-        summary: str,
-        artifacts: dict[str, Path],
-        metrics: dict | None = None,
-        errors: Optional[list[str]] = None,
-    ):
-        """Initialize result.
+    status: StatusType
+    summary: str
+    artifacts: dict[str, Path]
+    metrics: dict = field(default_factory=dict)
+    errors: list[str] = field(default_factory=list)
+    timestamp: str = field(default_factory=lambda: datetime.now().isoformat())
 
-        Args:
-            status: "SUCCESS", "FAILED", or "PARTIAL"
-            summary: Human-readable markdown summary
-            artifacts: Dict mapping artifact names to file paths
-            metrics: Optional metrics dictionary
-            errors: Optional list of error messages
-        """
-        if status not in ("SUCCESS", "FAILED", "PARTIAL"):
-            raise ValueError(f"Invalid status: {status}. Must be SUCCESS, FAILED, or PARTIAL")
-
-        self.status = status
-        self.summary = summary
-        self.artifacts = artifacts
-        self.metrics = metrics or {}
-        self.errors = errors or []
-        self.timestamp = datetime.now().isoformat()
+    def __post_init__(self) -> None:
+        """Validate status after initialization."""
+        if self.status not in VALID_STATUSES:
+            raise ValueError(f"Invalid status: {self.status}. Must be SUCCESS, FAILED, or PARTIAL")
 
     def to_dict(self) -> dict:
-        """Convert result to dictionary."""
-        return {
-            "status": self.status,
-            "summary": self.summary,
-            "artifacts": {k: str(v) for k, v in self.artifacts.items()},
-            "metrics": self.metrics,
-            "errors": self.errors,
-            "timestamp": self.timestamp,
-        }
+        """Convert result to dictionary with Path objects as strings."""
+        result = asdict(self)
+        result["artifacts"] = {k: str(v) for k, v in self.artifacts.items()}
+        return result
 
 
 class BaseSubServer(ABC):
@@ -72,18 +66,19 @@ class BaseSubServer(ABC):
     - Error handling
     """
 
-    def __init__(self, name: str, input_dir: Path, output_dir: Path):
+    def __init__(self, name: str, input_dir: Path | None, output_dir: Path | None):
         """Initialize sub-server.
 
         Args:
             name: Sub-server name (e.g., 'scope', 'quality', 'security')
-            input_dir: Input directory (contains required inputs)
-            output_dir: Output directory (for results)
+            input_dir: Input directory (contains required inputs), or None
+            output_dir: Output directory (for results), or None
         """
         self.name = name
-        self.input_dir = Path(input_dir)
-        self.output_dir = Path(output_dir)
-        self.output_dir.mkdir(parents=True, exist_ok=True)
+        self.input_dir = Path(input_dir) if input_dir else None
+        self.output_dir = Path(output_dir) if output_dir else None
+        if self.output_dir:
+            self.output_dir.mkdir(parents=True, exist_ok=True)
 
     @abstractmethod
     def validate_inputs(self) -> tuple[bool, list[str]]:
@@ -114,8 +109,9 @@ class BaseSubServer(ABC):
         if status not in ("SUCCESS", "FAILED", "IN_PROGRESS", "PARTIAL"):
             raise ValueError(f"Invalid status: {status}")
 
-        status_file = self.output_dir / "status.txt"
-        status_file.write_text(status)
+        if self.output_dir:
+            status_file = self.output_dir / "status.txt"
+            status_file.write_text(status)
 
     def save_summary(self, content: str) -> None:
         """Save summary report.
@@ -123,8 +119,9 @@ class BaseSubServer(ABC):
         Args:
             content: Markdown-formatted summary
         """
-        summary_file = self.output_dir / f"{self.name}_summary.md"
-        summary_file.write_text(content)
+        if self.output_dir:
+            summary_file = self.output_dir / f"{self.name}_summary.md"
+            summary_file.write_text(content)
 
     def save_json(self, filename: str, data: dict) -> None:
         """Save JSON data.
@@ -133,8 +130,9 @@ class BaseSubServer(ABC):
             filename: Output filename (e.g., 'results.json')
             data: Dictionary to save
         """
-        output_file = self.output_dir / filename
-        output_file.write_text(json.dumps(data, indent=2))
+        if self.output_dir:
+            output_file = self.output_dir / filename
+            output_file.write_text(json.dumps(data, indent=2))
 
     def run(self) -> SubServerResult:
         """Main entry point. Handles validation and execution.

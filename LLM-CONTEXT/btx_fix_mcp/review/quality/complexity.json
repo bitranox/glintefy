@@ -1,0 +1,3618 @@
+[
+  {
+    "file": "scripts/_utils.py",
+    "name": "bootstrap_dev",
+    "type": "function",
+    "complexity": 14,
+    "rank": "C",
+    "line": 690
+  },
+  {
+    "file": "scripts/_utils.py",
+    "name": "_extract_author_info",
+    "type": "function",
+    "complexity": 11,
+    "rank": "C",
+    "line": 364
+  },
+  {
+    "file": "scripts/_utils.py",
+    "name": "run",
+    "type": "function",
+    "complexity": 9,
+    "rank": "B",
+    "line": 157
+  },
+  {
+    "file": "scripts/_utils.py",
+    "name": "_derive_import_package",
+    "type": "function",
+    "complexity": 7,
+    "rank": "B",
+    "line": 263
+  },
+  {
+    "file": "scripts/_utils.py",
+    "name": "_select_cli_entry",
+    "type": "function",
+    "complexity": 6,
+    "rank": "B",
+    "line": 316
+  },
+  {
+    "file": "scripts/_utils.py",
+    "name": "_parse_repo_url",
+    "type": "function",
+    "complexity": 6,
+    "rank": "B",
+    "line": 342
+  },
+  {
+    "file": "scripts/_utils.py",
+    "name": "_as_str_dict",
+    "type": "function",
+    "complexity": 5,
+    "rank": "A",
+    "line": 225
+  },
+  {
+    "file": "scripts/_utils.py",
+    "name": "_extract_summary",
+    "type": "function",
+    "complexity": 5,
+    "rank": "A",
+    "line": 397
+  },
+  {
+    "file": "scripts/_utils.py",
+    "name": "_as_str_mapping",
+    "type": "function",
+    "complexity": 4,
+    "rank": "A",
+    "line": 213
+  },
+  {
+    "file": "scripts/_utils.py",
+    "name": "_load_pyproject",
+    "type": "function",
+    "complexity": 4,
+    "rank": "A",
+    "line": 246
+  },
+  {
+    "file": "scripts/_utils.py",
+    "name": "_derive_coverage_source",
+    "type": "function",
+    "complexity": 4,
+    "rank": "A",
+    "line": 282
+  },
+  {
+    "file": "scripts/_utils.py",
+    "name": "_derive_scripts",
+    "type": "function",
+    "complexity": 4,
+    "rank": "A",
+    "line": 293
+  },
+  {
+    "file": "scripts/_utils.py",
+    "name": "get_project_metadata",
+    "type": "function",
+    "complexity": 4,
+    "rank": "A",
+    "line": 421
+  },
+  {
+    "file": "scripts/_utils.py",
+    "name": "_extract_name",
+    "type": "function",
+    "complexity": 4,
+    "rank": "A",
+    "line": 482
+  },
+  {
+    "file": "scripts/_utils.py",
+    "name": "read_version_from_pyproject",
+    "type": "function",
+    "complexity": 4,
+    "rank": "A",
+    "line": 617
+  },
+  {
+    "file": "scripts/_utils.py",
+    "name": "ProjectMetadata",
+    "type": "class",
+    "complexity": 4,
+    "rank": "A",
+    "line": 55
+  },
+  {
+    "file": "scripts/_utils.py",
+    "name": "github_tarball_url",
+    "type": "method",
+    "complexity": 4,
+    "rank": "A",
+    "line": 79
+  },
+  {
+    "file": "scripts/_utils.py",
+    "name": "_get_toml_module",
+    "type": "function",
+    "complexity": 3,
+    "rank": "A",
+    "line": 123
+  },
+  {
+    "file": "scripts/_utils.py",
+    "name": "_extract_homepage",
+    "type": "function",
+    "complexity": 3,
+    "rank": "A",
+    "line": 491
+  },
+  {
+    "file": "scripts/_utils.py",
+    "name": "_render_metadata_module",
+    "type": "function",
+    "complexity": 3,
+    "rank": "A",
+    "line": 522
+  },
+  {
+    "file": "scripts/_utils.py",
+    "name": "sync_metadata_module",
+    "type": "function",
+    "complexity": 3,
+    "rank": "A",
+    "line": 602
+  },
+  {
+    "file": "scripts/_utils.py",
+    "name": "diagnostic_lines",
+    "type": "method",
+    "complexity": 3,
+    "rank": "A",
+    "line": 102
+  },
+  {
+    "file": "scripts/_utils.py",
+    "name": "_normalize_slug",
+    "type": "function",
+    "complexity": 2,
+    "rank": "A",
+    "line": 195
+  },
+  {
+    "file": "scripts/_utils.py",
+    "name": "_package_name_to_display",
+    "type": "function",
+    "complexity": 2,
+    "rank": "A",
+    "line": 200
+  },
+  {
+    "file": "scripts/_utils.py",
+    "name": "_as_sequence",
+    "type": "function",
+    "complexity": 2,
+    "rank": "A",
+    "line": 237
+  },
+  {
+    "file": "scripts/_utils.py",
+    "name": "_parse_entrypoint",
+    "type": "function",
+    "complexity": 2,
+    "rank": "A",
+    "line": 309
+  },
+  {
+    "file": "scripts/_utils.py",
+    "name": "_determine_shell_command",
+    "type": "function",
+    "complexity": 2,
+    "rank": "A",
+    "line": 501
+  },
+  {
+    "file": "scripts/_utils.py",
+    "name": "ensure_clean_git_tree",
+    "type": "function",
+    "complexity": 2,
+    "rank": "A",
+    "line": 629
+  },
+  {
+    "file": "scripts/_utils.py",
+    "name": "git_delete_tag",
+    "type": "function",
+    "complexity": 2,
+    "rank": "A",
+    "line": 642
+  },
+  {
+    "file": "scripts/_utils.py",
+    "name": "resolve_cli_entry",
+    "type": "method",
+    "complexity": 2,
+    "rank": "A",
+    "line": 84
+  },
+  {
+    "file": "scripts/_utils.py",
+    "name": "cmd_exists",
+    "type": "function",
+    "complexity": 1,
+    "rank": "A",
+    "line": 190
+  },
+  {
+    "file": "scripts/_utils.py",
+    "name": "_normalize_script_key",
+    "type": "function",
+    "complexity": 1,
+    "rank": "A",
+    "line": 305
+  },
+  {
+    "file": "scripts/_utils.py",
+    "name": "_quote",
+    "type": "function",
+    "complexity": 1,
+    "rank": "A",
+    "line": 518
+  },
+  {
+    "file": "scripts/_utils.py",
+    "name": "git_branch",
+    "type": "function",
+    "complexity": 1,
+    "rank": "A",
+    "line": 637
+  },
+  {
+    "file": "scripts/_utils.py",
+    "name": "git_tag_exists",
+    "type": "function",
+    "complexity": 1,
+    "rank": "A",
+    "line": 649
+  },
+  {
+    "file": "scripts/_utils.py",
+    "name": "git_create_annotated_tag",
+    "type": "function",
+    "complexity": 1,
+    "rank": "A",
+    "line": 660
+  },
+  {
+    "file": "scripts/_utils.py",
+    "name": "git_push",
+    "type": "function",
+    "complexity": 1,
+    "rank": "A",
+    "line": 665
+  },
+  {
+    "file": "scripts/_utils.py",
+    "name": "gh_available",
+    "type": "function",
+    "complexity": 1,
+    "rank": "A",
+    "line": 670
+  },
+  {
+    "file": "scripts/_utils.py",
+    "name": "gh_release_exists",
+    "type": "function",
+    "complexity": 1,
+    "rank": "A",
+    "line": 675
+  },
+  {
+    "file": "scripts/_utils.py",
+    "name": "gh_release_create",
+    "type": "function",
+    "complexity": 1,
+    "rank": "A",
+    "line": 680
+  },
+  {
+    "file": "scripts/_utils.py",
+    "name": "gh_release_edit",
+    "type": "function",
+    "complexity": 1,
+    "rank": "A",
+    "line": 685
+  },
+  {
+    "file": "scripts/_utils.py",
+    "name": "RunResult",
+    "type": "class",
+    "complexity": 1,
+    "rank": "A",
+    "line": 40
+  },
+  {
+    "file": "scripts/build.py",
+    "name": "build_artifacts",
+    "type": "function",
+    "complexity": 3,
+    "rank": "A",
+    "line": 33
+  },
+  {
+    "file": "scripts/build.py",
+    "name": "_purge_dist",
+    "type": "function",
+    "complexity": 2,
+    "rank": "A",
+    "line": 25
+  },
+  {
+    "file": "scripts/build.py",
+    "name": "_status",
+    "type": "function",
+    "complexity": 1,
+    "rank": "A",
+    "line": 17
+  },
+  {
+    "file": "scripts/build.py",
+    "name": "_failure",
+    "type": "function",
+    "complexity": 1,
+    "rank": "A",
+    "line": 21
+  },
+  {
+    "file": "scripts/build.py",
+    "name": "main",
+    "type": "function",
+    "complexity": 1,
+    "rank": "A",
+    "line": 45
+  },
+  {
+    "file": "scripts/bump.py",
+    "name": "bump",
+    "type": "function",
+    "complexity": 3,
+    "rank": "A",
+    "line": 11
+  },
+  {
+    "file": "scripts/bump_major.py",
+    "name": "bump_major",
+    "type": "function",
+    "complexity": 1,
+    "rank": "A",
+    "line": 11
+  },
+  {
+    "file": "scripts/bump_minor.py",
+    "name": "bump_minor",
+    "type": "function",
+    "complexity": 1,
+    "rank": "A",
+    "line": 11
+  },
+  {
+    "file": "scripts/bump_patch.py",
+    "name": "bump_patch",
+    "type": "function",
+    "complexity": 1,
+    "rank": "A",
+    "line": 11
+  },
+  {
+    "file": "scripts/bump_version.py",
+    "name": "bump_semver",
+    "type": "function",
+    "complexity": 4,
+    "rank": "A",
+    "line": 24
+  },
+  {
+    "file": "scripts/bump_version.py",
+    "name": "_update_changelog",
+    "type": "function",
+    "complexity": 4,
+    "rank": "A",
+    "line": 47
+  },
+  {
+    "file": "scripts/bump_version.py",
+    "name": "main",
+    "type": "function",
+    "complexity": 3,
+    "rank": "A",
+    "line": 60
+  },
+  {
+    "file": "scripts/bump_version.py",
+    "name": "_write_new_version",
+    "type": "function",
+    "complexity": 2,
+    "rank": "A",
+    "line": 35
+  },
+  {
+    "file": "scripts/bump_version.py",
+    "name": "parse_args",
+    "type": "function",
+    "complexity": 1,
+    "rank": "A",
+    "line": 9
+  },
+  {
+    "file": "scripts/clean.py",
+    "name": "clean",
+    "type": "function",
+    "complexity": 5,
+    "rank": "A",
+    "line": 31
+  },
+  {
+    "file": "scripts/cli.py",
+    "name": "choose_token",
+    "type": "function",
+    "complexity": 4,
+    "rank": "A",
+    "line": 41
+  },
+  {
+    "file": "scripts/cli.py",
+    "name": "env_token",
+    "type": "function",
+    "complexity": 3,
+    "rank": "A",
+    "line": 31
+  },
+  {
+    "file": "scripts/cli.py",
+    "name": "remote_choice",
+    "type": "function",
+    "complexity": 3,
+    "rank": "A",
+    "line": 86
+  },
+  {
+    "file": "scripts/cli.py",
+    "name": "push_command",
+    "type": "function",
+    "complexity": 2,
+    "rank": "A",
+    "line": 164
+  },
+  {
+    "file": "scripts/cli.py",
+    "name": "bump_command",
+    "type": "function",
+    "complexity": 2,
+    "rank": "A",
+    "line": 181
+  },
+  {
+    "file": "scripts/cli.py",
+    "name": "coverage_choice",
+    "type": "function",
+    "complexity": 1,
+    "rank": "A",
+    "line": 62
+  },
+  {
+    "file": "scripts/cli.py",
+    "name": "part_choice",
+    "type": "function",
+    "complexity": 1,
+    "rank": "A",
+    "line": 74
+  },
+  {
+    "file": "scripts/cli.py",
+    "name": "main",
+    "type": "function",
+    "complexity": 1,
+    "rank": "A",
+    "line": 96
+  },
+  {
+    "file": "scripts/cli.py",
+    "name": "help_command",
+    "type": "function",
+    "complexity": 1,
+    "rank": "A",
+    "line": 101
+  },
+  {
+    "file": "scripts/cli.py",
+    "name": "install_command",
+    "type": "function",
+    "complexity": 1,
+    "rank": "A",
+    "line": 107
+  },
+  {
+    "file": "scripts/cli.py",
+    "name": "dev_command",
+    "type": "function",
+    "complexity": 1,
+    "rank": "A",
+    "line": 113
+  },
+  {
+    "file": "scripts/cli.py",
+    "name": "clean_command",
+    "type": "function",
+    "complexity": 1,
+    "rank": "A",
+    "line": 119
+  },
+  {
+    "file": "scripts/cli.py",
+    "name": "run_command",
+    "type": "function",
+    "complexity": 1,
+    "rank": "A",
+    "line": 126
+  },
+  {
+    "file": "scripts/cli.py",
+    "name": "test_command",
+    "type": "function",
+    "complexity": 1,
+    "rank": "A",
+    "line": 134
+  },
+  {
+    "file": "scripts/cli.py",
+    "name": "coverage_command",
+    "type": "function",
+    "complexity": 1,
+    "rank": "A",
+    "line": 145
+  },
+  {
+    "file": "scripts/cli.py",
+    "name": "build_command",
+    "type": "function",
+    "complexity": 1,
+    "rank": "A",
+    "line": 150
+  },
+  {
+    "file": "scripts/cli.py",
+    "name": "release_command",
+    "type": "function",
+    "complexity": 1,
+    "rank": "A",
+    "line": 156
+  },
+  {
+    "file": "scripts/cli.py",
+    "name": "version_command",
+    "type": "function",
+    "complexity": 1,
+    "rank": "A",
+    "line": 172
+  },
+  {
+    "file": "scripts/cli.py",
+    "name": "bump_major_command",
+    "type": "function",
+    "complexity": 1,
+    "rank": "A",
+    "line": 193
+  },
+  {
+    "file": "scripts/cli.py",
+    "name": "bump_minor_command",
+    "type": "function",
+    "complexity": 1,
+    "rank": "A",
+    "line": 198
+  },
+  {
+    "file": "scripts/cli.py",
+    "name": "bump_patch_command",
+    "type": "function",
+    "complexity": 1,
+    "rank": "A",
+    "line": 203
+  },
+  {
+    "file": "scripts/cli.py",
+    "name": "menu_command",
+    "type": "function",
+    "complexity": 1,
+    "rank": "A",
+    "line": 208
+  },
+  {
+    "file": "scripts/dev.py",
+    "name": "install_dev",
+    "type": "function",
+    "complexity": 1,
+    "rank": "A",
+    "line": 10
+  },
+  {
+    "file": "scripts/help.py",
+    "name": "render_help",
+    "type": "function",
+    "complexity": 5,
+    "rank": "A",
+    "line": 13
+  },
+  {
+    "file": "scripts/help.py",
+    "name": "print_help",
+    "type": "function",
+    "complexity": 2,
+    "rank": "A",
+    "line": 24
+  },
+  {
+    "file": "scripts/help.py",
+    "name": "_default_stream",
+    "type": "function",
+    "complexity": 1,
+    "rank": "A",
+    "line": 32
+  },
+  {
+    "file": "scripts/install.py",
+    "name": "install",
+    "type": "function",
+    "complexity": 1,
+    "rank": "A",
+    "line": 10
+  },
+  {
+    "file": "scripts/menu.py",
+    "name": "_gather_values",
+    "type": "method",
+    "complexity": 12,
+    "rank": "C",
+    "line": 337
+  },
+  {
+    "file": "scripts/menu.py",
+    "name": "on_key",
+    "type": "method",
+    "complexity": 8,
+    "rank": "B",
+    "line": 137
+  },
+  {
+    "file": "scripts/menu.py",
+    "name": "compose",
+    "type": "method",
+    "complexity": 7,
+    "rank": "B",
+    "line": 275
+  },
+  {
+    "file": "scripts/menu.py",
+    "name": "_run_process",
+    "type": "method",
+    "complexity": 6,
+    "rank": "B",
+    "line": 416
+  },
+  {
+    "file": "scripts/menu.py",
+    "name": "_format_env",
+    "type": "function",
+    "complexity": 4,
+    "rank": "A",
+    "line": 546
+  },
+  {
+    "file": "scripts/menu.py",
+    "name": "_format_command",
+    "type": "function",
+    "complexity": 4,
+    "rank": "A",
+    "line": 553
+  },
+  {
+    "file": "scripts/menu.py",
+    "name": "on_button_pressed",
+    "type": "method",
+    "complexity": 4,
+    "rank": "A",
+    "line": 172
+  },
+  {
+    "file": "scripts/menu.py",
+    "name": "_receive_params",
+    "type": "method",
+    "complexity": 4,
+    "rank": "A",
+    "line": 229
+  },
+  {
+    "file": "scripts/menu.py",
+    "name": "ParamScreen",
+    "type": "class",
+    "complexity": 4,
+    "rank": "A",
+    "line": 262
+  },
+  {
+    "file": "scripts/menu.py",
+    "name": "RunScreen",
+    "type": "class",
+    "complexity": 4,
+    "rank": "A",
+    "line": 366
+  },
+  {
+    "file": "scripts/menu.py",
+    "name": "_pump",
+    "type": "method",
+    "complexity": 4,
+    "rank": "A",
+    "line": 446
+  },
+  {
+    "file": "scripts/menu.py",
+    "name": "_send_cancel_signal",
+    "type": "method",
+    "complexity": 4,
+    "rank": "A",
+    "line": 455
+  },
+  {
+    "file": "scripts/menu.py",
+    "name": "MenuScreen",
+    "type": "class",
+    "complexity": 3,
+    "rank": "A",
+    "line": 68
+  },
+  {
+    "file": "scripts/menu.py",
+    "name": "on_list_view_highlighted",
+    "type": "method",
+    "complexity": 3,
+    "rank": "A",
+    "line": 119
+  },
+  {
+    "file": "scripts/menu.py",
+    "name": "on_list_view_selected",
+    "type": "method",
+    "complexity": 3,
+    "rank": "A",
+    "line": 128
+  },
+  {
+    "file": "scripts/menu.py",
+    "name": "action_run",
+    "type": "method",
+    "complexity": 3,
+    "rank": "A",
+    "line": 180
+  },
+  {
+    "file": "scripts/menu.py",
+    "name": "action_edit",
+    "type": "method",
+    "complexity": 3,
+    "rank": "A",
+    "line": 190
+  },
+  {
+    "file": "scripts/menu.py",
+    "name": "_current_target",
+    "type": "method",
+    "complexity": 3,
+    "rank": "A",
+    "line": 215
+  },
+  {
+    "file": "scripts/menu.py",
+    "name": "_handle_run_result",
+    "type": "method",
+    "complexity": 3,
+    "rank": "A",
+    "line": 245
+  },
+  {
+    "file": "scripts/menu.py",
+    "name": "on_input_submitted",
+    "type": "method",
+    "complexity": 3,
+    "rank": "A",
+    "line": 311
+  },
+  {
+    "file": "scripts/menu.py",
+    "name": "_submit",
+    "type": "method",
+    "complexity": 3,
+    "rank": "A",
+    "line": 327
+  },
+  {
+    "file": "scripts/menu.py",
+    "name": "on_unmount",
+    "type": "method",
+    "complexity": 3,
+    "rank": "A",
+    "line": 400
+  },
+  {
+    "file": "scripts/menu.py",
+    "name": "action_cancel",
+    "type": "method",
+    "complexity": 3,
+    "rank": "A",
+    "line": 410
+  },
+  {
+    "file": "scripts/menu.py",
+    "name": "on_mount",
+    "type": "method",
+    "complexity": 2,
+    "rank": "A",
+    "line": 112
+  },
+  {
+    "file": "scripts/menu.py",
+    "name": "_focus_menu",
+    "type": "method",
+    "complexity": 2,
+    "rank": "A",
+    "line": 160
+  },
+  {
+    "file": "scripts/menu.py",
+    "name": "_focus_button",
+    "type": "method",
+    "complexity": 2,
+    "rank": "A",
+    "line": 166
+  },
+  {
+    "file": "scripts/menu.py",
+    "name": "_build_list",
+    "type": "method",
+    "complexity": 2,
+    "rank": "A",
+    "line": 197
+  },
+  {
+    "file": "scripts/menu.py",
+    "name": "_update_description",
+    "type": "method",
+    "complexity": 2,
+    "rank": "A",
+    "line": 207
+  },
+  {
+    "file": "scripts/menu.py",
+    "name": "menu_app",
+    "type": "method",
+    "complexity": 2,
+    "rank": "A",
+    "line": 256
+  },
+  {
+    "file": "scripts/menu.py",
+    "name": "on_button_pressed",
+    "type": "method",
+    "complexity": 2,
+    "rank": "A",
+    "line": 307
+  },
+  {
+    "file": "scripts/menu.py",
+    "name": "_focus_first_input",
+    "type": "method",
+    "complexity": 2,
+    "rank": "A",
+    "line": 318
+  },
+  {
+    "file": "scripts/menu.py",
+    "name": "_focus_ok_button",
+    "type": "method",
+    "complexity": 2,
+    "rank": "A",
+    "line": 323
+  },
+  {
+    "file": "scripts/menu.py",
+    "name": "menu_app",
+    "type": "method",
+    "complexity": 2,
+    "rank": "A",
+    "line": 360
+  },
+  {
+    "file": "scripts/menu.py",
+    "name": "compose",
+    "type": "method",
+    "complexity": 2,
+    "rank": "A",
+    "line": 382
+  },
+  {
+    "file": "scripts/menu.py",
+    "name": "on_button_pressed",
+    "type": "method",
+    "complexity": 2,
+    "rank": "A",
+    "line": 406
+  },
+  {
+    "file": "scripts/menu.py",
+    "name": "MenuApp",
+    "type": "class",
+    "complexity": 2,
+    "rank": "A",
+    "line": 468
+  },
+  {
+    "file": "scripts/menu.py",
+    "name": "run_menu",
+    "type": "function",
+    "complexity": 1,
+    "rank": "A",
+    "line": 561
+  },
+  {
+    "file": "scripts/menu.py",
+    "name": "__init__",
+    "type": "method",
+    "complexity": 1,
+    "rank": "A",
+    "line": 80
+  },
+  {
+    "file": "scripts/menu.py",
+    "name": "compose",
+    "type": "method",
+    "complexity": 1,
+    "rank": "A",
+    "line": 89
+  },
+  {
+    "file": "scripts/menu.py",
+    "name": "_open_param_editor",
+    "type": "method",
+    "complexity": 1,
+    "rank": "A",
+    "line": 223
+  },
+  {
+    "file": "scripts/menu.py",
+    "name": "_launch_run",
+    "type": "method",
+    "complexity": 1,
+    "rank": "A",
+    "line": 242
+  },
+  {
+    "file": "scripts/menu.py",
+    "name": "__init__",
+    "type": "method",
+    "complexity": 1,
+    "rank": "A",
+    "line": 267
+  },
+  {
+    "file": "scripts/menu.py",
+    "name": "on_mount",
+    "type": "method",
+    "complexity": 1,
+    "rank": "A",
+    "line": 304
+  },
+  {
+    "file": "scripts/menu.py",
+    "name": "action_cancel",
+    "type": "method",
+    "complexity": 1,
+    "rank": "A",
+    "line": 315
+  },
+  {
+    "file": "scripts/menu.py",
+    "name": "__init__",
+    "type": "method",
+    "complexity": 1,
+    "rank": "A",
+    "line": 371
+  },
+  {
+    "file": "scripts/menu.py",
+    "name": "on_mount",
+    "type": "method",
+    "complexity": 1,
+    "rank": "A",
+    "line": 395
+  },
+  {
+    "file": "scripts/menu.py",
+    "name": "__init__",
+    "type": "method",
+    "complexity": 1,
+    "rank": "A",
+    "line": 538
+  },
+  {
+    "file": "scripts/menu.py",
+    "name": "on_mount",
+    "type": "method",
+    "complexity": 1,
+    "rank": "A",
+    "line": 542
+  },
+  {
+    "file": "scripts/push.py",
+    "name": "_resolve_commit_message",
+    "type": "function",
+    "complexity": 10,
+    "rank": "B",
+    "line": 45
+  },
+  {
+    "file": "scripts/push.py",
+    "name": "push",
+    "type": "function",
+    "complexity": 3,
+    "rank": "A",
+    "line": 20
+  },
+  {
+    "file": "scripts/release.py",
+    "name": "release",
+    "type": "function",
+    "complexity": 6,
+    "rank": "B",
+    "line": 31
+  },
+  {
+    "file": "scripts/release.py",
+    "name": "_ensure_clean",
+    "type": "function",
+    "complexity": 2,
+    "rank": "A",
+    "line": 78
+  },
+  {
+    "file": "scripts/release.py",
+    "name": "_looks_like_semver",
+    "type": "function",
+    "complexity": 1,
+    "rank": "A",
+    "line": 83
+  },
+  {
+    "file": "scripts/run_cli.py",
+    "name": "candid_callable",
+    "type": "function",
+    "complexity": 6,
+    "rank": "B",
+    "line": 92
+  },
+  {
+    "file": "scripts/run_cli.py",
+    "name": "invoke_callable",
+    "type": "function",
+    "complexity": 5,
+    "rank": "A",
+    "line": 74
+  },
+  {
+    "file": "scripts/run_cli.py",
+    "name": "load_module",
+    "type": "function",
+    "complexity": 4,
+    "rank": "A",
+    "line": 19
+  },
+  {
+    "file": "scripts/run_cli.py",
+    "name": "exit_code_from",
+    "type": "function",
+    "complexity": 4,
+    "rank": "A",
+    "line": 47
+  },
+  {
+    "file": "scripts/run_cli.py",
+    "name": "delegate_to_module_entry",
+    "type": "function",
+    "complexity": 4,
+    "rank": "A",
+    "line": 121
+  },
+  {
+    "file": "scripts/run_cli.py",
+    "name": "run_cli",
+    "type": "function",
+    "complexity": 4,
+    "rank": "A",
+    "line": 139
+  },
+  {
+    "file": "scripts/run_cli.py",
+    "name": "temporary_argv",
+    "type": "function",
+    "complexity": 2,
+    "rank": "A",
+    "line": 36
+  },
+  {
+    "file": "scripts/run_cli.py",
+    "name": "run_python_module",
+    "type": "function",
+    "complexity": 2,
+    "rank": "A",
+    "line": 111
+  },
+  {
+    "file": "scripts/run_cli.py",
+    "name": "invocation_variants",
+    "type": "function",
+    "complexity": 1,
+    "rank": "A",
+    "line": 60
+  },
+  {
+    "file": "scripts/target_metadata.py",
+    "name": "_env_default",
+    "type": "function",
+    "complexity": 3,
+    "rank": "A",
+    "line": 58
+  },
+  {
+    "file": "scripts/target_metadata.py",
+    "name": "iter_help_rows",
+    "type": "function",
+    "complexity": 3,
+    "rank": "A",
+    "line": 169
+  },
+  {
+    "file": "scripts/target_metadata.py",
+    "name": "_build_targets",
+    "type": "function",
+    "complexity": 1,
+    "rank": "A",
+    "line": 65
+  },
+  {
+    "file": "scripts/target_metadata.py",
+    "name": "get_targets",
+    "type": "function",
+    "complexity": 1,
+    "rank": "A",
+    "line": 163
+  },
+  {
+    "file": "scripts/target_metadata.py",
+    "name": "ParamSpec",
+    "type": "class",
+    "complexity": 1,
+    "rank": "A",
+    "line": 39
+  },
+  {
+    "file": "scripts/target_metadata.py",
+    "name": "TargetSpec",
+    "type": "class",
+    "complexity": 1,
+    "rank": "A",
+    "line": 50
+  },
+  {
+    "file": "scripts/version_current.py",
+    "name": "print_current_version",
+    "type": "function",
+    "complexity": 2,
+    "rank": "A",
+    "line": 10
+  },
+  {
+    "file": "src/btx_fix_mcp/__init__conf__.py",
+    "name": "print_info",
+    "type": "function",
+    "complexity": 3,
+    "rank": "A",
+    "line": 45
+  },
+  {
+    "file": "src/btx_fix_mcp/behaviors.py",
+    "name": "_target_stream",
+    "type": "function",
+    "complexity": 2,
+    "rank": "A",
+    "line": 35
+  },
+  {
+    "file": "src/btx_fix_mcp/behaviors.py",
+    "name": "_flush_if_possible",
+    "type": "function",
+    "complexity": 2,
+    "rank": "A",
+    "line": 47
+  },
+  {
+    "file": "src/btx_fix_mcp/behaviors.py",
+    "name": "_greeting_line",
+    "type": "function",
+    "complexity": 1,
+    "rank": "A",
+    "line": 41
+  },
+  {
+    "file": "src/btx_fix_mcp/behaviors.py",
+    "name": "emit_greeting",
+    "type": "function",
+    "complexity": 1,
+    "rank": "A",
+    "line": 55
+  },
+  {
+    "file": "src/btx_fix_mcp/behaviors.py",
+    "name": "raise_intentional_failure",
+    "type": "function",
+    "complexity": 1,
+    "rank": "A",
+    "line": 91
+  },
+  {
+    "file": "src/btx_fix_mcp/behaviors.py",
+    "name": "noop_main",
+    "type": "function",
+    "complexity": 1,
+    "rank": "A",
+    "line": 118
+  },
+  {
+    "file": "src/btx_fix_mcp/cli.py",
+    "name": "main",
+    "type": "function",
+    "complexity": 8,
+    "rank": "B",
+    "line": 397
+  },
+  {
+    "file": "src/btx_fix_mcp/cli.py",
+    "name": "_print_review_result",
+    "type": "function",
+    "complexity": 6,
+    "rank": "B",
+    "line": 366
+  },
+  {
+    "file": "src/btx_fix_mcp/cli.py",
+    "name": "review_all",
+    "type": "function",
+    "complexity": 5,
+    "rank": "A",
+    "line": 329
+  },
+  {
+    "file": "src/btx_fix_mcp/cli.py",
+    "name": "cli",
+    "type": "function",
+    "complexity": 3,
+    "rank": "A",
+    "line": 62
+  },
+  {
+    "file": "src/btx_fix_mcp/cli.py",
+    "name": "review_group",
+    "type": "function",
+    "complexity": 2,
+    "rank": "A",
+    "line": 128
+  },
+  {
+    "file": "src/btx_fix_mcp/cli.py",
+    "name": "cli_info",
+    "type": "function",
+    "complexity": 1,
+    "rank": "A",
+    "line": 97
+  },
+  {
+    "file": "src/btx_fix_mcp/cli.py",
+    "name": "cli_hello",
+    "type": "function",
+    "complexity": 1,
+    "rank": "A",
+    "line": 103
+  },
+  {
+    "file": "src/btx_fix_mcp/cli.py",
+    "name": "cli_fail",
+    "type": "function",
+    "complexity": 1,
+    "rank": "A",
+    "line": 109
+  },
+  {
+    "file": "src/btx_fix_mcp/cli.py",
+    "name": "review_scope",
+    "type": "function",
+    "complexity": 1,
+    "rank": "A",
+    "line": 147
+  },
+  {
+    "file": "src/btx_fix_mcp/cli.py",
+    "name": "review_quality",
+    "type": "function",
+    "complexity": 1,
+    "rank": "A",
+    "line": 174
+  },
+  {
+    "file": "src/btx_fix_mcp/cli.py",
+    "name": "review_security",
+    "type": "function",
+    "complexity": 1,
+    "rank": "A",
+    "line": 206
+  },
+  {
+    "file": "src/btx_fix_mcp/cli.py",
+    "name": "review_deps",
+    "type": "function",
+    "complexity": 1,
+    "rank": "A",
+    "line": 237
+  },
+  {
+    "file": "src/btx_fix_mcp/cli.py",
+    "name": "review_docs",
+    "type": "function",
+    "complexity": 1,
+    "rank": "A",
+    "line": 266
+  },
+  {
+    "file": "src/btx_fix_mcp/cli.py",
+    "name": "review_perf",
+    "type": "function",
+    "complexity": 1,
+    "rank": "A",
+    "line": 284
+  },
+  {
+    "file": "src/btx_fix_mcp/cli.py",
+    "name": "review_report",
+    "type": "function",
+    "complexity": 1,
+    "rank": "A",
+    "line": 297
+  },
+  {
+    "file": "src/btx_fix_mcp/servers/review.py",
+    "name": "_determine_final_status",
+    "type": "method",
+    "complexity": 6,
+    "rank": "B",
+    "line": 496
+  },
+  {
+    "file": "src/btx_fix_mcp/servers/review.py",
+    "name": "run_quality",
+    "type": "method",
+    "complexity": 4,
+    "rank": "A",
+    "line": 105
+  },
+  {
+    "file": "src/btx_fix_mcp/servers/review.py",
+    "name": "run_security",
+    "type": "method",
+    "complexity": 4,
+    "rank": "A",
+    "line": 154
+  },
+  {
+    "file": "src/btx_fix_mcp/servers/review.py",
+    "name": "run_docs",
+    "type": "method",
+    "complexity": 4,
+    "rank": "A",
+    "line": 251
+  },
+  {
+    "file": "src/btx_fix_mcp/servers/review.py",
+    "name": "run_perf",
+    "type": "method",
+    "complexity": 4,
+    "rank": "A",
+    "line": 297
+  },
+  {
+    "file": "src/btx_fix_mcp/servers/review.py",
+    "name": "_run_parallel_analyses",
+    "type": "method",
+    "complexity": 4,
+    "rank": "A",
+    "line": 450
+  },
+  {
+    "file": "src/btx_fix_mcp/servers/review.py",
+    "name": "ReviewMCPServer",
+    "type": "class",
+    "complexity": 3,
+    "rank": "A",
+    "line": 35
+  },
+  {
+    "file": "src/btx_fix_mcp/servers/review.py",
+    "name": "run_scope",
+    "type": "method",
+    "complexity": 3,
+    "rank": "A",
+    "line": 63
+  },
+  {
+    "file": "src/btx_fix_mcp/servers/review.py",
+    "name": "run_deps",
+    "type": "method",
+    "complexity": 3,
+    "rank": "A",
+    "line": 203
+  },
+  {
+    "file": "src/btx_fix_mcp/servers/review.py",
+    "name": "_run_scope_step",
+    "type": "method",
+    "complexity": 3,
+    "rank": "A",
+    "line": 435
+  },
+  {
+    "file": "src/btx_fix_mcp/servers/review.py",
+    "name": "__init__",
+    "type": "method",
+    "complexity": 2,
+    "rank": "A",
+    "line": 47
+  },
+  {
+    "file": "src/btx_fix_mcp/servers/review.py",
+    "name": "run_report",
+    "type": "method",
+    "complexity": 2,
+    "rank": "A",
+    "line": 343
+  },
+  {
+    "file": "src/btx_fix_mcp/servers/review.py",
+    "name": "run_all",
+    "type": "method",
+    "complexity": 2,
+    "rank": "A",
+    "line": 377
+  },
+  {
+    "file": "src/btx_fix_mcp/servers/review.py",
+    "name": "_run_report_step",
+    "type": "method",
+    "complexity": 2,
+    "rank": "A",
+    "line": 488
+  },
+  {
+    "file": "src/btx_fix_mcp/servers/review.py",
+    "name": "_init_results",
+    "type": "method",
+    "complexity": 1,
+    "rank": "A",
+    "line": 421
+  },
+  {
+    "file": "src/btx_fix_mcp/servers/review.py",
+    "name": "get_tool_definitions",
+    "type": "method",
+    "complexity": 1,
+    "rank": "A",
+    "line": 507
+  },
+  {
+    "file": "src/btx_fix_mcp/servers/review.py",
+    "name": "handle_tool_call",
+    "type": "method",
+    "complexity": 1,
+    "rank": "A",
+    "line": 518
+  },
+  {
+    "file": "src/btx_fix_mcp/servers/review_handlers.py",
+    "name": "handle_tool_call",
+    "type": "function",
+    "complexity": 3,
+    "rank": "A",
+    "line": 88
+  },
+  {
+    "file": "src/btx_fix_mcp/servers/review_handlers.py",
+    "name": "_handle_scope",
+    "type": "function",
+    "complexity": 1,
+    "rank": "A",
+    "line": 21
+  },
+  {
+    "file": "src/btx_fix_mcp/servers/review_handlers.py",
+    "name": "_handle_quality",
+    "type": "function",
+    "complexity": 1,
+    "rank": "A",
+    "line": 26
+  },
+  {
+    "file": "src/btx_fix_mcp/servers/review_handlers.py",
+    "name": "_handle_security",
+    "type": "function",
+    "complexity": 1,
+    "rank": "A",
+    "line": 34
+  },
+  {
+    "file": "src/btx_fix_mcp/servers/review_handlers.py",
+    "name": "_handle_deps",
+    "type": "function",
+    "complexity": 1,
+    "rank": "A",
+    "line": 42
+  },
+  {
+    "file": "src/btx_fix_mcp/servers/review_handlers.py",
+    "name": "_handle_docs",
+    "type": "function",
+    "complexity": 1,
+    "rank": "A",
+    "line": 51
+  },
+  {
+    "file": "src/btx_fix_mcp/servers/review_handlers.py",
+    "name": "_handle_perf",
+    "type": "function",
+    "complexity": 1,
+    "rank": "A",
+    "line": 56
+  },
+  {
+    "file": "src/btx_fix_mcp/servers/review_handlers.py",
+    "name": "_handle_report",
+    "type": "function",
+    "complexity": 1,
+    "rank": "A",
+    "line": 61
+  },
+  {
+    "file": "src/btx_fix_mcp/servers/review_handlers.py",
+    "name": "_handle_all",
+    "type": "function",
+    "complexity": 1,
+    "rank": "A",
+    "line": 66
+  },
+  {
+    "file": "src/btx_fix_mcp/servers/review_tools.py",
+    "name": "get_review_tool_definitions",
+    "type": "function",
+    "complexity": 1,
+    "rank": "A",
+    "line": 18
+  },
+  {
+    "file": "src/btx_fix_mcp/servers/review_tools.py",
+    "name": "_scope_tool_definition",
+    "type": "function",
+    "complexity": 1,
+    "rank": "A",
+    "line": 44
+  },
+  {
+    "file": "src/btx_fix_mcp/servers/review_tools.py",
+    "name": "_quality_tool_definition",
+    "type": "function",
+    "complexity": 1,
+    "rank": "A",
+    "line": 63
+  },
+  {
+    "file": "src/btx_fix_mcp/servers/review_tools.py",
+    "name": "_security_tool_definition",
+    "type": "function",
+    "complexity": 1,
+    "rank": "A",
+    "line": 86
+  },
+  {
+    "file": "src/btx_fix_mcp/servers/review_tools.py",
+    "name": "_deps_tool_definition",
+    "type": "function",
+    "complexity": 1,
+    "rank": "A",
+    "line": 113
+  },
+  {
+    "file": "src/btx_fix_mcp/servers/review_tools.py",
+    "name": "_docs_tool_definition",
+    "type": "function",
+    "complexity": 1,
+    "rank": "A",
+    "line": 143
+  },
+  {
+    "file": "src/btx_fix_mcp/servers/review_tools.py",
+    "name": "_perf_tool_definition",
+    "type": "function",
+    "complexity": 1,
+    "rank": "A",
+    "line": 162
+  },
+  {
+    "file": "src/btx_fix_mcp/servers/review_tools.py",
+    "name": "_report_tool_definition",
+    "type": "function",
+    "complexity": 1,
+    "rank": "A",
+    "line": 182
+  },
+  {
+    "file": "src/btx_fix_mcp/servers/review_tools.py",
+    "name": "_all_tool_definition",
+    "type": "function",
+    "complexity": 1,
+    "rank": "A",
+    "line": 194
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/base.py",
+    "name": "SubServerResult",
+    "type": "class",
+    "complexity": 4,
+    "rank": "A",
+    "line": 10
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/base.py",
+    "name": "__init__",
+    "type": "method",
+    "complexity": 4,
+    "rank": "A",
+    "line": 21
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/base.py",
+    "name": "__init__",
+    "type": "method",
+    "complexity": 4,
+    "rank": "A",
+    "line": 75
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/base.py",
+    "name": "BaseSubServer",
+    "type": "class",
+    "complexity": 3,
+    "rank": "A",
+    "line": 60
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/base.py",
+    "name": "save_status",
+    "type": "method",
+    "complexity": 3,
+    "rank": "A",
+    "line": 109
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/base.py",
+    "name": "run",
+    "type": "method",
+    "complexity": 3,
+    "rank": "A",
+    "line": 143
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/base.py",
+    "name": "to_dict",
+    "type": "method",
+    "complexity": 2,
+    "rank": "A",
+    "line": 48
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/base.py",
+    "name": "save_summary",
+    "type": "method",
+    "complexity": 2,
+    "rank": "A",
+    "line": 122
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/base.py",
+    "name": "save_json",
+    "type": "method",
+    "complexity": 2,
+    "rank": "A",
+    "line": 132
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/base.py",
+    "name": "validate_inputs",
+    "type": "method",
+    "complexity": 1,
+    "rank": "A",
+    "line": 90
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/base.py",
+    "name": "execute",
+    "type": "method",
+    "complexity": 1,
+    "rank": "A",
+    "line": 101
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/common/files.py",
+    "name": "categorize_files",
+    "type": "function",
+    "complexity": 12,
+    "rank": "C",
+    "line": 141
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/common/files.py",
+    "name": "find_files",
+    "type": "function",
+    "complexity": 7,
+    "rank": "B",
+    "line": 55
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/common/files.py",
+    "name": "count_lines",
+    "type": "function",
+    "complexity": 4,
+    "rank": "A",
+    "line": 101
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/common/files.py",
+    "name": "read_file",
+    "type": "function",
+    "complexity": 3,
+    "rank": "A",
+    "line": 7
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/common/files.py",
+    "name": "write_file",
+    "type": "function",
+    "complexity": 2,
+    "rank": "A",
+    "line": 29
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/common/files.py",
+    "name": "ensure_dir",
+    "type": "function",
+    "complexity": 1,
+    "rank": "A",
+    "line": 46
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/common/files.py",
+    "name": "get_file_extension",
+    "type": "function",
+    "complexity": 1,
+    "rank": "A",
+    "line": 123
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/common/git.py",
+    "name": "get_uncommitted_files",
+    "type": "method",
+    "complexity": 8,
+    "rank": "B",
+    "line": 304
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/common/git.py",
+    "name": "create_commit",
+    "type": "method",
+    "complexity": 6,
+    "rank": "B",
+    "line": 119
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/common/git.py",
+    "name": "get_file_history",
+    "type": "method",
+    "complexity": 6,
+    "rank": "B",
+    "line": 357
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/common/git.py",
+    "name": "GitOperations",
+    "type": "class",
+    "complexity": 5,
+    "rank": "A",
+    "line": 14
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/common/git.py",
+    "name": "is_git_repo",
+    "type": "method",
+    "complexity": 3,
+    "rank": "A",
+    "line": 26
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/common/git.py",
+    "name": "get_repo_root",
+    "type": "method",
+    "complexity": 3,
+    "rank": "A",
+    "line": 56
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/common/git.py",
+    "name": "get_current_branch",
+    "type": "method",
+    "complexity": 3,
+    "rank": "A",
+    "line": 88
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/common/git.py",
+    "name": "revert_changes",
+    "type": "method",
+    "complexity": 3,
+    "rank": "A",
+    "line": 195
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/common/git.py",
+    "name": "get_diff",
+    "type": "method",
+    "complexity": 3,
+    "rank": "A",
+    "line": 227
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/common/git.py",
+    "name": "get_status",
+    "type": "method",
+    "complexity": 3,
+    "rank": "A",
+    "line": 267
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/common/git.py",
+    "name": "get_last_commit_hash",
+    "type": "method",
+    "complexity": 3,
+    "rank": "A",
+    "line": 420
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/common/git.py",
+    "name": "GitOperationError",
+    "type": "class",
+    "complexity": 1,
+    "rank": "A",
+    "line": 8
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/common/logging.py",
+    "name": "log_subprocess_result",
+    "type": "function",
+    "complexity": 10,
+    "rank": "B",
+    "line": 572
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/common/logging.py",
+    "name": "log_error_detailed",
+    "type": "function",
+    "complexity": 8,
+    "rank": "B",
+    "line": 419
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/common/logging.py",
+    "name": "log_function_call",
+    "type": "function",
+    "complexity": 6,
+    "rank": "B",
+    "line": 449
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/common/logging.py",
+    "name": "log_subprocess_call",
+    "type": "function",
+    "complexity": 5,
+    "rank": "A",
+    "line": 548
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/common/logging.py",
+    "name": "log_result",
+    "type": "function",
+    "complexity": 4,
+    "rank": "A",
+    "line": 201
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/common/logging.py",
+    "name": "log_debug",
+    "type": "function",
+    "complexity": 4,
+    "rank": "A",
+    "line": 397
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/common/logging.py",
+    "name": "setup_logger",
+    "type": "function",
+    "complexity": 3,
+    "rank": "A",
+    "line": 14
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/common/logging.py",
+    "name": "log_dict",
+    "type": "function",
+    "complexity": 3,
+    "rank": "A",
+    "line": 90
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/common/logging.py",
+    "name": "log_file_list",
+    "type": "function",
+    "complexity": 3,
+    "rank": "A",
+    "line": 118
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/common/logging.py",
+    "name": "LogContext",
+    "type": "class",
+    "complexity": 3,
+    "rank": "A",
+    "line": 309
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/common/logging.py",
+    "name": "__exit__",
+    "type": "method",
+    "complexity": 3,
+    "rank": "A",
+    "line": 347
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/common/logging.py",
+    "name": "log_error",
+    "type": "function",
+    "complexity": 2,
+    "rank": "A",
+    "line": 151
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/common/logging.py",
+    "name": "log_metric",
+    "type": "function",
+    "complexity": 2,
+    "rank": "A",
+    "line": 229
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/common/logging.py",
+    "name": "get_mcp_logger",
+    "type": "function",
+    "complexity": 2,
+    "rank": "A",
+    "line": 370
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/common/logging.py",
+    "name": "log_function_result",
+    "type": "function",
+    "complexity": 2,
+    "rank": "A",
+    "line": 472
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/common/logging.py",
+    "name": "log_config_loaded",
+    "type": "function",
+    "complexity": 2,
+    "rank": "A",
+    "line": 522
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/common/logging.py",
+    "name": "log_tool_execution",
+    "type": "function",
+    "complexity": 2,
+    "rank": "A",
+    "line": 604
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/common/logging.py",
+    "name": "log_section",
+    "type": "function",
+    "complexity": 1,
+    "rank": "A",
+    "line": 69
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/common/logging.py",
+    "name": "log_step",
+    "type": "function",
+    "complexity": 1,
+    "rank": "A",
+    "line": 179
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/common/logging.py",
+    "name": "log_timing",
+    "type": "function",
+    "complexity": 1,
+    "rank": "A",
+    "line": 256
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/common/logging.py",
+    "name": "create_execution_log",
+    "type": "function",
+    "complexity": 1,
+    "rank": "A",
+    "line": 281
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/common/logging.py",
+    "name": "debug_log",
+    "type": "function",
+    "complexity": 1,
+    "rank": "A",
+    "line": 491
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/common/logging.py",
+    "name": "__init__",
+    "type": "method",
+    "complexity": 1,
+    "rank": "A",
+    "line": 321
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/common/logging.py",
+    "name": "__enter__",
+    "type": "method",
+    "complexity": 1,
+    "rank": "A",
+    "line": 339
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/common/mindsets.py",
+    "name": "evaluate_results",
+    "type": "function",
+    "complexity": 14,
+    "rank": "C",
+    "line": 148
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/common/mindsets.py",
+    "name": "format_verdict_report",
+    "type": "function",
+    "complexity": 5,
+    "rank": "A",
+    "line": 225
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/common/mindsets.py",
+    "name": "format_for_tool_description",
+    "type": "method",
+    "complexity": 4,
+    "rank": "A",
+    "line": 70
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/common/mindsets.py",
+    "name": "get_mindset",
+    "type": "function",
+    "complexity": 3,
+    "rank": "A",
+    "line": 86
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/common/mindsets.py",
+    "name": "ReviewerMindset",
+    "type": "class",
+    "complexity": 3,
+    "rank": "A",
+    "line": 31
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/common/mindsets.py",
+    "name": "format_approach",
+    "type": "method",
+    "complexity": 2,
+    "rank": "A",
+    "line": 46
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/common/mindsets.py",
+    "name": "format_questions",
+    "type": "method",
+    "complexity": 2,
+    "rank": "A",
+    "line": 55
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/common/mindsets.py",
+    "name": "JudgmentCriteria",
+    "type": "class",
+    "complexity": 1,
+    "rank": "A",
+    "line": 19
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/common/mindsets.py",
+    "name": "format_header",
+    "type": "method",
+    "complexity": 1,
+    "rank": "A",
+    "line": 41
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/common/mindsets.py",
+    "name": "format_full",
+    "type": "method",
+    "complexity": 1,
+    "rank": "A",
+    "line": 62
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/common/mindsets.py",
+    "name": "AnalysisVerdict",
+    "type": "class",
+    "complexity": 1,
+    "rank": "A",
+    "line": 134
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/common/protocol.py",
+    "name": "validate_outputs",
+    "type": "method",
+    "complexity": 10,
+    "rank": "B",
+    "line": 27
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/common/protocol.py",
+    "name": "IntegrationProtocol",
+    "type": "class",
+    "complexity": 5,
+    "rank": "A",
+    "line": 13
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/common/protocol.py",
+    "name": "validate_status_file",
+    "type": "method",
+    "complexity": 5,
+    "rank": "A",
+    "line": 95
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/common/protocol.py",
+    "name": "validate_summary_file",
+    "type": "method",
+    "complexity": 5,
+    "rank": "A",
+    "line": 129
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/common/protocol.py",
+    "name": "create_summary_file",
+    "type": "method",
+    "complexity": 5,
+    "rank": "A",
+    "line": 196
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/common/protocol.py",
+    "name": "get_status",
+    "type": "method",
+    "complexity": 4,
+    "rank": "A",
+    "line": 235
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/common/protocol.py",
+    "name": "wait_for_completion",
+    "type": "method",
+    "complexity": 4,
+    "rank": "A",
+    "line": 311
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/common/protocol.py",
+    "name": "create_status_file",
+    "type": "method",
+    "complexity": 3,
+    "rank": "A",
+    "line": 164
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/common/protocol.py",
+    "name": "check_all_subservers",
+    "type": "method",
+    "complexity": 2,
+    "rank": "A",
+    "line": 265
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/common/protocol.py",
+    "name": "ProtocolViolation",
+    "type": "class",
+    "complexity": 1,
+    "rank": "A",
+    "line": 7
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/deps.py",
+    "name": "_generate_summary",
+    "type": "method",
+    "complexity": 17,
+    "rank": "C",
+    "line": 437
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/deps.py",
+    "name": "execute",
+    "type": "method",
+    "complexity": 12,
+    "rank": "C",
+    "line": 151
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/deps.py",
+    "name": "__init__",
+    "type": "method",
+    "complexity": 10,
+    "rank": "B",
+    "line": 69
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/deps.py",
+    "name": "_detect_project_type",
+    "type": "method",
+    "complexity": 8,
+    "rank": "B",
+    "line": 249
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/deps.py",
+    "name": "_count_direct_deps",
+    "type": "method",
+    "complexity": 8,
+    "rank": "B",
+    "line": 308
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/deps.py",
+    "name": "DepsSubServer",
+    "type": "class",
+    "complexity": 7,
+    "rank": "B",
+    "line": 39
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/deps.py",
+    "name": "_save_results",
+    "type": "method",
+    "complexity": 6,
+    "rank": "B",
+    "line": 384
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/deps.py",
+    "name": "_check_licenses",
+    "type": "method",
+    "complexity": 5,
+    "rank": "A",
+    "line": 267
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/deps.py",
+    "name": "_get_dependency_tree",
+    "type": "method",
+    "complexity": 5,
+    "rank": "A",
+    "line": 287
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/deps.py",
+    "name": "_licenses_to_issues",
+    "type": "method",
+    "complexity": 5,
+    "rank": "A",
+    "line": 361
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/deps.py",
+    "name": "_compile_metrics",
+    "type": "method",
+    "complexity": 5,
+    "rank": "A",
+    "line": 422
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/deps.py",
+    "name": "validate_inputs",
+    "type": "method",
+    "complexity": 3,
+    "rank": "A",
+    "line": 131
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/deps.py",
+    "name": "_vulnerabilities_to_issues",
+    "type": "method",
+    "complexity": 3,
+    "rank": "A",
+    "line": 333
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/deps.py",
+    "name": "_outdated_to_issues",
+    "type": "method",
+    "complexity": 2,
+    "rank": "A",
+    "line": 347
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/deps_scanners.py",
+    "name": "run_safety",
+    "type": "function",
+    "complexity": 10,
+    "rank": "B",
+    "line": 68
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/deps_scanners.py",
+    "name": "run_pip_audit",
+    "type": "function",
+    "complexity": 8,
+    "rank": "B",
+    "line": 31
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/deps_scanners.py",
+    "name": "check_outdated_packages",
+    "type": "function",
+    "complexity": 8,
+    "rank": "B",
+    "line": 148
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/deps_scanners.py",
+    "name": "classify_vuln_severity",
+    "type": "function",
+    "complexity": 7,
+    "rank": "B",
+    "line": 133
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/deps_scanners.py",
+    "name": "run_npm_audit",
+    "type": "function",
+    "complexity": 6,
+    "rank": "B",
+    "line": 101
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/deps_scanners.py",
+    "name": "scan_vulnerabilities",
+    "type": "function",
+    "complexity": 4,
+    "rank": "A",
+    "line": 15
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/docs.py",
+    "name": "_generate_summary",
+    "type": "method",
+    "complexity": 14,
+    "rank": "C",
+    "line": 387
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/docs.py",
+    "name": "execute",
+    "type": "method",
+    "complexity": 11,
+    "rank": "C",
+    "line": 121
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/docs.py",
+    "name": "_find_missing_docstrings",
+    "type": "method",
+    "complexity": 11,
+    "rank": "C",
+    "line": 253
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/docs.py",
+    "name": "__init__",
+    "type": "method",
+    "complexity": 10,
+    "rank": "B",
+    "line": 47
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/docs.py",
+    "name": "DocsSubServer",
+    "type": "class",
+    "complexity": 9,
+    "rank": "B",
+    "line": 34
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/docs.py",
+    "name": "_check_docstring_coverage",
+    "type": "method",
+    "complexity": 9,
+    "rank": "B",
+    "line": 220
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/docs.py",
+    "name": "_check_project_docs",
+    "type": "method",
+    "complexity": 8,
+    "rank": "B",
+    "line": 301
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/docs.py",
+    "name": "_get_python_files",
+    "type": "method",
+    "complexity": 7,
+    "rank": "B",
+    "line": 209
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/docs.py",
+    "name": "_save_results",
+    "type": "method",
+    "complexity": 7,
+    "rank": "B",
+    "line": 342
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/docs.py",
+    "name": "validate_inputs",
+    "type": "method",
+    "complexity": 3,
+    "rank": "A",
+    "line": 106
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/docs.py",
+    "name": "_compile_metrics",
+    "type": "method",
+    "complexity": 3,
+    "rank": "A",
+    "line": 372
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/perf.py",
+    "name": "_profile_tests",
+    "type": "method",
+    "complexity": 12,
+    "rank": "C",
+    "line": 258
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/perf.py",
+    "name": "_generate_summary",
+    "type": "method",
+    "complexity": 12,
+    "rank": "C",
+    "line": 397
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/perf.py",
+    "name": "__init__",
+    "type": "method",
+    "complexity": 9,
+    "rank": "B",
+    "line": 53
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/perf.py",
+    "name": "execute",
+    "type": "method",
+    "complexity": 9,
+    "rank": "B",
+    "line": 124
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/perf.py",
+    "name": "_analyze_complexity",
+    "type": "method",
+    "complexity": 9,
+    "rank": "B",
+    "line": 303
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/perf.py",
+    "name": "PerfSubServer",
+    "type": "class",
+    "complexity": 8,
+    "rank": "B",
+    "line": 33
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/perf.py",
+    "name": "_detect_patterns",
+    "type": "method",
+    "complexity": 8,
+    "rank": "B",
+    "line": 220
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/perf.py",
+    "name": "_get_python_files",
+    "type": "method",
+    "complexity": 7,
+    "rank": "B",
+    "line": 209
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/perf.py",
+    "name": "_save_results",
+    "type": "method",
+    "complexity": 5,
+    "rank": "A",
+    "line": 357
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/perf.py",
+    "name": "_hotspots_to_issues",
+    "type": "method",
+    "complexity": 4,
+    "rank": "A",
+    "line": 337
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/perf.py",
+    "name": "validate_inputs",
+    "type": "method",
+    "complexity": 3,
+    "rank": "A",
+    "line": 109
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/perf.py",
+    "name": "_compile_metrics",
+    "type": "method",
+    "complexity": 3,
+    "rank": "A",
+    "line": 385
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality.py",
+    "name": "_generate_summary",
+    "type": "method",
+    "complexity": 18,
+    "rank": "C",
+    "line": 369
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality.py",
+    "name": "_analyze_complexity",
+    "type": "method",
+    "complexity": 10,
+    "rank": "B",
+    "line": 234
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality.py",
+    "name": "QualitySubServer",
+    "type": "class",
+    "complexity": 9,
+    "rank": "B",
+    "line": 31
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality.py",
+    "name": "__init__",
+    "type": "method",
+    "complexity": 9,
+    "rank": "B",
+    "line": 58
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality.py",
+    "name": "_analyze_maintainability",
+    "type": "method",
+    "complexity": 9,
+    "rank": "B",
+    "line": 272
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality.py",
+    "name": "_load_config",
+    "type": "method",
+    "complexity": 8,
+    "rank": "B",
+    "line": 101
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality.py",
+    "name": "execute",
+    "type": "method",
+    "complexity": 8,
+    "rank": "B",
+    "line": 141
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality.py",
+    "name": "_get_python_files",
+    "type": "method",
+    "complexity": 7,
+    "rank": "B",
+    "line": 218
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality.py",
+    "name": "_identify_issues",
+    "type": "method",
+    "complexity": 7,
+    "rank": "B",
+    "line": 306
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality.py",
+    "name": "validate_inputs",
+    "type": "method",
+    "complexity": 3,
+    "rank": "A",
+    "line": 124
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality.py",
+    "name": "_save_results",
+    "type": "method",
+    "complexity": 2,
+    "rank": "A",
+    "line": 342
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",
+    "name": "execute",
+    "type": "method",
+    "complexity": 34,
+    "rank": "E",
+    "line": 402
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",
+    "name": "_generate_comprehensive_summary",
+    "type": "method",
+    "complexity": 31,
+    "rank": "E",
+    "line": 953
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",
+    "name": "_compile_all_issues",
+    "type": "method",
+    "complexity": 27,
+    "rank": "D",
+    "line": 647
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",
+    "name": "_run_analyzers_parallel",
+    "type": "method",
+    "complexity": 21,
+    "rank": "D",
+    "line": 286
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",
+    "name": "_save_all_results",
+    "type": "method",
+    "complexity": 16,
+    "rank": "C",
+    "line": 809
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",
+    "name": "_compile_metrics",
+    "type": "method",
+    "complexity": 13,
+    "rank": "C",
+    "line": 901
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",
+    "name": "_run_beartype_check",
+    "type": "method",
+    "complexity": 12,
+    "rank": "C",
+    "line": 599
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",
+    "name": "_analyze_js_files",
+    "type": "method",
+    "complexity": 9,
+    "rank": "B",
+    "line": 568
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",
+    "name": "_get_python_files",
+    "type": "method",
+    "complexity": 7,
+    "rank": "B",
+    "line": 547
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",
+    "name": "QualitySubServer",
+    "type": "class",
+    "complexity": 6,
+    "rank": "B",
+    "line": 71
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",
+    "name": "__init__",
+    "type": "method",
+    "complexity": 6,
+    "rank": "B",
+    "line": 78
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",
+    "name": "_get_js_files",
+    "type": "method",
+    "complexity": 6,
+    "rank": "B",
+    "line": 558
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",
+    "name": "validate_inputs",
+    "type": "method",
+    "complexity": 3,
+    "rank": "A",
+    "line": 390
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",
+    "name": "_init_analyzers",
+    "type": "method",
+    "complexity": 1,
+    "rank": "A",
+    "line": 149
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",
+    "name": "complexity_threshold",
+    "type": "method",
+    "complexity": 1,
+    "rank": "A",
+    "line": 175
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",
+    "name": "maintainability_threshold",
+    "type": "method",
+    "complexity": 1,
+    "rank": "A",
+    "line": 179
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",
+    "name": "max_function_length",
+    "type": "method",
+    "complexity": 1,
+    "rank": "A",
+    "line": 183
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",
+    "name": "max_nesting_depth",
+    "type": "method",
+    "complexity": 1,
+    "rank": "A",
+    "line": 187
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",
+    "name": "cognitive_complexity_threshold",
+    "type": "method",
+    "complexity": 1,
+    "rank": "A",
+    "line": 191
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",
+    "name": "min_type_coverage",
+    "type": "method",
+    "complexity": 1,
+    "rank": "A",
+    "line": 195
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",
+    "name": "dead_code_confidence",
+    "type": "method",
+    "complexity": 1,
+    "rank": "A",
+    "line": 199
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",
+    "name": "min_docstring_coverage",
+    "type": "method",
+    "complexity": 1,
+    "rank": "A",
+    "line": 203
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",
+    "name": "churn_threshold",
+    "type": "method",
+    "complexity": 1,
+    "rank": "A",
+    "line": 207
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",
+    "name": "coupling_threshold",
+    "type": "method",
+    "complexity": 1,
+    "rank": "A",
+    "line": 211
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",
+    "name": "god_object_methods_threshold",
+    "type": "method",
+    "complexity": 1,
+    "rank": "A",
+    "line": 215
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",
+    "name": "god_object_lines_threshold",
+    "type": "method",
+    "complexity": 1,
+    "rank": "A",
+    "line": 219
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",
+    "name": "enable_type_coverage",
+    "type": "method",
+    "complexity": 1,
+    "rank": "A",
+    "line": 223
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",
+    "name": "enable_dead_code_detection",
+    "type": "method",
+    "complexity": 1,
+    "rank": "A",
+    "line": 227
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",
+    "name": "enable_import_cycle_detection",
+    "type": "method",
+    "complexity": 1,
+    "rank": "A",
+    "line": 231
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",
+    "name": "enable_docstring_coverage",
+    "type": "method",
+    "complexity": 1,
+    "rank": "A",
+    "line": 235
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",
+    "name": "enable_halstead_metrics",
+    "type": "method",
+    "complexity": 1,
+    "rank": "A",
+    "line": 239
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",
+    "name": "enable_raw_metrics",
+    "type": "method",
+    "complexity": 1,
+    "rank": "A",
+    "line": 243
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",
+    "name": "enable_cognitive_complexity",
+    "type": "method",
+    "complexity": 1,
+    "rank": "A",
+    "line": 247
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",
+    "name": "enable_js_analysis",
+    "type": "method",
+    "complexity": 1,
+    "rank": "A",
+    "line": 251
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",
+    "name": "count_test_assertions",
+    "type": "method",
+    "complexity": 1,
+    "rank": "A",
+    "line": 255
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",
+    "name": "enable_code_churn",
+    "type": "method",
+    "complexity": 1,
+    "rank": "A",
+    "line": 259
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",
+    "name": "enable_beartype",
+    "type": "method",
+    "complexity": 1,
+    "rank": "A",
+    "line": 263
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",
+    "name": "enable_duplication_detection",
+    "type": "method",
+    "complexity": 1,
+    "rank": "A",
+    "line": 267
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",
+    "name": "enable_static_analysis",
+    "type": "method",
+    "complexity": 1,
+    "rank": "A",
+    "line": 271
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",
+    "name": "enable_test_analysis",
+    "type": "method",
+    "complexity": 1,
+    "rank": "A",
+    "line": 275
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",
+    "name": "enable_architecture_analysis",
+    "type": "method",
+    "complexity": 1,
+    "rank": "A",
+    "line": 279
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",
+    "name": "enable_runtime_check_detection",
+    "type": "method",
+    "complexity": 1,
+    "rank": "A",
+    "line": 283
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/architecture.py",
+    "name": "_analyze_architecture",
+    "type": "method",
+    "complexity": 18,
+    "rank": "C",
+    "line": 33
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/architecture.py",
+    "name": "_detect_import_cycles",
+    "type": "method",
+    "complexity": 13,
+    "rank": "C",
+    "line": 93
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/architecture.py",
+    "name": "ArchitectureAnalyzer",
+    "type": "class",
+    "complexity": 11,
+    "rank": "C",
+    "line": 18
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/architecture.py",
+    "name": "_is_runtime_check",
+    "type": "method",
+    "complexity": 10,
+    "rank": "B",
+    "line": 176
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/architecture.py",
+    "name": "_detect_runtime_checks",
+    "type": "method",
+    "complexity": 9,
+    "rank": "B",
+    "line": 144
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/architecture.py",
+    "name": "analyze",
+    "type": "method",
+    "complexity": 1,
+    "rank": "A",
+    "line": 21
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/base.py",
+    "name": "BaseAnalyzer",
+    "type": "class",
+    "complexity": 2,
+    "rank": "A",
+    "line": 12
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/base.py",
+    "name": "_get_relative_path",
+    "type": "method",
+    "complexity": 2,
+    "rank": "A",
+    "line": 45
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/base.py",
+    "name": "__init__",
+    "type": "method",
+    "complexity": 1,
+    "rank": "A",
+    "line": 24
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/base.py",
+    "name": "analyze",
+    "type": "method",
+    "complexity": 1,
+    "rank": "A",
+    "line": 35
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/complexity.py",
+    "name": "_analyze_cyclomatic",
+    "type": "method",
+    "complexity": 10,
+    "rank": "B",
+    "line": 37
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/complexity.py",
+    "name": "_analyze_functions",
+    "type": "method",
+    "complexity": 9,
+    "rank": "B",
+    "line": 145
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/complexity.py",
+    "name": "ComplexityAnalyzer",
+    "type": "class",
+    "complexity": 7,
+    "rank": "B",
+    "line": 21
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/complexity.py",
+    "name": "_analyze_maintainability",
+    "type": "method",
+    "complexity": 7,
+    "rank": "B",
+    "line": 71
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/complexity.py",
+    "name": "_analyze_cognitive",
+    "type": "method",
+    "complexity": 7,
+    "rank": "B",
+    "line": 97
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/complexity.py",
+    "name": "_calculate_cognitive_complexity",
+    "type": "method",
+    "complexity": 6,
+    "rank": "B",
+    "line": 125
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/complexity.py",
+    "name": "_calculate_nesting_depth",
+    "type": "method",
+    "complexity": 3,
+    "rank": "A",
+    "line": 191
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/complexity.py",
+    "name": "analyze",
+    "type": "method",
+    "complexity": 1,
+    "rank": "A",
+    "line": 24
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/metrics.py",
+    "name": "_analyze_code_churn",
+    "type": "method",
+    "complexity": 21,
+    "rank": "D",
+    "line": 120
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/metrics.py",
+    "name": "MetricsAnalyzer",
+    "type": "class",
+    "complexity": 12,
+    "rank": "C",
+    "line": 19
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/metrics.py",
+    "name": "_analyze_halstead",
+    "type": "method",
+    "complexity": 12,
+    "rank": "C",
+    "line": 34
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/metrics.py",
+    "name": "_analyze_raw_metrics",
+    "type": "method",
+    "complexity": 10,
+    "rank": "B",
+    "line": 82
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/metrics.py",
+    "name": "analyze",
+    "type": "method",
+    "complexity": 1,
+    "rank": "A",
+    "line": 22
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/static.py",
+    "name": "_detect_duplication",
+    "type": "method",
+    "complexity": 8,
+    "rank": "B",
+    "line": 58
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/static.py",
+    "name": "_run_ruff",
+    "type": "method",
+    "complexity": 7,
+    "rank": "B",
+    "line": 31
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/static.py",
+    "name": "StaticAnalyzer",
+    "type": "class",
+    "complexity": 6,
+    "rank": "B",
+    "line": 17
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/static.py",
+    "name": "analyze",
+    "type": "method",
+    "complexity": 1,
+    "rank": "A",
+    "line": 20
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/types.py",
+    "name": "_analyze_docstring_coverage",
+    "type": "method",
+    "complexity": 12,
+    "rank": "C",
+    "line": 111
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/types.py",
+    "name": "_analyze_type_coverage",
+    "type": "method",
+    "complexity": 11,
+    "rank": "C",
+    "line": 33
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/types.py",
+    "name": "_detect_dead_code",
+    "type": "method",
+    "complexity": 10,
+    "rank": "B",
+    "line": 76
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/types.py",
+    "name": "TypeAnalyzer",
+    "type": "class",
+    "complexity": 9,
+    "rank": "B",
+    "line": 18
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/types.py",
+    "name": "analyze",
+    "type": "method",
+    "complexity": 1,
+    "rank": "A",
+    "line": 21
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/report.py",
+    "name": "_generate_report",
+    "type": "method",
+    "complexity": 18,
+    "rank": "C",
+    "line": 258
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/report.py",
+    "name": "_gather_results",
+    "type": "method",
+    "complexity": 9,
+    "rank": "B",
+    "line": 127
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/report.py",
+    "name": "_compile_overall_metrics",
+    "type": "method",
+    "complexity": 9,
+    "rank": "B",
+    "line": 174
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/report.py",
+    "name": "_determine_verdict",
+    "type": "method",
+    "complexity": 9,
+    "rank": "B",
+    "line": 214
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/report.py",
+    "name": "ReportSubServer",
+    "type": "class",
+    "complexity": 8,
+    "rank": "B",
+    "line": 24
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/report.py",
+    "name": "__init__",
+    "type": "method",
+    "complexity": 6,
+    "rank": "B",
+    "line": 34
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/report.py",
+    "name": "validate_inputs",
+    "type": "method",
+    "complexity": 4,
+    "rank": "A",
+    "line": 63
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/report.py",
+    "name": "_save_report",
+    "type": "method",
+    "complexity": 4,
+    "rank": "A",
+    "line": 355
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/report.py",
+    "name": "execute",
+    "type": "method",
+    "complexity": 2,
+    "rank": "A",
+    "line": 80
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/scope.py",
+    "name": "_generate_summary",
+    "type": "method",
+    "complexity": 9,
+    "rank": "B",
+    "line": 236
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/scope.py",
+    "name": "_find_git_files",
+    "type": "method",
+    "complexity": 6,
+    "rank": "B",
+    "line": 178
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/scope.py",
+    "name": "ScopeSubServer",
+    "type": "class",
+    "complexity": 5,
+    "rank": "A",
+    "line": 30
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/scope.py",
+    "name": "validate_inputs",
+    "type": "method",
+    "complexity": 5,
+    "rank": "A",
+    "line": 88
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/scope.py",
+    "name": "_save_results",
+    "type": "method",
+    "complexity": 5,
+    "rank": "A",
+    "line": 204
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/scope.py",
+    "name": "execute",
+    "type": "method",
+    "complexity": 4,
+    "rank": "A",
+    "line": 111
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/scope.py",
+    "name": "__init__",
+    "type": "method",
+    "complexity": 3,
+    "rank": "A",
+    "line": 55
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/scope.py",
+    "name": "_find_all_files",
+    "type": "method",
+    "complexity": 1,
+    "rank": "A",
+    "line": 196
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/security.py",
+    "name": "_generate_summary",
+    "type": "method",
+    "complexity": 14,
+    "rank": "C",
+    "line": 373
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/security.py",
+    "name": "_run_bandit",
+    "type": "method",
+    "complexity": 12,
+    "rank": "C",
+    "line": 273
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/security.py",
+    "name": "__init__",
+    "type": "method",
+    "complexity": 11,
+    "rank": "C",
+    "line": 64
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/security.py",
+    "name": "SecuritySubServer",
+    "type": "class",
+    "complexity": 8,
+    "rank": "B",
+    "line": 34
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/security.py",
+    "name": "_load_config",
+    "type": "method",
+    "complexity": 8,
+    "rank": "B",
+    "line": 129
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/security.py",
+    "name": "_get_python_files",
+    "type": "method",
+    "complexity": 7,
+    "rank": "B",
+    "line": 258
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/security.py",
+    "name": "execute",
+    "type": "method",
+    "complexity": 6,
+    "rank": "B",
+    "line": 180
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/security.py",
+    "name": "validate_inputs",
+    "type": "method",
+    "complexity": 5,
+    "rank": "A",
+    "line": 152
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/security.py",
+    "name": "_filter_issues",
+    "type": "method",
+    "complexity": 4,
+    "rank": "A",
+    "line": 317
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/security.py",
+    "name": "_categorize_issues",
+    "type": "method",
+    "complexity": 3,
+    "rank": "A",
+    "line": 336
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/security.py",
+    "name": "_save_results",
+    "type": "method",
+    "complexity": 1,
+    "rank": "A",
+    "line": 353
+  },
+  {
+    "file": "src/btx_fix_mcp/tools_venv.py",
+    "name": "ensure_tools_venv",
+    "type": "function",
+    "complexity": 7,
+    "rank": "B",
+    "line": 195
+  },
+  {
+    "file": "src/btx_fix_mcp/tools_venv.py",
+    "name": "_install_uv_if_needed",
+    "type": "function",
+    "complexity": 6,
+    "rank": "B",
+    "line": 154
+  },
+  {
+    "file": "src/btx_fix_mcp/tools_venv.py",
+    "name": "is_venv_initialized",
+    "type": "function",
+    "complexity": 5,
+    "rank": "A",
+    "line": 87
+  },
+  {
+    "file": "src/btx_fix_mcp/tools_venv.py",
+    "name": "_get_tools_from_pyproject",
+    "type": "function",
+    "complexity": 5,
+    "rank": "A",
+    "line": 107
+  },
+  {
+    "file": "src/btx_fix_mcp/tools_venv.py",
+    "name": "get_tool_version",
+    "type": "function",
+    "complexity": 5,
+    "rank": "A",
+    "line": 290
+  },
+  {
+    "file": "src/btx_fix_mcp/tools_venv.py",
+    "name": "_find_python",
+    "type": "function",
+    "complexity": 4,
+    "rank": "A",
+    "line": 133
+  },
+  {
+    "file": "src/btx_fix_mcp/tools_venv.py",
+    "name": "get_cache_dir",
+    "type": "function",
+    "complexity": 2,
+    "rank": "A",
+    "line": 50
+  },
+  {
+    "file": "src/btx_fix_mcp/tools_venv.py",
+    "name": "get_tool_path",
+    "type": "function",
+    "complexity": 2,
+    "rank": "A",
+    "line": 68
+  },
+  {
+    "file": "src/btx_fix_mcp/tools_venv.py",
+    "name": "run_tool",
+    "type": "function",
+    "complexity": 2,
+    "rank": "A",
+    "line": 264
+  },
+  {
+    "file": "src/btx_fix_mcp/tools_venv.py",
+    "name": "cleanup_tools_venv",
+    "type": "function",
+    "complexity": 2,
+    "rank": "A",
+    "line": 315
+  },
+  {
+    "file": "src/btx_fix_mcp/tools_venv.py",
+    "name": "get_venv_path",
+    "type": "function",
+    "complexity": 1,
+    "rank": "A",
+    "line": 63
+  }
+]

@@ -32,7 +32,7 @@ def setup_logger(
         >>> from pathlib import Path
         >>> logger = setup_logger(
         ...     "scope",
-        ...     log_file=Path("LLM-CONTEXT/review-anal/logs/scope.log")
+        ...     log_file=Path("LLM-CONTEXT/btx_fix_mcp/review/logs/scope.log")
         ... )
         >>> logger.info("Starting scope analysis")
     """
@@ -294,11 +294,11 @@ def create_execution_log(
     Example:
         >>> from pathlib import Path
         >>> log_file = create_execution_log(
-        ...     Path("LLM-CONTEXT/review-anal/logs"),
+        ...     Path("LLM-CONTEXT/btx_fix_mcp/review/logs"),
         ...     "scope"
         ... )
         >>> print(log_file)
-        LLM-CONTEXT/review-anal/logs/scope_20251121_100000.log
+        LLM-CONTEXT/btx_fix_mcp/review/logs/scope_20251121_100000.log
     """
     output_dir.mkdir(parents=True, exist_ok=True)
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -356,9 +356,7 @@ class LogContext:
                     f"Completed: {self.operation} ({duration:.2f}s)",
                 )
             else:
-                self.logger.error(
-                    f"Failed: {self.operation} ({duration:.2f}s) - {exc_type.__name__}: {exc_val}"
-                )
+                self.logger.error(f"Failed: {self.operation} ({duration:.2f}s) - {exc_type.__name__}: {exc_val}")
         return False  # Don't suppress exceptions
 
 
@@ -497,10 +495,12 @@ def debug_log(logger: logging.Logger) -> Callable[[F], F]:
     Returns:
         Decorator function
     """
+
     def decorator(func: F) -> F:
         @wraps(func)
         def wrapper(*args: Any, **kwargs: Any) -> Any:
             import time
+
             start = time.perf_counter()
             log_function_call(logger, func.__name__, args, kwargs)
             try:
@@ -511,11 +511,14 @@ def debug_log(logger: logging.Logger) -> Callable[[F], F]:
             except Exception as e:
                 duration_ms = (time.perf_counter() - start) * 1000
                 log_error_detailed(
-                    logger, e,
+                    logger,
+                    e,
                     context={"function": func.__name__, "duration_ms": f"{duration_ms:.1f}"},
                 )
                 raise
+
         return wrapper  # type: ignore[return-value]
+
     return decorator
 
 
@@ -620,6 +623,4 @@ def log_tool_execution(
         duration_ms: Execution time in milliseconds
     """
     timing = f" in {duration_ms:.1f}ms" if duration_ms is not None else ""
-    logger.info(
-        f"TOOL {tool_name}: {status} | files={files_count} | issues={issues_found}{timing}"
-    )
+    logger.info(f"TOOL {tool_name}: {status} | files={files_count} | issues={issues_found}{timing}")

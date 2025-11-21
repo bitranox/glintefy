@@ -35,7 +35,7 @@
 
 [review]
 # Base output directory for review analysis
-# output_dir = "LLM-CONTEXT/review-anal"
+output_dir = "LLM-CONTEXT/btx_fix_mcp/review"
 
 # Sub-servers to run (in order)
 # subservers = ["scope", "quality", "security", "deps", "docs", "perf"]
@@ -81,38 +81,89 @@
 [review.quality]
 # Maximum cyclomatic complexity before flagging as issue
 # A = 1-5 (low risk), B = 6-10 (moderate), C = 11-20 (complex), D = 21+ (high risk)
-# complexity_threshold = 10
+complexity_threshold = 10
 
 # Minimum maintainability index before flagging as issue
 # A = 20+ (good), B = 10-19 (moderate), C = 0-9 (poor)
-# maintainability_threshold = 20
+maintainability_threshold = 20
+
+# Maximum cognitive complexity threshold
+cognitive_complexity_threshold = 15
 
 # Maximum function length in lines before flagging
-# function_length_threshold = 50
+max_function_length = 50
 
 # Maximum nesting depth before flagging
-# nesting_depth_threshold = 3
+max_nesting_depth = 3
 
-# Enable code duplication detection
-# detect_duplication = true
+# --- Feature Flags ---
 
+# Enable code duplication detection (via pylint)
+enable_duplication_detection = true
 # Minimum duplicate lines to report
-# min_duplicate_lines = 6
+min_duplicate_lines = 6
 
+# Enable static analysis (Ruff)
+enable_static_analysis = true
+
+# Enable test suite analysis
+enable_test_analysis = true
+# Count assertions in tests
+count_test_assertions = true
+
+# Enable architecture analysis (god objects, coupling)
+enable_architecture_analysis = true
 # Enable god object detection (classes with too many methods/lines)
-# detect_god_objects = true
-
+detect_god_objects = true
 # Maximum methods per class before flagging as god object
-# god_object_methods_threshold = 20
-
+god_object_methods_threshold = 20
 # Maximum lines per class before flagging as god object
-# god_object_lines_threshold = 500
-
+god_object_lines_threshold = 500
 # Enable coupling analysis
-# detect_high_coupling = true
-
+detect_high_coupling = true
 # Maximum imports per module before flagging high coupling
-# coupling_threshold = 15
+coupling_threshold = 15
+
+# Enable import cycle detection
+enable_import_cycle_detection = true
+
+# Enable runtime check optimization detection
+enable_runtime_check_detection = true
+
+# Enable type coverage analysis (mypy)
+enable_type_coverage = true
+# Minimum type coverage percentage
+min_type_coverage = 80
+
+# Enable dead code detection (vulture)
+enable_dead_code_detection = true
+# Minimum confidence for dead code detection (0-100)
+dead_code_confidence = 80
+
+# Enable docstring coverage analysis (interrogate)
+enable_docstring_coverage = true
+# Minimum docstring coverage percentage
+min_docstring_coverage = 80
+
+# Enable Halstead metrics (radon hal)
+enable_halstead_metrics = true
+
+# Enable raw metrics (LOC/SLOC/comments via radon raw)
+enable_raw_metrics = true
+
+# Enable cognitive complexity analysis
+enable_cognitive_complexity = true
+
+# Enable JavaScript/TypeScript analysis (eslint)
+enable_js_analysis = true
+
+# Enable code churn analysis (git history)
+enable_code_churn = true
+# High churn threshold (commits in 90 days)
+churn_threshold = 20
+
+# Enable beartype runtime type checking
+enable_beartype = true
 
 
 # -----------------------------------------------------------------------------
@@ -283,7 +334,7 @@
 
 [fix]
 # Base output directory for fix operations
-# output_dir = "LLM-CONTEXT/fix-anal"
+output_dir = "LLM-CONTEXT/btx_fix_mcp/fix"
 
 # Enable evidence-based fixing (measure -> fix -> verify)
 # evidence_based = true
@@ -529,6 +580,156 @@
 
 # Branch name template
 # branch_template = "fix/{issue_id}"
+
+
+# =============================================================================
+# REVIEWER MINDSETS
+# =============================================================================
+# Mindsets define the persona and approach for each reviewer type.
+# These are used in tool descriptions, reports, and result evaluation.
+
+[review.mindsets.quality]
+role = "meticulous quality reviewer"
+traits = ["pedantic", "precise", "relentlessly thorough"]
+
+[review.mindsets.quality.approach]
+every_function = "Check length (<50 lines), complexity (<10), coherence"
+verify_claims = "Measure actual complexity with tools, don't assume"
+no_trust = "Run analysis tools, don't guess"
+standards = "No functions >50 lines, no complexity >10, no exceptions"
+coherence = "Every function should be clear and inevitable"
+performance = "Detect expensive runtime checks that could be cached"
+
+[review.mindsets.quality.questions]
+items = [
+    "Is this function actually >50 lines? Let me measure.",
+    "Is this complexity really >10? Let me run radon.",
+    "Is this code duplicated elsewhere? Let me search.",
+    "Could this runtime check be done once at module load?",
+    "Is this nesting too deep? Let me count levels.",
+]
+
+# Judgment thresholds and verdicts
+[review.mindsets.quality.judgment]
+# Verdict thresholds (percentage of issues vs files)
+critical_threshold = 10   # >10% critical issues = REJECT
+warning_threshold = 25    # >25% warnings = NEEDS_WORK
+# Verdicts
+verdict_pass = "✅ APPROVED - Code meets quality standards"
+verdict_warning = "⚠️ APPROVED WITH COMMENTS - Minor issues found"
+verdict_needs_work = "🔧 NEEDS WORK - Significant issues require attention"
+verdict_reject = "❌ REJECTED - Critical issues must be fixed"
+
+
+[review.mindsets.security]
+role = "paranoid security auditor"
+traits = ["suspicious", "thorough", "zero-trust"]
+
+[review.mindsets.security.approach]
+every_input = "Treat all input as malicious until validated"
+verify_claims = "Test security assumptions with actual attack vectors"
+no_trust = "Assume breaches happen, verify defense in depth"
+standards = "No hardcoded secrets, no SQL injection, no command injection"
+defense = "Multiple layers of security, not single points of failure"
+
+[review.mindsets.security.questions]
+items = [
+    "Can this input be manipulated? Let me test injection.",
+    "Is this secret hardcoded? Let me scan for patterns.",
+    "What happens if auth fails? Let me trace the flow.",
+    "Is this data sanitized? Let me check validation.",
+]
+
+[review.mindsets.security.judgment]
+critical_threshold = 1    # Any HIGH severity = REJECT
+warning_threshold = 5     # >5 MEDIUM = NEEDS_WORK
+verdict_pass = "✅ SECURE - No significant vulnerabilities detected"
+verdict_warning = "⚠️ ACCEPTABLE - Low-risk issues found"
+verdict_needs_work = "🔧 VULNERABLE - Security issues require attention"
+verdict_reject = "❌ INSECURE - Critical vulnerabilities must be fixed immediately"
+
+
+[review.mindsets.docs]
+role = "meticulous documentation reviewer"
+traits = ["pedantic", "completeness-focused", "clarity-obsessed"]
+
+[review.mindsets.docs.approach]
+every_api = "Check every public function, class, method for docs"
+verify_claims = "Documentation must match actual code behavior"
+no_trust = "Re-check every docstring against implementation"
+standards = "WHY-WHAT-HOW structure, all parameters documented"
+completeness = "Every parameter, return value, exception documented"
+
+[review.mindsets.docs.questions]
+items = [
+    "Is this docstring describing actual behavior or just a TODO?",
+    "Does this documentation match what the code actually does?",
+    "Are all parameters and return values documented?",
+    "Is the WHY clear, not just the WHAT?",
+]
+
+[review.mindsets.docs.judgment]
+critical_threshold = 20   # >20% undocumented public APIs = REJECT
+warning_threshold = 40    # >40% incomplete docs = NEEDS_WORK
+verdict_pass = "✅ WELL DOCUMENTED - Documentation is complete and accurate"
+verdict_warning = "⚠️ ACCEPTABLE - Minor documentation gaps"
+verdict_needs_work = "🔧 INCOMPLETE - Significant documentation needed"
+verdict_reject = "❌ UNDOCUMENTED - Critical documentation missing"
+
+
+[review.mindsets.perf]
+role = "meticulous performance reviewer"
+traits = ["measurement-driven", "skeptical", "evidence-based"]
+
+[review.mindsets.perf.approach]
+every_claim = "Verify every performance assertion with profiling"
+verify_claims = "Profile with actual test suite, never synthetic benchmarks"
+no_trust = "Don't believe claims without benchmarks"
+standards = "Improvements must be >5% to justify complexity"
+evidence = "Show profiling data, cache hit rates, before/after metrics"
+
+[review.mindsets.perf.questions]
+items = [
+    "Is this actually faster? Let me profile it.",
+    "What's the cache hit rate with REAL data? Let me measure.",
+    "Is this optimization worth the complexity? Show me the numbers.",
+    "Where's the actual bottleneck? Let me profile with the test suite.",
+]
+
+[review.mindsets.perf.judgment]
+critical_threshold = 5    # >5% severe bottlenecks = REJECT
+warning_threshold = 15    # >15% potential issues = NEEDS_WORK
+verdict_pass = "✅ PERFORMANT - No significant performance issues"
+verdict_warning = "⚠️ ACCEPTABLE - Minor optimization opportunities"
+verdict_needs_work = "🔧 SLOW - Performance issues require attention"
+verdict_reject = "❌ UNACCEPTABLE - Critical performance problems"
+
+# --- Deps Mindset ---
+[review.mindsets.deps]
+role = "paranoid dependency auditor"
+traits = ["vigilant", "risk-averse", "thorough"]
+
+[review.mindsets.deps.approach]
+security_first = "Scan all dependencies for known vulnerabilities (CVEs)"
+freshness = "Check for outdated packages that may have security patches"
+license_compliance = "Verify all licenses are compatible with project"
+supply_chain = "Assess dependency tree depth and trusted sources"
+
+[review.mindsets.deps.questions]
+items = [
+    "Are there any known CVEs in these dependencies? Let me check pip-audit.",
+    "How outdated are these packages? What security patches are we missing?",
+    "Are all licenses compatible? Any GPL contamination risks?",
+    "How deep is the dependency tree? Are we pulling in untrusted sources?",
+]
+
+[review.mindsets.deps.judgment]
+critical_threshold = 1    # >0 critical vulnerabilities = REJECT
+warning_threshold = 20    # >20% outdated = NEEDS_WORK
+verdict_pass = "✅ SECURE - Dependencies are secure and up-to-date"
+verdict_warning = "⚠️ UPDATE RECOMMENDED - Minor updates available"
+verdict_needs_work = "🔧 ACTION NEEDED - Security patches required"
+verdict_reject = "❌ VULNERABLE - Critical security issues found"
 
 
 # =============================================================================

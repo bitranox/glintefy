@@ -1,0 +1,38 @@
+# Scope Analysis Report
+
+## Overview
+
+**Mode**: full
+**Repository**: /media/srv-main-softdev/projects/MCP/btx_fix_mcp
+**Branch**: master
+**Total Files**: 1661
+
+## File Breakdown by Category
+
+- **CODE**: 56 files
+- **TEST**: 48 files
+- **DOCS**: 60 files
+- **CONFIG**: 318 files
+- **BUILD**: 1 files
+- **OTHER**: 1178 files
+
+## Sample Files (first 10)
+
+- `.btx-review.yaml.example`
+- `.claude/settings.local.json`
+- `.coverage.unit.lxc-pydev.69601.XJkIlGyx`
+- `.devcontainer/devcontainer.json`
+- `.devcontainer/settings.json`
+- `.env`
+- `.env.example`
+- `.git/hooks/applypatch-msg.sample`
+- `.git/hooks/commit-msg.sample`
+- `.git/hooks/fsmonitor-watchman.sample`
+- ... and 1651 more
+
+## Next Steps
+
+1. Review code files for quality issues
+2. Check test coverage
+3. Scan for security vulnerabilities
+4. Review documentation completeness

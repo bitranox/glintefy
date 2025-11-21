@@ -2,7 +2,6 @@
 
 import subprocess
 from pathlib import Path
-from typing import Optional
 
 
 class GitOperationError(Exception):
@@ -37,9 +36,10 @@ class GitOperations:
             True
         """
         try:
-            cmd = ["git", "rev-parse", "--is-inside-work-tree"]
+            cmd = ["git"]
             if path:
                 cmd.extend(["-C", str(path)])
+            cmd.extend(["rev-parse", "--is-inside-work-tree"])
 
             result = subprocess.run(
                 cmd,
@@ -67,9 +67,10 @@ class GitOperations:
             /home/user/project
         """
         try:
-            cmd = ["git", "rev-parse", "--show-toplevel"]
+            cmd = ["git"]
             if path:
                 cmd.extend(["-C", str(path)])
+            cmd.extend(["rev-parse", "--show-toplevel"])
 
             result = subprocess.run(
                 cmd,
@@ -97,9 +98,10 @@ class GitOperations:
             'main'
         """
         try:
-            cmd = ["git", "rev-parse", "--abbrev-ref", "HEAD"]
+            cmd = ["git"]
             if path:
                 cmd.extend(["-C", str(path)])
+            cmd.extend(["rev-parse", "--abbrev-ref", "HEAD"])
 
             result = subprocess.run(
                 cmd,
@@ -159,7 +161,7 @@ class GitOperations:
                 commit_cmd.insert(1, "-C")
                 commit_cmd.insert(2, str(path))
 
-            result = subprocess.run(
+            subprocess.run(
                 commit_cmd,
                 capture_output=True,
                 text=True,

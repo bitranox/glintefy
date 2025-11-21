@@ -252,6 +252,18 @@ from btx_fix_mcp.subservers.common.logging import (
 4. **Redact secrets** - Use `log_config_loaded()` which auto-redacts keys containing: `password`, `secret`, `token`, `key`, `api_key`, `auth`
 5. **Log subprocess calls** - Use `log_subprocess_call()` before and `log_subprocess_result()` after
 
+### Sub-Server MCP Mode
+
+All sub-servers support a `mcp_mode` parameter that switches logging:
+
+```python
+# Standalone mode (default): logs to stdout
+server = ScopeSubServer(output_dir=output_dir, mcp_mode=False)
+
+# MCP mode: logs to stderr only (MCP protocol uses stdout)
+server = ScopeSubServer(output_dir=output_dir, mcp_mode=True)
+```
+
 ### Example: Sub-Server with Logging
 
 ```python
@@ -260,9 +272,12 @@ from btx_fix_mcp.subservers.common.logging import (
 )
 
 class MySubServer(BaseSubServer):
-    def __init__(self, ...):
+    def __init__(self, ..., mcp_mode: bool = False):
         super().__init__(...)
-        self._logger = get_mcp_logger(f"btx_fix_mcp.{self.name}")
+        if mcp_mode:
+            self._logger = get_mcp_logger(f"btx_fix_mcp.{self.name}")
+        else:
+            self._logger = setup_logger(self.name, log_file=None, level=20)
 
     @debug_log(_logger)  # Auto-logs entry, exit, and errors
     def run(self) -> SubServerResult:
@@ -275,6 +290,31 @@ class MySubServer(BaseSubServer):
                 include_traceback=True,
             )
             raise
+```
+
+### MCP Server Implementation
+
+The `ReviewMCPServer` wraps sub-servers for MCP protocol:
+
+```python
+from btx_fix_mcp.servers.review import ReviewMCPServer
+
+# Create MCP server
+server = ReviewMCPServer(repo_path=Path("."))
+
+# Run individual tools
+result = server.run_scope(mode="git")
+result = server.run_quality()
+result = server.run_security()
+
+# Run all reviews
+result = server.run_all(mode="git")
+
+# Get MCP tool definitions
+tools = server.get_tool_definitions()
+
+# Handle MCP tool call
+result = server.handle_tool_call("review_scope", {"mode": "full"})
 ```
 
 ### Testing Logging
@@ -291,7 +331,37 @@ def test_my_function_logs_debug(self, capsys):
 
 ## Code Review Quality Analyses
 
-When reviewing code, always use these quality analysis types:
+When reviewing code in this project, **run these tools** to ensure quality:
+
+### Required Analysis Tools
+
+| Tool | Command | Purpose |
+|------|---------|---------|
+| **ruff** | `ruff check src/ tests/` | Linting, style, potential bugs |
+| **mypy** | `mypy src/` | Type checking and coverage |
+| **pylint** | `pylint src/` | Code duplication, code smells |
+| **vulture** | `vulture src/` | Dead/unused code detection |
+| **interrogate** | `interrogate src/` | Docstring coverage |
+| **radon** | `radon cc src/ -a` | Cyclomatic complexity |
+| **radon** | `radon mi src/` | Maintainability index |
+| **bandit** | `python3.13 -m bandit -r src/` | Security vulnerabilities |
+
+### Quick Quality Check
+
+```bash
+# Run all quality checks at once
+ruff check src/ tests/ && mypy src/ && radon cc src/ -a -nc
+```
+
+### Quality Thresholds
+
+- Cyclomatic Complexity: **≤10** per function (A/B grade)
+- Maintainability Index: **≥20** per file (A grade)
+- Type Coverage: **≥80%**
+- Docstring Coverage: **≥80%**
+- No high/critical security issues from bandit
+
+### Analysis Types Reference
 
 | Analysis | Tool | Description |
 |----------|------|-------------|
@@ -317,3 +387,9 @@ When working on this project:
 5. Monitor CI after pushing changes
 6. **When adding config keys**: Follow Configuration Testing Requirements above
 7. **When adding MCP components**: Follow MCP Server Logging Requirements above
+- review everything what we have now
+- always update the mindset for new mcp subservers or analyzers
+- No more sqlite errors. When you need coverage, run explicitly:
+
+  pytest --cov=src/btx_fix_mcp --cov-report=term-missing
+- on user command "full review" run python -m btx_fix_mcp review all --mode full  , and analyze the code_review_report in LLM-CONTEXT/btx_fix_mcp/review/report/all_issues.json after finishing the command

@@ -1,0 +1,2412 @@
+[
+  {
+    "type": "high_complexity",
+    "severity": "warning",
+    "file": "scripts/_utils.py",
+    "line": 0,
+    "name": "bootstrap_dev",
+    "value": 14,
+    "threshold": 10,
+    "message": "Function 'bootstrap_dev' has complexity 14 (threshold: 10)"
+  },
+  {
+    "type": "high_complexity",
+    "severity": "warning",
+    "file": "scripts/_utils.py",
+    "line": 0,
+    "name": "_extract_author_info",
+    "value": 11,
+    "threshold": 10,
+    "message": "Function '_extract_author_info' has complexity 11 (threshold: 10)"
+  },
+  {
+    "type": "high_complexity",
+    "severity": "warning",
+    "file": "scripts/menu.py",
+    "line": 0,
+    "name": "_gather_values",
+    "value": 12,
+    "threshold": 10,
+    "message": "Function '_gather_values' has complexity 12 (threshold: 10)"
+  },
+  {
+    "type": "high_complexity",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/common/files.py",
+    "line": 0,
+    "name": "categorize_files",
+    "value": 12,
+    "threshold": 10,
+    "message": "Function 'categorize_files' has complexity 12 (threshold: 10)"
+  },
+  {
+    "type": "high_complexity",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/common/mindsets.py",
+    "line": 0,
+    "name": "evaluate_results",
+    "value": 14,
+    "threshold": 10,
+    "message": "Function 'evaluate_results' has complexity 14 (threshold: 10)"
+  },
+  {
+    "type": "high_complexity",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/review/deps.py",
+    "line": 0,
+    "name": "_generate_summary",
+    "value": 17,
+    "threshold": 10,
+    "message": "Function '_generate_summary' has complexity 17 (threshold: 10)"
+  },
+  {
+    "type": "high_complexity",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/review/deps.py",
+    "line": 0,
+    "name": "execute",
+    "value": 12,
+    "threshold": 10,
+    "message": "Function 'execute' has complexity 12 (threshold: 10)"
+  },
+  {
+    "type": "high_complexity",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/review/docs.py",
+    "line": 0,
+    "name": "_generate_summary",
+    "value": 14,
+    "threshold": 10,
+    "message": "Function '_generate_summary' has complexity 14 (threshold: 10)"
+  },
+  {
+    "type": "high_complexity",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/review/docs.py",
+    "line": 0,
+    "name": "execute",
+    "value": 11,
+    "threshold": 10,
+    "message": "Function 'execute' has complexity 11 (threshold: 10)"
+  },
+  {
+    "type": "high_complexity",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/review/docs.py",
+    "line": 0,
+    "name": "_find_missing_docstrings",
+    "value": 11,
+    "threshold": 10,
+    "message": "Function '_find_missing_docstrings' has complexity 11 (threshold: 10)"
+  },
+  {
+    "type": "high_complexity",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/review/perf.py",
+    "line": 0,
+    "name": "_profile_tests",
+    "value": 12,
+    "threshold": 10,
+    "message": "Function '_profile_tests' has complexity 12 (threshold: 10)"
+  },
+  {
+    "type": "high_complexity",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/review/perf.py",
+    "line": 0,
+    "name": "_generate_summary",
+    "value": 12,
+    "threshold": 10,
+    "message": "Function '_generate_summary' has complexity 12 (threshold: 10)"
+  },
+  {
+    "type": "high_complexity",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/review/quality.py",
+    "line": 0,
+    "name": "_generate_summary",
+    "value": 18,
+    "threshold": 10,
+    "message": "Function '_generate_summary' has complexity 18 (threshold: 10)"
+  },
+  {
+    "type": "high_complexity",
+    "severity": "error",
+    "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",
+    "line": 0,
+    "name": "execute",
+    "value": 34,
+    "threshold": 10,
+    "message": "Function 'execute' has complexity 34 (threshold: 10)"
+  },
+  {
+    "type": "high_complexity",
+    "severity": "error",
+    "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",
+    "line": 0,
+    "name": "_generate_comprehensive_summary",
+    "value": 31,
+    "threshold": 10,
+    "message": "Function '_generate_comprehensive_summary' has complexity 31 (threshold: 10)"
+  },
+  {
+    "type": "high_complexity",
+    "severity": "error",
+    "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",
+    "line": 0,
+    "name": "_compile_all_issues",
+    "value": 27,
+    "threshold": 10,
+    "message": "Function '_compile_all_issues' has complexity 27 (threshold: 10)"
+  },
+  {
+    "type": "high_complexity",
+    "severity": "error",
+    "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",
+    "line": 0,
+    "name": "_run_analyzers_parallel",
+    "value": 21,
+    "threshold": 10,
+    "message": "Function '_run_analyzers_parallel' has complexity 21 (threshold: 10)"
+  },
+  {
+    "type": "high_complexity",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",
+    "line": 0,
+    "name": "_save_all_results",
+    "value": 16,
+    "threshold": 10,
+    "message": "Function '_save_all_results' has complexity 16 (threshold: 10)"
+  },
+  {
+    "type": "high_complexity",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",
+    "line": 0,
+    "name": "_compile_metrics",
+    "value": 13,
+    "threshold": 10,
+    "message": "Function '_compile_metrics' has complexity 13 (threshold: 10)"
+  },
+  {
+    "type": "high_complexity",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",
+    "line": 0,
+    "name": "_run_beartype_check",
+    "value": 12,
+    "threshold": 10,
+    "message": "Function '_run_beartype_check' has complexity 12 (threshold: 10)"
+  },
+  {
+    "type": "high_complexity",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/review/quality/architecture.py",
+    "line": 0,
+    "name": "_analyze_architecture",
+    "value": 18,
+    "threshold": 10,
+    "message": "Function '_analyze_architecture' has complexity 18 (threshold: 10)"
+  },
+  {
+    "type": "high_complexity",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/review/quality/architecture.py",
+    "line": 0,
+    "name": "_detect_import_cycles",
+    "value": 13,
+    "threshold": 10,
+    "message": "Function '_detect_import_cycles' has complexity 13 (threshold: 10)"
+  },
+  {
+    "type": "high_complexity",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/review/quality/architecture.py",
+    "line": 0,
+    "name": "ArchitectureAnalyzer",
+    "value": 11,
+    "threshold": 10,
+    "message": "Function 'ArchitectureAnalyzer' has complexity 11 (threshold: 10)"
+  },
+  {
+    "type": "high_complexity",
+    "severity": "error",
+    "file": "src/btx_fix_mcp/subservers/review/quality/metrics.py",
+    "line": 0,
+    "name": "_analyze_code_churn",
+    "value": 21,
+    "threshold": 10,
+    "message": "Function '_analyze_code_churn' has complexity 21 (threshold: 10)"
+  },
+  {
+    "type": "high_complexity",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/review/quality/metrics.py",
+    "line": 0,
+    "name": "MetricsAnalyzer",
+    "value": 12,
+    "threshold": 10,
+    "message": "Function 'MetricsAnalyzer' has complexity 12 (threshold: 10)"
+  },
+  {
+    "type": "high_complexity",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/review/quality/metrics.py",
+    "line": 0,
+    "name": "_analyze_halstead",
+    "value": 12,
+    "threshold": 10,
+    "message": "Function '_analyze_halstead' has complexity 12 (threshold: 10)"
+  },
+  {
+    "type": "high_complexity",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/review/quality/types.py",
+    "line": 0,
+    "name": "_analyze_docstring_coverage",
+    "value": 12,
+    "threshold": 10,
+    "message": "Function '_analyze_docstring_coverage' has complexity 12 (threshold: 10)"
+  },
+  {
+    "type": "high_complexity",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/review/quality/types.py",
+    "line": 0,
+    "name": "_analyze_type_coverage",
+    "value": 11,
+    "threshold": 10,
+    "message": "Function '_analyze_type_coverage' has complexity 11 (threshold: 10)"
+  },
+  {
+    "type": "high_complexity",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/review/report.py",
+    "line": 0,
+    "name": "_generate_report",
+    "value": 18,
+    "threshold": 10,
+    "message": "Function '_generate_report' has complexity 18 (threshold: 10)"
+  },
+  {
+    "type": "high_complexity",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/review/security.py",
+    "line": 0,
+    "name": "_generate_summary",
+    "value": 14,
+    "threshold": 10,
+    "message": "Function '_generate_summary' has complexity 14 (threshold: 10)"
+  },
+  {
+    "type": "high_complexity",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/review/security.py",
+    "line": 0,
+    "name": "_run_bandit",
+    "value": 12,
+    "threshold": 10,
+    "message": "Function '_run_bandit' has complexity 12 (threshold: 10)"
+  },
+  {
+    "type": "high_complexity",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/review/security.py",
+    "line": 0,
+    "name": "__init__",
+    "value": 11,
+    "threshold": 10,
+    "message": "Function '__init__' has complexity 11 (threshold: 10)"
+  },
+  {
+    "type": "low_maintainability",
+    "severity": "warning",
+    "file": "scripts/menu.py",
+    "value": 17.22511363268717,
+    "threshold": 20,
+    "message": "File has maintainability index 17.2 (threshold: 20)"
+  },
+  {
+    "type": "low_maintainability",
+    "severity": "error",
+    "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",
+    "value": 8.077421061159518,
+    "threshold": 20,
+    "message": "File has maintainability index 8.1 (threshold: 20)"
+  },
+  {
+    "type": "too_long",
+    "severity": "warning",
+    "file": "scripts/_utils.py",
+    "line": 421,
+    "name": "get_project_metadata",
+    "value": 58,
+    "threshold": 50,
+    "message": "Function 'get_project_metadata' is 58 lines (max: 50)"
+  },
+  {
+    "type": "too_long",
+    "severity": "warning",
+    "file": "scripts/_utils.py",
+    "line": 522,
+    "name": "_render_metadata_module",
+    "value": 77,
+    "threshold": 50,
+    "message": "Function '_render_metadata_module' is 77 lines (max: 50)"
+  },
+  {
+    "type": "too_nested",
+    "severity": "warning",
+    "file": "scripts/clean.py",
+    "line": 31,
+    "name": "clean",
+    "value": 4,
+    "threshold": 3,
+    "message": "Function 'clean' has nesting depth 4 (max: 3)"
+  },
+  {
+    "type": "too_nested",
+    "severity": "warning",
+    "file": "scripts/menu.py",
+    "line": 275,
+    "name": "compose",
+    "value": 4,
+    "threshold": 3,
+    "message": "Function 'compose' has nesting depth 4 (max: 3)"
+  },
+  {
+    "type": "too_long",
+    "severity": "warning",
+    "file": "scripts/target_metadata.py",
+    "line": 65,
+    "name": "_build_targets",
+    "value": 95,
+    "threshold": 50,
+    "message": "Function '_build_targets' is 95 lines (max: 50)"
+  },
+  {
+    "type": "too_long",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/cli.py",
+    "line": 397,
+    "name": "main",
+    "value": 56,
+    "threshold": 50,
+    "message": "Function 'main' is 56 lines (max: 50)"
+  },
+  {
+    "type": "too_long",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/common/files.py",
+    "line": 141,
+    "name": "categorize_files",
+    "value": 71,
+    "threshold": 50,
+    "message": "Function 'categorize_files' is 71 lines (max: 50)"
+  },
+  {
+    "type": "too_nested",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/common/files.py",
+    "line": 141,
+    "name": "categorize_files",
+    "value": 6,
+    "threshold": 3,
+    "message": "Function 'categorize_files' has nesting depth 6 (max: 3)"
+  },
+  {
+    "type": "too_long",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/common/git.py",
+    "line": 119,
+    "name": "create_commit",
+    "value": 73,
+    "threshold": 50,
+    "message": "Function 'create_commit' is 73 lines (max: 50)"
+  },
+  {
+    "type": "too_long",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/common/git.py",
+    "line": 357,
+    "name": "get_file_history",
+    "value": 60,
+    "threshold": 50,
+    "message": "Function 'get_file_history' is 60 lines (max: 50)"
+  },
+  {
+    "type": "too_long",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/common/logging.py",
+    "line": 14,
+    "name": "setup_logger",
+    "value": 52,
+    "threshold": 50,
+    "message": "Function 'setup_logger' is 52 lines (max: 50)"
+  },
+  {
+    "type": "too_long",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/common/mindsets.py",
+    "line": 148,
+    "name": "evaluate_results",
+    "value": 74,
+    "threshold": 50,
+    "message": "Function 'evaluate_results' is 74 lines (max: 50)"
+  },
+  {
+    "type": "too_long",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/common/mindsets.py",
+    "line": 225,
+    "name": "format_verdict_report",
+    "value": 63,
+    "threshold": 50,
+    "message": "Function 'format_verdict_report' is 63 lines (max: 50)"
+  },
+  {
+    "type": "too_long",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/common/protocol.py",
+    "line": 27,
+    "name": "validate_outputs",
+    "value": 65,
+    "threshold": 50,
+    "message": "Function 'validate_outputs' is 65 lines (max: 50)"
+  },
+  {
+    "type": "too_nested",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/common/protocol.py",
+    "line": 27,
+    "name": "validate_outputs",
+    "value": 4,
+    "threshold": 3,
+    "message": "Function 'validate_outputs' has nesting depth 4 (max: 3)"
+  },
+  {
+    "type": "too_long",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/review/deps.py",
+    "line": 69,
+    "name": "__init__",
+    "value": 60,
+    "threshold": 50,
+    "message": "Function '__init__' is 60 lines (max: 50)"
+  },
+  {
+    "type": "too_long",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/review/deps.py",
+    "line": 151,
+    "name": "execute",
+    "value": 96,
+    "threshold": 50,
+    "message": "Function 'execute' is 96 lines (max: 50)"
+  },
+  {
+    "type": "too_long",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/review/deps.py",
+    "line": 437,
+    "name": "_generate_summary",
+    "value": 80,
+    "threshold": 50,
+    "message": "Function '_generate_summary' is 80 lines (max: 50)"
+  },
+  {
+    "type": "too_nested",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/review/deps_scanners.py",
+    "line": 31,
+    "name": "run_pip_audit",
+    "value": 5,
+    "threshold": 3,
+    "message": "Function 'run_pip_audit' has nesting depth 5 (max: 3)"
+  },
+  {
+    "type": "too_nested",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/review/deps_scanners.py",
+    "line": 68,
+    "name": "run_safety",
+    "value": 4,
+    "threshold": 3,
+    "message": "Function 'run_safety' has nesting depth 4 (max: 3)"
+  },
+  {
+    "type": "too_nested",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/review/deps_scanners.py",
+    "line": 101,
+    "name": "run_npm_audit",
+    "value": 4,
+    "threshold": 3,
+    "message": "Function 'run_npm_audit' has nesting depth 4 (max: 3)"
+  },
+  {
+    "type": "too_nested",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/review/deps_scanners.py",
+    "line": 148,
+    "name": "check_outdated_packages",
+    "value": 5,
+    "threshold": 3,
+    "message": "Function 'check_outdated_packages' has nesting depth 5 (max: 3)"
+  },
+  {
+    "type": "too_long",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/review/docs.py",
+    "line": 47,
+    "name": "__init__",
+    "value": 57,
+    "threshold": 50,
+    "message": "Function '__init__' is 57 lines (max: 50)"
+  },
+  {
+    "type": "too_long",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/review/docs.py",
+    "line": 121,
+    "name": "execute",
+    "value": 86,
+    "threshold": 50,
+    "message": "Function 'execute' is 86 lines (max: 50)"
+  },
+  {
+    "type": "too_nested",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/review/docs.py",
+    "line": 121,
+    "name": "execute",
+    "value": 4,
+    "threshold": 3,
+    "message": "Function 'execute' has nesting depth 4 (max: 3)"
+  },
+  {
+    "type": "too_nested",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/review/docs.py",
+    "line": 220,
+    "name": "_check_docstring_coverage",
+    "value": 5,
+    "threshold": 3,
+    "message": "Function '_check_docstring_coverage' has nesting depth 5 (max: 3)"
+  },
+  {
+    "type": "too_nested",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/review/docs.py",
+    "line": 253,
+    "name": "_find_missing_docstrings",
+    "value": 6,
+    "threshold": 3,
+    "message": "Function '_find_missing_docstrings' has nesting depth 6 (max: 3)"
+  },
+  {
+    "type": "too_long",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/review/docs.py",
+    "line": 387,
+    "name": "_generate_summary",
+    "value": 59,
+    "threshold": 50,
+    "message": "Function '_generate_summary' is 59 lines (max: 50)"
+  },
+  {
+    "type": "too_long",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/review/perf.py",
+    "line": 53,
+    "name": "__init__",
+    "value": 54,
+    "threshold": 50,
+    "message": "Function '__init__' is 54 lines (max: 50)"
+  },
+  {
+    "type": "too_long",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/review/perf.py",
+    "line": 124,
+    "name": "execute",
+    "value": 83,
+    "threshold": 50,
+    "message": "Function 'execute' is 83 lines (max: 50)"
+  },
+  {
+    "type": "too_nested",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/review/perf.py",
+    "line": 220,
+    "name": "_detect_patterns",
+    "value": 4,
+    "threshold": 3,
+    "message": "Function '_detect_patterns' has nesting depth 4 (max: 3)"
+  },
+  {
+    "type": "too_nested",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/review/perf.py",
+    "line": 258,
+    "name": "_profile_tests",
+    "value": 6,
+    "threshold": 3,
+    "message": "Function '_profile_tests' has nesting depth 6 (max: 3)"
+  },
+  {
+    "type": "too_nested",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/review/perf.py",
+    "line": 303,
+    "name": "_analyze_complexity",
+    "value": 6,
+    "threshold": 3,
+    "message": "Function '_analyze_complexity' has nesting depth 6 (max: 3)"
+  },
+  {
+    "type": "too_long",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/review/perf.py",
+    "line": 397,
+    "name": "_generate_summary",
+    "value": 60,
+    "threshold": 50,
+    "message": "Function '_generate_summary' is 60 lines (max: 50)"
+  },
+  {
+    "type": "too_long",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/review/quality.py",
+    "line": 141,
+    "name": "execute",
+    "value": 75,
+    "threshold": 50,
+    "message": "Function 'execute' is 75 lines (max: 50)"
+  },
+  {
+    "type": "too_nested",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/review/quality.py",
+    "line": 234,
+    "name": "_analyze_complexity",
+    "value": 5,
+    "threshold": 3,
+    "message": "Function '_analyze_complexity' has nesting depth 5 (max: 3)"
+  },
+  {
+    "type": "too_nested",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/review/quality.py",
+    "line": 272,
+    "name": "_analyze_maintainability",
+    "value": 4,
+    "threshold": 3,
+    "message": "Function '_analyze_maintainability' has nesting depth 4 (max: 3)"
+  },
+  {
+    "type": "too_long",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/review/quality.py",
+    "line": 369,
+    "name": "_generate_summary",
+    "value": 85,
+    "threshold": 50,
+    "message": "Function '_generate_summary' is 85 lines (max: 50)"
+  },
+  {
+    "type": "too_long",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",
+    "line": 78,
+    "name": "__init__",
+    "value": 69,
+    "threshold": 50,
+    "message": "Function '__init__' is 69 lines (max: 50)"
+  },
+  {
+    "type": "too_long",
+    "severity": "error",
+    "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",
+    "line": 286,
+    "name": "_run_analyzers_parallel",
+    "value": 102,
+    "threshold": 50,
+    "message": "Function '_run_analyzers_parallel' is 102 lines (max: 50)"
+  },
+  {
+    "type": "too_nested",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",
+    "line": 286,
+    "name": "_run_analyzers_parallel",
+    "value": 6,
+    "threshold": 3,
+    "message": "Function '_run_analyzers_parallel' has nesting depth 6 (max: 3)"
+  },
+  {
+    "type": "too_long",
+    "severity": "error",
+    "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",
+    "line": 402,
+    "name": "execute",
+    "value": 143,
+    "threshold": 50,
+    "message": "Function 'execute' is 143 lines (max: 50)"
+  },
+  {
+    "type": "too_nested",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",
+    "line": 402,
+    "name": "execute",
+    "value": 4,
+    "threshold": 3,
+    "message": "Function 'execute' has nesting depth 4 (max: 3)"
+  },
+  {
+    "type": "too_nested",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",
+    "line": 568,
+    "name": "_analyze_js_files",
+    "value": 5,
+    "threshold": 3,
+    "message": "Function '_analyze_js_files' has nesting depth 5 (max: 3)"
+  },
+  {
+    "type": "too_nested",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",
+    "line": 599,
+    "name": "_run_beartype_check",
+    "value": 4,
+    "threshold": 3,
+    "message": "Function '_run_beartype_check' has nesting depth 4 (max: 3)"
+  },
+  {
+    "type": "too_long",
+    "severity": "error",
+    "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",
+    "line": 647,
+    "name": "_compile_all_issues",
+    "value": 160,
+    "threshold": 50,
+    "message": "Function '_compile_all_issues' is 160 lines (max: 50)"
+  },
+  {
+    "type": "too_long",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",
+    "line": 809,
+    "name": "_save_all_results",
+    "value": 90,
+    "threshold": 50,
+    "message": "Function '_save_all_results' is 90 lines (max: 50)"
+  },
+  {
+    "type": "too_long",
+    "severity": "error",
+    "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",
+    "line": 953,
+    "name": "_generate_comprehensive_summary",
+    "value": 132,
+    "threshold": 50,
+    "message": "Function '_generate_comprehensive_summary' is 132 lines (max: 50)"
+  },
+  {
+    "type": "too_long",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/review/quality/architecture.py",
+    "line": 33,
+    "name": "_analyze_architecture",
+    "value": 58,
+    "threshold": 50,
+    "message": "Function '_analyze_architecture' is 58 lines (max: 50)"
+  },
+  {
+    "type": "too_nested",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/review/quality/architecture.py",
+    "line": 33,
+    "name": "_analyze_architecture",
+    "value": 6,
+    "threshold": 3,
+    "message": "Function '_analyze_architecture' has nesting depth 6 (max: 3)"
+  },
+  {
+    "type": "too_nested",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/review/quality/architecture.py",
+    "line": 93,
+    "name": "_detect_import_cycles",
+    "value": 5,
+    "threshold": 3,
+    "message": "Function '_detect_import_cycles' has nesting depth 5 (max: 3)"
+  },
+  {
+    "type": "too_nested",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/review/quality/architecture.py",
+    "line": 144,
+    "name": "_detect_runtime_checks",
+    "value": 5,
+    "threshold": 3,
+    "message": "Function '_detect_runtime_checks' has nesting depth 5 (max: 3)"
+  },
+  {
+    "type": "too_nested",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/review/quality/architecture.py",
+    "line": 176,
+    "name": "_is_runtime_check",
+    "value": 4,
+    "threshold": 3,
+    "message": "Function '_is_runtime_check' has nesting depth 4 (max: 3)"
+  },
+  {
+    "type": "too_nested",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/review/quality/complexity.py",
+    "line": 37,
+    "name": "_analyze_cyclomatic",
+    "value": 5,
+    "threshold": 3,
+    "message": "Function '_analyze_cyclomatic' has nesting depth 5 (max: 3)"
+  },
+  {
+    "type": "too_nested",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/review/quality/complexity.py",
+    "line": 71,
+    "name": "_analyze_maintainability",
+    "value": 4,
+    "threshold": 3,
+    "message": "Function '_analyze_maintainability' has nesting depth 4 (max: 3)"
+  },
+  {
+    "type": "too_nested",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/review/quality/complexity.py",
+    "line": 97,
+    "name": "_analyze_cognitive",
+    "value": 5,
+    "threshold": 3,
+    "message": "Function '_analyze_cognitive' has nesting depth 5 (max: 3)"
+  },
+  {
+    "type": "too_nested",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/review/quality/complexity.py",
+    "line": 125,
+    "name": "_calculate_cognitive_complexity",
+    "value": 5,
+    "threshold": 3,
+    "message": "Function '_calculate_cognitive_complexity' has nesting depth 5 (max: 3)"
+  },
+  {
+    "type": "too_nested",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/review/quality/complexity.py",
+    "line": 145,
+    "name": "_analyze_functions",
+    "value": 6,
+    "threshold": 3,
+    "message": "Function '_analyze_functions' has nesting depth 6 (max: 3)"
+  },
+  {
+    "type": "too_nested",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/review/quality/metrics.py",
+    "line": 34,
+    "name": "_analyze_halstead",
+    "value": 5,
+    "threshold": 3,
+    "message": "Function '_analyze_halstead' has nesting depth 5 (max: 3)"
+  },
+  {
+    "type": "too_nested",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/review/quality/metrics.py",
+    "line": 82,
+    "name": "_analyze_raw_metrics",
+    "value": 4,
+    "threshold": 3,
+    "message": "Function '_analyze_raw_metrics' has nesting depth 4 (max: 3)"
+  },
+  {
+    "type": "too_long",
+    "severity": "error",
+    "file": "src/btx_fix_mcp/subservers/review/quality/metrics.py",
+    "line": 120,
+    "name": "_analyze_code_churn",
+    "value": 119,
+    "threshold": 50,
+    "message": "Function '_analyze_code_churn' is 119 lines (max: 50)"
+  },
+  {
+    "type": "too_nested",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/review/quality/metrics.py",
+    "line": 120,
+    "name": "_analyze_code_churn",
+    "value": 6,
+    "threshold": 3,
+    "message": "Function '_analyze_code_churn' has nesting depth 6 (max: 3)"
+  },
+  {
+    "type": "too_nested",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/review/quality/types.py",
+    "line": 33,
+    "name": "_analyze_type_coverage",
+    "value": 4,
+    "threshold": 3,
+    "message": "Function '_analyze_type_coverage' has nesting depth 4 (max: 3)"
+  },
+  {
+    "type": "too_nested",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/review/quality/types.py",
+    "line": 76,
+    "name": "_detect_dead_code",
+    "value": 4,
+    "threshold": 3,
+    "message": "Function '_detect_dead_code' has nesting depth 4 (max: 3)"
+  },
+  {
+    "type": "too_nested",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/review/quality/types.py",
+    "line": 111,
+    "name": "_analyze_docstring_coverage",
+    "value": 4,
+    "threshold": 3,
+    "message": "Function '_analyze_docstring_coverage' has nesting depth 4 (max: 3)"
+  },
+  {
+    "type": "too_nested",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/review/report.py",
+    "line": 174,
+    "name": "_compile_overall_metrics",
+    "value": 4,
+    "threshold": 3,
+    "message": "Function '_compile_overall_metrics' has nesting depth 4 (max: 3)"
+  },
+  {
+    "type": "too_long",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/review/report.py",
+    "line": 258,
+    "name": "_generate_report",
+    "value": 95,
+    "threshold": 50,
+    "message": "Function '_generate_report' is 95 lines (max: 50)"
+  },
+  {
+    "type": "too_long",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/review/scope.py",
+    "line": 111,
+    "name": "execute",
+    "value": 65,
+    "threshold": 50,
+    "message": "Function 'execute' is 65 lines (max: 50)"
+  },
+  {
+    "type": "too_long",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/review/scope.py",
+    "line": 236,
+    "name": "_generate_summary",
+    "value": 62,
+    "threshold": 50,
+    "message": "Function '_generate_summary' is 62 lines (max: 50)"
+  },
+  {
+    "type": "too_long",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/review/security.py",
+    "line": 64,
+    "name": "__init__",
+    "value": 63,
+    "threshold": 50,
+    "message": "Function '__init__' is 63 lines (max: 50)"
+  },
+  {
+    "type": "too_long",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/review/security.py",
+    "line": 180,
+    "name": "execute",
+    "value": 76,
+    "threshold": 50,
+    "message": "Function 'execute' is 76 lines (max: 50)"
+  },
+  {
+    "type": "too_nested",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/review/security.py",
+    "line": 273,
+    "name": "_run_bandit",
+    "value": 5,
+    "threshold": 3,
+    "message": "Function '_run_bandit' has nesting depth 5 (max: 3)"
+  },
+  {
+    "type": "too_long",
+    "severity": "error",
+    "file": "src/btx_fix_mcp/subservers/review/security.py",
+    "line": 373,
+    "name": "_generate_summary",
+    "value": 110,
+    "threshold": 50,
+    "message": "Function '_generate_summary' is 110 lines (max: 50)"
+  },
+  {
+    "type": "too_long",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/tools_venv.py",
+    "line": 195,
+    "name": "ensure_tools_venv",
+    "value": 66,
+    "threshold": 50,
+    "message": "Function 'ensure_tools_venv' is 66 lines (max: 50)"
+  },
+  {
+    "type": "too_nested",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/tools_venv.py",
+    "line": 290,
+    "name": "get_tool_version",
+    "value": 4,
+    "threshold": 3,
+    "message": "Function 'get_tool_version' has nesting depth 4 (max: 3)"
+  },
+  {
+    "type": "high_cognitive_complexity",
+    "severity": "warning",
+    "file": "scripts/_utils.py",
+    "line": 364,
+    "name": "_extract_author_info",
+    "value": 0,
+    "threshold": 15,
+    "message": "Function '_extract_author_info' has cognitive complexity 0 (threshold: 15)"
+  },
+  {
+    "type": "high_cognitive_complexity",
+    "severity": "warning",
+    "file": "scripts/_utils.py",
+    "line": 690,
+    "name": "bootstrap_dev",
+    "value": 0,
+    "threshold": 15,
+    "message": "Function 'bootstrap_dev' has cognitive complexity 0 (threshold: 15)"
+  },
+  {
+    "type": "high_cognitive_complexity",
+    "severity": "warning",
+    "file": "scripts/menu.py",
+    "line": 337,
+    "name": "_gather_values",
+    "value": 0,
+    "threshold": 15,
+    "message": "Function '_gather_values' has cognitive complexity 0 (threshold: 15)"
+  },
+  {
+    "type": "high_cognitive_complexity",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/common/files.py",
+    "line": 141,
+    "name": "categorize_files",
+    "value": 0,
+    "threshold": 15,
+    "message": "Function 'categorize_files' has cognitive complexity 0 (threshold: 15)"
+  },
+  {
+    "type": "high_cognitive_complexity",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/review/deps.py",
+    "line": 437,
+    "name": "_generate_summary",
+    "value": 0,
+    "threshold": 15,
+    "message": "Function '_generate_summary' has cognitive complexity 0 (threshold: 15)"
+  },
+  {
+    "type": "high_cognitive_complexity",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/review/deps_scanners.py",
+    "line": 148,
+    "name": "check_outdated_packages",
+    "value": 0,
+    "threshold": 15,
+    "message": "Function 'check_outdated_packages' has cognitive complexity 0 (threshold: 15)"
+  },
+  {
+    "type": "high_cognitive_complexity",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/review/docs.py",
+    "line": 220,
+    "name": "_check_docstring_coverage",
+    "value": 0,
+    "threshold": 15,
+    "message": "Function '_check_docstring_coverage' has cognitive complexity 0 (threshold: 15)"
+  },
+  {
+    "type": "high_cognitive_complexity",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/review/docs.py",
+    "line": 253,
+    "name": "_find_missing_docstrings",
+    "value": 0,
+    "threshold": 15,
+    "message": "Function '_find_missing_docstrings' has cognitive complexity 0 (threshold: 15)"
+  },
+  {
+    "type": "high_cognitive_complexity",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/review/perf.py",
+    "line": 258,
+    "name": "_profile_tests",
+    "value": 0,
+    "threshold": 15,
+    "message": "Function '_profile_tests' has cognitive complexity 0 (threshold: 15)"
+  },
+  {
+    "type": "high_cognitive_complexity",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/review/perf.py",
+    "line": 303,
+    "name": "_analyze_complexity",
+    "value": 0,
+    "threshold": 15,
+    "message": "Function '_analyze_complexity' has cognitive complexity 0 (threshold: 15)"
+  },
+  {
+    "type": "high_cognitive_complexity",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/review/quality.py",
+    "line": 234,
+    "name": "_analyze_complexity",
+    "value": 0,
+    "threshold": 15,
+    "message": "Function '_analyze_complexity' has cognitive complexity 0 (threshold: 15)"
+  },
+  {
+    "type": "high_cognitive_complexity",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",
+    "line": 286,
+    "name": "_run_analyzers_parallel",
+    "value": 0,
+    "threshold": 15,
+    "message": "Function '_run_analyzers_parallel' has cognitive complexity 0 (threshold: 15)"
+  },
+  {
+    "type": "high_cognitive_complexity",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",
+    "line": 402,
+    "name": "execute",
+    "value": 0,
+    "threshold": 15,
+    "message": "Function 'execute' has cognitive complexity 0 (threshold: 15)"
+  },
+  {
+    "type": "high_cognitive_complexity",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",
+    "line": 647,
+    "name": "_compile_all_issues",
+    "value": 0,
+    "threshold": 15,
+    "message": "Function '_compile_all_issues' has cognitive complexity 0 (threshold: 15)"
+  },
+  {
+    "type": "high_cognitive_complexity",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",
+    "line": 809,
+    "name": "_save_all_results",
+    "value": 0,
+    "threshold": 15,
+    "message": "Function '_save_all_results' has cognitive complexity 0 (threshold: 15)"
+  },
+  {
+    "type": "high_cognitive_complexity",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",
+    "line": 953,
+    "name": "_generate_comprehensive_summary",
+    "value": 0,
+    "threshold": 15,
+    "message": "Function '_generate_comprehensive_summary' has cognitive complexity 0 (threshold: 15)"
+  },
+  {
+    "type": "high_cognitive_complexity",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/review/quality/architecture.py",
+    "line": 33,
+    "name": "_analyze_architecture",
+    "value": 0,
+    "threshold": 15,
+    "message": "Function '_analyze_architecture' has cognitive complexity 0 (threshold: 15)"
+  },
+  {
+    "type": "high_cognitive_complexity",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/review/quality/architecture.py",
+    "line": 93,
+    "name": "_detect_import_cycles",
+    "value": 0,
+    "threshold": 15,
+    "message": "Function '_detect_import_cycles' has cognitive complexity 0 (threshold: 15)"
+  },
+  {
+    "type": "high_cognitive_complexity",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/review/quality/architecture.py",
+    "line": 176,
+    "name": "_is_runtime_check",
+    "value": 0,
+    "threshold": 15,
+    "message": "Function '_is_runtime_check' has cognitive complexity 0 (threshold: 15)"
+  },
+  {
+    "type": "high_cognitive_complexity",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/review/quality/complexity.py",
+    "line": 37,
+    "name": "_analyze_cyclomatic",
+    "value": 0,
+    "threshold": 15,
+    "message": "Function '_analyze_cyclomatic' has cognitive complexity 0 (threshold: 15)"
+  },
+  {
+    "type": "high_cognitive_complexity",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/review/quality/complexity.py",
+    "line": 145,
+    "name": "_analyze_functions",
+    "value": 0,
+    "threshold": 15,
+    "message": "Function '_analyze_functions' has cognitive complexity 0 (threshold: 15)"
+  },
+  {
+    "type": "high_cognitive_complexity",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/review/quality/metrics.py",
+    "line": 34,
+    "name": "_analyze_halstead",
+    "value": 0,
+    "threshold": 15,
+    "message": "Function '_analyze_halstead' has cognitive complexity 0 (threshold: 15)"
+  },
+  {
+    "type": "high_cognitive_complexity",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/review/quality/metrics.py",
+    "line": 82,
+    "name": "_analyze_raw_metrics",
+    "value": 0,
+    "threshold": 15,
+    "message": "Function '_analyze_raw_metrics' has cognitive complexity 0 (threshold: 15)"
+  },
+  {
+    "type": "high_cognitive_complexity",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/review/quality/metrics.py",
+    "line": 120,
+    "name": "_analyze_code_churn",
+    "value": 0,
+    "threshold": 15,
+    "message": "Function '_analyze_code_churn' has cognitive complexity 0 (threshold: 15)"
+  },
+  {
+    "type": "high_cognitive_complexity",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/review/report.py",
+    "line": 127,
+    "name": "_gather_results",
+    "value": 0,
+    "threshold": 15,
+    "message": "Function '_gather_results' has cognitive complexity 0 (threshold: 15)"
+  },
+  {
+    "type": "high_cognitive_complexity",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/review/report.py",
+    "line": 174,
+    "name": "_compile_overall_metrics",
+    "value": 0,
+    "threshold": 15,
+    "message": "Function '_compile_overall_metrics' has cognitive complexity 0 (threshold: 15)"
+  },
+  {
+    "type": "high_cognitive_complexity",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/review/report.py",
+    "line": 258,
+    "name": "_generate_report",
+    "value": 0,
+    "threshold": 15,
+    "message": "Function '_generate_report' has cognitive complexity 0 (threshold: 15)"
+  },
+  {
+    "type": "high_cognitive_complexity",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/review/security.py",
+    "line": 373,
+    "name": "_generate_summary",
+    "value": 0,
+    "threshold": 15,
+    "message": "Function '_generate_summary' has cognitive complexity 0 (threshold: 15)"
+  },
+  {
+    "type": "god_object",
+    "severity": "error",
+    "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",
+    "line": 71,
+    "name": "QualitySubServer",
+    "value": "41 methods, 1014 lines",
+    "message": "Class 'QualitySubServer' is a god object (41 methods, 1014 lines)"
+  },
+  {
+    "type": "high_coupling",
+    "severity": "warning",
+    "file": "scripts/_utils.py",
+    "value": 16,
+    "threshold": 15,
+    "message": "Module has 16 imports (threshold: 15)"
+  },
+  {
+    "type": "runtime_check_optimization",
+    "severity": "info",
+    "file": "scripts/_utils.py",
+    "line": 157,
+    "name": "run",
+    "value": 1,
+    "message": "Function 'run' has 1 runtime checks that could be module-level constants"
+  },
+  {
+    "type": "runtime_check_optimization",
+    "severity": "info",
+    "file": "scripts/_utils.py",
+    "line": 213,
+    "name": "_as_str_mapping",
+    "value": 2,
+    "message": "Function '_as_str_mapping' has 2 runtime checks that could be module-level constants"
+  },
+  {
+    "type": "runtime_check_optimization",
+    "severity": "info",
+    "file": "scripts/_utils.py",
+    "line": 225,
+    "name": "_as_str_dict",
+    "value": 3,
+    "message": "Function '_as_str_dict' has 3 runtime checks that could be module-level constants"
+  },
+  {
+    "type": "runtime_check_optimization",
+    "severity": "info",
+    "file": "scripts/_utils.py",
+    "line": 237,
+    "name": "_as_sequence",
+    "value": 1,
+    "message": "Function '_as_sequence' has 1 runtime checks that could be module-level constants"
+  },
+  {
+    "type": "runtime_check_optimization",
+    "severity": "info",
+    "file": "scripts/_utils.py",
+    "line": 263,
+    "name": "_derive_import_package",
+    "value": 2,
+    "message": "Function '_derive_import_package' has 2 runtime checks that could be module-level constants"
+  },
+  {
+    "type": "runtime_check_optimization",
+    "severity": "info",
+    "file": "scripts/_utils.py",
+    "line": 282,
+    "name": "_derive_coverage_source",
+    "value": 1,
+    "message": "Function '_derive_coverage_source' has 1 runtime checks that could be module-level constants"
+  },
+  {
+    "type": "runtime_check_optimization",
+    "severity": "info",
+    "file": "scripts/_utils.py",
+    "line": 293,
+    "name": "_derive_scripts",
+    "value": 1,
+    "message": "Function '_derive_scripts' has 1 runtime checks that could be module-level constants"
+  },
+  {
+    "type": "runtime_check_optimization",
+    "severity": "info",
+    "file": "scripts/_utils.py",
+    "line": 364,
+    "name": "_extract_author_info",
+    "value": 4,
+    "message": "Function '_extract_author_info' has 4 runtime checks that could be module-level constants"
+  },
+  {
+    "type": "runtime_check_optimization",
+    "severity": "info",
+    "file": "scripts/_utils.py",
+    "line": 397,
+    "name": "_extract_summary",
+    "value": 1,
+    "message": "Function '_extract_summary' has 1 runtime checks that could be module-level constants"
+  },
+  {
+    "type": "runtime_check_optimization",
+    "severity": "info",
+    "file": "scripts/_utils.py",
+    "line": 421,
+    "name": "get_project_metadata",
+    "value": 1,
+    "message": "Function 'get_project_metadata' has 1 runtime checks that could be module-level constants"
+  },
+  {
+    "type": "runtime_check_optimization",
+    "severity": "info",
+    "file": "scripts/_utils.py",
+    "line": 482,
+    "name": "_extract_name",
+    "value": 1,
+    "message": "Function '_extract_name' has 1 runtime checks that could be module-level constants"
+  },
+  {
+    "type": "runtime_check_optimization",
+    "severity": "info",
+    "file": "scripts/_utils.py",
+    "line": 491,
+    "name": "_extract_homepage",
+    "value": 1,
+    "message": "Function '_extract_homepage' has 1 runtime checks that could be module-level constants"
+  },
+  {
+    "type": "runtime_check_optimization",
+    "severity": "info",
+    "file": "scripts/_utils.py",
+    "line": 617,
+    "name": "read_version_from_pyproject",
+    "value": 1,
+    "message": "Function 'read_version_from_pyproject' has 1 runtime checks that could be module-level constants"
+  },
+  {
+    "type": "runtime_check_optimization",
+    "severity": "info",
+    "file": "scripts/_utils.py",
+    "line": 690,
+    "name": "bootstrap_dev",
+    "value": 1,
+    "message": "Function 'bootstrap_dev' has 1 runtime checks that could be module-level constants"
+  },
+  {
+    "type": "runtime_check_optimization",
+    "severity": "info",
+    "file": "scripts/cli.py",
+    "line": 31,
+    "name": "env_token",
+    "value": 1,
+    "message": "Function 'env_token' has 1 runtime checks that could be module-level constants"
+  },
+  {
+    "type": "runtime_check_optimization",
+    "severity": "info",
+    "file": "scripts/menu.py",
+    "line": 137,
+    "name": "on_key",
+    "value": 2,
+    "message": "Function 'on_key' has 2 runtime checks that could be module-level constants"
+  },
+  {
+    "type": "runtime_check_optimization",
+    "severity": "info",
+    "file": "scripts/menu.py",
+    "line": 256,
+    "name": "menu_app",
+    "value": 1,
+    "message": "Function 'menu_app' has 1 runtime checks that could be module-level constants"
+  },
+  {
+    "type": "runtime_check_optimization",
+    "severity": "info",
+    "file": "scripts/menu.py",
+    "line": 337,
+    "name": "_gather_values",
+    "value": 2,
+    "message": "Function '_gather_values' has 2 runtime checks that could be module-level constants"
+  },
+  {
+    "type": "runtime_check_optimization",
+    "severity": "info",
+    "file": "scripts/menu.py",
+    "line": 360,
+    "name": "menu_app",
+    "value": 1,
+    "message": "Function 'menu_app' has 1 runtime checks that could be module-level constants"
+  },
+  {
+    "type": "runtime_check_optimization",
+    "severity": "info",
+    "file": "scripts/run_cli.py",
+    "line": 47,
+    "name": "exit_code_from",
+    "value": 2,
+    "message": "Function 'exit_code_from' has 2 runtime checks that could be module-level constants"
+  },
+  {
+    "type": "runtime_check_optimization",
+    "severity": "info",
+    "file": "scripts/run_cli.py",
+    "line": 92,
+    "name": "candid_callable",
+    "value": 1,
+    "message": "Function 'candid_callable' has 1 runtime checks that could be module-level constants"
+  },
+  {
+    "type": "runtime_check_optimization",
+    "severity": "info",
+    "file": "scripts/run_cli.py",
+    "line": 121,
+    "name": "delegate_to_module_entry",
+    "value": 1,
+    "message": "Function 'delegate_to_module_entry' has 1 runtime checks that could be module-level constants"
+  },
+  {
+    "type": "runtime_check_optimization",
+    "severity": "info",
+    "file": "scripts/target_metadata.py",
+    "line": 58,
+    "name": "_env_default",
+    "value": 1,
+    "message": "Function '_env_default' has 1 runtime checks that could be module-level constants"
+  },
+  {
+    "type": "runtime_check_optimization",
+    "severity": "info",
+    "file": "src/btx_fix_mcp/behaviors.py",
+    "line": 47,
+    "name": "_flush_if_possible",
+    "value": 1,
+    "message": "Function '_flush_if_possible' has 1 runtime checks that could be module-level constants"
+  },
+  {
+    "type": "runtime_check_optimization",
+    "severity": "info",
+    "file": "src/btx_fix_mcp/cli.py",
+    "line": 397,
+    "name": "main",
+    "value": 1,
+    "message": "Function 'main' has 1 runtime checks that could be module-level constants"
+  },
+  {
+    "type": "runtime_check_optimization",
+    "severity": "info",
+    "file": "src/btx_fix_mcp/subservers/common/logging.py",
+    "line": 548,
+    "name": "log_subprocess_call",
+    "value": 1,
+    "message": "Function 'log_subprocess_call' has 1 runtime checks that could be module-level constants"
+  },
+  {
+    "type": "runtime_check_optimization",
+    "severity": "info",
+    "file": "src/btx_fix_mcp/subservers/common/logging.py",
+    "line": 572,
+    "name": "log_subprocess_result",
+    "value": 1,
+    "message": "Function 'log_subprocess_result' has 1 runtime checks that could be module-level constants"
+  },
+  {
+    "type": "runtime_check_optimization",
+    "severity": "info",
+    "file": "src/btx_fix_mcp/subservers/review/docs.py",
+    "line": 253,
+    "name": "_find_missing_docstrings",
+    "value": 2,
+    "message": "Function '_find_missing_docstrings' has 2 runtime checks that could be module-level constants"
+  },
+  {
+    "type": "runtime_check_optimization",
+    "severity": "info",
+    "file": "src/btx_fix_mcp/subservers/review/quality/architecture.py",
+    "line": 33,
+    "name": "_analyze_architecture",
+    "value": 5,
+    "message": "Function '_analyze_architecture' has 5 runtime checks that could be module-level constants"
+  },
+  {
+    "type": "runtime_check_optimization",
+    "severity": "info",
+    "file": "src/btx_fix_mcp/subservers/review/quality/architecture.py",
+    "line": 93,
+    "name": "_detect_import_cycles",
+    "value": 2,
+    "message": "Function '_detect_import_cycles' has 2 runtime checks that could be module-level constants"
+  },
+  {
+    "type": "runtime_check_optimization",
+    "severity": "info",
+    "file": "src/btx_fix_mcp/subservers/review/quality/architecture.py",
+    "line": 144,
+    "name": "_detect_runtime_checks",
+    "value": 1,
+    "message": "Function '_detect_runtime_checks' has 1 runtime checks that could be module-level constants"
+  },
+  {
+    "type": "runtime_check_optimization",
+    "severity": "info",
+    "file": "src/btx_fix_mcp/subservers/review/quality/architecture.py",
+    "line": 176,
+    "name": "_is_runtime_check",
+    "value": 4,
+    "message": "Function '_is_runtime_check' has 4 runtime checks that could be module-level constants"
+  },
+  {
+    "type": "runtime_check_optimization",
+    "severity": "info",
+    "file": "src/btx_fix_mcp/subservers/review/quality/complexity.py",
+    "line": 97,
+    "name": "_analyze_cognitive",
+    "value": 1,
+    "message": "Function '_analyze_cognitive' has 1 runtime checks that could be module-level constants"
+  },
+  {
+    "type": "runtime_check_optimization",
+    "severity": "info",
+    "file": "src/btx_fix_mcp/subservers/review/quality/complexity.py",
+    "line": 125,
+    "name": "_calculate_cognitive_complexity",
+    "value": 4,
+    "message": "Function '_calculate_cognitive_complexity' has 4 runtime checks that could be module-level constants"
+  },
+  {
+    "type": "runtime_check_optimization",
+    "severity": "info",
+    "file": "src/btx_fix_mcp/subservers/review/quality/complexity.py",
+    "line": 145,
+    "name": "_analyze_functions",
+    "value": 2,
+    "message": "Function '_analyze_functions' has 2 runtime checks that could be module-level constants"
+  },
+  {
+    "type": "runtime_check_optimization",
+    "severity": "info",
+    "file": "src/btx_fix_mcp/subservers/review/quality/complexity.py",
+    "line": 191,
+    "name": "_calculate_nesting_depth",
+    "value": 1,
+    "message": "Function '_calculate_nesting_depth' has 1 runtime checks that could be module-level constants"
+  },
+  {
+    "type": "runtime_check_optimization",
+    "severity": "info",
+    "file": "src/btx_fix_mcp/subservers/review/quality/metrics.py",
+    "line": 34,
+    "name": "_analyze_halstead",
+    "value": 1,
+    "message": "Function '_analyze_halstead' has 1 runtime checks that could be module-level constants"
+  },
+  {
+    "type": "ruff_F401",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/common/git.py",
+    "line": 5,
+    "message": "`typing.Optional` imported but unused",
+    "rule": "F401"
+  },
+  {
+    "type": "ruff_F841",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/common/git.py",
+    "line": 165,
+    "message": "Local variable `result` is assigned to but never used",
+    "rule": "F841"
+  },
+  {
+    "type": "ruff_F401",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/common/protocol.py",
+    "line": 4,
+    "message": "`typing.Optional` imported but unused",
+    "rule": "F401"
+  },
+  {
+    "type": "ruff_F541",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/common/protocol.py",
+    "line": 58,
+    "message": "f-string without any placeholders",
+    "rule": "F541"
+  },
+  {
+    "type": "ruff_F541",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/common/protocol.py",
+    "line": 90,
+    "message": "f-string without any placeholders",
+    "rule": "F541"
+  },
+  {
+    "type": "ruff_F401",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/review/deps.py",
+    "line": 33,
+    "message": "`btx_fix_mcp.subservers.review.deps_scanners.classify_vuln_severity` imported but unused",
+    "rule": "F401"
+  },
+  {
+    "type": "ruff_E741",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/review/deps.py",
+    "line": 329,
+    "message": "Ambiguous variable name: `l`",
+    "rule": "E741"
+  },
+  {
+    "type": "ruff_F401",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/review/quality.py",
+    "line": 21,
+    "message": "`btx_fix_mcp.subservers.common.logging.log_dict` imported but unused",
+    "rule": "F401"
+  },
+  {
+    "type": "ruff_F401",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/review/quality.py",
+    "line": 23,
+    "message": "`btx_fix_mcp.subservers.common.logging.log_metric` imported but unused",
+    "rule": "F401"
+  },
+  {
+    "type": "ruff_F401",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",
+    "line": 43,
+    "message": "`btx_fix_mcp.subservers.common.mindsets.AnalysisVerdict` imported but unused; consider removing, adding to `__all__`, or using a redundant alias",
+    "rule": "F401"
+  },
+  {
+    "type": "ruff_F401",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",
+    "line": 44,
+    "message": "`btx_fix_mcp.subservers.common.mindsets.ReviewerMindset` imported but unused; consider removing, adding to `__all__`, or using a redundant alias",
+    "rule": "F401"
+  },
+  {
+    "type": "ruff_F401",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",
+    "line": 46,
+    "message": "`btx_fix_mcp.subservers.common.mindsets.format_verdict_report` imported but unused; consider removing, adding to `__all__`, or using a redundant alias",
+    "rule": "F401"
+  },
+  {
+    "type": "ruff_F401",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/review/quality/types.py",
+    "line": 10,
+    "message": "`pathlib.Path` imported but unused",
+    "rule": "F401"
+  },
+  {
+    "type": "ruff_F401",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/review/scope.py",
+    "line": 10,
+    "message": "`typing.Optional` imported but unused",
+    "rule": "F401"
+  },
+  {
+    "type": "ruff_F401",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/review/scope.py",
+    "line": 17,
+    "message": "`btx_fix_mcp.subservers.common.logging.debug_log` imported but unused",
+    "rule": "F401"
+  },
+  {
+    "type": "ruff_F401",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/review/scope.py",
+    "line": 19,
+    "message": "`btx_fix_mcp.subservers.common.logging.log_debug` imported but unused",
+    "rule": "F401"
+  },
+  {
+    "type": "ruff_F401",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/review/scope.py",
+    "line": 22,
+    "message": "`btx_fix_mcp.subservers.common.logging.log_file_list` imported but unused",
+    "rule": "F401"
+  },
+  {
+    "type": "ruff_F401",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/tools_venv.py",
+    "line": 28,
+    "message": "`typing.Optional` imported but unused",
+    "rule": "F401"
+  },
+  {
+    "type": "code_duplication",
+    "severity": "warning",
+    "message": "src/btx_fix_mcp/tools_venv.py:1:0: R0801: Similar lines in 2 files"
+  },
+  {
+    "type": "code_duplication",
+    "severity": "warning",
+    "message": "\"\"\"Check docstring coverage using interrogate.\"\"\" (duplicate-code)"
+  },
+  {
+    "type": "code_duplication",
+    "severity": "warning",
+    "message": "src/btx_fix_mcp/tools_venv.py:1:0: R0801: Similar lines in 2 files"
+  },
+  {
+    "type": "code_duplication",
+    "severity": "warning",
+    "message": "\"\"\"Get JavaScript/TypeScript files to analyze.\"\"\" (duplicate-code)"
+  },
+  {
+    "type": "code_duplication",
+    "severity": "warning",
+    "message": "src/btx_fix_mcp/tools_venv.py:1:0: R0801: Similar lines in 2 files"
+  },
+  {
+    "type": "code_duplication",
+    "severity": "warning",
+    "message": "import re (duplicate-code)"
+  },
+  {
+    "type": "code_duplication",
+    "severity": "warning",
+    "message": "src/btx_fix_mcp/tools_venv.py:1:0: R0801: Similar lines in 2 files"
+  },
+  {
+    "type": "code_duplication",
+    "severity": "warning",
+    "message": "f\"**Files Analyzed**: {metrics['files_analyzed']}\", (duplicate-code)"
+  },
+  {
+    "type": "code_duplication",
+    "severity": "warning",
+    "message": "src/btx_fix_mcp/tools_venv.py:1:0: R0801: Similar lines in 2 files"
+  },
+  {
+    "type": "code_duplication",
+    "severity": "warning",
+    "message": "f\"- Warnings: {verdict.warning_count} ({verdict.warning_ratio:.1f}%)\", (duplicate-code)"
+  },
+  {
+    "type": "code_duplication",
+    "severity": "warning",
+    "message": "src/btx_fix_mcp/tools_venv.py:1:0: R0801: Similar lines in 2 files"
+  },
+  {
+    "type": "code_duplication",
+    "severity": "warning",
+    "message": "# Filter to existing files only (duplicate-code)"
+  },
+  {
+    "type": "code_duplication",
+    "severity": "warning",
+    "message": "src/btx_fix_mcp/tools_venv.py:1:0: R0801: Similar lines in 2 files"
+  },
+  {
+    "type": "code_duplication",
+    "severity": "warning",
+    "message": "\"\"\"Analyze cyclomatic complexity using radon.\"\"\" (duplicate-code)"
+  },
+  {
+    "type": "code_duplication",
+    "severity": "warning",
+    "message": "src/btx_fix_mcp/tools_venv.py:1:0: R0801: Similar lines in 2 files"
+  },
+  {
+    "type": "code_duplication",
+    "severity": "warning",
+    "message": "\"\"\"Detect project type from dependency files.\"\"\" (duplicate-code)"
+  },
+  {
+    "type": "code_duplication",
+    "severity": "warning",
+    "message": "src/btx_fix_mcp/tools_venv.py:1:0: R0801: Similar lines in 2 files"
+  },
+  {
+    "type": "code_duplication",
+    "severity": "warning",
+    "message": "# Load config (duplicate-code)"
+  },
+  {
+    "type": "code_duplication",
+    "severity": "warning",
+    "message": "src/btx_fix_mcp/tools_venv.py:1:0: R0801: Similar lines in 2 files"
+  },
+  {
+    "type": "code_duplication",
+    "severity": "warning",
+    "message": "\"\"\"Get Python files to analyze.\"\"\" (duplicate-code)"
+  },
+  {
+    "type": "code_duplication",
+    "severity": "warning",
+    "message": "src/btx_fix_mcp/tools_venv.py:1:0: R0801: Similar lines in 2 files"
+  },
+  {
+    "type": "code_duplication",
+    "severity": "warning",
+    "message": "(duplicate-code)"
+  },
+  {
+    "type": "code_duplication",
+    "severity": "warning",
+    "message": "src/btx_fix_mcp/tools_venv.py:1:0: R0801: Similar lines in 2 files"
+  },
+  {
+    "type": "code_duplication",
+    "severity": "warning",
+    "message": "# Load config using extracted config module (duplicate-code)"
+  },
+  {
+    "type": "code_duplication",
+    "severity": "warning",
+    "message": "src/btx_fix_mcp/tools_venv.py:1:0: R0801: Similar lines in 2 files"
+  },
+  {
+    "type": "code_duplication",
+    "severity": "warning",
+    "message": "pad = max(len(label) for label, _ in fields) (duplicate-code)"
+  },
+  {
+    "type": "code_duplication",
+    "severity": "warning",
+    "message": "src/btx_fix_mcp/tools_venv.py:1:0: R0801: Similar lines in 2 files"
+  },
+  {
+    "type": "code_duplication",
+    "severity": "warning",
+    "message": "\"\"\"Execute performance analysis.\"\"\" (duplicate-code)"
+  },
+  {
+    "type": "code_duplication",
+    "severity": "warning",
+    "message": "src/btx_fix_mcp/tools_venv.py:1:0: R0801: Similar lines in 2 files"
+  },
+  {
+    "type": "code_duplication",
+    "severity": "warning",
+    "message": "self.repo_path = repo_path or Path.cwd() (duplicate-code)"
+  },
+  {
+    "type": "code_duplication",
+    "severity": "warning",
+    "message": "src/btx_fix_mcp/tools_venv.py:1:0: R0801: Similar lines in 2 files"
+  },
+  {
+    "type": "code_duplication",
+    "severity": "warning",
+    "message": "results = [] (duplicate-code)"
+  },
+  {
+    "type": "code_duplication",
+    "severity": "warning",
+    "message": "src/btx_fix_mcp/tools_venv.py:1:0: R0801: Similar lines in 2 files"
+  },
+  {
+    "type": "code_duplication",
+    "severity": "warning",
+    "message": "artifacts={}, (duplicate-code)"
+  },
+  {
+    "type": "code_duplication",
+    "severity": "warning",
+    "message": "src/btx_fix_mcp/tools_venv.py:1:0: R0801: Similar lines in 2 files"
+  },
+  {
+    "type": "code_duplication",
+    "severity": "warning",
+    "message": "return \"\\n\".join(lines) (duplicate-code)"
+  },
+  {
+    "type": "code_duplication",
+    "severity": "warning",
+    "message": "src/btx_fix_mcp/tools_venv.py:1:0: R0801: Similar lines in 2 files"
+  },
+  {
+    "type": "code_duplication",
+    "severity": "warning",
+    "message": "\"\"\"Detect project type from dependency files.\"\"\" (duplicate-code)"
+  },
+  {
+    "type": "code_duplication",
+    "severity": "warning",
+    "message": "src/btx_fix_mcp/tools_venv.py:1:0: R0801: Similar lines in 2 files"
+  },
+  {
+    "type": "code_duplication",
+    "severity": "warning",
+    "message": "# Initialize logger (duplicate-code)"
+  },
+  {
+    "type": "code_duplication",
+    "severity": "warning",
+    "message": "src/btx_fix_mcp/tools_venv.py:1:0: R0801: Similar lines in 2 files"
+  },
+  {
+    "type": "code_duplication",
+    "severity": "warning",
+    "message": "artifacts=artifacts, (duplicate-code)"
+  },
+  {
+    "type": "code_duplication",
+    "severity": "warning",
+    "message": "src/btx_fix_mcp/tools_venv.py:1:0: R0801: Similar lines in 2 files"
+  },
+  {
+    "type": "code_duplication",
+    "severity": "warning",
+    "message": "\"# Documentation Analysis Report\", \"\", (duplicate-code)"
+  },
+  {
+    "type": "code_duplication",
+    "severity": "warning",
+    "message": "src/btx_fix_mcp/tools_venv.py:1:0: R0801: Similar lines in 2 files"
+  },
+  {
+    "type": "code_duplication",
+    "severity": "warning",
+    "message": "\"\"\"Identify quality issues based on thresholds.\"\"\" (duplicate-code)"
+  },
+  {
+    "type": "code_duplication",
+    "severity": "warning",
+    "message": "src/btx_fix_mcp/tools_venv.py:1:0: R0801: Similar lines in 2 files"
+  },
+  {
+    "type": "code_duplication",
+    "severity": "warning",
+    "message": "full_config = yaml.safe_load(f) (duplicate-code)"
+  },
+  {
+    "type": "code_duplication",
+    "severity": "warning",
+    "message": "src/btx_fix_mcp/tools_venv.py:1:0: R0801: Similar lines in 2 files"
+  },
+  {
+    "type": "code_duplication",
+    "severity": "warning",
+    "message": "result = subprocess.run( (duplicate-code)"
+  },
+  {
+    "type": "code_duplication",
+    "severity": "warning",
+    "message": "src/btx_fix_mcp/tools_venv.py:1:0: R0801: Similar lines in 2 files"
+  },
+  {
+    "type": "code_duplication",
+    "severity": "warning",
+    "message": "\"files_analyzed\": len(files), (duplicate-code)"
+  },
+  {
+    "type": "code_duplication",
+    "severity": "warning",
+    "message": "src/btx_fix_mcp/tools_venv.py:1:0: R0801: Similar lines in 2 files"
+  },
+  {
+    "type": "code_duplication",
+    "severity": "warning",
+    "message": "# Step 2: Run complexity analysis (duplicate-code)"
+  },
+  {
+    "type": "code_duplication",
+    "severity": "warning",
+    "message": "src/btx_fix_mcp/tools_venv.py:1:0: R0801: Similar lines in 2 files"
+  },
+  {
+    "type": "code_duplication",
+    "severity": "warning",
+    "message": "return \"\\n\".join(lines) (duplicate-code)"
+  },
+  {
+    "type": "code_duplication",
+    "severity": "warning",
+    "message": "src/btx_fix_mcp/tools_venv.py:1:0: R0801: Similar lines in 2 files"
+  },
+  {
+    "type": "code_duplication",
+    "severity": "warning",
+    "message": "result = subprocess.run( (duplicate-code)"
+  },
+  {
+    "type": "code_duplication",
+    "severity": "warning",
+    "message": "src/btx_fix_mcp/tools_venv.py:1:0: R0801: Similar lines in 2 files"
+  },
+  {
+    "type": "code_duplication",
+    "severity": "warning",
+    "message": "result = subprocess.run( (duplicate-code)"
+  },
+  {
+    "type": "code_duplication",
+    "severity": "warning",
+    "message": "src/btx_fix_mcp/tools_venv.py:1:0: R0801: Similar lines in 2 files"
+  },
+  {
+    "type": "code_duplication",
+    "severity": "warning",
+    "message": "# Load config (duplicate-code)"
+  },
+  {
+    "type": "code_duplication",
+    "severity": "warning",
+    "message": "src/btx_fix_mcp/tools_venv.py:1:0: R0801: Similar lines in 2 files"
+  },
+  {
+    "type": "code_duplication",
+    "severity": "warning",
+    "message": "artifacts=artifacts, (duplicate-code)"
+  },
+  {
+    "type": "code_duplication",
+    "severity": "warning",
+    "message": "src/btx_fix_mcp/tools_venv.py:1:0: R0801: Similar lines in 2 files"
+  },
+  {
+    "type": "code_duplication",
+    "severity": "warning",
+    "message": "return { (duplicate-code)"
+  },
+  {
+    "type": "code_duplication",
+    "severity": "warning",
+    "message": "src/btx_fix_mcp/tools_venv.py:1:0: R0801: Similar lines in 2 files"
+  },
+  {
+    "type": "code_duplication",
+    "severity": "warning",
+    "message": "\"\"\"Detect project type from dependency files.\"\"\" (duplicate-code)"
+  },
+  {
+    "type": "code_duplication",
+    "severity": "warning",
+    "message": "src/btx_fix_mcp/tools_venv.py:1:0: R0801: Similar lines in 2 files"
+  },
+  {
+    "type": "code_duplication",
+    "severity": "warning",
+    "message": "return \"\\n\".join(lines) (duplicate-code)"
+  },
+  {
+    "type": "code_duplication",
+    "severity": "warning",
+    "message": "src/btx_fix_mcp/tools_venv.py:1:0: R0801: Similar lines in 2 files"
+  },
+  {
+    "type": "code_duplication",
+    "severity": "warning",
+    "message": "missing.append( (duplicate-code)"
+  },
+  {
+    "type": "code_duplication",
+    "severity": "warning",
+    "message": "src/btx_fix_mcp/tools_venv.py:1:0: R0801: Similar lines in 2 files"
+  },
+  {
+    "type": "code_duplication",
+    "severity": "warning",
+    "message": "return \"\\n\".join(lines) (duplicate-code)"
+  },
+  {
+    "type": "code_duplication",
+    "severity": "warning",
+    "message": "src/btx_fix_mcp/tools_venv.py:1:0: R0801: Similar lines in 2 files"
+  },
+  {
+    "type": "code_duplication",
+    "severity": "warning",
+    "message": "# Step 2: Pattern-based detection (duplicate-code)"
+  },
+  {
+    "type": "code_duplication",
+    "severity": "warning",
+    "message": "src/btx_fix_mcp/tools_venv.py:1:0: R0801: Similar lines in 2 files"
+  },
+  {
+    "type": "code_duplication",
+    "severity": "warning",
+    "message": "return { (duplicate-code)"
+  },
+  {
+    "type": "code_duplication",
+    "severity": "warning",
+    "message": "src/btx_fix_mcp/tools_venv.py:1:0: R0801: Similar lines in 2 files"
+  },
+  {
+    "type": "code_duplication",
+    "severity": "warning",
+    "message": "missing.append( (duplicate-code)"
+  },
+  {
+    "type": "code_duplication",
+    "severity": "warning",
+    "message": "src/btx_fix_mcp/tools_venv.py:1:0: R0801: Similar lines in 2 files"
+  },
+  {
+    "type": "code_duplication",
+    "severity": "warning",
+    "message": "# Run radon mi (maintainability index) (duplicate-code)"
+  },
+  {
+    "type": "code_duplication",
+    "severity": "warning",
+    "message": "src/btx_fix_mcp/tools_venv.py:1:0: R0801: Similar lines in 2 files"
+  },
+  {
+    "type": "code_duplication",
+    "severity": "warning",
+    "message": "results.append({ (duplicate-code)"
+  },
+  {
+    "type": "code_duplication",
+    "severity": "warning",
+    "message": "src/btx_fix_mcp/tools_venv.py:1:0: R0801: Similar lines in 2 files"
+  },
+  {
+    "type": "code_duplication",
+    "severity": "warning",
+    "message": "metrics={ (duplicate-code)"
+  },
+  {
+    "type": "code_duplication",
+    "severity": "warning",
+    "message": "src/btx_fix_mcp/tools_venv.py:1:0: R0801: Similar lines in 2 files"
+  },
+  {
+    "type": "code_duplication",
+    "severity": "warning",
+    "message": "tree = ast.parse(content) (duplicate-code)"
+  },
+  {
+    "type": "code_duplication",
+    "severity": "warning",
+    "message": "src/btx_fix_mcp/tools_venv.py:1:0: R0801: Similar lines in 2 files"
+  },
+  {
+    "type": "code_duplication",
+    "severity": "warning",
+    "message": "tree = ast.parse(content) (duplicate-code)"
+  },
+  {
+    "type": "code_duplication",
+    "severity": "warning",
+    "message": "src/btx_fix_mcp/tools_venv.py:1:0: R0801: Similar lines in 2 files"
+  },
+  {
+    "type": "code_duplication",
+    "severity": "warning",
+    "message": "\"\"\" (duplicate-code)"
+  },
+  {
+    "type": "code_duplication",
+    "severity": "warning",
+    "message": "src/btx_fix_mcp/tools_venv.py:1:0: R0801: Similar lines in 2 files"
+  },
+  {
+    "type": "code_duplication",
+    "severity": "warning",
+    "message": "# Initialize logger (duplicate-code)"
+  },
+  {
+    "type": "code_duplication",
+    "severity": "warning",
+    "message": "src/btx_fix_mcp/tools_venv.py:1:0: R0801: Similar lines in 2 files"
+  },
+  {
+    "type": "code_duplication",
+    "severity": "warning",
+    "message": "# Run radon cc (cyclomatic complexity) (duplicate-code)"
+  },
+  {
+    "type": "code_duplication",
+    "severity": "warning",
+    "message": "src/btx_fix_mcp/tools_venv.py:1:0: R0801: Similar lines in 2 files"
+  },
+  {
+    "type": "code_duplication",
+    "severity": "warning",
+    "message": "result = subprocess.run( (duplicate-code)"
+  },
+  {
+    "type": "code_duplication",
+    "severity": "warning",
+    "message": "src/btx_fix_mcp/tools_venv.py:1:0: R0801: Similar lines in 2 files"
+  },
+  {
+    "type": "code_duplication",
+    "severity": "warning",
+    "message": "result = subprocess.run( (duplicate-code)"
+  },
+  {
+    "type": "code_duplication",
+    "severity": "warning",
+    "message": "src/btx_fix_mcp/tools_venv.py:1:0: R0801: Similar lines in 2 files"
+  },
+  {
+    "type": "code_duplication",
+    "severity": "warning",
+    "message": "result = subprocess.run( (duplicate-code)"
+  },
+  {
+    "type": "code_duplication",
+    "severity": "warning",
+    "message": "src/btx_fix_mcp/tools_venv.py:1:0: R0801: Similar lines in 2 files"
+  },
+  {
+    "type": "code_duplication",
+    "severity": "warning",
+    "message": "# Check repository exists (duplicate-code)"
+  },
+  {
+    "type": "low_type_coverage",
+    "severity": "warning",
+    "value": 0,
+    "threshold": 80,
+    "message": "Type coverage is 0% (minimum: 80%)"
+  },
+  {
+    "type": "low_docstring_coverage",
+    "severity": "warning",
+    "value": 0.0,
+    "threshold": 80,
+    "message": "Docstring coverage is 0.0% (minimum: 80%)"
+  },
+  {
+    "type": "dead_code",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/common/logging.py",
+    "line": 347,
+    "value": 0,
+    "message": "unused variable 'exc_tb' (100% confidence)"
+  },
+  {
+    "type": "dead_code",
+    "severity": "warning",
+    "file": "src/btx_fix_mcp/subservers/review/quality.py",
+    "line": 19,
+    "value": 0,
+    "message": "unused import 'log_metric' (90% confidence)"
+  }
+]

@@ -38,6 +38,14 @@ from urllib.parse import urlparse
 
 @dataclass
 class RunResult:
+    """Result of a subprocess execution.
+
+    Attributes:
+        code: Exit code from the process
+        out: Captured stdout content
+        err: Captured stderr content
+    """
+
     code: int
     out: str
     err: str
@@ -45,6 +53,12 @@ class RunResult:
 
 @dataclass
 class ProjectMetadata:
+    """Project metadata extracted from pyproject.toml.
+
+    Contains all relevant information about a Python project including
+    repository details, package names, and build configuration.
+    """
+
     name: str
     description: str
     slug: str
@@ -175,6 +189,7 @@ def run(
 
 
 def cmd_exists(name: str) -> bool:
+    """Check if a command exists in the system PATH."""
     return shutil.which(name) is not None
 
 
@@ -325,53 +340,41 @@ def _select_cli_entry(
     return None
 
 
-def get_project_metadata(pyproject: Path = Path("pyproject.toml")) -> ProjectMetadata:
-    path = pyproject.resolve()
-    cached = _METADATA_CACHE.get(path)
-    if cached is not None:
-        return cached
+def _parse_repo_url(repo_url: str) -> tuple[str, str, str]:
+    """Parse repository URL into host, owner, and name.
 
-    data = _load_pyproject(pyproject)
-    project_table = _as_str_mapping(data.get("project"))
-    name = str(pyproject.stem)
-    name_value = project_table.get("name")
-    if isinstance(name_value, str) and name_value.strip():
-        name = name_value.strip()
-    if not name:
-        name = "project"
-    slug = _normalize_slug(name)
+    Args:
+        repo_url: Repository URL (e.g., "https://github.com/owner/repo")
 
-    description_value = project_table.get("description")
-    description = description_value.strip() if isinstance(description_value, str) else ""
+    Returns:
+        Tuple of (host, owner, name). Empty strings if parsing fails.
+    """
+    if not repo_url:
+        return "", "", ""
+    parsed = urlparse(repo_url)
+    repo_host = parsed.netloc.lower()
+    repo_path = parsed.path.strip("/")
+    if repo_path.endswith(".git"):
+        repo_path = repo_path[:-4]
+    parts = [p for p in repo_path.split("/") if p]
+    if len(parts) >= 2:
+        return repo_host, parts[0], parts[1]
+    return repo_host, "", ""
 
-    urls_table = _as_str_dict(project_table.get("urls"))
-    repo_url = urls_table.get("Repository", "")
-    homepage_value = urls_table.get("Homepage")
-    homepage_project = project_table.get("homepage")
-    homepage = homepage_value or (homepage_project if isinstance(homepage_project, str) else "")
-    repo_host = repo_owner = repo_name = ""
-    if repo_url:
-        parsed = urlparse(repo_url)
-        repo_host = parsed.netloc.lower()
-        repo_path = parsed.path.strip("/")
-        if repo_path.endswith(".git"):
-            repo_path = repo_path[:-4]
-        parts = [p for p in repo_path.split("/") if p]
-        if len(parts) >= 2:
-            repo_owner, repo_name = parts[0], parts[1]
 
-    import_package = _derive_import_package(data, name)
-    coverage_source = _derive_coverage_source(data, import_package)
-    scripts = _derive_scripts(data)
+def _extract_author_info(
+    project_table: dict[str, object],
+    fallback_name: str,
+) -> tuple[str, str]:
+    """Extract author name and email from project table.
 
-    version = read_version_from_pyproject(pyproject)
-    summary = description.strip() if description else ""
-    if not summary:
-        summary_candidate = project_table.get("summary")
-        summary = summary_candidate.strip() if isinstance(summary_candidate, str) else ""
-    if not summary:
-        summary = name
+    Args:
+        project_table: Project section of pyproject.toml
+        fallback_name: Fallback name if no author found
 
+    Returns:
+        Tuple of (author_name, author_email)
+    """
     author_name = ""
     author_email = ""
     authors_value = project_table.get("authors")
@@ -388,21 +391,70 @@ def get_project_metadata(pyproject: Path = Path("pyproject.toml")) -> ProjectMet
             if not author_email and isinstance(email_field, str) and email_field.strip():
                 author_email = email_field.strip()
     if not author_name:
-        author_name = repo_owner or name
+        author_name = fallback_name
+    return author_name, author_email
 
-    shell_command = slug.replace("_", "-")
-    preferred_entry = _select_cli_entry(
-        scripts,
-        (
-            slug,
-            name,
-            import_package,
-            import_package.replace("_", "-"),
-        ),
-    )
-    if preferred_entry is not None:
-        shell_command = preferred_entry[0]
 
+def _extract_summary(
+    project_table: dict[str, object],
+    description: str,
+    name: str,
+) -> str:
+    """Extract summary from project table with fallbacks.
+
+    Args:
+        project_table: Project section of pyproject.toml
+        description: Project description
+        name: Project name
+
+    Returns:
+        Summary string
+    """
+    summary = description.strip() if description else ""
+    if not summary:
+        summary_candidate = project_table.get("summary")
+        summary = summary_candidate.strip() if isinstance(summary_candidate, str) else ""
+    if not summary:
+        summary = name
+    return summary
+
+
+def get_project_metadata(pyproject: Path = Path("pyproject.toml")) -> ProjectMetadata:
+    """Load project metadata from pyproject.toml with caching."""
+    path = pyproject.resolve()
+    cached = _METADATA_CACHE.get(path)
+    if cached is not None:
+        return cached
+
+    data = _load_pyproject(pyproject)
+    project_table = _as_str_mapping(data.get("project"))
+
+    # Extract name and slug
+    name = _extract_name(project_table, pyproject)
+    slug = _normalize_slug(name)
+
+    # Extract description
+    description_value = project_table.get("description")
+    description = description_value.strip() if isinstance(description_value, str) else ""
+
+    # Extract URLs
+    urls_table = _as_str_dict(project_table.get("urls"))
+    repo_url = urls_table.get("Repository", "")
+    homepage = _extract_homepage(urls_table, project_table)
+    repo_host, repo_owner, repo_name = _parse_repo_url(repo_url)
+
+    # Derive package info
+    import_package = _derive_import_package(data, name)
+    coverage_source = _derive_coverage_source(data, import_package)
+    scripts = _derive_scripts(data)
+
+    # Extract other metadata
+    version = read_version_from_pyproject(pyproject)
+    summary = _extract_summary(project_table, description, name)
+    author_name, author_email = _extract_author_info(project_table, repo_owner or name)
+
+    # Determine shell command
+    shell_command = _determine_shell_command(slug, scripts, name, import_package)
     metadata_module = (Path("src") / import_package / "__init__conf__.py").resolve()
 
     meta = ProjectMetadata(
@@ -426,6 +478,42 @@ def get_project_metadata(pyproject: Path = Path("pyproject.toml")) -> ProjectMet
     )
     _METADATA_CACHE[path] = meta
     return meta
+
+
+def _extract_name(project_table: dict[str, object], pyproject: Path) -> str:
+    """Extract project name from project table."""
+    name = str(pyproject.stem)
+    name_value = project_table.get("name")
+    if isinstance(name_value, str) and name_value.strip():
+        name = name_value.strip()
+    return name if name else "project"
+
+
+def _extract_homepage(
+    urls_table: dict[str, str],
+    project_table: dict[str, object],
+) -> str:
+    """Extract homepage URL from urls table or project table."""
+    homepage_value = urls_table.get("Homepage")
+    homepage_project = project_table.get("homepage")
+    return homepage_value or (homepage_project if isinstance(homepage_project, str) else "")
+
+
+def _determine_shell_command(
+    slug: str,
+    scripts: dict[str, str],
+    name: str,
+    import_package: str,
+) -> str:
+    """Determine the shell command for the project."""
+    shell_command = slug.replace("_", "-")
+    preferred_entry = _select_cli_entry(
+        scripts,
+        (slug, name, import_package, import_package.replace("_", "-")),
+    )
+    if preferred_entry is not None:
+        shell_command = preferred_entry[0]
+    return shell_command
 
 
 def _quote(value: str) -> str:
@@ -528,6 +616,7 @@ def sync_metadata_module(project: ProjectMetadata) -> None:
 
 
 def read_version_from_pyproject(pyproject: Path = Path("pyproject.toml")) -> str:
+    """Read the version string from pyproject.toml."""
     data = _load_pyproject(pyproject)
     project_table = _as_str_mapping(data.get("project"))
     version_value = project_table.get("version")
@@ -539,6 +628,7 @@ def read_version_from_pyproject(pyproject: Path = Path("pyproject.toml")) -> str
 
 
 def ensure_clean_git_tree() -> None:
+    """Ensure the git working tree has no uncommitted changes."""
     dirty = subprocess.call(["bash", "-lc", "! git diff --quiet || ! git diff --cached --quiet"], stdout=subprocess.DEVNULL)
     if dirty == 0:
         print("[release] Working tree not clean. Commit or stash changes first.", file=sys.stderr)
@@ -546,16 +636,19 @@ def ensure_clean_git_tree() -> None:
 
 
 def git_branch() -> str:
+    """Get the current git branch name."""
     return run(["git", "rev-parse", "--abbrev-ref", "HEAD"], capture=True).out.strip()
 
 
 def git_delete_tag(name: str, *, remote: str | None = None) -> None:
+    """Delete a git tag locally and optionally from remote."""
     run(["git", "tag", "-d", name], check=False, capture=True)
     if remote:
         run(["git", "push", remote, f":refs/tags/{name}"], check=False)
 
 
 def git_tag_exists(name: str) -> bool:
+    """Check if a git tag exists locally."""
     return (
         subprocess.call(
             ["bash", "-lc", f"git rev-parse -q --verify {shlex.quote('refs/tags/' + name)} >/dev/null"],
@@ -566,30 +659,37 @@ def git_tag_exists(name: str) -> bool:
 
 
 def git_create_annotated_tag(name: str, message: str) -> None:
+    """Create an annotated git tag."""
     run(["git", "tag", "-a", name, "-m", message])
 
 
 def git_push(remote: str, ref: str) -> None:
+    """Push a ref to a remote repository."""
     run(["git", "push", remote, ref])
 
 
 def gh_available() -> bool:
+    """Check if the GitHub CLI (gh) is available."""
     return cmd_exists("gh")
 
 
 def gh_release_exists(tag: str) -> bool:
+    """Check if a GitHub release exists for the given tag."""
     return subprocess.call(["bash", "-lc", f"gh release view {shlex.quote(tag)} >/dev/null 2>&1"], stdout=subprocess.DEVNULL) == 0
 
 
 def gh_release_create(tag: str, title: str, body: str) -> None:
+    """Create a new GitHub release."""
     run(["gh", "release", "create", tag, "-t", title, "-n", body], check=False)
 
 
 def gh_release_edit(tag: str, title: str, body: str) -> None:
+    """Edit an existing GitHub release."""
     run(["gh", "release", "edit", tag, "-t", title, "-n", body], check=False)
 
 
 def bootstrap_dev() -> None:
+    """Bootstrap development environment with required tools."""
     needs_dev_install = False
     if not (cmd_exists("ruff") and cmd_exists("pyright")):
         needs_dev_install = True

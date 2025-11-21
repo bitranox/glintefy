@@ -12,14 +12,23 @@ from typing import Any
 
 import yaml
 
+from btx_fix_mcp.config import get_config, get_subserver_config
+from btx_fix_mcp.subservers.common.issues import SecurityMetrics
 from btx_fix_mcp.subservers.base import BaseSubServer, SubServerResult
 from btx_fix_mcp.subservers.common.logging import (
     LogContext,
+    get_mcp_logger,
+    log_error_detailed,
     log_file_list,
     log_result,
     log_section,
     log_step,
     setup_logger,
+)
+from btx_fix_mcp.subservers.common.mindsets import (
+    SECURITY_MINDSET,
+    evaluate_results,
+    get_mindset,
 )
 
 
@@ -44,8 +53,8 @@ class SecuritySubServer(BaseSubServer):
 
     Example:
         >>> server = SecuritySubServer(
-        ...     input_dir=Path("LLM-CONTEXT/review-anal/scope"),
-        ...     output_dir=Path("LLM-CONTEXT/review-anal/security"),
+        ...     input_dir=Path("LLM-CONTEXT/btx_fix_mcp/review/scope"),
+        ...     output_dir=Path("LLM-CONTEXT/btx_fix_mcp/review/security"),
         ...     severity_threshold="medium"
         ... )
         >>> result = server.run()
@@ -62,35 +71,53 @@ class SecuritySubServer(BaseSubServer):
         severity_threshold: str = "low",
         confidence_threshold: str = "low",
         config_file: Path | None = None,
+        mcp_mode: bool = False,
     ):
-        """Initialize security sub-server."""
+        """Initialize security sub-server.
+
+        Args:
+            name: Sub-server name
+            input_dir: Input directory (containing files_to_review.txt from scope)
+            output_dir: Output directory for results
+            repo_path: Repository path (default: current directory)
+            severity_threshold: Minimum severity to report ("low", "medium", "high")
+            confidence_threshold: Minimum confidence ("low", "medium", "high")
+            config_file: Path to config file
+            mcp_mode: If True, log to stderr only (MCP protocol compatible).
+                      If False, log to stdout only (standalone mode).
+        """
+        # Get output base from config for standalone use
+        base_config = get_config(start_dir=str(repo_path or Path.cwd()))
+        output_base = base_config.get("review", {}).get("output_dir", "LLM-CONTEXT/btx_fix_mcp/review")
+
         if input_dir is None:
-            input_dir = Path.cwd() / "LLM-CONTEXT" / "review-anal" / "scope"
+            input_dir = Path.cwd() / output_base / "scope"
         if output_dir is None:
-            output_dir = Path.cwd() / "LLM-CONTEXT" / "review-anal" / name
+            output_dir = Path.cwd() / output_base / name
 
         super().__init__(name=name, input_dir=input_dir, output_dir=output_dir)
         self.repo_path = repo_path or Path.cwd()
+        self.mcp_mode = mcp_mode
 
-        # Initialize logger
-        self.logger = setup_logger(
-            name, log_file=self.output_dir / f"{name}.log", level=20
-        )
+        # Initialize logger based on mode
+        if mcp_mode:
+            # MCP mode: stderr only (MCP protocol uses stdout)
+            self.logger = get_mcp_logger(f"btx_fix_mcp.{name}")
+        else:
+            # Standalone mode: stdout only (no file logging)
+            self.logger = setup_logger(name, log_file=None, level=20)
 
         # Load config
         config = self._load_config(config_file)
+        self.config = config or {}
+
+        # Load reviewer mindset
+        full_config = get_subserver_config("security", start_dir=str(self.repo_path))
+        self.mindset = get_mindset(SECURITY_MINDSET, full_config)
 
         # Apply config with parameter priority
-        self.severity_threshold = (
-            severity_threshold
-            if severity_threshold != "low" or config is None
-            else config.get("severity_threshold", "low")
-        )
-        self.confidence_threshold = (
-            confidence_threshold
-            if confidence_threshold != "low" or config is None
-            else config.get("confidence_threshold", "low")
-        )
+        self.severity_threshold = severity_threshold if severity_threshold != "low" or config is None else config.get("severity_threshold", "low")
+        self.confidence_threshold = confidence_threshold if confidence_threshold != "low" or config is None else config.get("confidence_threshold", "low")
 
     def _load_config(self, config_file: Path | None) -> dict | None:
         """Load configuration from file."""
@@ -124,22 +151,13 @@ class SecuritySubServer(BaseSubServer):
         if not files_list.exists():
             files_list = self.input_dir / "files_code.txt"
             if not files_list.exists():
-                missing.append(
-                    f"No files list found in {self.input_dir}. "
-                    "Run scope sub-server first."
-                )
+                missing.append(f"No files list found in {self.input_dir}. Run scope sub-server first.")
 
         # Validate thresholds
         if self.severity_threshold not in self.SEVERITY_LEVELS:
-            missing.append(
-                f"Invalid severity_threshold: {self.severity_threshold}. "
-                "Must be 'low', 'medium', or 'high'"
-            )
+            missing.append(f"Invalid severity_threshold: {self.severity_threshold}. Must be 'low', 'medium', or 'high'")
         if self.confidence_threshold not in self.SEVERITY_LEVELS:
-            missing.append(
-                f"Invalid confidence_threshold: {self.confidence_threshold}. "
-                "Must be 'low', 'medium', or 'high'"
-            )
+            missing.append(f"Invalid confidence_threshold: {self.confidence_threshold}. Must be 'low', 'medium', or 'high'")
 
         return len(missing) == 0, missing
 
@@ -181,9 +199,7 @@ class SecuritySubServer(BaseSubServer):
             artifacts = self._save_results(bandit_results, filtered_issues)
 
             # Step 6: Generate summary
-            summary = self._generate_summary(
-                python_files, filtered_issues, categorized
-            )
+            summary = self._generate_summary(python_files, filtered_issues, categorized)
 
             # Determine status
             high_severity = [i for i in filtered_issues if i.get("issue_severity") == "HIGH"]
@@ -195,21 +211,28 @@ class SecuritySubServer(BaseSubServer):
                 f"Scan complete: {len(filtered_issues)} issues found",
             )
 
+            metrics = SecurityMetrics(
+                files_scanned=len(python_files),
+                issues_found=len(filtered_issues),
+                high_severity=len(categorized.get("HIGH", [])),
+                medium_severity=len(categorized.get("MEDIUM", [])),
+                low_severity=len(categorized.get("LOW", [])),
+            )
+
             return SubServerResult(
                 status=status,
                 summary=summary,
                 artifacts=artifacts,
-                metrics={
-                    "files_scanned": len(python_files),
-                    "issues_found": len(filtered_issues),
-                    "high_severity": len(categorized.get("HIGH", [])),
-                    "medium_severity": len(categorized.get("MEDIUM", [])),
-                    "low_severity": len(categorized.get("LOW", [])),
-                },
+                metrics=metrics.to_dict(),
             )
 
         except Exception as e:
-            self.logger.error(f"Security analysis failed: {e}", exc_info=True)
+            log_error_detailed(
+                self.logger,
+                e,
+                context={"repo_path": str(self.repo_path)},
+                include_traceback=True,
+            )
             return SubServerResult(
                 status="FAILED",
                 summary=f"# Security Analysis Failed\n\n**Error**: {e}",
@@ -259,9 +282,7 @@ class SecuritySubServer(BaseSubServer):
                 for issue in results:
                     if "filename" in issue:
                         try:
-                            issue["relative_file"] = str(
-                                Path(issue["filename"]).relative_to(self.repo_path)
-                            )
+                            issue["relative_file"] = str(Path(issue["filename"]).relative_to(self.repo_path))
                         except ValueError:
                             issue["relative_file"] = issue["filename"]
 
@@ -283,12 +304,8 @@ class SecuritySubServer(BaseSubServer):
 
         filtered = []
         for issue in issues:
-            issue_severity = self.SEVERITY_LEVELS.get(
-                issue.get("issue_severity", "").lower(), 0
-            )
-            issue_confidence = self.SEVERITY_LEVELS.get(
-                issue.get("issue_confidence", "").lower(), 0
-            )
+            issue_severity = self.SEVERITY_LEVELS.get(issue.get("issue_severity", "").lower(), 0)
+            issue_confidence = self.SEVERITY_LEVELS.get(issue.get("issue_confidence", "").lower(), 0)
 
             if issue_severity >= severity_min and issue_confidence >= confidence_min:
                 filtered.append(issue)
@@ -338,9 +355,36 @@ class SecuritySubServer(BaseSubServer):
         issues: list[dict],
         categorized: dict[str, list[dict]],
     ) -> str:
-        """Generate markdown summary."""
+        """Generate markdown summary with mindset evaluation."""
+        # Evaluate results with mindset
+        high_issues = categorized.get("HIGH", [])
+        medium_issues = categorized.get("MEDIUM", [])
+        critical_issues = [{"severity": "critical"} for _ in high_issues]
+        warning_issues = [{"severity": "warning"} for _ in medium_issues]
+
+        verdict = evaluate_results(
+            self.mindset,
+            critical_issues,
+            warning_issues,
+            max(len(files), 1),
+        )
+
         lines = [
             "# Security Analysis Report",
+            "",
+            "## Reviewer Mindset",
+            "",
+            self.mindset.format_header(),
+            "",
+            self.mindset.format_approach(),
+            "",
+            "## Verdict",
+            "",
+            f"**{verdict.verdict_text}**",
+            "",
+            f"- High severity: {len(high_issues)}",
+            f"- Medium severity: {len(medium_issues)}",
+            f"- Files scanned: {len(files)}",
             "",
             "## Overview",
             "",
@@ -363,10 +407,12 @@ class SecuritySubServer(BaseSubServer):
         # High severity issues (always show)
         high_issues = categorized.get("HIGH", [])
         if high_issues:
-            lines.extend([
-                "## 🔴 High Severity Issues",
-                "",
-            ])
+            lines.extend(
+                [
+                    "## 🔴 High Severity Issues",
+                    "",
+                ]
+            )
             for issue in high_issues[:10]:
                 file_path = issue.get("relative_file", issue.get("filename", "unknown"))
                 line_num = issue.get("line_number", "?")
@@ -381,10 +427,12 @@ class SecuritySubServer(BaseSubServer):
         # Medium severity issues
         medium_issues = categorized.get("MEDIUM", [])
         if medium_issues:
-            lines.extend([
-                "## 🟠 Medium Severity Issues",
-                "",
-            ])
+            lines.extend(
+                [
+                    "## 🟠 Medium Severity Issues",
+                    "",
+                ]
+            )
             for issue in medium_issues[:10]:
                 file_path = issue.get("relative_file", issue.get("filename", "unknown"))
                 line_num = issue.get("line_number", "?")
@@ -396,15 +444,25 @@ class SecuritySubServer(BaseSubServer):
             lines.append("")
 
         # Recommendations
-        lines.extend([
-            "## Recommendations",
-            "",
-        ])
+        lines.extend(
+            [
+                "## Recommendations",
+                "",
+            ]
+        )
         if high_issues:
             lines.append("1. **Fix high severity issues immediately** - These represent significant security risks")
         if medium_issues:
             lines.append("2. **Review medium severity issues** - Address before production deployment")
         if not issues:
             lines.append("✅ No security issues detected!")
+
+        # Approval status (using mindset verdict)
+        lines.extend(["", "## Approval Status", ""])
+        lines.append(f"**{verdict.verdict_text}**")
+        if verdict.recommendations:
+            lines.append("")
+            for rec in verdict.recommendations:
+                lines.append(f"- {rec}")
 
         return "\n".join(lines)

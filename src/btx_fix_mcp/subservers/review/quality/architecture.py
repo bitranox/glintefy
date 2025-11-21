@@ -56,22 +56,21 @@ class ArchitectureAnalyzer(BaseAnalyzer):
 
                 for node in ast.walk(tree):
                     if isinstance(node, ast.ClassDef):
-                        methods = [
-                            item for item in node.body
-                            if isinstance(item, (ast.FunctionDef, ast.AsyncFunctionDef))
-                        ]
+                        methods = [item for item in node.body if isinstance(item, (ast.FunctionDef, ast.AsyncFunctionDef))]
                         if hasattr(node, "end_lineno"):
                             lines = node.end_lineno - node.lineno
                             if len(methods) > god_object_methods or lines > god_object_lines:
-                                results["god_objects"].append({
-                                    "file": rel_path,
-                                    "class": node.name,
-                                    "line": node.lineno,
-                                    "methods": len(methods),
-                                    "lines": lines,
-                                    "methods_threshold": god_object_methods,
-                                    "lines_threshold": god_object_lines,
-                                })
+                                results["god_objects"].append(
+                                    {
+                                        "file": rel_path,
+                                        "class": node.name,
+                                        "line": node.lineno,
+                                        "methods": len(methods),
+                                        "lines": lines,
+                                        "methods_threshold": god_object_methods,
+                                        "lines_threshold": god_object_lines,
+                                    }
+                                )
                     if isinstance(node, ast.Import):
                         for alias in node.names:
                             import_graph[rel_path].add(alias.name.split(".")[0])
@@ -82,11 +81,13 @@ class ArchitectureAnalyzer(BaseAnalyzer):
 
         for filepath, imports in import_graph.items():
             if len(imports) > coupling_threshold:
-                results["highly_coupled"].append({
-                    "file": filepath,
-                    "import_count": len(imports),
-                    "threshold": coupling_threshold,
-                })
+                results["highly_coupled"].append(
+                    {
+                        "file": filepath,
+                        "import_count": len(imports),
+                        "threshold": coupling_threshold,
+                    }
+                )
 
         return results
 
@@ -116,9 +117,7 @@ class ArchitectureAnalyzer(BaseAnalyzer):
         results["import_graph"] = {k: list(v) for k, v in import_graph.items()}
 
         # Simple cycle detection using DFS
-        def find_cycle(
-            start: str, current: str, visited: set, path: list
-        ) -> list | None:
+        def find_cycle(start: str, current: str, visited: set, path: list) -> list | None:
             if current in path:
                 cycle_start = path.index(current)
                 return path[cycle_start:] + [current]
@@ -154,21 +153,17 @@ class ArchitectureAnalyzer(BaseAnalyzer):
 
                 for node in ast.walk(tree):
                     if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
-                        runtime_checks = [
-                            child for child in ast.walk(node)
-                            if self._is_runtime_check(child)
-                        ]
+                        runtime_checks = [child for child in ast.walk(node) if self._is_runtime_check(child)]
                         if runtime_checks:
-                            results.append({
-                                "file": rel_path,
-                                "function": node.name,
-                                "line": node.lineno,
-                                "check_count": len(runtime_checks),
-                                "message": (
-                                    f"Function '{node.name}' has {len(runtime_checks)} "
-                                    "runtime checks that could be module-level constants"
-                                ),
-                            })
+                            results.append(
+                                {
+                                    "file": rel_path,
+                                    "function": node.name,
+                                    "line": node.lineno,
+                                    "check_count": len(runtime_checks),
+                                    "message": (f"Function '{node.name}' has {len(runtime_checks)} runtime checks that could be module-level constants"),
+                                }
+                            )
             except Exception as e:
                 self.logger.warning(f"Error detecting runtime checks in {file_path}: {e}")
         return results
@@ -182,8 +177,6 @@ class ArchitectureAnalyzer(BaseAnalyzer):
                         return True
                     if node.func.value.id == "sys" and node.func.attr == "platform":
                         return True
-            if isinstance(node.func, ast.Name) and node.func.id in [
-                "hasattr", "isinstance", "callable", "issubclass"
-            ]:
+            if isinstance(node.func, ast.Name) and node.func.id in ["hasattr", "isinstance", "callable", "issubclass"]:
                 return True
         return False

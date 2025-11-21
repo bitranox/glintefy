@@ -24,10 +24,12 @@ entry point (python -m) reuses the same helpers for consistency.
 
 from __future__ import annotations
 
-from typing import Optional, Sequence
+from pathlib import Path
+from collections.abc import Sequence
 
 import rich_click as click
 from rich.console import Console
+from rich.markdown import Markdown
 from rich.traceback import Traceback, install as install_rich_traceback
 
 from . import __init__conf__
@@ -109,8 +111,287 @@ def cli_fail() -> None:
     raise_intentional_failure()
 
 
+# =============================================================================
+# Review Commands
+# =============================================================================
+
+
+@cli.group("review", context_settings=CLICK_CONTEXT_SETTINGS)
+@click.option(
+    "--repo",
+    "-r",
+    type=click.Path(exists=True, file_okay=False, path_type=Path),
+    default=None,
+    help="Repository path (default: current directory)",
+)
+@click.pass_context
+def review_group(ctx: click.Context, repo: Path | None) -> None:
+    """Code review and analysis commands.
+
+    Run various code analysis tools including scope detection,
+    quality analysis, security scanning, and more.
+    """
+    ctx.ensure_object(dict)
+    ctx.obj["repo_path"] = repo or Path.cwd()
+
+
+@review_group.command("scope", context_settings=CLICK_CONTEXT_SETTINGS)
+@click.option(
+    "--mode",
+    "-m",
+    type=click.Choice(["git", "full"]),
+    default="git",
+    help="Scan mode: 'git' for uncommitted changes, 'full' for all files",
+)
+@click.pass_context
+def review_scope(ctx: click.Context, mode: str) -> None:
+    """Determine which files need to be reviewed."""
+    from .servers.review import ReviewMCPServer
+
+    repo_path = ctx.obj["repo_path"]
+    server = ReviewMCPServer(repo_path=repo_path)
+    result = server.run_scope(mode=mode)
+
+    _print_review_result(result)
+
+
+@review_group.command("quality", context_settings=CLICK_CONTEXT_SETTINGS)
+@click.option(
+    "--complexity",
+    "-c",
+    type=int,
+    default=None,
+    help="Maximum cyclomatic complexity threshold (default: 10)",
+)
+@click.option(
+    "--maintainability",
+    "-m",
+    type=int,
+    default=None,
+    help="Minimum maintainability index (default: 20)",
+)
+@click.pass_context
+def review_quality(ctx: click.Context, complexity: int | None, maintainability: int | None) -> None:
+    """Analyze code quality including complexity and maintainability."""
+    from .servers.review import ReviewMCPServer
+
+    repo_path = ctx.obj["repo_path"]
+    server = ReviewMCPServer(repo_path=repo_path)
+    result = server.run_quality(
+        complexity_threshold=complexity,
+        maintainability_threshold=maintainability,
+    )
+
+    _print_review_result(result)
+
+
+@review_group.command("security", context_settings=CLICK_CONTEXT_SETTINGS)
+@click.option(
+    "--severity",
+    "-s",
+    type=click.Choice(["low", "medium", "high"]),
+    default="low",
+    help="Minimum severity to report",
+)
+@click.option(
+    "--confidence",
+    "-c",
+    type=click.Choice(["low", "medium", "high"]),
+    default="low",
+    help="Minimum confidence to report",
+)
+@click.pass_context
+def review_security(ctx: click.Context, severity: str, confidence: str) -> None:
+    """Scan code for security vulnerabilities using Bandit."""
+    from .servers.review import ReviewMCPServer
+
+    repo_path = ctx.obj["repo_path"]
+    server = ReviewMCPServer(repo_path=repo_path)
+    result = server.run_security(
+        severity_threshold=severity,
+        confidence_threshold=confidence,
+    )
+
+    _print_review_result(result)
+
+
+@review_group.command("deps", context_settings=CLICK_CONTEXT_SETTINGS)
+@click.option(
+    "--no-vulnerabilities",
+    is_flag=True,
+    help="Skip vulnerability scanning",
+)
+@click.option(
+    "--no-licenses",
+    is_flag=True,
+    help="Skip license compliance checking",
+)
+@click.option(
+    "--no-outdated",
+    is_flag=True,
+    help="Skip outdated package detection",
+)
+@click.pass_context
+def review_deps(
+    ctx: click.Context,
+    no_vulnerabilities: bool,
+    no_licenses: bool,
+    no_outdated: bool,
+) -> None:
+    """Analyze project dependencies for vulnerabilities and compliance."""
+    from .servers.review import ReviewMCPServer
+
+    repo_path = ctx.obj["repo_path"]
+    server = ReviewMCPServer(repo_path=repo_path)
+    result = server.run_deps(
+        scan_vulnerabilities=not no_vulnerabilities,
+        check_licenses=not no_licenses,
+        check_outdated=not no_outdated,
+    )
+
+    _print_review_result(result)
+
+
+@review_group.command("docs", context_settings=CLICK_CONTEXT_SETTINGS)
+@click.option(
+    "--min-coverage",
+    "-c",
+    type=int,
+    default=None,
+    help="Minimum docstring coverage percentage (default: 80)",
+)
+@click.pass_context
+def review_docs(ctx: click.Context, min_coverage: int | None) -> None:
+    """Analyze documentation coverage and quality."""
+    from .servers.review import ReviewMCPServer
+
+    repo_path = ctx.obj["repo_path"]
+    server = ReviewMCPServer(repo_path=repo_path)
+    result = server.run_docs(min_coverage=min_coverage)
+
+    _print_review_result(result)
+
+
+@review_group.command("perf", context_settings=CLICK_CONTEXT_SETTINGS)
+@click.option(
+    "--no-profiling",
+    is_flag=True,
+    help="Skip test profiling",
+)
+@click.pass_context
+def review_perf(ctx: click.Context, no_profiling: bool) -> None:
+    """Analyze code for performance issues and patterns."""
+    from .servers.review import ReviewMCPServer
+
+    repo_path = ctx.obj["repo_path"]
+    server = ReviewMCPServer(repo_path=repo_path)
+    result = server.run_perf(run_profiling=not no_profiling)
+
+    _print_review_result(result)
+
+
+@review_group.command("report", context_settings=CLICK_CONTEXT_SETTINGS)
+@click.pass_context
+def review_report(ctx: click.Context) -> None:
+    """Generate consolidated report from all analysis results."""
+    from .servers.review import ReviewMCPServer
+
+    repo_path = ctx.obj["repo_path"]
+    server = ReviewMCPServer(repo_path=repo_path)
+    result = server.run_report()
+
+    _print_review_result(result)
+
+
+@review_group.command("all", context_settings=CLICK_CONTEXT_SETTINGS)
+@click.option(
+    "--mode",
+    "-m",
+    type=click.Choice(["git", "full"]),
+    default="git",
+    help="Scan mode for scope analysis",
+)
+@click.option(
+    "--complexity",
+    type=int,
+    default=None,
+    help="Maximum cyclomatic complexity threshold",
+)
+@click.option(
+    "--severity",
+    type=click.Choice(["low", "medium", "high"]),
+    default="low",
+    help="Minimum security severity to report",
+)
+@click.pass_context
+def review_all(ctx: click.Context, mode: str, complexity: int | None, severity: str) -> None:
+    """Run complete code review (all sub-servers)."""
+    from .servers.review import ReviewMCPServer
+
+    repo_path = ctx.obj["repo_path"]
+    server = ReviewMCPServer(repo_path=repo_path)
+    result = server.run_all(
+        mode=mode,
+        complexity_threshold=complexity,
+        severity_threshold=severity,
+    )
+
+    # Print overall status
+    status = result.get("overall_status", "UNKNOWN")
+    status_color = {
+        "SUCCESS": "green",
+        "PARTIAL": "yellow",
+        "FAILED": "red",
+    }.get(status, "white")
+
+    console.print(f"\n[bold {status_color}]Overall Status: {status}[/]")
+
+    if result.get("errors"):
+        console.print("\n[red]Errors:[/]")
+        for error in result["errors"]:
+            console.print(f"  • {error}")
+
+    # Print individual results
+    for name in ["scope", "quality", "security", "deps", "docs", "perf", "report"]:
+        sub_result = result.get(name)
+        if sub_result:
+            sub_status = sub_result.get("status", "N/A")
+            console.print(f"\n[bold]{name.title()}[/]: {sub_status}")
+
+
+def _print_review_result(result: dict) -> None:
+    """Print a review result with rich formatting."""
+    status = result.get("status", "UNKNOWN")
+    status_color = {
+        "SUCCESS": "green",
+        "PARTIAL": "yellow",
+        "FAILED": "red",
+    }.get(status, "white")
+
+    console.print(f"\n[bold {status_color}]Status: {status}[/]")
+
+    # Print summary as markdown
+    summary = result.get("summary", "")
+    if summary:
+        console.print(Markdown(summary))
+
+    # Print metrics
+    metrics = result.get("metrics", {})
+    if metrics:
+        console.print("\n[bold]Metrics:[/]")
+        for key, value in metrics.items():
+            console.print(f"  {key}: {value}")
+
+    # Print errors if any
+    errors = result.get("errors", [])
+    if errors:
+        console.print("\n[red]Errors:[/]")
+        for error in errors:
+            console.print(f"  • {error}")
+
+
 def main(
-    argv: Optional[Sequence[str]] = None,
+    argv: Sequence[str] | None = None,
 ) -> int:
     """Execute the CLI and return the exit code.
 

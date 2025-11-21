@@ -1,8 +1,7 @@
 """Tests for integration protocol validation."""
 
 import pytest
-from pathlib import Path
-from btx_fix_mcp.subservers.common.protocol import IntegrationProtocol, ProtocolViolation
+from btx_fix_mcp.subservers.common.protocol import IntegrationProtocol
 
 
 class TestValidateOutputs:
@@ -94,18 +93,14 @@ class TestValidateOutputs:
         (output_dir / "scope_summary.md").write_text("# Scope Analysis")
 
         # Without result.json
-        valid, violations = IntegrationProtocol.validate_outputs(
-            output_dir, "scope", require_result_json=True
-        )
+        valid, violations = IntegrationProtocol.validate_outputs(output_dir, "scope", require_result_json=True)
 
         assert valid is False
         assert any("result.json" in v for v in violations)
 
         # With result.json
         (output_dir / "result.json").write_text("{}")
-        valid, violations = IntegrationProtocol.validate_outputs(
-            output_dir, "scope", require_result_json=True
-        )
+        valid, violations = IntegrationProtocol.validate_outputs(output_dir, "scope", require_result_json=True)
 
         assert valid is True
 
@@ -309,9 +304,7 @@ class TestCheckAllSubservers:
         (quality_dir / "status.txt").write_text("SUCCESS")
         (quality_dir / "quality_summary.md").write_text("# Quality")
 
-        results = IntegrationProtocol.check_all_subservers(
-            tmp_path, ["scope", "quality"]
-        )
+        results = IntegrationProtocol.check_all_subservers(tmp_path, ["scope", "quality"])
 
         assert len(results) == 2
         assert results["scope"]["valid"] is True
@@ -332,9 +325,7 @@ class TestCheckAllSubservers:
         quality_dir.mkdir()
         (quality_dir / "status.txt").write_text("FAILED")
 
-        results = IntegrationProtocol.check_all_subservers(
-            tmp_path, ["scope", "quality"]
-        )
+        results = IntegrationProtocol.check_all_subservers(tmp_path, ["scope", "quality"])
 
         assert results["scope"]["valid"] is True
         assert results["quality"]["valid"] is False
@@ -348,9 +339,7 @@ class TestWaitForCompletion:
         """Test wait when already completed."""
         (tmp_path / "status.txt").write_text("SUCCESS")
 
-        completed, status = IntegrationProtocol.wait_for_completion(
-            tmp_path, timeout_seconds=1, poll_interval=0.1
-        )
+        completed, status = IntegrationProtocol.wait_for_completion(tmp_path, timeout_seconds=1, poll_interval=0.1)
 
         assert completed is True
         assert status == "SUCCESS"
@@ -359,18 +348,14 @@ class TestWaitForCompletion:
         """Test wait when stuck in progress."""
         (tmp_path / "status.txt").write_text("IN_PROGRESS")
 
-        completed, status = IntegrationProtocol.wait_for_completion(
-            tmp_path, timeout_seconds=0.5, poll_interval=0.1
-        )
+        completed, status = IntegrationProtocol.wait_for_completion(tmp_path, timeout_seconds=0.5, poll_interval=0.1)
 
         assert completed is False
         assert status == "IN_PROGRESS"
 
     def test_wait_no_status_file(self, tmp_path):
         """Test wait when status file doesn't exist."""
-        completed, status = IntegrationProtocol.wait_for_completion(
-            tmp_path, timeout_seconds=0.5, poll_interval=0.1
-        )
+        completed, status = IntegrationProtocol.wait_for_completion(tmp_path, timeout_seconds=0.5, poll_interval=0.1)
 
         assert completed is False
         assert status is None

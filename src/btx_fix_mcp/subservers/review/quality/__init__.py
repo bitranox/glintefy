@@ -22,30 +22,41 @@ This sub-server analyzes code quality using multiple tools:
 
 import json
 import subprocess
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 from typing import Any
 
-from btx_fix_mcp.config import get_subserver_config
+from btx_fix_mcp.config import get_config, get_subserver_config
 from btx_fix_mcp.subservers.base import BaseSubServer, SubServerResult
 from btx_fix_mcp.subservers.common.logging import (
     LogContext,
+    get_mcp_logger,
+    log_error_detailed,
     log_file_list,
     log_result,
     log_section,
     log_step,
     setup_logger,
 )
+from btx_fix_mcp.subservers.common.mindsets import (
+    QUALITY_MINDSET,
+    get_mindset,
+)
 from btx_fix_mcp.tools_venv import ensure_tools_venv
 
 from .architecture import ArchitectureAnalyzer
 from .complexity import ComplexityAnalyzer
+from .config import QualityConfig, get_analyzer_config, load_quality_config
+from .issues import compile_all_issues
 from .metrics import MetricsAnalyzer
+from .summary import generate_comprehensive_summary
 from .static import StaticAnalyzer
 from .tests import TestAnalyzer
 from .types import TypeAnalyzer
 
 __all__ = [
     "QualitySubServer",
+    "QualityConfig",
     "ArchitectureAnalyzer",
     "ComplexityAnalyzer",
     "MetricsAnalyzer",
@@ -74,112 +85,303 @@ class QualitySubServer(BaseSubServer):
         max_nesting_depth: int | None = None,
         cognitive_complexity_threshold: int | None = None,
         config_file: Path | None = None,
+        mcp_mode: bool = False,
     ):
-        """Initialize quality sub-server."""
+        """Initialize quality sub-server.
+
+        Args:
+            name: Sub-server name
+            input_dir: Input directory (contains files_to_review.txt from scope)
+            output_dir: Output directory for results
+            repo_path: Repository path (default: current directory)
+            complexity_threshold: Complexity threshold for warnings
+            maintainability_threshold: MI threshold for warnings
+            max_function_length: Max lines per function
+            max_nesting_depth: Max nesting depth
+            cognitive_complexity_threshold: Cognitive complexity threshold
+            config_file: Path to config file
+            mcp_mode: If True, log to stderr only (MCP protocol compatible).
+                      If False, log to stdout only (standalone mode).
+        """
+        # Get output base from config for standalone use
+        base_config = get_config(start_dir=str(repo_path or Path.cwd()))
+        output_base = base_config.get("review", {}).get("output_dir", "LLM-CONTEXT/btx_fix_mcp/review")
+
         if input_dir is None:
-            input_dir = Path.cwd() / "LLM-CONTEXT" / "review-anal" / "scope"
+            input_dir = Path.cwd() / output_base / "scope"
         if output_dir is None:
-            output_dir = Path.cwd() / "LLM-CONTEXT" / "review-anal" / name
+            output_dir = Path.cwd() / output_base / name
 
         super().__init__(name=name, input_dir=input_dir, output_dir=output_dir)
         self.repo_path = repo_path or Path.cwd()
+        self.mcp_mode = mcp_mode
 
-        # Initialize logger
-        self.logger = setup_logger(
-            name, log_file=self.output_dir / f"{name}.log", level=20
-        )
+        # Initialize logger based on mode
+        if mcp_mode:
+            # MCP mode: stderr only (MCP protocol uses stdout)
+            self.logger = get_mcp_logger(f"btx_fix_mcp.{name}")
+        else:
+            # Standalone mode: stdout only (no file logging)
+            self.logger = setup_logger(name, log_file=None, level=20)
 
-        # Load config from lib_layered_config
-        config = get_subserver_config("quality", start_dir=str(self.repo_path))
-        self.config = config
-
-        # Core thresholds
-        self.complexity_threshold = (
-            complexity_threshold if complexity_threshold is not None
-            else config.get("complexity_threshold", 10)
-        )
-        self.maintainability_threshold = (
-            maintainability_threshold if maintainability_threshold is not None
-            else config.get("maintainability_threshold", 20)
-        )
-        self.max_function_length = (
-            max_function_length if max_function_length is not None
-            else config.get("max_function_length", 50)
-        )
-        self.max_nesting_depth = (
-            max_nesting_depth if max_nesting_depth is not None
-            else config.get("max_nesting_depth", 3)
-        )
-        self.cognitive_complexity_threshold = (
-            cognitive_complexity_threshold if cognitive_complexity_threshold is not None
-            else config.get("cognitive_complexity_threshold", 15)
+        # Load config using extracted config module
+        raw_config = get_subserver_config("quality", start_dir=str(self.repo_path))
+        self.quality_config = load_quality_config(
+            raw_config,
+            complexity_threshold=complexity_threshold,
+            maintainability_threshold=maintainability_threshold,
+            max_function_length=max_function_length,
+            max_nesting_depth=max_nesting_depth,
+            cognitive_complexity_threshold=cognitive_complexity_threshold,
         )
 
-        # Feature flags from config
-        self.enable_type_coverage = config.get("enable_type_coverage", True)
-        self.enable_dead_code_detection = config.get("enable_dead_code_detection", True)
-        self.enable_import_cycle_detection = config.get("enable_import_cycle_detection", True)
-        self.enable_docstring_coverage = config.get("enable_docstring_coverage", True)
-        self.enable_halstead_metrics = config.get("enable_halstead_metrics", True)
-        self.enable_raw_metrics = config.get("enable_raw_metrics", True)
-        self.enable_cognitive_complexity = config.get("enable_cognitive_complexity", True)
-        self.enable_js_analysis = config.get("enable_js_analysis", True)
-        self.count_test_assertions = config.get("count_test_assertions", True)
-        self.enable_code_churn = config.get("enable_code_churn", True)
-        self.enable_beartype = config.get("enable_beartype", True)
-        self.enable_duplication_detection = config.get(
-            "enable_duplication_detection", config.get("detect_duplication", True)
-        )
-        self.enable_static_analysis = config.get("enable_static_analysis", True)
-        self.enable_test_analysis = config.get("enable_test_analysis", True)
-        self.enable_architecture_analysis = config.get("enable_architecture_analysis", True)
-        self.enable_runtime_check_detection = config.get("enable_runtime_check_detection", True)
+        # Expose config for external access
+        self.config = raw_config
 
-        # Additional thresholds
-        self.min_type_coverage = config.get("min_type_coverage", 80)
-        self.dead_code_confidence = config.get("dead_code_confidence", 80)
-        self.min_docstring_coverage = config.get("min_docstring_coverage", 80)
-        self.churn_threshold = config.get("churn_threshold", 20)
-        self.coupling_threshold = config.get("coupling_threshold", 15)
-        self.god_object_methods_threshold = config.get("god_object_methods_threshold", 20)
-        self.god_object_lines_threshold = config.get("god_object_lines_threshold", 500)
+        # Load reviewer mindset for evaluation
+        self.mindset = get_mindset(QUALITY_MINDSET, raw_config)
 
         # Initialize analyzers
         self._init_analyzers()
 
     def _init_analyzers(self) -> None:
         """Initialize all analyzer instances."""
-        analyzer_config = {
-            "complexity_threshold": self.complexity_threshold,
-            "maintainability_threshold": self.maintainability_threshold,
-            "max_function_length": self.max_function_length,
-            "max_nesting_depth": self.max_nesting_depth,
-            "cognitive_complexity_threshold": self.cognitive_complexity_threshold,
-            "dead_code_confidence": self.dead_code_confidence,
-            "churn_threshold": self.churn_threshold,
-            "coupling_threshold": self.coupling_threshold,
-            "god_object_methods_threshold": self.god_object_methods_threshold,
-            "god_object_lines_threshold": self.god_object_lines_threshold,
-        }
+        analyzer_config = get_analyzer_config(self.quality_config)
 
-        self.complexity_analyzer = ComplexityAnalyzer(
-            self.repo_path, self.logger, analyzer_config
+        self.complexity_analyzer = ComplexityAnalyzer(self.repo_path, self.logger, analyzer_config)
+        self.static_analyzer = StaticAnalyzer(self.repo_path, self.logger, analyzer_config)
+        self.type_analyzer = TypeAnalyzer(self.repo_path, self.logger, analyzer_config)
+        self.architecture_analyzer = ArchitectureAnalyzer(self.repo_path, self.logger, analyzer_config)
+        self.test_analyzer = TestAnalyzer(self.repo_path, self.logger, analyzer_config)
+        self.metrics_analyzer = MetricsAnalyzer(self.repo_path, self.logger, analyzer_config)
+
+    # --- Config accessor properties (for backward compatibility) ---
+
+    @property
+    def complexity_threshold(self) -> int:
+        return self.quality_config.thresholds.complexity
+
+    @property
+    def maintainability_threshold(self) -> int:
+        return self.quality_config.thresholds.maintainability
+
+    @property
+    def max_function_length(self) -> int:
+        return self.quality_config.thresholds.max_function_length
+
+    @property
+    def max_nesting_depth(self) -> int:
+        return self.quality_config.thresholds.max_nesting_depth
+
+    @property
+    def cognitive_complexity_threshold(self) -> int:
+        return self.quality_config.thresholds.cognitive_complexity
+
+    @property
+    def min_type_coverage(self) -> int:
+        return self.quality_config.thresholds.min_type_coverage
+
+    @property
+    def dead_code_confidence(self) -> int:
+        return self.quality_config.thresholds.dead_code_confidence
+
+    @property
+    def min_docstring_coverage(self) -> int:
+        return self.quality_config.thresholds.min_docstring_coverage
+
+    @property
+    def churn_threshold(self) -> int:
+        return self.quality_config.thresholds.churn_threshold
+
+    @property
+    def coupling_threshold(self) -> int:
+        return self.quality_config.thresholds.coupling_threshold
+
+    @property
+    def god_object_methods_threshold(self) -> int:
+        return self.quality_config.thresholds.god_object_methods
+
+    @property
+    def god_object_lines_threshold(self) -> int:
+        return self.quality_config.thresholds.god_object_lines
+
+    @property
+    def enable_type_coverage(self) -> bool:
+        return self.quality_config.features.type_coverage
+
+    @property
+    def enable_dead_code_detection(self) -> bool:
+        return self.quality_config.features.dead_code_detection
+
+    @property
+    def enable_import_cycle_detection(self) -> bool:
+        return self.quality_config.features.import_cycle_detection
+
+    @property
+    def enable_docstring_coverage(self) -> bool:
+        return self.quality_config.features.docstring_coverage
+
+    @property
+    def enable_halstead_metrics(self) -> bool:
+        return self.quality_config.features.halstead_metrics
+
+    @property
+    def enable_raw_metrics(self) -> bool:
+        return self.quality_config.features.raw_metrics
+
+    @property
+    def enable_cognitive_complexity(self) -> bool:
+        return self.quality_config.features.cognitive_complexity
+
+    @property
+    def enable_js_analysis(self) -> bool:
+        return self.quality_config.features.js_analysis
+
+    @property
+    def count_test_assertions(self) -> bool:
+        return self.quality_config.features.test_assertions
+
+    @property
+    def enable_code_churn(self) -> bool:
+        return self.quality_config.features.code_churn
+
+    @property
+    def enable_beartype(self) -> bool:
+        return self.quality_config.features.beartype
+
+    @property
+    def enable_duplication_detection(self) -> bool:
+        return self.quality_config.features.duplication_detection
+
+    @property
+    def enable_static_analysis(self) -> bool:
+        return self.quality_config.features.static_analysis
+
+    @property
+    def enable_test_analysis(self) -> bool:
+        return self.quality_config.features.test_analysis
+
+    @property
+    def enable_architecture_analysis(self) -> bool:
+        return self.quality_config.features.architecture_analysis
+
+    @property
+    def enable_runtime_check_detection(self) -> bool:
+        return self.quality_config.features.runtime_check_detection
+
+    def _run_analyzers_parallel(self, python_files: list[str], js_files: list[str]) -> dict[str, Any]:
+        """Run all enabled analyzers in parallel using ThreadPoolExecutor.
+
+        Each analyzer runs in its own thread. Failures in individual analyzers
+        are caught and logged, allowing other analyzers to complete.
+
+        Args:
+            python_files: List of Python file paths to analyze
+            js_files: List of JS/TS file paths to analyze
+
+        Returns:
+            Dictionary with results from all analyzers
+        """
+        results: dict[str, Any] = {}
+        all_files = python_files + js_files
+
+        # Define analyzer tasks - each is a tuple of (name, analyzer_func, files, result_keys)
+        tasks: list[tuple[str, Any, list[str], list[str]]] = []
+
+        # Complexity analyzer (always enabled)
+        tasks.append(
+            (
+                "complexity",
+                self.complexity_analyzer.analyze,
+                python_files,
+                ["complexity", "maintainability", "cognitive", "function_issues"],
+            )
         )
-        self.static_analyzer = StaticAnalyzer(
-            self.repo_path, self.logger, analyzer_config
-        )
-        self.type_analyzer = TypeAnalyzer(
-            self.repo_path, self.logger, analyzer_config
-        )
-        self.architecture_analyzer = ArchitectureAnalyzer(
-            self.repo_path, self.logger, analyzer_config
-        )
-        self.test_analyzer = TestAnalyzer(
-            self.repo_path, self.logger, analyzer_config
-        )
-        self.metrics_analyzer = MetricsAnalyzer(
-            self.repo_path, self.logger, analyzer_config
-        )
+
+        # Static analyzer
+        if self.enable_static_analysis or self.enable_duplication_detection:
+            tasks.append(
+                (
+                    "static",
+                    self.static_analyzer.analyze,
+                    python_files,
+                    ["static", "duplication"],
+                )
+            )
+
+        # Test analyzer
+        if self.enable_test_analysis:
+            tasks.append(
+                (
+                    "tests",
+                    self.test_analyzer.analyze,
+                    python_files,
+                    ["tests"],
+                )
+            )
+
+        # Architecture analyzer
+        if self.enable_architecture_analysis or self.enable_runtime_check_detection or self.enable_import_cycle_detection:
+            tasks.append(
+                (
+                    "architecture",
+                    self.architecture_analyzer.analyze,
+                    python_files,
+                    ["architecture", "import_cycles", "runtime_checks"],
+                )
+            )
+
+        # Metrics analyzer
+        if self.enable_halstead_metrics or self.enable_raw_metrics or self.enable_code_churn:
+            tasks.append(
+                (
+                    "metrics",
+                    self.metrics_analyzer.analyze,
+                    all_files,
+                    ["halstead", "raw_metrics", "code_churn"],
+                )
+            )
+
+        # Type analyzer
+        if self.enable_type_coverage or self.enable_dead_code_detection or self.enable_docstring_coverage:
+            tasks.append(
+                (
+                    "types",
+                    self.type_analyzer.analyze,
+                    python_files,
+                    ["type_coverage", "dead_code", "docstring_coverage"],
+                )
+            )
+
+        def run_analyzer(task: tuple[str, Any, list[str], list[str]]) -> tuple[str, dict[str, Any]]:
+            """Run a single analyzer and return its results."""
+            name, analyzer_func, files, _ = task
+            try:
+                return (name, analyzer_func(files))
+            except Exception as e:
+                self.logger.warning(f"Analyzer {name} failed: {e}")
+                return (name, {})
+
+        # Run all analyzers in parallel
+        with ThreadPoolExecutor(max_workers=len(tasks) if tasks else 1) as executor:
+            futures = {executor.submit(run_analyzer, task): task for task in tasks}
+
+            for future in as_completed(futures):
+                task = futures[future]
+                name, result_keys = task[0], task[3]
+                try:
+                    analyzer_name, analyzer_results = future.result()
+                    # Map results to expected keys
+                    for key in result_keys:
+                        if key in analyzer_results:
+                            results[key] = analyzer_results[key]
+                        elif key == "tests" and analyzer_results:
+                            # Test analyzer returns dict directly
+                            results[key] = analyzer_results
+                except Exception as e:
+                    self.logger.error(f"Failed to get results from {name}: {e}")
+
+        return results
 
     def validate_inputs(self) -> tuple[bool, list[str]]:
         """Validate inputs for quality analysis."""
@@ -188,9 +390,7 @@ class QualitySubServer(BaseSubServer):
         if not files_list.exists():
             files_list = self.input_dir / "files_code.txt"
             if not files_list.exists():
-                missing.append(
-                    f"No files list found in {self.input_dir}. Run scope sub-server first."
-                )
+                missing.append(f"No files list found in {self.input_dir}. Run scope sub-server first.")
         return len(missing) == 0, missing
 
     def execute(self) -> SubServerResult:
@@ -306,17 +506,12 @@ class QualitySubServer(BaseSubServer):
             artifacts = self._save_all_results(results, all_issues)
 
             # Step 22: Generate summary
-            summary = self._generate_comprehensive_summary(
-                python_files, js_files, results, all_issues
-            )
+            summary = self._generate_comprehensive_summary(python_files, js_files, results, all_issues)
 
             # Determine status
             critical_issues = [i for i in all_issues if i.get("severity") == "error"]
             status = "SUCCESS" if not critical_issues else "PARTIAL"
-            log_result(
-                self.logger, status == "SUCCESS",
-                f"Analysis complete: {len(all_issues)} issues found"
-            )
+            log_result(self.logger, status == "SUCCESS", f"Analysis complete: {len(all_issues)} issues found")
 
             return SubServerResult(
                 status=status,
@@ -326,7 +521,12 @@ class QualitySubServer(BaseSubServer):
             )
 
         except Exception as e:
-            self.logger.error(f"Quality analysis failed: {e}", exc_info=True)
+            log_error_detailed(
+                self.logger,
+                e,
+                context={"repo_path": str(self.repo_path)},
+                include_traceback=True,
+            )
             return SubServerResult(
                 status="FAILED",
                 summary=f"# Quality Analysis Failed\n\n**Error**: {e}",
@@ -363,7 +563,9 @@ class QualitySubServer(BaseSubServer):
         try:
             result = subprocess.run(
                 ["eslint", "--format=json"] + files,
-                capture_output=True, text=True, timeout=60,
+                capture_output=True,
+                text=True,
+                timeout=60,
             )
             results["raw_output"] = result.stdout
             if result.stdout.strip():
@@ -371,13 +573,15 @@ class QualitySubServer(BaseSubServer):
                     eslint_results = json.loads(result.stdout)
                     for file_result in eslint_results:
                         for message in file_result.get("messages", []):
-                            results["issues"].append({
-                                "file": file_result.get("filePath", ""),
-                                "line": message.get("line", 0),
-                                "severity": "error" if message.get("severity") == 2 else "warning",
-                                "message": message.get("message", ""),
-                                "rule": message.get("ruleId", ""),
-                            })
+                            results["issues"].append(
+                                {
+                                    "file": file_result.get("filePath", ""),
+                                    "line": message.get("line", 0),
+                                    "severity": "error" if message.get("severity") == 2 else "warning",
+                                    "message": message.get("message", ""),
+                                    "rule": message.get("ruleId", ""),
+                                }
+                            )
                 except json.JSONDecodeError:
                     pass
         except FileNotFoundError:
@@ -402,7 +606,9 @@ class QualitySubServer(BaseSubServer):
             # Check if beartype is available
             beartype_check = subprocess.run(
                 ["python", "-c", "import beartype; print('available')"],
-                capture_output=True, text=True, timeout=10,
+                capture_output=True,
+                text=True,
+                timeout=10,
             )
             if beartype_check.returncode != 0:
                 self.logger.info("Beartype not installed, skipping runtime type check")
@@ -415,7 +621,10 @@ class QualitySubServer(BaseSubServer):
             # Run actual test suite
             test_result = subprocess.run(
                 ["python", "-m", "pytest", "tests/", "-x", "--tb=short", "-q"],
-                capture_output=True, text=True, timeout=120, cwd=str(self.repo_path),
+                capture_output=True,
+                text=True,
+                timeout=120,
+                cwd=str(self.repo_path),
             )
             results["raw_output"] += test_result.stdout + test_result.stderr
             if test_result.returncode != 0 and "failed" in test_result.stdout.lower():
@@ -436,168 +645,9 @@ class QualitySubServer(BaseSubServer):
 
     def _compile_all_issues(self, results: dict[str, Any]) -> list[dict[str, Any]]:
         """Compile all issues from various analyses."""
-        issues = []
+        return compile_all_issues(results, self.quality_config, self.repo_path)
 
-        # Complexity issues
-        for r in results.get("complexity", []):
-            if r.get("complexity", 0) > self.complexity_threshold:
-                issues.append({
-                    "type": "high_complexity",
-                    "severity": "warning" if r["complexity"] <= 20 else "error",
-                    "file": r["file"], "line": r.get("lineno", 0), "name": r["name"],
-                    "value": r["complexity"], "threshold": self.complexity_threshold,
-                    "message": f"Function '{r['name']}' has complexity {r['complexity']} (threshold: {self.complexity_threshold})",
-                })
-
-        # Maintainability issues
-        for r in results.get("maintainability", []):
-            if r.get("mi", 100) < self.maintainability_threshold:
-                issues.append({
-                    "type": "low_maintainability",
-                    "severity": "warning" if r["mi"] >= 10 else "error",
-                    "file": r["file"], "value": r["mi"],
-                    "threshold": self.maintainability_threshold,
-                    "message": f"File has maintainability index {r['mi']:.1f} (threshold: {self.maintainability_threshold})",
-                })
-
-        # Function issues
-        for issue in results.get("function_issues", []):
-            issues.append({
-                "type": issue["issue_type"].lower(),
-                "severity": "error" if issue["value"] > issue["threshold"] * 2 else "warning",
-                "file": issue["file"], "line": issue["line"], "name": issue["function"],
-                "value": issue["value"], "threshold": issue["threshold"],
-                "message": issue["message"],
-            })
-
-        # Cognitive complexity issues
-        for r in results.get("cognitive", []):
-            if r.get("exceeds_threshold"):
-                issues.append({
-                    "type": "high_cognitive_complexity", "severity": "warning",
-                    "file": r["file"], "line": r["line"], "name": r["function"],
-                    "value": r["cognitive_complexity"],
-                    "threshold": self.cognitive_complexity_threshold,
-                    "message": f"Function '{r['function']}' has cognitive complexity {r['cognitive_complexity']} (threshold: {self.cognitive_complexity_threshold})",
-                })
-
-        # Test issues
-        for test_issue in results.get("tests", {}).get("issues", []):
-            issue_type = test_issue.get("type", "test_issue").lower()
-            issues.append({
-                "type": issue_type, "severity": "warning",
-                "file": test_issue.get("file", ""),
-                "line": test_issue.get("line", 0),
-                "message": test_issue.get("message", ""),
-            })
-
-        # Architecture issues
-        arch = results.get("architecture", {})
-        for obj in arch.get("god_objects", []):
-            issues.append({
-                "type": "god_object", "severity": "error",
-                "file": obj["file"], "line": obj["line"], "name": obj["class"],
-                "value": f"{obj['methods']} methods, {obj['lines']} lines",
-                "message": f"Class '{obj['class']}' is a god object ({obj['methods']} methods, {obj['lines']} lines)",
-            })
-        for item in arch.get("highly_coupled", []):
-            threshold = item.get("threshold", self.coupling_threshold)
-            issues.append({
-                "type": "high_coupling", "severity": "warning",
-                "file": item["file"], "value": item["import_count"],
-                "threshold": threshold,
-                "message": f"Module has {item['import_count']} imports (threshold: {threshold})",
-            })
-
-        # Runtime check optimization issues
-        for rc in results.get("runtime_checks", []):
-            issues.append({
-                "type": "runtime_check_optimization", "severity": "info",
-                "file": rc["file"], "line": rc["line"], "name": rc["function"],
-                "value": rc["check_count"], "message": rc["message"],
-            })
-
-        # Ruff static analysis issues
-        for ruff_issue in results.get("static", {}).get("ruff_json", []):
-            try:
-                file_path = ruff_issue.get("filename", "")
-                rel_path = str(Path(file_path).relative_to(self.repo_path)) if file_path else ""
-            except ValueError:
-                rel_path = file_path
-            issues.append({
-                "type": f"ruff_{ruff_issue.get('code', 'unknown')}", "severity": "warning",
-                "file": rel_path,
-                "line": ruff_issue.get("location", {}).get("row", 0),
-                "message": ruff_issue.get("message", ""),
-                "rule": ruff_issue.get("code", ""),
-            })
-
-        # Duplication issues
-        for dup in results.get("duplication", {}).get("duplicates", []):
-            issues.append({"type": "code_duplication", "severity": "warning", "message": dup})
-
-        # Type coverage issues
-        type_cov = results.get("type_coverage", {})
-        if type_cov.get("coverage_percent", 100) < self.min_type_coverage:
-            issues.append({
-                "type": "low_type_coverage", "severity": "warning",
-                "value": type_cov["coverage_percent"], "threshold": self.min_type_coverage,
-                "message": f"Type coverage is {type_cov['coverage_percent']}% (minimum: {self.min_type_coverage}%)",
-            })
-
-        # Docstring coverage issues
-        doc_cov = results.get("docstring_coverage", {})
-        if doc_cov.get("coverage_percent", 100) < self.min_docstring_coverage:
-            issues.append({
-                "type": "low_docstring_coverage", "severity": "warning",
-                "value": doc_cov["coverage_percent"], "threshold": self.min_docstring_coverage,
-                "message": f"Docstring coverage is {doc_cov['coverage_percent']}% (minimum: {self.min_docstring_coverage}%)",
-            })
-
-        # Import cycles
-        for cycle in results.get("import_cycles", {}).get("cycles", []):
-            issues.append({
-                "type": "import_cycle", "severity": "error",
-                "value": " -> ".join(cycle),
-                "message": f"Import cycle detected: {' -> '.join(cycle)}",
-            })
-
-        # Dead code
-        for dc in results.get("dead_code", {}).get("dead_code", []):
-            issues.append({
-                "type": "dead_code", "severity": "warning",
-                "file": dc["file"], "line": dc["line"], "value": dc.get("confidence", 0),
-                "message": dc["message"],
-            })
-
-        # High churn files
-        for churn_file in results.get("code_churn", {}).get("high_churn_files", []):
-            issues.append({
-                "type": "high_churn", "severity": "warning",
-                "file": churn_file["file"],
-                "value": f"{churn_file['commits']} commits, {churn_file['authors']} authors",
-                "message": f"High churn file: {churn_file['file']} ({churn_file['commits']} commits by {churn_file['authors']} authors in 90 days)",
-            })
-
-        # JS/TS issues
-        for js_issue in results.get("js_analysis", {}).get("issues", []):
-            issues.append({
-                "type": f"eslint_{js_issue.get('rule', 'unknown')}",
-                "severity": js_issue.get("severity", "warning"),
-                "file": js_issue["file"], "line": js_issue["line"],
-                "message": js_issue["message"],
-            })
-
-        # Beartype issues
-        if not results.get("beartype", {}).get("passed", True):
-            for err in results.get("beartype", {}).get("errors", []):
-                issues.append({"type": "runtime_type_error", "severity": "error", "message": err})
-
-        return issues
-
-    def _save_all_results(
-        self, results: dict[str, Any], all_issues: list[dict]
-    ) -> dict[str, Path]:
+    def _save_all_results(self, results: dict[str, Any], all_issues: list[dict]) -> dict[str, Path]:
         """Save all analysis results to files."""
         artifacts = {}
 
@@ -700,26 +750,11 @@ class QualitySubServer(BaseSubServer):
             "python_files": len(python_files),
             "js_files": len(js_files),
             "total_functions": len(results.get("complexity", [])),
-            "high_complexity_count": len([
-                r for r in results.get("complexity", [])
-                if r.get("complexity", 0) > self.complexity_threshold
-            ]),
-            "low_mi_count": len([
-                r for r in results.get("maintainability", [])
-                if r.get("mi", 100) < self.maintainability_threshold
-            ]),
-            "functions_too_long": len([
-                i for i in results.get("function_issues", [])
-                if i["issue_type"] == "TOO_LONG"
-            ]),
-            "functions_too_nested": len([
-                i for i in results.get("function_issues", [])
-                if i["issue_type"] == "TOO_NESTED"
-            ]),
-            "high_cognitive_count": len([
-                r for r in results.get("cognitive", [])
-                if r.get("exceeds_threshold")
-            ]),
+            "high_complexity_count": len([r for r in results.get("complexity", []) if r.get("complexity", 0) > self.complexity_threshold]),
+            "low_mi_count": len([r for r in results.get("maintainability", []) if r.get("mi", 100) < self.maintainability_threshold]),
+            "functions_too_long": len([i for i in results.get("function_issues", []) if i["issue_type"] == "TOO_LONG"]),
+            "functions_too_nested": len([i for i in results.get("function_issues", []) if i["issue_type"] == "TOO_NESTED"]),
+            "high_cognitive_count": len([r for r in results.get("cognitive", []) if r.get("exceeds_threshold")]),
             "duplicate_blocks": len(results.get("duplication", {}).get("duplicates", [])),
             "total_tests": results.get("tests", {}).get("total_tests", 0),
             "total_assertions": results.get("tests", {}).get("total_assertions", 0),
@@ -746,110 +781,6 @@ class QualitySubServer(BaseSubServer):
         results: dict[str, Any],
         all_issues: list[dict],
     ) -> str:
-        """Generate comprehensive markdown summary."""
+        """Generate comprehensive markdown summary with mindset evaluation."""
         metrics = self._compile_metrics(python_files, js_files, results, all_issues)
-        tests = results.get("tests", {})
-        type_cov = results.get("type_coverage", {})
-        doc_cov = results.get("docstring_coverage", {})
-        raw = results.get("raw_metrics", [])
-
-        # Calculate raw totals
-        total_loc = sum(r.get("loc", 0) for r in raw)
-        total_sloc = sum(r.get("sloc", 0) for r in raw)
-        total_comments = sum(r.get("comments", 0) for r in raw)
-
-        lines = [
-            "# Quality Analysis Report", "",
-            "## Overview", "",
-            f"**Files Analyzed**: {metrics['files_analyzed']} ({metrics['python_files']} Python, {metrics['js_files']} JS/TS)",
-            f"**Functions Analyzed**: {metrics['total_functions']}",
-            f"**Total Issues Found**: {metrics['issues_count']}",
-            f"**Critical Issues**: {metrics['critical_issues']}", "",
-            "## Code Metrics", "",
-            f"- Total LOC: **{total_loc:,}**",
-            f"- Source LOC (SLOC): **{total_sloc:,}**",
-            f"- Comments: **{total_comments:,}**",
-            f"- Comment Ratio: **{round(total_comments / total_sloc * 100, 1) if total_sloc > 0 else 0}%**", "",
-            "## Quality Issues Summary", "",
-            f"- Functions >50 lines: **{metrics['functions_too_long']}**",
-            f"- High cyclomatic complexity (>{self.complexity_threshold}): **{metrics['high_complexity_count']}**",
-            f"- High cognitive complexity (>{self.cognitive_complexity_threshold}): **{metrics['high_cognitive_count']}**",
-            f"- Functions with nesting >{self.max_nesting_depth}: **{metrics['functions_too_nested']}**",
-            f"- Code duplication blocks: **{metrics['duplicate_blocks']}**",
-            f"- God objects: **{metrics['god_objects']}**",
-            f"- Highly coupled modules: **{metrics['highly_coupled_modules']}**",
-            f"- Import cycles: **{metrics['import_cycles']}**",
-            f"- Dead code items: **{metrics['dead_code_items']}**", "",
-            "## Coverage Metrics", "",
-            f"- Type coverage: **{type_cov.get('coverage_percent', 0)}%** (minimum: {self.min_type_coverage}%)",
-            f"- Docstring coverage: **{doc_cov.get('coverage_percent', 0)}%** (minimum: {self.min_docstring_coverage}%)", "",
-            "## Test Suite Analysis", "",
-            f"- Total tests: **{tests.get('total_tests', 0)}**",
-            f"- Total assertions: **{tests.get('total_assertions', 0)}**",
-            f"- Assertions per test: **{round(tests.get('total_assertions', 0) / tests.get('total_tests', 1), 1) if tests.get('total_tests', 0) > 0 else 0}**",
-            f"- Unit tests: {tests.get('categories', {}).get('unit', 0)}",
-            f"- Integration tests: {tests.get('categories', {}).get('integration', 0)}",
-            f"- E2E tests: {tests.get('categories', {}).get('e2e', 0)}",
-            f"- Test issues: **{len(tests.get('issues', []))}**", "",
-            "## Runtime Type Checking (Beartype)", "",
-            f"- Status: **{'✅ Passed' if metrics['beartype_passed'] else '❌ Failed'}**", "",
-        ]
-
-        # Critical issues
-        critical_issues = [i for i in all_issues if i.get("severity") == "error"]
-        if critical_issues:
-            lines.extend(["## Critical Issues (Must Fix)", ""])
-            for issue in critical_issues[:15]:
-                file_info = f"`{issue.get('file', 'unknown')}`" if issue.get("file") else ""
-                lines.append(f"- 🔴 {file_info}: {issue['message']}")
-            if len(critical_issues) > 15:
-                lines.append(f"- ... and {len(critical_issues) - 15} more critical issues")
-            lines.append("")
-
-        # Refactoring recommendations
-        lines.extend(["## Refactoring Recommendations", ""])
-        rec_num = 1
-        if metrics["functions_too_long"] > 0:
-            lines.append(f"{rec_num}. **Break Down Long Functions**: {metrics['functions_too_long']} functions exceed 50 lines")
-            rec_num += 1
-        if metrics["high_complexity_count"] > 0:
-            lines.append(f"{rec_num}. **Reduce Cyclomatic Complexity**: {metrics['high_complexity_count']} functions exceed threshold")
-            rec_num += 1
-        if metrics["high_cognitive_count"] > 0:
-            lines.append(f"{rec_num}. **Reduce Cognitive Complexity**: {metrics['high_cognitive_count']} functions are too complex")
-            rec_num += 1
-        if metrics["duplicate_blocks"] > 0:
-            lines.append(f"{rec_num}. **Extract Duplicated Code**: {metrics['duplicate_blocks']} duplicate blocks found")
-            rec_num += 1
-        if metrics["god_objects"] > 0:
-            lines.append(f"{rec_num}. **Refactor God Objects**: {metrics['god_objects']} classes need decomposition")
-            rec_num += 1
-        if metrics["import_cycles"] > 0:
-            lines.append(f"{rec_num}. **Break Import Cycles**: {metrics['import_cycles']} cycles detected")
-            rec_num += 1
-        if type_cov.get("coverage_percent", 100) < self.min_type_coverage:
-            lines.append(f"{rec_num}. **Add Type Annotations**: Coverage is {type_cov.get('coverage_percent', 0)}%")
-            rec_num += 1
-        if doc_cov.get("coverage_percent", 100) < self.min_docstring_coverage:
-            lines.append(f"{rec_num}. **Add Docstrings**: Coverage is {doc_cov.get('coverage_percent', 0)}%")
-            rec_num += 1
-        if metrics["dead_code_items"] > 0:
-            lines.append(f"{rec_num}. **Remove Dead Code**: {metrics['dead_code_items']} unused items found")
-            rec_num += 1
-        if metrics.get("high_churn_files", 0) > 0:
-            lines.append(f"{rec_num}. **Review High Churn Files**: {metrics['high_churn_files']} files with frequent changes")
-            rec_num += 1
-
-        if metrics["issues_count"] == 0:
-            lines.append("✅ No quality issues detected!")
-
-        # Approval status
-        lines.extend(["", "## Approval Status", ""])
-        if metrics["critical_issues"] > 0:
-            lines.append("**✗ Critical Issues Found** - Refactoring required before approval")
-        elif metrics["issues_count"] > 0:
-            lines.append("**⚠ Refactoring Recommended** - Non-critical issues found")
-        else:
-            lines.append("**✓ No Critical Issues** - Code quality acceptable")
-
-        return "\n".join(lines)
+        return generate_comprehensive_summary(metrics, results, all_issues, self.mindset, self.quality_config)

@@ -1,7 +1,6 @@
 """Tests for git utilities."""
 
 import pytest
-from pathlib import Path
 import subprocess
 from btx_fix_mcp.subservers.common.git import GitOperations, GitOperationError
 

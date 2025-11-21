@@ -7,7 +7,6 @@ Analyzes code using:
 """
 
 import subprocess
-from pathlib import Path
 from typing import Any
 
 from btx_fix_mcp.tools_venv import get_tool_path
@@ -46,7 +45,9 @@ class TypeAnalyzer(BaseAnalyzer):
         try:
             result = subprocess.run(
                 [mypy, "--ignore-missing-imports", "--show-error-codes", "--no-error-summary"] + files,
-                capture_output=True, text=True, timeout=120,
+                capture_output=True,
+                text=True,
+                timeout=120,
             )
             results["raw_output"] = result.stdout + result.stderr
 
@@ -61,9 +62,7 @@ class TypeAnalyzer(BaseAnalyzer):
 
             total = results["typed_functions"] + results["untyped_functions"]
             if total > 0:
-                results["coverage_percent"] = round(
-                    (results["typed_functions"] / total) * 100, 1
-                )
+                results["coverage_percent"] = round((results["typed_functions"] / total) * 100, 1)
         except subprocess.TimeoutExpired:
             self.logger.warning("mypy timed out")
         except FileNotFoundError:
@@ -85,7 +84,9 @@ class TypeAnalyzer(BaseAnalyzer):
         try:
             result = subprocess.run(
                 [vulture, f"--min-confidence={confidence}"] + files,
-                capture_output=True, text=True, timeout=60,
+                capture_output=True,
+                text=True,
+                timeout=60,
             )
             results["raw_output"] = result.stdout
 
@@ -94,11 +95,13 @@ class TypeAnalyzer(BaseAnalyzer):
                     # Parse: filename.py:123: unused variable 'x' (60% confidence)
                     parts = line.split(":")
                     if len(parts) >= 3:
-                        results["dead_code"].append({
-                            "file": self._get_relative_path(parts[0]),
-                            "line": int(parts[1]) if parts[1].isdigit() else 0,
-                            "message": ":".join(parts[2:]).strip(),
-                        })
+                        results["dead_code"].append(
+                            {
+                                "file": self._get_relative_path(parts[0]),
+                                "line": int(parts[1]) if parts[1].isdigit() else 0,
+                                "message": ":".join(parts[2:]).strip(),
+                            }
+                        )
         except subprocess.TimeoutExpired:
             self.logger.warning("vulture timed out")
         except FileNotFoundError:
@@ -118,7 +121,9 @@ class TypeAnalyzer(BaseAnalyzer):
         try:
             result = subprocess.run(
                 [interrogate, "-v", "--fail-under=0"] + files,
-                capture_output=True, text=True, timeout=60,
+                capture_output=True,
+                text=True,
+                timeout=60,
             )
             results["raw_output"] = result.stdout
 
@@ -127,6 +132,7 @@ class TypeAnalyzer(BaseAnalyzer):
                 if "%" in line and ("PASSED" in line or "FAILED" in line):
                     # Extract percentage
                     import re
+
                     match = re.search(r"(\d+(?:\.\d+)?)\s*%", line)
                     if match:
                         results["coverage_percent"] = float(match.group(1))

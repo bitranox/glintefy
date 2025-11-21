@@ -1,0 +1,497 @@
+[
+  {
+    "type": "missing_docstring",
+    "severity": "warning",
+    "file": "/media/srv-main-softdev/projects/MCP/btx_fix_mcp/scripts/_utils.py",
+    "line": 157,
+    "name": "run",
+    "kind": "function",
+    "message": "Function 'run' is missing a docstring"
+  },
+  {
+    "type": "missing_docstring",
+    "severity": "warning",
+    "file": "/media/srv-main-softdev/projects/MCP/btx_fix_mcp/scripts/_utils.py",
+    "line": 342,
+    "name": "get_project_metadata",
+    "kind": "function",
+    "message": "Function 'get_project_metadata' is missing a docstring"
+  },
+  {
+    "type": "missing_docstring",
+    "severity": "warning",
+    "file": "/media/srv-main-softdev/projects/MCP/btx_fix_mcp/scripts/_utils.py",
+    "line": 79,
+    "name": "github_tarball_url",
+    "kind": "function",
+    "message": "Function 'github_tarball_url' is missing a docstring"
+  },
+  {
+    "type": "missing_docstring",
+    "severity": "warning",
+    "file": "/media/srv-main-softdev/projects/MCP/btx_fix_mcp/scripts/build.py",
+    "line": 45,
+    "name": "main",
+    "kind": "function",
+    "message": "Function 'main' is missing a docstring"
+  },
+  {
+    "type": "missing_docstring",
+    "severity": "warning",
+    "file": "/media/srv-main-softdev/projects/MCP/btx_fix_mcp/scripts/bump_version.py",
+    "line": 9,
+    "name": "parse_args",
+    "kind": "function",
+    "message": "Function 'parse_args' is missing a docstring"
+  },
+  {
+    "type": "missing_docstring",
+    "severity": "warning",
+    "file": "/media/srv-main-softdev/projects/MCP/btx_fix_mcp/scripts/bump_version.py",
+    "line": 24,
+    "name": "bump_semver",
+    "kind": "function",
+    "message": "Function 'bump_semver' is missing a docstring"
+  },
+  {
+    "type": "missing_docstring",
+    "severity": "warning",
+    "file": "/media/srv-main-softdev/projects/MCP/btx_fix_mcp/scripts/bump_version.py",
+    "line": 60,
+    "name": "main",
+    "kind": "function",
+    "message": "Function 'main' is missing a docstring"
+  },
+  {
+    "type": "missing_docstring",
+    "severity": "warning",
+    "file": "/media/srv-main-softdev/projects/MCP/btx_fix_mcp/scripts/cli.py",
+    "line": 101,
+    "name": "help_command",
+    "kind": "function",
+    "message": "Function 'help_command' is missing a docstring"
+  },
+  {
+    "type": "missing_docstring",
+    "severity": "warning",
+    "file": "/media/srv-main-softdev/projects/MCP/btx_fix_mcp/scripts/cli.py",
+    "line": 107,
+    "name": "install_command",
+    "kind": "function",
+    "message": "Function 'install_command' is missing a docstring"
+  },
+  {
+    "type": "missing_docstring",
+    "severity": "warning",
+    "file": "/media/srv-main-softdev/projects/MCP/btx_fix_mcp/scripts/cli.py",
+    "line": 113,
+    "name": "dev_command",
+    "kind": "function",
+    "message": "Function 'dev_command' is missing a docstring"
+  },
+  {
+    "type": "missing_docstring",
+    "severity": "warning",
+    "file": "/media/srv-main-softdev/projects/MCP/btx_fix_mcp/scripts/cli.py",
+    "line": 119,
+    "name": "clean_command",
+    "kind": "function",
+    "message": "Function 'clean_command' is missing a docstring"
+  },
+  {
+    "type": "missing_docstring",
+    "severity": "warning",
+    "file": "/media/srv-main-softdev/projects/MCP/btx_fix_mcp/scripts/cli.py",
+    "line": 126,
+    "name": "run_command",
+    "kind": "function",
+    "message": "Function 'run_command' is missing a docstring"
+  },
+  {
+    "type": "missing_docstring",
+    "severity": "warning",
+    "file": "/media/srv-main-softdev/projects/MCP/btx_fix_mcp/scripts/cli.py",
+    "line": 134,
+    "name": "test_command",
+    "kind": "function",
+    "message": "Function 'test_command' is missing a docstring"
+  },
+  {
+    "type": "missing_docstring",
+    "severity": "warning",
+    "file": "/media/srv-main-softdev/projects/MCP/btx_fix_mcp/scripts/cli.py",
+    "line": 145,
+    "name": "coverage_command",
+    "kind": "function",
+    "message": "Function 'coverage_command' is missing a docstring"
+  },
+  {
+    "type": "missing_docstring",
+    "severity": "warning",
+    "file": "/media/srv-main-softdev/projects/MCP/btx_fix_mcp/scripts/cli.py",
+    "line": 150,
+    "name": "build_command",
+    "kind": "function",
+    "message": "Function 'build_command' is missing a docstring"
+  },
+  {
+    "type": "missing_docstring",
+    "severity": "warning",
+    "file": "/media/srv-main-softdev/projects/MCP/btx_fix_mcp/scripts/cli.py",
+    "line": 156,
+    "name": "release_command",
+    "kind": "function",
+    "message": "Function 'release_command' is missing a docstring"
+  },
+  {
+    "type": "missing_docstring",
+    "severity": "warning",
+    "file": "/media/srv-main-softdev/projects/MCP/btx_fix_mcp/scripts/cli.py",
+    "line": 164,
+    "name": "push_command",
+    "kind": "function",
+    "message": "Function 'push_command' is missing a docstring"
+  },
+  {
+    "type": "missing_docstring",
+    "severity": "warning",
+    "file": "/media/srv-main-softdev/projects/MCP/btx_fix_mcp/scripts/cli.py",
+    "line": 172,
+    "name": "version_command",
+    "kind": "function",
+    "message": "Function 'version_command' is missing a docstring"
+  },
+  {
+    "type": "missing_docstring",
+    "severity": "warning",
+    "file": "/media/srv-main-softdev/projects/MCP/btx_fix_mcp/scripts/cli.py",
+    "line": 181,
+    "name": "bump_command",
+    "kind": "function",
+    "message": "Function 'bump_command' is missing a docstring"
+  },
+  {
+    "type": "missing_docstring",
+    "severity": "warning",
+    "file": "/media/srv-main-softdev/projects/MCP/btx_fix_mcp/scripts/cli.py",
+    "line": 193,
+    "name": "bump_major_command",
+    "kind": "function",
+    "message": "Function 'bump_major_command' is missing a docstring"
+  },
+  {
+    "type": "missing_docstring",
+    "severity": "warning",
+    "file": "/media/srv-main-softdev/projects/MCP/btx_fix_mcp/scripts/cli.py",
+    "line": 198,
+    "name": "bump_minor_command",
+    "kind": "function",
+    "message": "Function 'bump_minor_command' is missing a docstring"
+  },
+  {
+    "type": "missing_docstring",
+    "severity": "warning",
+    "file": "/media/srv-main-softdev/projects/MCP/btx_fix_mcp/scripts/cli.py",
+    "line": 203,
+    "name": "bump_patch_command",
+    "kind": "function",
+    "message": "Function 'bump_patch_command' is missing a docstring"
+  },
+  {
+    "type": "missing_docstring",
+    "severity": "warning",
+    "file": "/media/srv-main-softdev/projects/MCP/btx_fix_mcp/scripts/cli.py",
+    "line": 208,
+    "name": "menu_command",
+    "kind": "function",
+    "message": "Function 'menu_command' is missing a docstring"
+  },
+  {
+    "type": "missing_docstring",
+    "severity": "warning",
+    "file": "/media/srv-main-softdev/projects/MCP/btx_fix_mcp/scripts/menu.py",
+    "line": 80,
+    "name": "__init__",
+    "kind": "function",
+    "message": "Function '__init__' is missing a docstring"
+  },
+  {
+    "type": "missing_docstring",
+    "severity": "warning",
+    "file": "/media/srv-main-softdev/projects/MCP/btx_fix_mcp/scripts/menu.py",
+    "line": 89,
+    "name": "compose",
+    "kind": "function",
+    "message": "Function 'compose' is missing a docstring"
+  },
+  {
+    "type": "missing_docstring",
+    "severity": "warning",
+    "file": "/media/srv-main-softdev/projects/MCP/btx_fix_mcp/scripts/menu.py",
+    "line": 112,
+    "name": "on_mount",
+    "kind": "function",
+    "message": "Function 'on_mount' is missing a docstring"
+  },
+  {
+    "type": "missing_docstring",
+    "severity": "warning",
+    "file": "/media/srv-main-softdev/projects/MCP/btx_fix_mcp/scripts/menu.py",
+    "line": 119,
+    "name": "on_list_view_highlighted",
+    "kind": "function",
+    "message": "Function 'on_list_view_highlighted' is missing a docstring"
+  },
+  {
+    "type": "missing_docstring",
+    "severity": "warning",
+    "file": "/media/srv-main-softdev/projects/MCP/btx_fix_mcp/scripts/menu.py",
+    "line": 128,
+    "name": "on_list_view_selected",
+    "kind": "function",
+    "message": "Function 'on_list_view_selected' is missing a docstring"
+  },
+  {
+    "type": "missing_docstring",
+    "severity": "warning",
+    "file": "/media/srv-main-softdev/projects/MCP/btx_fix_mcp/scripts/menu.py",
+    "line": 137,
+    "name": "on_key",
+    "kind": "function",
+    "message": "Function 'on_key' is missing a docstring"
+  },
+  {
+    "type": "missing_docstring",
+    "severity": "warning",
+    "file": "/media/srv-main-softdev/projects/MCP/btx_fix_mcp/scripts/menu.py",
+    "line": 172,
+    "name": "on_button_pressed",
+    "kind": "function",
+    "message": "Function 'on_button_pressed' is missing a docstring"
+  },
+  {
+    "type": "missing_docstring",
+    "severity": "warning",
+    "file": "/media/srv-main-softdev/projects/MCP/btx_fix_mcp/scripts/menu.py",
+    "line": 180,
+    "name": "action_run",
+    "kind": "function",
+    "message": "Function 'action_run' is missing a docstring"
+  },
+  {
+    "type": "missing_docstring",
+    "severity": "warning",
+    "file": "/media/srv-main-softdev/projects/MCP/btx_fix_mcp/scripts/menu.py",
+    "line": 190,
+    "name": "action_edit",
+    "kind": "function",
+    "message": "Function 'action_edit' is missing a docstring"
+  },
+  {
+    "type": "missing_docstring",
+    "severity": "warning",
+    "file": "/media/srv-main-softdev/projects/MCP/btx_fix_mcp/scripts/menu.py",
+    "line": 256,
+    "name": "menu_app",
+    "kind": "function",
+    "message": "Function 'menu_app' is missing a docstring"
+  },
+  {
+    "type": "missing_docstring",
+    "severity": "warning",
+    "file": "/media/srv-main-softdev/projects/MCP/btx_fix_mcp/scripts/menu.py",
+    "line": 267,
+    "name": "__init__",
+    "kind": "function",
+    "message": "Function '__init__' is missing a docstring"
+  },
+  {
+    "type": "missing_docstring",
+    "severity": "warning",
+    "file": "/media/srv-main-softdev/projects/MCP/btx_fix_mcp/scripts/menu.py",
+    "line": 275,
+    "name": "compose",
+    "kind": "function",
+    "message": "Function 'compose' is missing a docstring"
+  },
+  {
+    "type": "missing_docstring",
+    "severity": "warning",
+    "file": "/media/srv-main-softdev/projects/MCP/btx_fix_mcp/scripts/menu.py",
+    "line": 304,
+    "name": "on_mount",
+    "kind": "function",
+    "message": "Function 'on_mount' is missing a docstring"
+  },
+  {
+    "type": "missing_docstring",
+    "severity": "warning",
+    "file": "/media/srv-main-softdev/projects/MCP/btx_fix_mcp/scripts/menu.py",
+    "line": 307,
+    "name": "on_button_pressed",
+    "kind": "function",
+    "message": "Function 'on_button_pressed' is missing a docstring"
+  },
+  {
+    "type": "missing_docstring",
+    "severity": "warning",
+    "file": "/media/srv-main-softdev/projects/MCP/btx_fix_mcp/scripts/menu.py",
+    "line": 311,
+    "name": "on_input_submitted",
+    "kind": "function",
+    "message": "Function 'on_input_submitted' is missing a docstring"
+  },
+  {
+    "type": "missing_docstring",
+    "severity": "warning",
+    "file": "/media/srv-main-softdev/projects/MCP/btx_fix_mcp/scripts/menu.py",
+    "line": 315,
+    "name": "action_cancel",
+    "kind": "function",
+    "message": "Function 'action_cancel' is missing a docstring"
+  },
+  {
+    "type": "missing_docstring",
+    "severity": "warning",
+    "file": "/media/srv-main-softdev/projects/MCP/btx_fix_mcp/scripts/menu.py",
+    "line": 360,
+    "name": "menu_app",
+    "kind": "function",
+    "message": "Function 'menu_app' is missing a docstring"
+  },
+  {
+    "type": "missing_docstring",
+    "severity": "warning",
+    "file": "/media/srv-main-softdev/projects/MCP/btx_fix_mcp/scripts/menu.py",
+    "line": 371,
+    "name": "__init__",
+    "kind": "function",
+    "message": "Function '__init__' is missing a docstring"
+  },
+  {
+    "type": "missing_docstring",
+    "severity": "warning",
+    "file": "/media/srv-main-softdev/projects/MCP/btx_fix_mcp/scripts/menu.py",
+    "line": 382,
+    "name": "compose",
+    "kind": "function",
+    "message": "Function 'compose' is missing a docstring"
+  },
+  {
+    "type": "missing_docstring",
+    "severity": "warning",
+    "file": "/media/srv-main-softdev/projects/MCP/btx_fix_mcp/scripts/menu.py",
+    "line": 395,
+    "name": "on_mount",
+    "kind": "function",
+    "message": "Function 'on_mount' is missing a docstring"
+  },
+  {
+    "type": "missing_docstring",
+    "severity": "warning",
+    "file": "/media/srv-main-softdev/projects/MCP/btx_fix_mcp/scripts/menu.py",
+    "line": 400,
+    "name": "on_unmount",
+    "kind": "function",
+    "message": "Function 'on_unmount' is missing a docstring"
+  },
+  {
+    "type": "missing_docstring",
+    "severity": "warning",
+    "file": "/media/srv-main-softdev/projects/MCP/btx_fix_mcp/scripts/menu.py",
+    "line": 406,
+    "name": "on_button_pressed",
+    "kind": "function",
+    "message": "Function 'on_button_pressed' is missing a docstring"
+  },
+  {
+    "type": "missing_docstring",
+    "severity": "warning",
+    "file": "/media/srv-main-softdev/projects/MCP/btx_fix_mcp/scripts/menu.py",
+    "line": 410,
+    "name": "action_cancel",
+    "kind": "function",
+    "message": "Function 'action_cancel' is missing a docstring"
+  },
+  {
+    "type": "missing_docstring",
+    "severity": "warning",
+    "file": "/media/srv-main-softdev/projects/MCP/btx_fix_mcp/scripts/menu.py",
+    "line": 538,
+    "name": "__init__",
+    "kind": "function",
+    "message": "Function '__init__' is missing a docstring"
+  },
+  {
+    "type": "missing_docstring",
+    "severity": "warning",
+    "file": "/media/srv-main-softdev/projects/MCP/btx_fix_mcp/scripts/menu.py",
+    "line": 542,
+    "name": "on_mount",
+    "kind": "function",
+    "message": "Function 'on_mount' is missing a docstring"
+  },
+  {
+    "type": "missing_docstring",
+    "severity": "warning",
+    "file": "/media/srv-main-softdev/projects/MCP/btx_fix_mcp/scripts/release.py",
+    "line": 31,
+    "name": "release",
+    "kind": "function",
+    "message": "Function 'release' is missing a docstring"
+  },
+  {
+    "type": "missing_docstring",
+    "severity": "warning",
+    "file": "/media/srv-main-softdev/projects/MCP/btx_fix_mcp/src/btx_fix_mcp/servers/review.py",
+    "line": 461,
+    "name": "task",
+    "kind": "function",
+    "message": "Function 'task' is missing a docstring"
+  },
+  {
+    "type": "missing_docstring",
+    "severity": "warning",
+    "file": "/media/srv-main-softdev/projects/MCP/btx_fix_mcp/src/btx_fix_mcp/subservers/common/logging.py",
+    "line": 500,
+    "name": "decorator",
+    "kind": "function",
+    "message": "Function 'decorator' is missing a docstring"
+  },
+  {
+    "type": "missing_docstring",
+    "severity": "warning",
+    "file": "/media/srv-main-softdev/projects/MCP/btx_fix_mcp/src/btx_fix_mcp/subservers/common/logging.py",
+    "line": 536,
+    "name": "redact_value",
+    "kind": "function",
+    "message": "Function 'redact_value' is missing a docstring"
+  },
+  {
+    "type": "missing_docstring",
+    "severity": "warning",
+    "file": "/media/srv-main-softdev/projects/MCP/btx_fix_mcp/src/btx_fix_mcp/subservers/common/logging.py",
+    "line": 502,
+    "name": "wrapper",
+    "kind": "function",
+    "message": "Function 'wrapper' is missing a docstring"
+  },
+  {
+    "type": "missing_docstring",
+    "severity": "warning",
+    "file": "/media/srv-main-softdev/projects/MCP/btx_fix_mcp/src/btx_fix_mcp/subservers/review/quality/architecture.py",
+    "line": 119,
+    "name": "find_cycle",
+    "kind": "function",
+    "message": "Function 'find_cycle' is missing a docstring"
+  },
+  {
+    "type": "missing_docstring",
+    "severity": "warning",
+    "file": "/media/srv-main-softdev/projects/MCP/btx_fix_mcp/src/btx_fix_mcp/subservers/review/quality/base.py",
+    "line": 24,
+    "name": "__init__",
+    "kind": "function",
+    "message": "Function '__init__' is missing a docstring"
+  }
+]

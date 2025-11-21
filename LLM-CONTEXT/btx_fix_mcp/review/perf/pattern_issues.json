@@ -1,0 +1,89 @@
+[
+  {
+    "type": "nested_loop",
+    "severity": "warning",
+    "file": "/media/srv-main-softdev/projects/MCP/btx_fix_mcp/scripts/clean.py",
+    "line": 34,
+    "message": "Nested loop detected",
+    "pattern": "for .+ in .+:\\s*for .+ in .+:"
+  },
+  {
+    "type": "nested_loop",
+    "severity": "warning",
+    "file": "/media/srv-main-softdev/projects/MCP/btx_fix_mcp/src/btx_fix_mcp/subservers/review/deps.py",
+    "line": 292,
+    "message": "Nested loop detected",
+    "pattern": "for .+ in .+:\\s*for .+ in .+:"
+  },
+  {
+    "type": "regex_compile",
+    "severity": "warning",
+    "file": "/media/srv-main-softdev/projects/MCP/btx_fix_mcp/src/btx_fix_mcp/subservers/review/docs.py",
+    "line": 235,
+    "message": "Regex not precompiled",
+    "pattern": "import re\\n.*re\\.(match|search|findall)\\("
+  },
+  {
+    "type": "nested_loop",
+    "severity": "warning",
+    "file": "/media/srv-main-softdev/projects/MCP/btx_fix_mcp/src/btx_fix_mcp/subservers/review/perf.py",
+    "line": 230,
+    "message": "Nested loop detected",
+    "pattern": "for .+ in .+:\\s*for .+ in .+:"
+  },
+  {
+    "type": "range_len",
+    "severity": "warning",
+    "file": "/media/srv-main-softdev/projects/MCP/btx_fix_mcp/src/btx_fix_mcp/subservers/review/perf.py",
+    "line": 244,
+    "message": "Using range(len()) - consider enumerate() or direct iteration"
+  },
+  {
+    "type": "nested_loop",
+    "severity": "warning",
+    "file": "/media/srv-main-softdev/projects/MCP/btx_fix_mcp/src/btx_fix_mcp/subservers/review/quality.py",
+    "line": 253,
+    "message": "Nested loop detected",
+    "pattern": "for .+ in .+:\\s*for .+ in .+:"
+  },
+  {
+    "type": "nested_loop",
+    "severity": "warning",
+    "file": "/media/srv-main-softdev/projects/MCP/btx_fix_mcp/src/btx_fix_mcp/subservers/review/quality/__init__.py",
+    "line": 518,
+    "message": "Nested loop detected",
+    "pattern": "for .+ in .+:\\s*for .+ in .+:"
+  },
+  {
+    "type": "nested_loop",
+    "severity": "warning",
+    "file": "/media/srv-main-softdev/projects/MCP/btx_fix_mcp/src/btx_fix_mcp/subservers/review/quality/complexity.py",
+    "line": 52,
+    "message": "Nested loop detected",
+    "pattern": "for .+ in .+:\\s*for .+ in .+:"
+  },
+  {
+    "type": "regex_compile",
+    "severity": "warning",
+    "file": "/media/srv-main-softdev/projects/MCP/btx_fix_mcp/src/btx_fix_mcp/subservers/review/quality/types.py",
+    "line": 129,
+    "message": "Regex not precompiled",
+    "pattern": "import re\\n.*re\\.(match|search|findall)\\("
+  },
+  {
+    "type": "nested_loop",
+    "severity": "warning",
+    "file": "/media/srv-main-softdev/projects/MCP/btx_fix_mcp/src/btx_fix_mcp/subservers/review/report.py",
+    "line": 330,
+    "message": "Nested loop detected",
+    "pattern": "for .+ in .+:\\s*for .+ in .+:"
+  },
+  {
+    "type": "nested_loop",
+    "severity": "warning",
+    "file": "/media/srv-main-softdev/projects/MCP/btx_fix_mcp/src/btx_fix_mcp/subservers/review/report.py",
+    "line": 382,
+    "message": "Nested loop detected",
+    "pattern": "for .+ in .+:\\s*for .+ in .+:"
+  }
+]

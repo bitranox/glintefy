@@ -38,7 +38,9 @@ class StaticAnalyzer(BaseAnalyzer):
         try:
             result = subprocess.run(
                 [ruff, "check", "--output-format=json"] + files,
-                capture_output=True, text=True, timeout=60,
+                capture_output=True,
+                text=True,
+                timeout=60,
             )
             results["ruff"] = result.stdout
             if result.stdout.strip():
@@ -65,7 +67,9 @@ class StaticAnalyzer(BaseAnalyzer):
         try:
             result = subprocess.run(
                 [pylint, "--disable=all", "--enable=duplicate-code"] + files,
-                capture_output=True, text=True, timeout=120,
+                capture_output=True,
+                text=True,
+                timeout=120,
             )
             results["raw_output"] = result.stdout + result.stderr
             for line in result.stdout.split("\n"):

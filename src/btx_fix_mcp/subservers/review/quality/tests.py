@@ -133,9 +133,7 @@ class TestAnalyzer(BaseAnalyzer):
                     count += 1
         return count
 
-    def _check_os_specific_test(
-        self, node: ast.FunctionDef, file_path: str
-    ) -> dict[str, Any] | None:
+    def _check_os_specific_test(self, node: ast.FunctionDef, file_path: str) -> dict[str, Any] | None:
         """Check if test has OS-specific code without proper skip decorators.
 
         Detects:
@@ -146,8 +144,19 @@ class TestAnalyzer(BaseAnalyzer):
         """
         # Keywords that indicate OS-aware decorators (standard and custom)
         os_decorator_keywords = {
-            "skip", "skipif", "skipunless", "platform", "windows", "linux",
-            "darwin", "macos", "unix", "posix", "nt", "os_specific", "requires_"
+            "skip",
+            "skipif",
+            "skipunless",
+            "platform",
+            "windows",
+            "linux",
+            "darwin",
+            "macos",
+            "unix",
+            "posix",
+            "nt",
+            "os_specific",
+            "requires_",
         }
 
         # Check if test has OS-aware decorators
@@ -163,19 +172,11 @@ class TestAnalyzer(BaseAnalyzer):
         for child in ast.walk(node):
             # sys.platform
             if isinstance(child, ast.Attribute):
-                if (
-                    isinstance(child.value, ast.Name)
-                    and child.value.id == "sys"
-                    and child.attr == "platform"
-                ):
+                if isinstance(child.value, ast.Name) and child.value.id == "sys" and child.attr == "platform":
                     os_checks_found.append("sys.platform")
             # os.name
             if isinstance(child, ast.Attribute):
-                if (
-                    isinstance(child.value, ast.Name)
-                    and child.value.id == "os"
-                    and child.attr == "name"
-                ):
+                if isinstance(child.value, ast.Name) and child.value.id == "os" and child.attr == "name":
                     os_checks_found.append("os.name")
             # platform.system() or platform.platform()
             if isinstance(child, ast.Call) and isinstance(child.func, ast.Attribute):
@@ -188,10 +189,7 @@ class TestAnalyzer(BaseAnalyzer):
                     if isinstance(comparator, ast.Constant) and isinstance(comparator.value, str):
                         val = comparator.value.lower()
                         if val in ("win32", "linux", "darwin", "nt", "posix", "windows", "macos"):
-                            if (
-                                "sys.platform" not in os_checks_found
-                                and "os.name" not in os_checks_found
-                            ):
+                            if "sys.platform" not in os_checks_found and "os.name" not in os_checks_found:
                                 os_checks_found.append(f"OS comparison: '{comparator.value}'")
 
         # If OS checks found but no decorator, flag it
@@ -203,10 +201,7 @@ class TestAnalyzer(BaseAnalyzer):
                 "line": node.lineno,
                 "function": node.name,
                 "os_checks": unique_checks,
-                "message": (
-                    f"Test '{node.name}' uses {', '.join(unique_checks)} "
-                    "but lacks @pytest.mark.skipif decorator"
-                ),
+                "message": (f"Test '{node.name}' uses {', '.join(unique_checks)} but lacks @pytest.mark.skipif decorator"),
             }
         return None
 

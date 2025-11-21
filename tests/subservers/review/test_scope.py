@@ -1,7 +1,6 @@
 """Tests for Scope sub-server."""
 
 import subprocess
-from pathlib import Path
 
 import pytest
 
@@ -77,18 +76,14 @@ class TestScopeSubServer:
 
     def test_initialization_custom_mode(self, tmp_path):
         """Test initialization with custom mode."""
-        server = ScopeSubServer(
-            output_dir=tmp_path / "output", repo_path=tmp_path, mode="full"
-        )
+        server = ScopeSubServer(output_dir=tmp_path / "output", repo_path=tmp_path, mode="full")
 
         assert server.mode == "full"
 
     def test_validate_inputs_success(self, git_repo, tmp_path):
         """Test input validation succeeds for valid git repo."""
         output_dir = tmp_path / "output"
-        server = ScopeSubServer(
-            output_dir=output_dir, repo_path=git_repo, mode="git"
-        )
+        server = ScopeSubServer(output_dir=output_dir, repo_path=git_repo, mode="git")
 
         valid, missing = server.validate_inputs()
 
@@ -101,9 +96,7 @@ class TestScopeSubServer:
         non_git_dir.mkdir()
 
         output_dir = tmp_path / "output"
-        server = ScopeSubServer(
-            output_dir=output_dir, repo_path=non_git_dir, mode="git"
-        )
+        server = ScopeSubServer(output_dir=output_dir, repo_path=non_git_dir, mode="git")
 
         valid, missing = server.validate_inputs()
 
@@ -113,9 +106,7 @@ class TestScopeSubServer:
     def test_validate_inputs_invalid_mode(self, git_repo, tmp_path):
         """Test validation fails for invalid mode."""
         output_dir = tmp_path / "output"
-        server = ScopeSubServer(
-            output_dir=output_dir, repo_path=git_repo, mode="invalid"
-        )
+        server = ScopeSubServer(output_dir=output_dir, repo_path=git_repo, mode="invalid")
 
         valid, missing = server.validate_inputs()
 
@@ -137,9 +128,7 @@ class TestScopeSubServer:
     def test_execute_git_mode(self, git_repo, tmp_path):
         """Test execution in git mode."""
         output_dir = tmp_path / "output"
-        server = ScopeSubServer(
-            output_dir=output_dir, repo_path=git_repo, mode="git"
-        )
+        server = ScopeSubServer(output_dir=output_dir, repo_path=git_repo, mode="git")
 
         result = server.run()
 
@@ -151,9 +140,7 @@ class TestScopeSubServer:
     def test_execute_full_mode(self, git_repo, tmp_path):
         """Test execution in full mode."""
         output_dir = tmp_path / "output"
-        server = ScopeSubServer(
-            output_dir=output_dir, repo_path=git_repo, mode="full"
-        )
+        server = ScopeSubServer(output_dir=output_dir, repo_path=git_repo, mode="full")
 
         result = server.run()
 
@@ -165,9 +152,7 @@ class TestScopeSubServer:
     def test_file_categorization(self, git_repo, tmp_path):
         """Test that files are properly categorized."""
         output_dir = tmp_path / "output"
-        server = ScopeSubServer(
-            output_dir=output_dir, repo_path=git_repo, mode="full"
-        )
+        server = ScopeSubServer(output_dir=output_dir, repo_path=git_repo, mode="full")
 
         result = server.run()
 
@@ -183,9 +168,7 @@ class TestScopeSubServer:
     def test_artifacts_created(self, git_repo, tmp_path):
         """Test that artifact files are created."""
         output_dir = tmp_path / "output"
-        server = ScopeSubServer(
-            output_dir=output_dir, repo_path=git_repo, mode="full"
-        )
+        server = ScopeSubServer(output_dir=output_dir, repo_path=git_repo, mode="full")
 
         result = server.run()
 
@@ -201,9 +184,7 @@ class TestScopeSubServer:
     def test_summary_format(self, git_repo, tmp_path):
         """Test summary is properly formatted."""
         output_dir = tmp_path / "output"
-        server = ScopeSubServer(
-            output_dir=output_dir, repo_path=git_repo, mode="git"
-        )
+        server = ScopeSubServer(output_dir=output_dir, repo_path=git_repo, mode="git")
 
         result = server.run()
 
@@ -215,11 +196,9 @@ class TestScopeSubServer:
     def test_integration_protocol_compliance(self, git_repo, tmp_path):
         """Test integration protocol compliance."""
         output_dir = tmp_path / "output"
-        server = ScopeSubServer(
-            output_dir=output_dir, repo_path=git_repo, mode="full"
-        )
+        server = ScopeSubServer(output_dir=output_dir, repo_path=git_repo, mode="full")
 
-        result = server.run()
+        server.run()
 
         # Check status.txt
         status_file = output_dir / "status.txt"
@@ -235,19 +214,8 @@ class TestScopeSubServer:
         result_file = output_dir / "result.json"
         assert result_file.exists()
 
-    def test_log_file_created(self, git_repo, tmp_path):
-        """Test that log file is created."""
-        output_dir = tmp_path / "output"
-        server = ScopeSubServer(
-            output_dir=output_dir, repo_path=git_repo, mode="full"
-        )
-
-        server.run()
-
-        log_file = output_dir / "scope.log"
-        assert log_file.exists()
-        log_content = log_file.read_text()
-        assert "SCOPE ANALYSIS" in log_content
+    # Note: test_log_file_created removed - file logging disabled
+    # File logging will be handled by external library
 
     def test_non_git_repo_fallback(self, tmp_path):
         """Test fallback to full mode when git fails."""
@@ -257,9 +225,7 @@ class TestScopeSubServer:
         (non_git_dir / "test.py").write_text("print('test')")
 
         output_dir = tmp_path / "output"
-        server = ScopeSubServer(
-            output_dir=output_dir, repo_path=non_git_dir, mode="full"
-        )
+        server = ScopeSubServer(output_dir=output_dir, repo_path=non_git_dir, mode="full")
 
         result = server.run()
 
@@ -272,9 +238,7 @@ class TestScopeSubServer:
         empty_dir.mkdir()
 
         output_dir = tmp_path / "output"
-        server = ScopeSubServer(
-            output_dir=output_dir, repo_path=empty_dir, mode="full"
-        )
+        server = ScopeSubServer(output_dir=output_dir, repo_path=empty_dir, mode="full")
 
         result = server.run()
 
@@ -292,9 +256,7 @@ class TestScopeSubServerEdgeCases:
         (repo_dir / "test.py").write_text("print('test')")
 
         output_dir = tmp_path / "output"
-        server = ScopeSubServer(
-            output_dir=output_dir, repo_path=repo_dir, mode="full"
-        )
+        server = ScopeSubServer(output_dir=output_dir, repo_path=repo_dir, mode="full")
 
         result = server.run()
 
@@ -314,9 +276,7 @@ class TestScopeSubServerEdgeCases:
         test_file.write_text("print('test')")
 
         output_dir = tmp_path / "output"
-        server = ScopeSubServer(
-            output_dir=output_dir, repo_path=repo_dir, mode="full"
-        )
+        server = ScopeSubServer(output_dir=output_dir, repo_path=repo_dir, mode="full")
 
         # Should not crash even if some files are deleted during execution
         result = server.run()

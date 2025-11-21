@@ -1,0 +1,282 @@
+[
+  {
+    "file": "scripts/__init__.py",
+    "mi": 100.0,
+    "rank": "A"
+  },
+  {
+    "file": "scripts/__main__.py",
+    "mi": 100.0,
+    "rank": "A"
+  },
+  {
+    "file": "scripts/_utils.py",
+    "mi": 30.370137016153183,
+    "rank": "A"
+  },
+  {
+    "file": "scripts/build.py",
+    "mi": 69.97565086890167,
+    "rank": "A"
+  },
+  {
+    "file": "scripts/bump.py",
+    "mi": 72.57153428709272,
+    "rank": "A"
+  },
+  {
+    "file": "scripts/bump_major.py",
+    "mi": 89.26587099756442,
+    "rank": "A"
+  },
+  {
+    "file": "scripts/bump_minor.py",
+    "mi": 89.26587099756442,
+    "rank": "A"
+  },
+  {
+    "file": "scripts/bump_patch.py",
+    "mi": 89.26587099756442,
+    "rank": "A"
+  },
+  {
+    "file": "scripts/bump_version.py",
+    "mi": 51.5277053141986,
+    "rank": "A"
+  },
+  {
+    "file": "scripts/clean.py",
+    "mi": 75.25327812445563,
+    "rank": "A"
+  },
+  {
+    "file": "scripts/cli.py",
+    "mi": 42.80415266687684,
+    "rank": "A"
+  },
+  {
+    "file": "scripts/dev.py",
+    "mi": 90.9005658016036,
+    "rank": "A"
+  },
+  {
+    "file": "scripts/help.py",
+    "mi": 69.24838340422251,
+    "rank": "A"
+  },
+  {
+    "file": "scripts/install.py",
+    "mi": 90.9005658016036,
+    "rank": "A"
+  },
+  {
+    "file": "scripts/menu.py",
+    "mi": 17.22511363268717,
+    "rank": "B"
+  },
+  {
+    "file": "scripts/push.py",
+    "mi": 60.70927869366828,
+    "rank": "A"
+  },
+  {
+    "file": "scripts/release.py",
+    "mi": 70.02416691090913,
+    "rank": "A"
+  },
+  {
+    "file": "scripts/run_cli.py",
+    "mi": 41.337065343939024,
+    "rank": "A"
+  },
+  {
+    "file": "scripts/target_metadata.py",
+    "mi": 71.4273477221073,
+    "rank": "A"
+  },
+  {
+    "file": "scripts/version_current.py",
+    "mi": 85.70169791537606,
+    "rank": "A"
+  },
+  {
+    "file": "src/btx_fix_mcp/__init__.py",
+    "mi": 100.0,
+    "rank": "A"
+  },
+  {
+    "file": "src/btx_fix_mcp/__init__conf__.py",
+    "mi": 100.0,
+    "rank": "A"
+  },
+  {
+    "file": "src/btx_fix_mcp/__main__.py",
+    "mi": 71.2534582073154,
+    "rank": "A"
+  },
+  {
+    "file": "src/btx_fix_mcp/behaviors.py",
+    "mi": 53.14762956643277,
+    "rank": "A"
+  },
+  {
+    "file": "src/btx_fix_mcp/cli.py",
+    "mi": 59.8172321970936,
+    "rank": "A"
+  },
+  {
+    "file": "src/btx_fix_mcp/servers/__init__.py",
+    "mi": 100.0,
+    "rank": "A"
+  },
+  {
+    "file": "src/btx_fix_mcp/servers/review.py",
+    "mi": 50.17723314930147,
+    "rank": "A"
+  },
+  {
+    "file": "src/btx_fix_mcp/servers/review_handlers.py",
+    "mi": 83.89493449580223,
+    "rank": "A"
+  },
+  {
+    "file": "src/btx_fix_mcp/servers/review_tools.py",
+    "mi": 100.0,
+    "rank": "A"
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/__init__.py",
+    "mi": 100.0,
+    "rank": "A"
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/base.py",
+    "mi": 69.98187072736407,
+    "rank": "A"
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/common/__init__.py",
+    "mi": 100.0,
+    "rank": "A"
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/common/files.py",
+    "mi": 70.15605459440555,
+    "rank": "A"
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/common/git.py",
+    "mi": 63.05161876760011,
+    "rank": "A"
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/common/logging.py",
+    "mi": 52.09889924245469,
+    "rank": "A"
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/common/mindsets.py",
+    "mi": 56.899243564800884,
+    "rank": "A"
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/common/protocol.py",
+    "mi": 55.43794094999431,
+    "rank": "A"
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/fix/__init__.py",
+    "mi": 100.0,
+    "rank": "A"
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/__init__.py",
+    "mi": 100.0,
+    "rank": "A"
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/deps.py",
+    "mi": 34.40431197336464,
+    "rank": "A"
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/deps_scanners.py",
+    "mi": 42.487045352122216,
+    "rank": "A"
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/docs.py",
+    "mi": 35.541719639133795,
+    "rank": "A"
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/perf.py",
+    "mi": 35.74014845059892,
+    "rank": "A"
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality.py",
+    "mi": 40.33132524944609,
+    "rank": "A"
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",
+    "mi": 8.077421061159518,
+    "rank": "C"
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/architecture.py",
+    "mi": 45.12558514821386,
+    "rank": "A"
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/base.py",
+    "mi": 100.0,
+    "rank": "A"
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/complexity.py",
+    "mi": 46.60572379125707,
+    "rank": "A"
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/metrics.py",
+    "mi": 50.405251052448634,
+    "rank": "A"
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/static.py",
+    "mi": 68.11737246526454,
+    "rank": "A"
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/types.py",
+    "mi": 54.3856082012142,
+    "rank": "A"
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/report.py",
+    "mi": 40.581034382063386,
+    "rank": "A"
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/scope.py",
+    "mi": 64.06497040267365,
+    "rank": "A"
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/security.py",
+    "mi": 42.42120774391039,
+    "rank": "A"
+  },
+  {
+    "file": "src/btx_fix_mcp/tools/__init__.py",
+    "mi": 100.0,
+    "rank": "A"
+  },
+  {
+    "file": "src/btx_fix_mcp/tools_venv.py",
+    "mi": 58.86971168147551,
+    "rank": "A"
+  }
+]

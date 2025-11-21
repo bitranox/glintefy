@@ -128,9 +128,9 @@ ruff check src/ tests/
 pyright src/
 ```
 
-### Python 3.9+ Support
+### Python 3.13+ Support
 
-The project targets Python 3.9 and newer, tested on 3.9 through 3.14.
+The project requires Python 3.13 or newer, tested on 3.13 and 3.14.
 
 ## Documentation
 

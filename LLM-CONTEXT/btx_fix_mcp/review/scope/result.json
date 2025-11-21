@@ -1,0 +1,23 @@
+{
+  "status": "SUCCESS",
+  "summary": "# Scope Analysis Report\n\n## Overview\n\n**Mode**: full\n**Repository**: /media/srv-main-softdev/projects/MCP/btx_fix_mcp\n**Branch**: master\n**Total Files**: 1661\n\n## File Breakdown by Category\n\n- **CODE**: 56 files\n- **TEST**: 48 files\n- **DOCS**: 60 files\n- **CONFIG**: 318 files\n- **BUILD**: 1 files\n- **OTHER**: 1178 files\n\n## Sample Files (first 10)\n\n- `.btx-review.yaml.example`\n- `.claude/settings.local.json`\n- `.coverage.unit.lxc-pydev.69601.XJkIlGyx`\n- `.devcontainer/devcontainer.json`\n- `.devcontainer/settings.json`\n- `.env`\n- `.env.example`\n- `.git/hooks/applypatch-msg.sample`\n- `.git/hooks/commit-msg.sample`\n- `.git/hooks/fsmonitor-watchman.sample`\n- ... and 1651 more\n\n## Next Steps\n\n1. Review code files for quality issues\n2. Check test coverage\n3. Scan for security vulnerabilities\n4. Review documentation completeness",
+  "artifacts": {
+    "files_to_review": "/media/srv-main-softdev/projects/MCP/btx_fix_mcp/LLM-CONTEXT/btx_fix_mcp/review/scope/files_to_review.txt",
+    "files_code": "/media/srv-main-softdev/projects/MCP/btx_fix_mcp/LLM-CONTEXT/btx_fix_mcp/review/scope/files_code.txt",
+    "files_test": "/media/srv-main-softdev/projects/MCP/btx_fix_mcp/LLM-CONTEXT/btx_fix_mcp/review/scope/files_test.txt",
+    "files_docs": "/media/srv-main-softdev/projects/MCP/btx_fix_mcp/LLM-CONTEXT/btx_fix_mcp/review/scope/files_docs.txt",
+    "files_config": "/media/srv-main-softdev/projects/MCP/btx_fix_mcp/LLM-CONTEXT/btx_fix_mcp/review/scope/files_config.txt",
+    "files_build": "/media/srv-main-softdev/projects/MCP/btx_fix_mcp/LLM-CONTEXT/btx_fix_mcp/review/scope/files_build.txt",
+    "files_other": "/media/srv-main-softdev/projects/MCP/btx_fix_mcp/LLM-CONTEXT/btx_fix_mcp/review/scope/files_other.txt"
+  },
+  "metrics": {
+    "total_files": 1661,
+    "code_files": 56,
+    "test_files": 48,
+    "doc_files": 60,
+    "config_files": 318,
+    "mode": "full"
+  },
+  "errors": [],
+  "timestamp": "2025-11-21T15:46:53.858466"
+}

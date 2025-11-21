@@ -1,7 +1,5 @@
 """Tests for Security sub-server."""
 
-from pathlib import Path
-
 import pytest
 
 from btx_fix_mcp.subservers.review.security import SecuritySubServer
@@ -37,7 +35,7 @@ def greet(name: str) -> str:
         """Create repo with vulnerable Python code."""
         repo_dir = tmp_path / "repo"
         repo_dir.mkdir()
-        (repo_dir / "vulnerable.py").write_text('''
+        (repo_dir / "vulnerable.py").write_text("""
 import subprocess
 import pickle
 
@@ -52,7 +50,7 @@ def load_data(filename):
 
 # B105: hardcoded password
 PASSWORD = "secret123"
-''')
+""")
         return repo_dir
 
     def test_initialization(self, tmp_path):
@@ -273,7 +271,7 @@ PASSWORD = "secret123"
             repo_path=repo_with_secure_code,
         )
 
-        result = server.run()
+        server.run()
 
         assert (output_dir / "status.txt").exists()
         assert (output_dir / "security_summary.md").exists()
@@ -298,6 +296,176 @@ PASSWORD = "secret123"
 
         assert server.severity_threshold == "high"
         assert server.confidence_threshold == "medium"
+
+
+class TestSecuritySubServerMCPMode:
+    """Tests for MCP mode functionality."""
+
+    def test_mcp_mode_enabled(self, tmp_path):
+        """Test MCP mode initialization."""
+        input_dir = tmp_path / "input"
+        input_dir.mkdir()
+        output_dir = tmp_path / "output"
+
+        server = SecuritySubServer(
+            input_dir=input_dir,
+            output_dir=output_dir,
+            mcp_mode=True,
+        )
+
+        assert server.mcp_mode is True
+        assert server.logger is not None
+
+
+class TestSecurityConfigLoading:
+    """Tests for config file loading."""
+
+    def test_load_config_from_explicit_file(self, tmp_path):
+        """Test loading config from explicit file path."""
+        import yaml
+
+        config_file = tmp_path / "custom_config.yaml"
+        config_file.write_text(
+            yaml.dump(
+                {
+                    "security": {
+                        "severity_threshold": "high",
+                        "confidence_threshold": "medium",
+                    }
+                }
+            )
+        )
+
+        input_dir = tmp_path / "input"
+        input_dir.mkdir()
+        output_dir = tmp_path / "output"
+
+        server = SecuritySubServer(
+            input_dir=input_dir,
+            output_dir=output_dir,
+            config_file=config_file,
+        )
+
+        assert server.config is not None
+
+    def test_load_config_from_default_location(self, tmp_path):
+        """Test loading config from default .btx-review.yaml."""
+        import yaml
+
+        repo_dir = tmp_path / "repo"
+        repo_dir.mkdir()
+
+        config_file = repo_dir / ".btx-review.yaml"
+        config_file.write_text(
+            yaml.dump(
+                {
+                    "security": {
+                        "severity_threshold": "medium",
+                    }
+                }
+            )
+        )
+
+        input_dir = tmp_path / "input"
+        input_dir.mkdir()
+        output_dir = tmp_path / "output"
+
+        server = SecuritySubServer(
+            input_dir=input_dir,
+            output_dir=output_dir,
+            repo_path=repo_dir,
+        )
+
+        assert server.config is not None
+
+    def test_load_config_invalid_yaml(self, tmp_path):
+        """Test handling of invalid YAML config."""
+        config_file = tmp_path / "invalid.yaml"
+        config_file.write_text("invalid: yaml: content: [")
+
+        input_dir = tmp_path / "input"
+        input_dir.mkdir()
+        output_dir = tmp_path / "output"
+
+        # Should not raise, just use defaults
+        server = SecuritySubServer(
+            input_dir=input_dir,
+            output_dir=output_dir,
+            config_file=config_file,
+        )
+
+        assert server.severity_threshold == "low"
+
+
+class TestSecurityBanditHelpers:
+    """Tests for Bandit helper methods."""
+
+    @pytest.fixture
+    def server(self, tmp_path):
+        """Create a SecuritySubServer instance."""
+        input_dir = tmp_path / "input"
+        input_dir.mkdir()
+        output_dir = tmp_path / "output"
+        return SecuritySubServer(
+            input_dir=input_dir,
+            output_dir=output_dir,
+            repo_path=tmp_path,
+        )
+
+    def test_filter_issues_by_severity(self, server):
+        """Test filtering issues by severity threshold."""
+        issues = [
+            {"issue_severity": "HIGH", "issue_confidence": "HIGH"},
+            {"issue_severity": "MEDIUM", "issue_confidence": "HIGH"},
+            {"issue_severity": "LOW", "issue_confidence": "HIGH"},
+        ]
+
+        server.severity_threshold = "medium"
+        filtered = server._filter_issues(issues)
+
+        # Should filter out LOW
+        assert len(filtered) == 2
+
+    def test_filter_issues_by_confidence(self, server):
+        """Test filtering issues by confidence threshold."""
+        issues = [
+            {"issue_severity": "HIGH", "issue_confidence": "HIGH"},
+            {"issue_severity": "HIGH", "issue_confidence": "MEDIUM"},
+            {"issue_severity": "HIGH", "issue_confidence": "LOW"},
+        ]
+
+        server.confidence_threshold = "high"
+        filtered = server._filter_issues(issues)
+
+        # Should filter out MEDIUM and LOW confidence
+        assert len(filtered) == 1
+
+    def test_categorize_issues(self, server):
+        """Test categorizing issues by severity."""
+        issues = [
+            {"issue_severity": "HIGH"},
+            {"issue_severity": "MEDIUM"},
+            {"issue_severity": "MEDIUM"},
+            {"issue_severity": "LOW"},
+        ]
+
+        categorized = server._categorize_issues(issues)
+
+        assert len(categorized["HIGH"]) == 1
+        assert len(categorized["MEDIUM"]) == 2
+        assert len(categorized["LOW"]) == 1
+
+    def test_categorize_issues_unknown_severity(self, server):
+        """Test categorizing issues with unknown severity."""
+        issues = [
+            {"issue_severity": "UNKNOWN"},
+            {},
+        ]
+
+        categorized = server._categorize_issues(issues)
+
+        # Unknown severities should go to LOW
+        assert len(categorized["LOW"]) == 2
 
 
 class TestSecuritySubServerIntegration:

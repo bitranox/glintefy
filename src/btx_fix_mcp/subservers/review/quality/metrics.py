@@ -42,31 +42,31 @@ class MetricsAnalyzer(BaseAnalyzer):
             try:
                 result = subprocess.run(
                     [radon, "hal", "-j", file_path],
-                    capture_output=True, text=True, timeout=30,
+                    capture_output=True,
+                    text=True,
+                    timeout=30,
                 )
                 if result.returncode == 0 and result.stdout.strip():
                     data = json.loads(result.stdout)
                     for filepath, hal_data in data.items():
                         if hal_data.get("total"):
-                            total = (
-                                hal_data["total"][0]
-                                if isinstance(hal_data["total"], list)
-                                else hal_data["total"]
+                            total = hal_data["total"][0] if isinstance(hal_data["total"], list) else hal_data["total"]
+                            results.append(
+                                {
+                                    "file": self._get_relative_path(filepath),
+                                    "h1": total.get("h1", 0),
+                                    "h2": total.get("h2", 0),
+                                    "N1": total.get("N1", 0),
+                                    "N2": total.get("N2", 0),
+                                    "vocabulary": total.get("vocabulary", 0),
+                                    "length": total.get("length", 0),
+                                    "volume": total.get("volume", 0),
+                                    "difficulty": total.get("difficulty", 0),
+                                    "effort": total.get("effort", 0),
+                                    "time": total.get("time", 0),
+                                    "bugs": total.get("bugs", 0),
+                                }
                             )
-                            results.append({
-                                "file": self._get_relative_path(filepath),
-                                "h1": total.get("h1", 0),
-                                "h2": total.get("h2", 0),
-                                "N1": total.get("N1", 0),
-                                "N2": total.get("N2", 0),
-                                "vocabulary": total.get("vocabulary", 0),
-                                "length": total.get("length", 0),
-                                "volume": total.get("volume", 0),
-                                "difficulty": total.get("difficulty", 0),
-                                "effort": total.get("effort", 0),
-                                "time": total.get("time", 0),
-                                "bugs": total.get("bugs", 0),
-                            })
             except subprocess.TimeoutExpired:
                 self.logger.warning(f"Timeout analyzing Halstead in {file_path}")
             except json.JSONDecodeError:
@@ -90,21 +90,25 @@ class MetricsAnalyzer(BaseAnalyzer):
             try:
                 result = subprocess.run(
                     [radon, "raw", "-j", file_path],
-                    capture_output=True, text=True, timeout=30,
+                    capture_output=True,
+                    text=True,
+                    timeout=30,
                 )
                 if result.returncode == 0 and result.stdout.strip():
                     data = json.loads(result.stdout)
                     for filepath, raw_data in data.items():
-                        results.append({
-                            "file": self._get_relative_path(filepath),
-                            "loc": raw_data.get("loc", 0),
-                            "lloc": raw_data.get("lloc", 0),
-                            "sloc": raw_data.get("sloc", 0),
-                            "comments": raw_data.get("comments", 0),
-                            "multi": raw_data.get("multi", 0),
-                            "blank": raw_data.get("blank", 0),
-                            "single_comments": raw_data.get("single_comments", 0),
-                        })
+                        results.append(
+                            {
+                                "file": self._get_relative_path(filepath),
+                                "loc": raw_data.get("loc", 0),
+                                "lloc": raw_data.get("lloc", 0),
+                                "sloc": raw_data.get("sloc", 0),
+                                "comments": raw_data.get("comments", 0),
+                                "multi": raw_data.get("multi", 0),
+                                "blank": raw_data.get("blank", 0),
+                                "single_comments": raw_data.get("single_comments", 0),
+                            }
+                        )
             except subprocess.TimeoutExpired:
                 self.logger.warning(f"Timeout analyzing raw metrics in {file_path}")
             except json.JSONDecodeError:
@@ -139,7 +143,10 @@ class MetricsAnalyzer(BaseAnalyzer):
             # Check if we're in a git repo
             git_check = subprocess.run(
                 ["git", "rev-parse", "--git-dir"],
-                capture_output=True, text=True, timeout=5, cwd=str(self.repo_path),
+                capture_output=True,
+                text=True,
+                timeout=5,
+                cwd=str(self.repo_path),
             )
             if git_check.returncode != 0:
                 self.logger.info("Not a git repository, skipping churn analysis")
@@ -156,11 +163,11 @@ class MetricsAnalyzer(BaseAnalyzer):
 
             # Get git log with numstat for the past 90 days
             result = subprocess.run(
-                [
-                    "git", "log", "--numstat", "--format=%H|%ae|%at",
-                    "--since=90 days ago", "--", *relative_files
-                ],
-                capture_output=True, text=True, timeout=60, cwd=str(self.repo_path),
+                ["git", "log", "--numstat", "--format=%H|%ae|%at", "--since=90 days ago", "--", *relative_files],
+                capture_output=True,
+                text=True,
+                timeout=60,
+                cwd=str(self.repo_path),
             )
 
             if result.returncode != 0:

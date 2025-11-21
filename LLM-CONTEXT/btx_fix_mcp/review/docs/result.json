@@ -1,0 +1,22 @@
+{
+  "status": "SUCCESS",
+  "summary": "# Documentation Analysis Report\n\n## Reviewer Mindset\n\n**You are a docs reviewer** - thorough, precise.\n\n**Your approach:**\n- \u2713 **Verify:** Verify all claims with evidence\n\n## Verdict\n\n**\ud83d\udd27 NEEDS WORK**\n\n- Critical issues: 0\n- Warnings: 55\n- Files analyzed: 55\n\n## Overview\n\n**Files Analyzed**: 55\n**Docstring Coverage**: 97.0% (minimum: 80%)\n**Missing Docstrings**: 55\n**Total Issues**: 55\n\n## Project Documentation\n\n- README: \u2705\n- CHANGELOG: \u2705\n- CONTRIBUTING: \u2705\n- LICENSE: \u2705\n\n## Missing Docstrings\n\n- `/media/srv-main-softdev/projects/MCP/btx_fix_mcp/scripts/_utils.py:157` - function `run`\n- `/media/srv-main-softdev/projects/MCP/btx_fix_mcp/scripts/_utils.py:342` - function `get_project_metadata`\n- `/media/srv-main-softdev/projects/MCP/btx_fix_mcp/scripts/_utils.py:79` - function `github_tarball_url`\n- `/media/srv-main-softdev/projects/MCP/btx_fix_mcp/scripts/build.py:45` - function `main`\n- `/media/srv-main-softdev/projects/MCP/btx_fix_mcp/scripts/bump_version.py:9` - function `parse_args`\n- `/media/srv-main-softdev/projects/MCP/btx_fix_mcp/scripts/bump_version.py:24` - function `bump_semver`\n- `/media/srv-main-softdev/projects/MCP/btx_fix_mcp/scripts/bump_version.py:60` - function `main`\n- `/media/srv-main-softdev/projects/MCP/btx_fix_mcp/scripts/cli.py:101` - function `help_command`\n- `/media/srv-main-softdev/projects/MCP/btx_fix_mcp/scripts/cli.py:107` - function `install_command`\n- `/media/srv-main-softdev/projects/MCP/btx_fix_mcp/scripts/cli.py:113` - function `dev_command`\n- `/media/srv-main-softdev/projects/MCP/btx_fix_mcp/scripts/cli.py:119` - function `clean_command`\n- `/media/srv-main-softdev/projects/MCP/btx_fix_mcp/scripts/cli.py:126` - function `run_command`\n- `/media/srv-main-softdev/projects/MCP/btx_fix_mcp/scripts/cli.py:134` - function `test_command`\n- `/media/srv-main-softdev/projects/MCP/btx_fix_mcp/scripts/cli.py:145` - function `coverage_command`\n- `/media/srv-main-softdev/projects/MCP/btx_fix_mcp/scripts/cli.py:150` - function `build_command`\n- ... and 40 more\n\n## Approval Status\n\n**\ud83d\udd27 NEEDS WORK**\n\n- Address critical issues before merging\n- Ask yourself: Is this correct? Let me check.",
+  "artifacts": {
+    "docstring_coverage": "/media/srv-main-softdev/projects/MCP/btx_fix_mcp/LLM-CONTEXT/btx_fix_mcp/review/docs/docstring_coverage.json",
+    "missing_docstrings": "/media/srv-main-softdev/projects/MCP/btx_fix_mcp/LLM-CONTEXT/btx_fix_mcp/review/docs/missing_docstrings.json",
+    "project_docs": "/media/srv-main-softdev/projects/MCP/btx_fix_mcp/LLM-CONTEXT/btx_fix_mcp/review/docs/project_docs.json",
+    "issues": "/media/srv-main-softdev/projects/MCP/btx_fix_mcp/LLM-CONTEXT/btx_fix_mcp/review/docs/issues.json"
+  },
+  "metrics": {
+    "files_analyzed": 55,
+    "docstring_coverage": 97.0,
+    "missing_docstrings": 55,
+    "has_readme": true,
+    "has_changelog": true,
+    "has_license": true,
+    "total_issues": 55,
+    "critical_issues": 0
+  },
+  "errors": [],
+  "timestamp": "2025-11-21T15:26:25.219326"
+}

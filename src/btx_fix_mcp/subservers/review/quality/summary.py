@@ -5,6 +5,7 @@ Extracts summary generation logic to reduce __init__ complexity.
 
 from typing import Any
 
+from btx_fix_mcp.subservers.common.issues import QualityMetrics
 from btx_fix_mcp.subservers.common.mindsets import (
     AnalysisVerdict,
     ReviewerMindset,
@@ -15,7 +16,7 @@ from .config import QualityConfig
 
 
 def generate_comprehensive_summary(
-    metrics: dict[str, Any],
+    metrics: QualityMetrics,
     results: dict[str, Any],
     all_issues: list[dict[str, Any]],
     mindset: ReviewerMindset,
@@ -24,7 +25,7 @@ def generate_comprehensive_summary(
     """Generate comprehensive markdown summary with mindset evaluation.
 
     Args:
-        metrics: Compiled metrics dictionary
+        metrics: Quality metrics dataclass
         results: Analysis results dictionary
         all_issues: List of all issues found
         mindset: Reviewer mindset for evaluation
@@ -47,7 +48,7 @@ def generate_comprehensive_summary(
     # Evaluate results with mindset
     critical_issues = [i for i in all_issues if i.get("severity") == "error"]
     warning_issues = [i for i in all_issues if i.get("severity") == "warning"]
-    total_items = metrics["files_analyzed"] or 1
+    total_items = metrics.files_analyzed or 1
 
     verdict = evaluate_results(mindset, critical_issues, warning_issues, total_items)
 
@@ -86,15 +87,15 @@ def _build_header_section(mindset: ReviewerMindset, verdict: AnalysisVerdict) ->
     ]
 
 
-def _build_overview_section(metrics: dict[str, Any]) -> list[str]:
+def _build_overview_section(metrics: QualityMetrics) -> list[str]:
     """Build overview section."""
     return [
         "## Overview",
         "",
-        f"**Files Analyzed**: {metrics['files_analyzed']} ({metrics['python_files']} Python, {metrics['js_files']} JS/TS)",
-        f"**Functions Analyzed**: {metrics['total_functions']}",
-        f"**Total Issues Found**: {metrics['issues_count']}",
-        f"**Critical Issues**: {metrics['critical_issues']}",
+        f"**Files Analyzed**: {metrics.files_analyzed} ({metrics.python_files} Python, {metrics.js_files} JS/TS)",
+        f"**Functions Analyzed**: {metrics.total_functions}",
+        f"**Total Issues Found**: {metrics.total_issues}",
+        f"**Critical Issues**: {metrics.critical_issues}",
         "",
     ]
 
@@ -113,20 +114,20 @@ def _build_code_metrics_section(total_loc: int, total_sloc: int, total_comments:
     ]
 
 
-def _build_quality_issues_section(metrics: dict[str, Any], t: Any) -> list[str]:
+def _build_quality_issues_section(metrics: QualityMetrics, t: Any) -> list[str]:
     """Build quality issues summary section."""
     return [
         "## Quality Issues Summary",
         "",
-        f"- Functions >50 lines: **{metrics['functions_too_long']}**",
-        f"- High cyclomatic complexity (>{t.complexity}): **{metrics['high_complexity_count']}**",
-        f"- High cognitive complexity (>{t.cognitive_complexity}): **{metrics['high_cognitive_count']}**",
-        f"- Functions with nesting >{t.max_nesting_depth}: **{metrics['functions_too_nested']}**",
-        f"- Code duplication blocks: **{metrics['duplicate_blocks']}**",
-        f"- God objects: **{metrics['god_objects']}**",
-        f"- Highly coupled modules: **{metrics['highly_coupled_modules']}**",
-        f"- Import cycles: **{metrics['import_cycles']}**",
-        f"- Dead code items: **{metrics['dead_code_items']}**",
+        f"- Functions >50 lines: **{metrics.functions_too_long}**",
+        f"- High cyclomatic complexity (>{t.complexity}): **{metrics.high_complexity_count}**",
+        f"- High cognitive complexity (>{t.cognitive_complexity}): **{metrics.high_cognitive_count}**",
+        f"- Functions with nesting >{t.max_nesting_depth}: **{metrics.functions_too_nested}**",
+        f"- Code duplication blocks: **{metrics.duplicate_blocks}**",
+        f"- God objects: **{metrics.god_objects}**",
+        f"- Highly coupled modules: **{metrics.highly_coupled_modules}**",
+        f"- Import cycles: **{metrics.import_cycles}**",
+        f"- Dead code items: **{metrics.dead_code_items}**",
         "",
     ]
 
@@ -146,7 +147,7 @@ def _build_coverage_section(
     ]
 
 
-def _build_test_section(tests: dict[str, Any], metrics: dict[str, Any]) -> list[str]:
+def _build_test_section(tests: dict[str, Any], metrics: QualityMetrics) -> list[str]:
     """Build test suite analysis section."""
     total_tests = tests.get("total_tests", 0)
     total_assertions = tests.get("total_assertions", 0)
@@ -166,7 +167,7 @@ def _build_test_section(tests: dict[str, Any], metrics: dict[str, Any]) -> list[
         "",
         "## Runtime Type Checking (Beartype)",
         "",
-        f"- Status: **{'✅ Passed' if metrics['beartype_passed'] else '❌ Failed'}**",
+        f"- Status: **{'✅ Passed' if metrics.beartype_passed else '❌ Failed'}**",
         "",
     ]
 
@@ -187,7 +188,7 @@ def _build_critical_issues_section(critical_issues: list[dict[str, Any]]) -> lis
 
 
 def _build_recommendations_section(
-    metrics: dict[str, Any],
+    metrics: QualityMetrics,
     type_cov: dict[str, Any],
     doc_cov: dict[str, Any],
     t: Any,
@@ -197,16 +198,16 @@ def _build_recommendations_section(
     rec_num = 1
 
     recommendations = [
-        (metrics["functions_too_long"] > 0, f"**Break Down Long Functions**: {metrics['functions_too_long']} functions exceed 50 lines"),
-        (metrics["high_complexity_count"] > 0, f"**Reduce Cyclomatic Complexity**: {metrics['high_complexity_count']} functions exceed threshold"),
-        (metrics["high_cognitive_count"] > 0, f"**Reduce Cognitive Complexity**: {metrics['high_cognitive_count']} functions are too complex"),
-        (metrics["duplicate_blocks"] > 0, f"**Extract Duplicated Code**: {metrics['duplicate_blocks']} duplicate blocks found"),
-        (metrics["god_objects"] > 0, f"**Refactor God Objects**: {metrics['god_objects']} classes need decomposition"),
-        (metrics["import_cycles"] > 0, f"**Break Import Cycles**: {metrics['import_cycles']} cycles detected"),
+        (metrics.functions_too_long > 0, f"**Break Down Long Functions**: {metrics.functions_too_long} functions exceed 50 lines"),
+        (metrics.high_complexity_count > 0, f"**Reduce Cyclomatic Complexity**: {metrics.high_complexity_count} functions exceed threshold"),
+        (metrics.high_cognitive_count > 0, f"**Reduce Cognitive Complexity**: {metrics.high_cognitive_count} functions are too complex"),
+        (metrics.duplicate_blocks > 0, f"**Extract Duplicated Code**: {metrics.duplicate_blocks} duplicate blocks found"),
+        (metrics.god_objects > 0, f"**Refactor God Objects**: {metrics.god_objects} classes need decomposition"),
+        (metrics.import_cycles > 0, f"**Break Import Cycles**: {metrics.import_cycles} cycles detected"),
         (type_cov.get("coverage_percent", 100) < t.min_type_coverage, f"**Add Type Annotations**: Coverage is {type_cov.get('coverage_percent', 0)}%"),
         (doc_cov.get("coverage_percent", 100) < t.min_docstring_coverage, f"**Add Docstrings**: Coverage is {doc_cov.get('coverage_percent', 0)}%"),
-        (metrics["dead_code_items"] > 0, f"**Remove Dead Code**: {metrics['dead_code_items']} unused items found"),
-        (metrics.get("high_churn_files", 0) > 0, f"**Review High Churn Files**: {metrics['high_churn_files']} files with frequent changes"),
+        (metrics.dead_code_items > 0, f"**Remove Dead Code**: {metrics.dead_code_items} unused items found"),
+        (metrics.high_churn_files > 0, f"**Review High Churn Files**: {metrics.high_churn_files} files with frequent changes"),
     ]
 
     for condition, text in recommendations:
@@ -214,7 +215,7 @@ def _build_recommendations_section(
             lines.append(f"{rec_num}. {text}")
             rec_num += 1
 
-    if metrics["issues_count"] == 0:
+    if metrics.total_issues == 0:
         lines.append("✅ No quality issues detected!")
 
     return lines

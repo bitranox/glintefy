@@ -242,7 +242,7 @@ class QualitySubServer(BaseSubServer):
                 status=status,
                 summary=summary,
                 artifacts=artifacts,
-                metrics=metrics,
+                metrics=metrics.to_dict(),
             )
 
         except Exception as e:

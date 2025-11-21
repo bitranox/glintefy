@@ -3,6 +3,8 @@
 from pathlib import Path
 from typing import Any
 
+from btx_fix_mcp.subservers.common.issues import QualityMetrics
+
 from .config import QualityConfig
 from .issues import compile_all_issues
 
@@ -40,7 +42,7 @@ class ResultsCompiler:
         js_files: list[str],
         results: dict[str, Any],
         all_issues: list[dict],
-    ) -> dict[str, Any]:
+    ) -> QualityMetrics:
         """Compile all metrics from analysis results.
 
         Args:
@@ -50,16 +52,40 @@ class ResultsCompiler:
             all_issues: Compiled issues list
 
         Returns:
-            Dictionary of compiled metrics
+            Quality metrics dataclass
         """
-        return {
-            **self._compile_file_metrics(python_files, js_files),
-            **self._compile_complexity_metrics(results),
-            **self._compile_test_metrics(results),
-            **self._compile_architecture_metrics(results),
-            **self._compile_coverage_metrics(results),
-            **self._compile_issue_metrics(all_issues, results),
-        }
+        # Collect metrics from all analyzers
+        file_metrics = self._compile_file_metrics(python_files, js_files)
+        complexity_metrics = self._compile_complexity_metrics(results)
+        architecture_metrics = self._compile_architecture_metrics(results)
+        coverage_metrics = self._compile_coverage_metrics(results)
+        issue_metrics = self._compile_issue_metrics(all_issues, results)
+
+        # Build QualityMetrics dataclass
+        return QualityMetrics(
+            files_analyzed=file_metrics["files_analyzed"],
+            python_files=file_metrics["python_files"],
+            js_files=file_metrics["js_files"],
+            total_functions=complexity_metrics["total_functions"],
+            high_complexity_count=complexity_metrics["high_complexity_count"],
+            high_cognitive_count=complexity_metrics["high_cognitive_count"],
+            low_mi_count=complexity_metrics["low_mi_count"],
+            functions_too_long=complexity_metrics["functions_too_long"],
+            functions_too_nested=complexity_metrics["functions_too_nested"],
+            god_objects=architecture_metrics["god_objects"],
+            highly_coupled_modules=architecture_metrics["highly_coupled_modules"],
+            import_cycles=coverage_metrics["import_cycles"],
+            duplicate_blocks=complexity_metrics["duplicate_blocks"],
+            dead_code_items=coverage_metrics["dead_code_items"],
+            docstring_coverage_percent=coverage_metrics["docstring_coverage_percent"],
+            type_coverage_percent=coverage_metrics["type_coverage_percent"],
+            test_coverage_percent=0.0,  # TODO: Add test coverage computation
+            high_churn_files=coverage_metrics["high_churn_files"],
+            beartype_passed=issue_metrics["beartype_passed"],
+            critical_issues=issue_metrics["critical_issues"],
+            warning_issues=issue_metrics["issues_count"] - issue_metrics["critical_issues"],
+            total_issues=issue_metrics["issues_count"],
+        )
 
     def _compile_file_metrics(
         self, python_files: list[str], js_files: list[str]

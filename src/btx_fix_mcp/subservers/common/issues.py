@@ -284,6 +284,63 @@ class PerfMetrics:
         return asdict(self)
 
 
+@dataclass(slots=True)
+class QualityMetrics:
+    """Quality analysis metrics.
+
+    Attributes:
+        files_analyzed: Total files analyzed
+        python_files: Python files count
+        js_files: JavaScript/TypeScript files count
+        total_functions: Total functions analyzed
+        high_complexity_count: Functions with complexity > threshold
+        high_cognitive_count: Functions with high cognitive complexity
+        low_mi_count: Files with low maintainability index
+        functions_too_long: Functions exceeding length threshold
+        functions_too_nested: Functions exceeding nesting depth
+        god_objects: Classes exceeding size/method thresholds
+        highly_coupled_modules: Modules with high coupling
+        import_cycles: Number of import cycles detected
+        duplicate_blocks: Code duplication blocks
+        dead_code_items: Unused code items (vars, functions, imports)
+        docstring_coverage_percent: Percentage of code with docstrings
+        type_coverage_percent: Percentage of code with type hints
+        test_coverage_percent: Test coverage percentage
+        high_churn_files: Files with high modification frequency
+        beartype_passed: Beartype runtime checks passed
+        critical_issues: Critical severity issues
+        warning_issues: Warning severity issues
+        total_issues: Total issues found
+    """
+
+    files_analyzed: int = 0
+    python_files: int = 0
+    js_files: int = 0
+    total_functions: int = 0
+    high_complexity_count: int = 0
+    high_cognitive_count: int = 0
+    low_mi_count: int = 0
+    functions_too_long: int = 0
+    functions_too_nested: int = 0
+    god_objects: int = 0
+    highly_coupled_modules: int = 0
+    import_cycles: int = 0
+    duplicate_blocks: int = 0
+    dead_code_items: int = 0
+    docstring_coverage_percent: float = 0.0
+    type_coverage_percent: float = 0.0
+    test_coverage_percent: float = 0.0
+    high_churn_files: int = 0
+    beartype_passed: bool = True
+    critical_issues: int = 0
+    warning_issues: int = 0
+    total_issues: int = 0
+
+    def to_dict(self) -> dict[str, Any]:
+        """Convert to dictionary for JSON serialization."""
+        return asdict(self)
+
+
 # Helper to convert list of issues to dicts
 def issues_to_dicts(issues: list[BaseIssue]) -> list[dict[str, Any]]:
     """Convert a list of issue dataclasses to dictionaries."""

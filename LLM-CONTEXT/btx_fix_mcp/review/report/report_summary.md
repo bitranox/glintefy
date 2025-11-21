@@ -1,12 +1,12 @@
 # Code Review Report
 
-**Generated**: 2025-11-21T20:23:15.730986
+**Generated**: 2025-11-21T22:36:05.624123
 
 ---
 
 ## Overall Verdict
 
-### ❌ Code review failed - 3 critical issues found
+### ❌ Code review failed - 2 critical issues found
 
 **Status**: `REJECTED`
 
@@ -18,12 +18,12 @@
 ## Summary Statistics
 
 - **Sub-servers run**: 6
-- **Sub-servers passed**: 3
+- **Sub-servers passed**: 4
 - **Sub-servers failed**: 0
-- **Files analyzed**: 62
-- **Total issues**: 325
-- **Critical issues**: 3
-- **Warnings**: 278
+- **Files analyzed**: 1
+- **Total issues**: 13
+- **Critical issues**: 2
+- **Warnings**: 11
 
 ---
 
@@ -34,31 +34,31 @@
 **Status**: `SUCCESS`
 
 **Key Metrics:**
-- total_files: 3431
-- code_files: 62
-- test_files: 65
-- doc_files: 60
-- config_files: 971
+- total_files: 5
+- code_files: 1
+- test_files: 0
+- doc_files: 3
+- config_files: 1
 
-### ⚠️ Quality
+### ✅ Quality
 
-**Status**: `PARTIAL`
+**Status**: `SUCCESS`
 
 **Key Metrics:**
-- files_analyzed: 62
-- python_files: 62
+- files_analyzed: 1
+- python_files: 1
 - js_files: 0
-- total_functions: 521
-- high_complexity_count: 23
+- total_functions: 20
+- high_complexity_count: 0
 
-**Issues**: 218 (1 critical, 173 warnings)
+**Issues**: 3 (0 critical, 3 warnings)
 
 ### ✅ Security
 
 **Status**: `SUCCESS`
 
 **Key Metrics:**
-- files_scanned: 62
+- files_scanned: 1
 - issues_found: 0
 - high_severity: 0
 - medium_severity: 0
@@ -82,33 +82,30 @@
 **Status**: `SUCCESS`
 
 **Key Metrics:**
-- files_analyzed: 62
-- coverage_percent: 97.8
-- missing_docstrings: 54
+- files_analyzed: 1
+- coverage_percent: 99.1
+- missing_docstrings: 0
 - project_docs_found: 3
-- total_issues: 54
-
-**Issues**: 54 (0 critical, 54 warnings)
+- total_issues: 0
 
 ### ⚠️ Perf
 
 **Status**: `PARTIAL`
 
 **Key Metrics:**
-- files_analyzed: 62
-- patterns_found: 7
-- hotspots_found: 3
-- total_issues: 46
+- files_analyzed: 1
+- patterns_found: 0
+- hotspots_found: 2
+- total_issues: 3
 
-**Issues**: 46 (2 critical, 44 warnings)
+**Issues**: 3 (2 critical, 1 warnings)
 
 ---
 
 ## Critical Issues (Must Fix)
 
-- **[quality]** `src/btx_fix_mcp/subservers/review/deps.py:46` Class 'DepsSubServer' is a god object (27 methods, 590 lines)
-- **[perf]**  Slow test: tests/subservers/review/test_deps.py::TestDepsSubServer::test_summary_includes_mindset takes 7.16s
-- **[perf]**  Slow test: tests/subservers/review/test_deps.py::TestDepsSubServer::test_execute_python_project takes 6.11s
+- **[perf]**  Slow test: tests/subservers/review/test_deps.py::TestDepsSubServer::test_execute_python_project takes 5.91s
+- **[perf]**  Slow test: tests/subservers/review/test_deps.py::TestDepsSubServer::test_summary_includes_mindset takes 5.58s
 
 ---
 

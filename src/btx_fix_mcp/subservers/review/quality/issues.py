@@ -192,15 +192,16 @@ def _add_cognitive_issues(
     for r in results.get("cognitive", []):
         if r.get("exceeds_threshold"):
             func_name = r.get("function", r.get("name", "unknown"))
+            complexity_value = r.get("complexity", 0)
             issue = ThresholdIssue(
                 type="high_cognitive_complexity",
                 severity="warning",
                 file=r.get("file", ""),
                 line=r.get("line", 0),
                 name=func_name,
-                value=r.get("cognitive_complexity", 0),
+                value=complexity_value,
                 threshold=threshold,
-                message=f"Function '{func_name}' has cognitive complexity {r.get('cognitive_complexity', 0)} (threshold: {threshold})",
+                message=f"Function '{func_name}' has cognitive complexity {complexity_value} (threshold: {threshold})",
             )
             issues.append(issue.to_dict())
 

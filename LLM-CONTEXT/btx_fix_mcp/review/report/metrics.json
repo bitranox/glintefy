@@ -1,5 +1,5 @@
 {
-  "timestamp": "2025-11-21T20:23:15.730986",
+  "timestamp": "2025-11-21T22:36:05.624123",
   "subservers_run": [
     "scope",
     "quality",
@@ -10,12 +10,13 @@
   ],
   "subservers_passed": [
     "scope",
+    "quality",
     "security",
     "docs"
   ],
   "subservers_failed": [],
-  "total_issues": 325,
-  "critical_issues": 3,
-  "warning_issues": 278,
-  "files_analyzed": 62
+  "total_issues": 13,
+  "critical_issues": 2,
+  "warning_issues": 11,
+  "files_analyzed": 1
 }

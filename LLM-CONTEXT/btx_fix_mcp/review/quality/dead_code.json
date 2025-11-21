@@ -1,10 +1,4 @@
 {
-  "dead_code": [
-    {
-      "file": "src/btx_fix_mcp/subservers/common/logging.py",
-      "line": 347,
-      "message": "unused variable 'exc_tb' (100% confidence)"
-    }
-  ],
-  "raw_output": "src/btx_fix_mcp/subservers/common/logging.py:347: unused variable 'exc_tb' (100% confidence)\n"
+  "dead_code": [],
+  "raw_output": ""
 }

@@ -11,35 +11,35 @@
 
 **🔧 NEEDS WORK**
 
-- Critical issues: 1 (1.6%)
-- Warnings: 173 (279.0%)
-- Total items analyzed: 62
+- Critical issues: 0 (0.0%)
+- Warnings: 3 (300.0%)
+- Total items analyzed: 1
 
 ## Overview
 
-**Files Analyzed**: 62 (62 Python, 0 JS/TS)
-**Functions Analyzed**: 521
-**Total Issues Found**: 218
-**Critical Issues**: 1
+**Files Analyzed**: 1 (1 Python, 0 JS/TS)
+**Functions Analyzed**: 20
+**Total Issues Found**: 3
+**Critical Issues**: 0
 
 ## Code Metrics
 
-- Total LOC: **12,307**
-- Source LOC (SLOC): **7,820**
-- Comments: **406**
-- Comment Ratio: **5.2%**
+- Total LOC: **421**
+- Source LOC (SLOC): **294**
+- Comments: **16**
+- Comment Ratio: **5.4%**
 
 ## Quality Issues Summary
 
-- Functions >50 lines: **28**
-- High cyclomatic complexity (>10): **23**
-- High cognitive complexity (>15): **19**
-- Functions with nesting >3: **32**
-- Code duplication blocks: **66**
-- God objects: **1**
-- Highly coupled modules: **1**
+- Functions >50 lines: **1**
+- High cyclomatic complexity (>10): **0**
+- High cognitive complexity (>15): **0**
+- Functions with nesting >3: **0**
+- Code duplication blocks: **0**
+- God objects: **0**
+- Highly coupled modules: **0**
 - Import cycles: **0**
-- Dead code items: **1**
+- Dead code items: **0**
 
 ## Coverage Metrics
 
@@ -60,20 +60,11 @@
 
 - Status: **✅ Passed**
 
-## Critical Issues (Must Fix)
-
-- 🔴 `src/btx_fix_mcp/subservers/review/deps.py`: Class 'DepsSubServer' is a god object (27 methods, 590 lines)
-
 ## Refactoring Recommendations
 
-1. **Break Down Long Functions**: 28 functions exceed 50 lines
-2. **Reduce Cyclomatic Complexity**: 23 functions exceed threshold
-3. **Reduce Cognitive Complexity**: 19 functions are too complex
-4. **Extract Duplicated Code**: 66 duplicate blocks found
-5. **Refactor God Objects**: 1 classes need decomposition
-6. **Add Type Annotations**: Coverage is 0%
-7. **Add Docstrings**: Coverage is 0.0%
-8. **Remove Dead Code**: 1 unused items found
+1. **Break Down Long Functions**: 1 functions exceed 50 lines
+2. **Add Type Annotations**: Coverage is 0%
+3. **Add Docstrings**: Coverage is 0.0%
 
 ## Approval Status
 

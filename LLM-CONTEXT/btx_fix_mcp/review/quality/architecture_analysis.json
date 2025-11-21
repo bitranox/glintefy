@@ -1,88 +1,9 @@
 {
-  "god_objects": [
-    {
-      "file": "src/btx_fix_mcp/subservers/review/deps.py",
-      "class": "DepsSubServer",
-      "line": 46,
-      "methods": 27,
-      "lines": 590,
-      "methods_threshold": 20,
-      "lines_threshold": 500
-    }
-  ],
-  "highly_coupled": [
-    {
-      "file": "scripts/_utils.py",
-      "import_count": 16,
-      "threshold": 15
-    }
-  ],
+  "god_objects": [],
+  "highly_coupled": [],
   "module_structure": {
-    "scripts": [
-      "scripts/__init__.py",
-      "scripts/__main__.py",
-      "scripts/_utils.py",
-      "scripts/build.py",
-      "scripts/bump.py",
-      "scripts/bump_major.py",
-      "scripts/bump_minor.py",
-      "scripts/bump_patch.py",
-      "scripts/bump_version.py",
-      "scripts/clean.py",
-      "scripts/cli.py",
-      "scripts/dev.py",
-      "scripts/help.py",
-      "scripts/install.py",
-      "scripts/menu.py",
-      "scripts/push.py",
-      "scripts/release.py",
-      "scripts/run_cli.py",
-      "scripts/target_metadata.py",
-      "scripts/version_current.py"
-    ],
     "src": [
-      "src/btx_fix_mcp/__init__.py",
-      "src/btx_fix_mcp/__init__conf__.py",
-      "src/btx_fix_mcp/__main__.py",
-      "src/btx_fix_mcp/behaviors.py",
-      "src/btx_fix_mcp/cli.py",
-      "src/btx_fix_mcp/servers/__init__.py",
-      "src/btx_fix_mcp/servers/review.py",
-      "src/btx_fix_mcp/servers/review_handlers.py",
-      "src/btx_fix_mcp/servers/review_tools.py",
-      "src/btx_fix_mcp/subservers/__init__.py",
-      "src/btx_fix_mcp/subservers/base.py",
-      "src/btx_fix_mcp/subservers/common/__init__.py",
-      "src/btx_fix_mcp/subservers/common/files.py",
-      "src/btx_fix_mcp/subservers/common/git.py",
-      "src/btx_fix_mcp/subservers/common/issues.py",
-      "src/btx_fix_mcp/subservers/common/logging.py",
-      "src/btx_fix_mcp/subservers/common/mindsets.py",
-      "src/btx_fix_mcp/subservers/common/protocol.py",
-      "src/btx_fix_mcp/subservers/fix/__init__.py",
-      "src/btx_fix_mcp/subservers/review/__init__.py",
-      "src/btx_fix_mcp/subservers/review/deps.py",
-      "src/btx_fix_mcp/subservers/review/deps_scanners.py",
-      "src/btx_fix_mcp/subservers/review/docs.py",
-      "src/btx_fix_mcp/subservers/review/perf.py",
-      "src/btx_fix_mcp/subservers/review/quality/__init__.py",
-      "src/btx_fix_mcp/subservers/review/quality/architecture.py",
-      "src/btx_fix_mcp/subservers/review/quality/base.py",
-      "src/btx_fix_mcp/subservers/review/quality/complexity.py",
-      "src/btx_fix_mcp/subservers/review/quality/files.py",
-      "src/btx_fix_mcp/subservers/review/quality/issues.py",
-      "src/btx_fix_mcp/subservers/review/quality/metrics.py",
-      "src/btx_fix_mcp/subservers/review/quality/orchestrator.py",
-      "src/btx_fix_mcp/subservers/review/quality/results.py",
-      "src/btx_fix_mcp/subservers/review/quality/static.py",
-      "src/btx_fix_mcp/subservers/review/quality/summary.py",
-      "src/btx_fix_mcp/subservers/review/quality/types.py",
-      "src/btx_fix_mcp/subservers/review/quality/writer.py",
-      "src/btx_fix_mcp/subservers/review/report.py",
-      "src/btx_fix_mcp/subservers/review/scope.py",
-      "src/btx_fix_mcp/subservers/review/security.py",
-      "src/btx_fix_mcp/tools/__init__.py",
-      "src/btx_fix_mcp/tools_venv.py"
+      "src/btx_fix_mcp/subservers/review/quality/issues.py"
     ]
   }
 }

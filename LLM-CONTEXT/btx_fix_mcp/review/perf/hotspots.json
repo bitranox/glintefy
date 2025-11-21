@@ -1,17 +1,12 @@
 [
   {
-    "name": "tests/subservers/review/test_deps.py::TestDepsSubServer::test_summary_includes_mindset",
-    "duration": 7.16,
-    "type": "slow_test"
-  },
-  {
     "name": "tests/subservers/review/test_deps.py::TestDepsSubServer::test_execute_python_project",
-    "duration": 6.11,
+    "duration": 5.91,
     "type": "slow_test"
   },
   {
-    "name": "tests/servers/test_review.py::TestReviewMCPServer::test_run_all",
-    "duration": 1.02,
+    "name": "tests/subservers/review/test_deps.py::TestDepsSubServer::test_summary_includes_mindset",
+    "duration": 5.58,
     "type": "slow_test"
   }
 ]

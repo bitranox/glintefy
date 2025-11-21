@@ -11,8 +11,8 @@ Provide a centralized configuration loader that reads settings from:
 Contents
 --------
 * :func:`get_config` - Load merged configuration
-* :func:`get_section` - Get a specific config section
-* :func:`get_review_config` - Get review sub-server configuration
+* :func:`get_section` - Get a specific config section (cached)
+* :func:`get_review_config` - Get review sub-server configuration (cached)
 * :func:`get_fix_config` - Get fix sub-server configuration
 
 System Role
@@ -23,6 +23,7 @@ details from sub-servers and orchestrators.
 
 from __future__ import annotations
 
+from functools import lru_cache
 from pathlib import Path
 from typing import Any
 

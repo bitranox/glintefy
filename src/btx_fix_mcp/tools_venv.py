@@ -24,6 +24,7 @@ import os
 import shutil
 import subprocess
 import sys
+from functools import lru_cache
 from pathlib import Path
 
 # Module-level state
@@ -46,10 +47,13 @@ DEFAULT_TOOLS = [
 ]
 
 
+@lru_cache(maxsize=1)
 def get_cache_dir() -> Path:
-    """Get the cache directory for btx-fix-mcp.
+    """Get the cache directory for btx-fix-mcp (cached).
 
     Uses XDG_CACHE_HOME if set, otherwise ~/.cache/btx-fix-mcp/
+
+    Returns are cached for performance.
     """
     xdg_cache = os.environ.get("XDG_CACHE_HOME")
     if xdg_cache:
@@ -59,19 +63,24 @@ def get_cache_dir() -> Path:
     return base / "btx-fix-mcp"
 
 
+@lru_cache(maxsize=1)
 def get_venv_path() -> Path:
-    """Get the path to the tools virtual environment."""
+    """Get the path to the tools virtual environment (cached)."""
     return get_cache_dir() / "tools-venv"
 
 
+@lru_cache(maxsize=32)
 def get_tool_path(tool_name: str) -> Path:
-    """Get the full path to a tool executable in the tools venv.
+    """Get the full path to a tool executable in the tools venv (cached).
 
     Args:
         tool_name: Name of the tool (e.g., "ruff", "mypy", "pylint")
 
     Returns:
         Path to the tool executable
+
+    Note:
+        Results are cached for performance as tool paths don't change.
 
     Example:
         >>> ruff = get_tool_path("ruff")

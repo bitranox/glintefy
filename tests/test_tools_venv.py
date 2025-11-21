@@ -20,6 +20,12 @@ from btx_fix_mcp.tools_venv import (
 class TestCacheDir:
     """Tests for cache directory functions."""
 
+    def setup_method(self):
+        """Clear caches before each test."""
+        get_cache_dir.cache_clear()
+        get_venv_path.cache_clear()
+        get_tool_path.cache_clear()
+
     def test_get_cache_dir_default(self):
         """Test default cache directory is under home."""
         with patch.dict("os.environ", {}, clear=True):
@@ -43,6 +49,12 @@ class TestCacheDir:
 class TestToolPath:
     """Tests for tool path functions."""
 
+    def setup_method(self):
+        """Clear caches before each test."""
+        get_cache_dir.cache_clear()
+        get_venv_path.cache_clear()
+        get_tool_path.cache_clear()
+
     def test_get_tool_path_linux(self):
         """Test tool path on Linux/macOS."""
         with patch.object(sys, "platform", "linux"):
@@ -60,6 +72,12 @@ class TestToolPath:
 
 class TestVenvInitialization:
     """Tests for venv initialization detection."""
+
+    def setup_method(self):
+        """Clear caches before each test."""
+        get_cache_dir.cache_clear()
+        get_venv_path.cache_clear()
+        get_tool_path.cache_clear()
 
     def test_is_venv_initialized_no_venv(self, tmp_path):
         """Test returns False when venv doesn't exist."""

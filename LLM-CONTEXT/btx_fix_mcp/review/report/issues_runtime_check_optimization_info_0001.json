@@ -2,12 +2,12 @@
   {
     "type": "runtime_check_optimization",
     "severity": "info",
-    "message": "Function '_format_missing_docstrings_section' has 4 runtime checks that could be module-level constants",
+    "message": "Function '_extract_docstring_item_data' has 4 runtime checks that could be module-level constants",
     "file": "src/btx_fix_mcp/subservers/review/docs.py",
-    "line": 609,
+    "line": 659,
     "value": 4,
     "threshold": 0,
-    "name": "_format_missing_docstrings_section"
+    "name": "_extract_docstring_item_data"
   },
   {
     "type": "runtime_check_optimization",
@@ -64,7 +64,7 @@
     "severity": "info",
     "message": "Function '_analyze_file_for_docstrings' has 2 runtime checks that could be module-level constants",
     "file": "src/btx_fix_mcp/subservers/review/docs.py",
-    "line": 327,
+    "line": 357,
     "value": 2,
     "threshold": 0,
     "name": "_analyze_file_for_docstrings"
@@ -164,7 +164,7 @@
     "severity": "info",
     "message": "Function '_save_missing_docstrings' has 1 runtime checks that could be module-level constants",
     "file": "src/btx_fix_mcp/subservers/review/docs.py",
-    "line": 554,
+    "line": 604,
     "value": 1,
     "threshold": 0,
     "name": "_save_missing_docstrings"
@@ -174,7 +174,7 @@
     "severity": "info",
     "message": "Function '_save_project_docs' has 1 runtime checks that could be module-level constants",
     "file": "src/btx_fix_mcp/subservers/review/docs.py",
-    "line": 564,
+    "line": 614,
     "value": 1,
     "threshold": 0,
     "name": "_save_project_docs"

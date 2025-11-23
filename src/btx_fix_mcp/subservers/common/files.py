@@ -143,62 +143,80 @@ def get_file_extension(file_path: Path) -> str:
     return file_path.suffix.lstrip(".")
 
 
+TEST_KEYWORDS = ["test", "spec", "__tests__", "tests/"]
+DOCS_EXTENSIONS = {".md", ".rst", ".txt", ".adoc"}
+CONFIG_KEYWORDS = ["config", ".json", ".yml", ".yaml", ".toml", ".ini"]
+BUILD_FILES = {"dockerfile", "makefile"}
+BUILD_PATTERNS = {".dockerfile", ".mk"}
+CODE_EXTENSIONS = {
+    ".py", ".js", ".ts", ".jsx", ".tsx", ".java",
+    ".go", ".rs", ".cpp", ".c", ".rb", ".php",
+}
+
+
 def _is_test_file(file_path: Path) -> bool:
     """Check if file is a test file."""
     path_str = str(file_path).lower()
     name = file_path.name.lower()
-    return any(keyword in path_str for keyword in ["test", "spec", "__tests__", "tests/"]) or name.startswith("test_")
+
+    if name.startswith("test_"):
+        return True
+
+    for keyword in TEST_KEYWORDS:
+        if keyword in path_str:
+            return True
+
+    return False
 
 
 def _is_docs_file(file_path: Path) -> bool:
     """Check if file is a documentation file."""
-    return file_path.suffix.lower() in [".md", ".rst", ".txt", ".adoc"]
+    return file_path.suffix.lower() in DOCS_EXTENSIONS
 
 
 def _is_config_file(file_path: Path) -> bool:
     """Check if file is a configuration file."""
     name = file_path.name.lower()
-    return any(keyword in name for keyword in ["config", ".json", ".yml", ".yaml", ".toml", ".ini"])
+
+    for keyword in CONFIG_KEYWORDS:
+        if keyword in name:
+            return True
+
+    return False
 
 
 def _is_build_file(file_path: Path) -> bool:
     """Check if file is a build file."""
     name = file_path.name.lower()
-    return name in ["dockerfile", "makefile"] or ".dockerfile" in name or ".mk" in name
+
+    if name in BUILD_FILES:
+        return True
+
+    for pattern in BUILD_PATTERNS:
+        if pattern in name:
+            return True
+
+    return False
 
 
 def _is_code_file(file_path: Path) -> bool:
     """Check if file is a source code file."""
-    return file_path.suffix.lower() in [
-        ".py",
-        ".js",
-        ".ts",
-        ".jsx",
-        ".tsx",
-        ".java",
-        ".go",
-        ".rs",
-        ".cpp",
-        ".c",
-        ".rb",
-        ".php",
-    ]
+    return file_path.suffix.lower() in CODE_EXTENSIONS
 
 
 def _determine_category(file_path: Path) -> str:
     """Determine the category for a file."""
     if _is_test_file(file_path):
         return "TEST"
-    elif _is_docs_file(file_path):
+    if _is_docs_file(file_path):
         return "DOCS"
-    elif _is_config_file(file_path):
+    if _is_config_file(file_path):
         return "CONFIG"
-    elif _is_build_file(file_path):
+    if _is_build_file(file_path):
         return "BUILD"
-    elif _is_code_file(file_path):
+    if _is_code_file(file_path):
         return "CODE"
-    else:
-        return "OTHER"
+    return "OTHER"
 
 
 def categorize_files(files: list[Path]) -> dict[str, list[Path]]:

@@ -324,16 +324,16 @@
   {
     "file": "src/btx_fix_mcp/subservers/review/docs.py",
     "h1": 13,
-    "h2": 109,
-    "N1": 79,
-    "N2": 143,
-    "vocabulary": 122,
-    "length": 222,
-    "volume": 1538.6236889389609,
-    "difficulty": 8.527522935779816,
-    "effort": 13120.648796961137,
-    "time": 728.9249331645076,
-    "bugs": 0.5128745629796536
+    "h2": 120,
+    "N1": 78,
+    "N2": 139,
+    "vocabulary": 133,
+    "length": 217,
+    "volume": 1530.9962885037583,
+    "difficulty": 7.529166666666667,
+    "effort": 11527.12622219288,
+    "time": 640.3959012329377,
+    "bugs": 0.5103320961679194
   },
   {
     "file": "src/btx_fix_mcp/subservers/review/perf.py",
@@ -548,16 +548,16 @@
   {
     "file": "src/btx_fix_mcp/subservers/review/scope.py",
     "h1": 10,
-    "h2": 32,
-    "N1": 21,
-    "N2": 40,
-    "vocabulary": 42,
-    "length": 61,
-    "volume": 328.9313627895044,
-    "difficulty": 6.25,
-    "effort": 2055.8210174344026,
-    "time": 114.21227874635571,
-    "bugs": 0.10964378759650148
+    "h2": 34,
+    "N1": 23,
+    "N2": 42,
+    "vocabulary": 44,
+    "length": 65,
+    "volume": 354.86305521142435,
+    "difficulty": 6.176470588235294,
+    "effort": 2191.80122336468,
+    "time": 121.76673463137111,
+    "bugs": 0.11828768507047478
   },
   {
     "file": "src/btx_fix_mcp/subservers/review/security.py",

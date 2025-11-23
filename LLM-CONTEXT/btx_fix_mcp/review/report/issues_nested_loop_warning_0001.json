@@ -21,6 +21,15 @@
     "type": "nested_loop",
     "severity": "warning",
     "message": "Nested loop detected",
+    "file": "/media/srv-main-softdev/projects/MCP/btx_fix_mcp/src/btx_fix_mcp/subservers/review/docs.py",
+    "line": 418,
+    "pattern": "for .+ in .+:\\s*for .+ in .+:",
+    "impact": ""
+  },
+  {
+    "type": "nested_loop",
+    "severity": "warning",
+    "message": "Nested loop detected",
     "file": "/media/srv-main-softdev/projects/MCP/btx_fix_mcp/src/btx_fix_mcp/subservers/review/perf.py",
     "line": 237,
     "pattern": "for .+ in .+:\\s*for .+ in .+:",
@@ -49,7 +58,7 @@
     "severity": "warning",
     "message": "Nested loop detected",
     "file": "/media/srv-main-softdev/projects/MCP/btx_fix_mcp/src/btx_fix_mcp/subservers/review/report.py",
-    "line": 484,
+    "line": 493,
     "pattern": "for .+ in .+:\\s*for .+ in .+:",
     "impact": ""
   }

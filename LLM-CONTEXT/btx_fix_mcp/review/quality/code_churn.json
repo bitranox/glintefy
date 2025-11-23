@@ -1,21 +1,21 @@
 {
   "files": [
     {
+      "file": "src/btx_fix_mcp/subservers/review/docs.py",
+      "commits": 9,
+      "authors": 1,
+      "lines_added": 1084,
+      "lines_deleted": 326,
+      "total_changes": 1410,
+      "churn_score": 9
+    },
+    {
       "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",
       "commits": 8,
       "authors": 1,
       "lines_added": 1321,
       "lines_deleted": 1064,
       "total_changes": 2385,
-      "churn_score": 8
-    },
-    {
-      "file": "src/btx_fix_mcp/subservers/review/docs.py",
-      "commits": 8,
-      "authors": 1,
-      "lines_added": 893,
-      "lines_deleted": 194,
-      "total_changes": 1087,
       "churn_score": 8
     },
     {
@@ -35,6 +35,24 @@
       "lines_deleted": 109,
       "total_changes": 787,
       "churn_score": 7
+    },
+    {
+      "file": "src/btx_fix_mcp/subservers/review/scope.py",
+      "commits": 6,
+      "authors": 1,
+      "lines_added": 422,
+      "lines_deleted": 82,
+      "total_changes": 504,
+      "churn_score": 6
+    },
+    {
+      "file": "src/btx_fix_mcp/subservers/review/report.py",
+      "commits": 5,
+      "authors": 1,
+      "lines_added": 632,
+      "lines_deleted": 121,
+      "total_changes": 753,
+      "churn_score": 5
     },
     {
       "file": "src/btx_fix_mcp/subservers/review/quality/results.py",
@@ -109,15 +127,6 @@
       "churn_score": 5
     },
     {
-      "file": "src/btx_fix_mcp/subservers/review/scope.py",
-      "commits": 5,
-      "authors": 1,
-      "lines_added": 352,
-      "lines_deleted": 30,
-      "total_changes": 382,
-      "churn_score": 5
-    },
-    {
       "file": "src/btx_fix_mcp/subservers/review/quality/writer.py",
       "commits": 4,
       "authors": 1,
@@ -187,15 +196,6 @@
       "lines_added": 265,
       "lines_deleted": 86,
       "total_changes": 351,
-      "churn_score": 4
-    },
-    {
-      "file": "src/btx_fix_mcp/subservers/review/report.py",
-      "commits": 4,
-      "authors": 1,
-      "lines_added": 617,
-      "lines_deleted": 115,
-      "total_changes": 732,
       "churn_score": 4
     },
     {
@@ -389,6 +389,6 @@
     }
   ],
   "high_churn_files": [],
-  "total_commits_analyzed": 30,
+  "total_commits_analyzed": 31,
   "analysis_period_days": 90
 }

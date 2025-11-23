@@ -928,7 +928,6 @@ LLM-CONTEXT/btx_fix_mcp/review/report/issues_code_duplication_warning_0001.json
 LLM-CONTEXT/btx_fix_mcp/review/report/issues_docstring_style_mismatch_info_0001.json
 LLM-CONTEXT/btx_fix_mcp/review/report/issues_god_object_error_0001.json
 LLM-CONTEXT/btx_fix_mcp/review/report/issues_high_cognitive_complexity_warning_0001.json
-LLM-CONTEXT/btx_fix_mcp/review/report/issues_high_complexity_error_0001.json
 LLM-CONTEXT/btx_fix_mcp/review/report/issues_high_complexity_warning_0001.json
 LLM-CONTEXT/btx_fix_mcp/review/report/issues_high_coupling_warning_0001.json
 LLM-CONTEXT/btx_fix_mcp/review/report/issues_low_docstring_coverage_warning_0001.json
@@ -943,7 +942,6 @@ LLM-CONTEXT/btx_fix_mcp/review/report/issues_range_len_warning_0001.json
 LLM-CONTEXT/btx_fix_mcp/review/report/issues_runtime_check_optimization_info_0001.json
 LLM-CONTEXT/btx_fix_mcp/review/report/issues_runtime_type_error_error_0001.json
 LLM-CONTEXT/btx_fix_mcp/review/report/issues_too_long_warning_0001.json
-LLM-CONTEXT/btx_fix_mcp/review/report/issues_too_nested_error_0001.json
 LLM-CONTEXT/btx_fix_mcp/review/report/issues_too_nested_warning_0001.json
 LLM-CONTEXT/btx_fix_mcp/review/report/issues_unknown_info_0001.json
 LLM-CONTEXT/btx_fix_mcp/review/report/issues_unknown_info_0002.json

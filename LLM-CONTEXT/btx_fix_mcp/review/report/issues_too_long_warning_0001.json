@@ -2,16 +2,6 @@
   {
     "type": "too_long",
     "severity": "warning",
-    "message": "Function '_check_project_docs' is 88 lines (max: 50)",
-    "file": "src/btx_fix_mcp/subservers/review/docs.py",
-    "line": 430,
-    "value": 88,
-    "threshold": 50,
-    "name": "_check_project_docs"
-  },
-  {
-    "type": "too_long",
-    "severity": "warning",
     "message": "Function 'execute' is 84 lines (max: 50)",
     "file": "src/btx_fix_mcp/subservers/review/security.py",
     "line": 230,
@@ -62,42 +52,12 @@
   {
     "type": "too_long",
     "severity": "warning",
-    "message": "Function '_validate_docstring_style' is 72 lines (max: 50)",
-    "file": "src/btx_fix_mcp/subservers/review/docs.py",
-    "line": 356,
-    "value": 72,
-    "threshold": 50,
-    "name": "_validate_docstring_style"
-  },
-  {
-    "type": "too_long",
-    "severity": "warning",
-    "message": "Function '__init__' is 68 lines (max: 50)",
-    "file": "src/btx_fix_mcp/subservers/review/docs.py",
-    "line": 57,
-    "value": 68,
-    "threshold": 50,
-    "name": "__init__"
-  },
-  {
-    "type": "too_long",
-    "severity": "warning",
     "message": "Function 'execute' is 68 lines (max: 50)",
     "file": "src/btx_fix_mcp/subservers/review/scope.py",
     "line": 118,
     "value": 68,
     "threshold": 50,
     "name": "execute"
-  },
-  {
-    "type": "too_long",
-    "severity": "warning",
-    "message": "Function '_generate_summary' is 68 lines (max: 50)",
-    "file": "src/btx_fix_mcp/subservers/review/scope.py",
-    "line": 254,
-    "value": 68,
-    "threshold": 50,
-    "name": "_generate_summary"
   },
   {
     "type": "too_long",
@@ -194,7 +154,7 @@
     "severity": "warning",
     "message": "Function 'execute' is 53 lines (max: 50)",
     "file": "src/btx_fix_mcp/subservers/review/docs.py",
-    "line": 177,
+    "line": 207,
     "value": 53,
     "threshold": 50,
     "name": "execute"

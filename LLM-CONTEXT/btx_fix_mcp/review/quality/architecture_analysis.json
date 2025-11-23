@@ -13,8 +13,8 @@
       "file": "src/btx_fix_mcp/subservers/review/docs.py",
       "class": "DocsSubServer",
       "line": 44,
-      "methods": 27,
-      "lines": 655,
+      "methods": 42,
+      "lines": 714,
       "methods_threshold": 20,
       "lines_threshold": 500
     },

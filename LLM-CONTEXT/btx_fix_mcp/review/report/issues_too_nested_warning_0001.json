@@ -44,7 +44,7 @@
     "severity": "warning",
     "message": "Function '_check_docstring_coverage' has nesting depth 5 (max: 3)",
     "file": "src/btx_fix_mcp/subservers/review/docs.py",
-    "line": 243,
+    "line": 273,
     "value": 5,
     "threshold": 3,
     "name": "_check_docstring_coverage"
@@ -84,7 +84,7 @@
     "severity": "warning",
     "message": "Function '_analyze_file_for_docstrings' has nesting depth 4 (max: 3)",
     "file": "src/btx_fix_mcp/subservers/review/docs.py",
-    "line": 327,
+    "line": 357,
     "value": 4,
     "threshold": 3,
     "name": "_analyze_file_for_docstrings"

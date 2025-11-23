@@ -223,47 +223,53 @@ class PerfSubServer(BaseSubServer):
         python_files = [f for f in all_files if f.endswith(".py") and f]
         return [str(self.repo_path / f) for f in python_files]
 
-    def _detect_patterns(self, files: list[str]) -> list[PerformanceIssue]:
-        """Detect performance anti-patterns in code."""
+    def _find_pattern_matches(self, content: str, file_path: str, issues: list[PerformanceIssue]) -> None:
+        """Find all expensive pattern matches in content."""
         import re
 
+        for pattern, issue_type, message in self.EXPENSIVE_PATTERNS:
+            for match in re.finditer(pattern, content):
+                line_num = content[: match.start()].count("\n") + 1
+                issues.append(
+                    PerformanceIssue(
+                        type=issue_type,
+                        severity="warning",
+                        file=file_path,
+                        line=line_num,
+                        message=message,
+                        pattern=pattern,
+                    )
+                )
+
+    def _find_range_len_patterns(self, lines: list[str], file_path: str, issues: list[PerformanceIssue]) -> None:
+        """Find range(len()) anti-patterns in code."""
+        for i, line in enumerate(lines, 1):
+            if "for " in line and "range(len(" in line:
+                issues.append(
+                    PerformanceIssue(
+                        type="range_len",
+                        severity="warning",
+                        file=file_path,
+                        line=i,
+                        message="Using range(len()) - consider enumerate() or direct iteration",
+                    )
+                )
+
+    def _analyze_file_for_patterns(self, file_path: str, issues: list[PerformanceIssue]) -> None:
+        """Analyze a single file for performance patterns."""
+        try:
+            content = Path(file_path).read_text()
+            lines = content.split("\n")
+            self._find_pattern_matches(content, file_path, issues)
+            self._find_range_len_patterns(lines, file_path, issues)
+        except Exception as e:
+            self.logger.warning(f"Error analyzing {file_path}: {e}")
+
+    def _detect_patterns(self, files: list[str]) -> list[PerformanceIssue]:
+        """Detect performance anti-patterns in code."""
         issues: list[PerformanceIssue] = []
-
         for file_path in files:
-            try:
-                content = Path(file_path).read_text()
-                lines = content.split("\n")
-
-                for pattern, issue_type, message in self.EXPENSIVE_PATTERNS:
-                    for match in re.finditer(pattern, content):
-                        line_num = content[: match.start()].count("\n") + 1
-                        issues.append(
-                            PerformanceIssue(
-                                type=issue_type,
-                                severity="warning",
-                                file=file_path,
-                                line=line_num,
-                                message=message,
-                                pattern=pattern,
-                            )
-                        )
-
-                # Check for O(n²) patterns
-                for i, line in enumerate(lines, 1):
-                    if "for " in line and "range(len(" in line:
-                        issues.append(
-                            PerformanceIssue(
-                                type="range_len",
-                                severity="warning",
-                                file=file_path,
-                                line=i,
-                                message="Using range(len()) - consider enumerate() or direct iteration",
-                            )
-                        )
-
-            except Exception as e:
-                self.logger.warning(f"Error analyzing {file_path}: {e}")
-
+            self._analyze_file_for_patterns(file_path, issues)
         return issues
 
     def _run_pytest_with_profiling(self) -> subprocess.CompletedProcess | None:
@@ -299,22 +305,32 @@ class PerfSubServer(BaseSubServer):
         except ValueError:
             return None
 
+    def _is_test_timing_line(self, line: str) -> bool:
+        """Check if line contains test timing information."""
+        return "s call" in line or "s setup" in line
+
+    def _create_slowtest_hotspot(self, duration: float, test_name: str) -> dict[str, Any]:
+        """Create hotspot entry for slow test."""
+        return {
+            "name": test_name,
+            "duration": duration,
+            "type": "slow_test",
+        }
+
     def _extract_slow_tests(self, output: str) -> list[dict[str, Any]]:
         """Extract slow tests from pytest output."""
         hotspots = []
         for line in output.split("\n"):
-            if "s call" in line or "s setup" in line:
-                parsed = self._parse_test_duration(line)
-                if parsed:
-                    duration, test_name = parsed
-                    if duration > 1.0:  # Tests taking > 1 second
-                        hotspots.append(
-                            {
-                                "name": test_name,
-                                "duration": duration,
-                                "type": "slow_test",
-                            }
-                        )
+            if not self._is_test_timing_line(line):
+                continue
+
+            parsed = self._parse_test_duration(line)
+            if not parsed:
+                continue
+
+            duration, test_name = parsed
+            if duration > 1.0:  # Tests taking > 1 second
+                hotspots.append(self._create_slowtest_hotspot(duration, test_name))
         return hotspots
 
     def _profile_tests(self) -> dict[str, Any]:
@@ -334,6 +350,52 @@ class PerfSubServer(BaseSubServer):
         results["hotspots"] = self._extract_slow_tests(result.stdout)
         return results
 
+    def _should_analyze_file_for_nesting(self, content: str) -> bool:
+        """Check if file has enough loops to warrant nesting analysis."""
+        return content.count("for ") >= self.nested_loop_threshold
+
+    def _is_loop_line(self, stripped_line: str) -> bool:
+        """Check if line starts a loop."""
+        return stripped_line.startswith("for ") or stripped_line.startswith("while ")
+
+    def _update_indent_stack(self, indent_stack: list[tuple[int, int]], current_indent: int) -> None:
+        """Remove loops at same or lower indentation from stack."""
+        while indent_stack and current_indent <= indent_stack[-1][0]:
+            indent_stack.pop()
+
+    def _create_nesting_issue(self, file_path: str, line_num: int, nesting_depth: int) -> PerformanceIssue:
+        """Create performance issue for excessive loop nesting."""
+        complexity = f"O(n^{nesting_depth})"
+        return PerformanceIssue(
+            type="nested_iteration",
+            severity="warning",
+            file=file_path,
+            line=line_num,
+            message=f"Nested iteration depth {nesting_depth} detected - potential {complexity} complexity (threshold: {self.nested_loop_threshold})",
+        )
+
+    def _analyze_file_for_nested_loops(self, file_path: str, content: str, issues: list[PerformanceIssue]) -> None:
+        """Analyze a single file for nested loop patterns."""
+        if not self._should_analyze_file_for_nesting(content):
+            return
+
+        lines = content.split("\n")
+        indent_stack: list[tuple[int, int]] = []  # [(indent_level, line_number)]
+
+        for i, line in enumerate(lines, 1):
+            stripped = line.lstrip()
+            if not self._is_loop_line(stripped):
+                continue
+
+            current_indent = len(line) - len(stripped)
+            self._update_indent_stack(indent_stack, current_indent)
+
+            nesting_depth = len(indent_stack) + 1
+            if nesting_depth >= self.nested_loop_threshold:
+                issues.append(self._create_nesting_issue(file_path, i, nesting_depth))
+
+            indent_stack.append((current_indent, i))
+
     def _analyze_complexity(self, files: list[str]) -> list[PerformanceIssue]:
         """Analyze algorithmic complexity patterns.
 
@@ -347,40 +409,7 @@ class PerfSubServer(BaseSubServer):
         for file_path in files:
             try:
                 content = Path(file_path).read_text()
-
-                # Check for potential O(n²) or worse patterns
-                if content.count("for ") >= self.nested_loop_threshold:
-                    # Nested loops indicator
-                    lines = content.split("\n")
-                    indent_stack: list[tuple[int, int]] = []  # [(indent_level, line_number)]
-
-                    for i, line in enumerate(lines, 1):
-                        stripped = line.lstrip()
-                        if stripped.startswith("for ") or stripped.startswith("while "):
-                            current_indent = len(line) - len(stripped)
-
-                            # Remove loops at same or lower indentation from stack
-                            while indent_stack and current_indent <= indent_stack[-1][0]:
-                                indent_stack.pop()
-
-                            # Track nesting depth
-                            nesting_depth = len(indent_stack) + 1
-
-                            # Warn if nesting exceeds threshold
-                            if nesting_depth >= self.nested_loop_threshold:
-                                complexity = "O(n^{})".format(nesting_depth)
-                                issues.append(
-                                    PerformanceIssue(
-                                        type="nested_iteration",
-                                        severity="warning",
-                                        file=file_path,
-                                        line=i,
-                                        message=f"Nested iteration depth {nesting_depth} detected - potential {complexity} complexity (threshold: {self.nested_loop_threshold})",
-                                    )
-                                )
-
-                            indent_stack.append((current_indent, i))
-
+                self._analyze_file_for_nested_loops(file_path, content, issues)
             except Exception as e:
                 self.logger.warning(f"Error analyzing complexity in {file_path}: {e}")
 

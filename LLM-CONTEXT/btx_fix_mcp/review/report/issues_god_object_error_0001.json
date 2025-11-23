@@ -12,10 +12,10 @@
   {
     "type": "god_object",
     "severity": "error",
-    "message": "Class 'DocsSubServer' is a god object (27 methods, 655 lines)",
+    "message": "Class 'DocsSubServer' is a god object (42 methods, 714 lines)",
     "file": "src/btx_fix_mcp/subservers/review/docs.py",
     "line": 44,
-    "value": "27 methods, 655 lines",
+    "value": "42 methods, 714 lines",
     "threshold": 0,
     "name": "DocsSubServer"
   },

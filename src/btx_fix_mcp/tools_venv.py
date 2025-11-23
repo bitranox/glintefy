@@ -295,6 +295,22 @@ def run_tool(tool_name: str, args: list[str], **subprocess_kwargs) -> subprocess
     return subprocess.run([str(tool_path)] + args, **subprocess_kwargs)
 
 
+def _extract_version_from_output(output: str) -> str:
+    """Extract version number from tool version output.
+
+    Args:
+        output: Version command output
+
+    Returns:
+        Version string (either extracted number or full output)
+    """
+    parts = output.split()
+    for part in parts:
+        if part and part[0].isdigit():
+            return part
+    return output
+
+
 def get_tool_version(tool_name: str) -> str | None:
     """Get the version of a tool in the tools venv.
 
@@ -307,14 +323,8 @@ def get_tool_version(tool_name: str) -> str | None:
     try:
         result = run_tool(tool_name, ["--version"], capture_output=True, text=True, timeout=10)
         if result.returncode == 0:
-            # Most tools output "toolname X.Y.Z" or just "X.Y.Z"
             output = result.stdout.strip()
-            # Try to extract version number
-            parts = output.split()
-            for part in parts:
-                if part[0].isdigit():
-                    return part
-            return output
+            return _extract_version_from_output(output)
     except Exception:
         pass
     return None

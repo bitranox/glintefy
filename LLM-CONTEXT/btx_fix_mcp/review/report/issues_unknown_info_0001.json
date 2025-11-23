@@ -746,7 +746,7 @@
     "relative_file": "src/btx_fix_mcp/subservers/review/docs.py"
   },
   {
-    "code": "249             timeout = get_timeout(\"tool_analysis\", 60, start_dir=str(self.repo_path))\n250             result = subprocess.run(\n251                 [str(python_path), \"-m\", \"interrogate\", \"-v\", str(self.repo_path / \"src\")],\n252                 capture_output=True,\n253                 text=True,\n254                 timeout=timeout,\n255             )\n256 \n",
+    "code": "279             timeout = get_timeout(\"tool_analysis\", 60, start_dir=str(self.repo_path))\n280             result = subprocess.run(\n281                 [str(python_path), \"-m\", \"interrogate\", \"-v\", str(self.repo_path / \"src\")],\n282                 capture_output=True,\n283                 text=True,\n284                 timeout=timeout,\n285             )\n286 \n",
     "col_offset": 21,
     "end_col_offset": 13,
     "filename": "/media/srv-main-softdev/projects/MCP/btx_fix_mcp/src/btx_fix_mcp/subservers/review/docs.py",
@@ -757,14 +757,14 @@
     },
     "issue_severity": "LOW",
     "issue_text": "subprocess call - check for execution of untrusted input.",
-    "line_number": 250,
+    "line_number": 280,
     "line_range": [
-      250,
-      251,
-      252,
-      253,
-      254,
-      255
+      280,
+      281,
+      282,
+      283,
+      284,
+      285
     ],
     "more_info": "https://bandit.readthedocs.io/en/1.9.1/plugins/b603_subprocess_without_shell_equals_true.html",
     "test_id": "B603",

@@ -270,6 +270,38 @@ class DocsSubServer(BaseSubServer):
         python_files = [f for f in all_files if f.endswith(".py") and f]
         return [str(self.repo_path / f) for f in python_files]
 
+    def _parse_coverage_percentage(self, line: str) -> float | None:
+        """Extract coverage percentage from interrogate TOTAL line."""
+        import re
+
+        match = re.search(r"(\d+\.?\d*)%", line)
+        if match:
+            return float(match.group(1))
+        return None
+
+    def _parse_missing_count(self, line: str) -> int | None:
+        """Extract missing count from interrogate output."""
+        import re
+
+        match = re.search(r"(\d+)", line)
+        if match:
+            return int(match.group(1))
+        return None
+
+    def _parse_interrogate_output(self, output: str, coverage: dict[str, Any]) -> None:
+        """Parse interrogate output to extract coverage metrics."""
+        for line in output.split("\n"):
+            if "TOTAL" in line and "%" in line:
+                percentage = self._parse_coverage_percentage(line)
+                if percentage is not None:
+                    coverage["coverage_percent"] = percentage
+            elif "missing" in line.lower():
+                missing = self._parse_missing_count(line)
+                if missing is not None:
+                    coverage["missing"] = missing
+
+        coverage["raw_output"] = output
+
     def _check_docstring_coverage(self) -> dict[str, Any]:
         """Check docstring coverage using interrogate."""
         coverage = {"coverage_percent": 0, "missing": 0, "total": 0}
@@ -283,22 +315,7 @@ class DocsSubServer(BaseSubServer):
                 text=True,
                 timeout=timeout,
             )
-
-            # Parse interrogate output
-            for line in result.stdout.split("\n"):
-                if "TOTAL" in line and "%" in line:
-                    # Extract percentage
-                    import re
-
-                    match = re.search(r"(\d+\.?\d*)%", line)
-                    if match:
-                        coverage["coverage_percent"] = float(match.group(1))
-                elif "missing" in line.lower():
-                    match = re.search(r"(\d+)", line)
-                    if match:
-                        coverage["missing"] = int(match.group(1))
-
-            coverage["raw_output"] = result.stdout
+            self._parse_interrogate_output(result.stdout, coverage)
 
         except FileNotFoundError:
             self.logger.info("interrogate not available")
@@ -354,6 +371,15 @@ class DocsSubServer(BaseSubServer):
             if style_issue:
                 issues.append(style_issue)
 
+    def _process_ast_node(self, node: object, file_path: str, issues: list[DocstringIssue]) -> None:
+        """Process a single AST node for docstring checks."""
+        import ast
+
+        if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
+            self._check_function_docstring(node, file_path, issues)
+        elif isinstance(node, ast.ClassDef):
+            self._check_class_docstring(node, file_path, issues)
+
     def _analyze_file_for_docstrings(self, file_path: str) -> list[DocstringIssue]:
         """Analyze a single file for missing docstrings."""
         import ast
@@ -364,10 +390,7 @@ class DocsSubServer(BaseSubServer):
             tree = ast.parse(content)
 
             for node in ast.walk(tree):
-                if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
-                    self._check_function_docstring(node, file_path, issues)
-                elif isinstance(node, ast.ClassDef):
-                    self._check_class_docstring(node, file_path, issues)
+                self._process_ast_node(node, file_path, issues)
 
         except SyntaxError:
             self.logger.warning(f"Syntax error in {file_path}")

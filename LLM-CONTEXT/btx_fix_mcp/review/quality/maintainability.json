@@ -116,8 +116,8 @@
   },
   {
     "file": "src/btx_fix_mcp/subservers/review/docs.py",
-    "mi": 23.125838628981978,
-    "rank": "A"
+    "mi": 18.367572667381697,
+    "rank": "B"
   },
   {
     "file": "src/btx_fix_mcp/subservers/review/perf.py",
@@ -191,12 +191,12 @@
   },
   {
     "file": "src/btx_fix_mcp/subservers/review/report.py",
-    "mi": 36.41748211142709,
+    "mi": 35.79559759769342,
     "rank": "A"
   },
   {
     "file": "src/btx_fix_mcp/subservers/review/scope.py",
-    "mi": 60.863423780469745,
+    "mi": 58.17378798834323,
     "rank": "A"
   },
   {

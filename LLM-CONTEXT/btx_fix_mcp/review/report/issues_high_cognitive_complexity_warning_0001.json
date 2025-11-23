@@ -12,16 +12,6 @@
   {
     "type": "high_cognitive_complexity",
     "severity": "warning",
-    "message": "Function '_check_project_docs' has cognitive complexity 18 (threshold: 15)",
-    "file": "src/btx_fix_mcp/subservers/review/docs.py",
-    "line": 430,
-    "value": 18,
-    "threshold": 15,
-    "name": "_check_project_docs"
-  },
-  {
-    "type": "high_cognitive_complexity",
-    "severity": "warning",
     "message": "Function 'check_outdated_packages' has cognitive complexity 17 (threshold: 15)",
     "file": "src/btx_fix_mcp/subservers/review/deps_scanners.py",
     "line": 164,
@@ -44,7 +34,7 @@
     "severity": "warning",
     "message": "Function '_check_docstring_coverage' has cognitive complexity 16 (threshold: 15)",
     "file": "src/btx_fix_mcp/subservers/review/docs.py",
-    "line": 243,
+    "line": 273,
     "value": 16,
     "threshold": 15,
     "name": "_check_docstring_coverage"

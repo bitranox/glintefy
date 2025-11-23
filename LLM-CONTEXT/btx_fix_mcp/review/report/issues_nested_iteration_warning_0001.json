@@ -130,7 +130,7 @@
     "severity": "warning",
     "message": "Nested iteration depth 2 detected - potential O(n^2) complexity (threshold: 2)",
     "file": "/media/srv-main-softdev/projects/MCP/btx_fix_mcp/src/btx_fix_mcp/subservers/review/docs.py",
-    "line": 477,
+    "line": 419,
     "pattern": "",
     "impact": ""
   },
@@ -139,7 +139,7 @@
     "severity": "warning",
     "message": "Nested iteration depth 2 detected - potential O(n^2) complexity (threshold: 2)",
     "file": "/media/srv-main-softdev/projects/MCP/btx_fix_mcp/src/btx_fix_mcp/subservers/review/docs.py",
-    "line": 533,
+    "line": 583,
     "pattern": "",
     "impact": ""
   },
@@ -148,7 +148,7 @@
     "severity": "warning",
     "message": "Nested iteration depth 2 detected - potential O(n^2) complexity (threshold: 2)",
     "file": "/media/srv-main-softdev/projects/MCP/btx_fix_mcp/src/btx_fix_mcp/subservers/review/docs.py",
-    "line": 679,
+    "line": 738,
     "pattern": "",
     "impact": ""
   },
@@ -319,16 +319,7 @@
     "severity": "warning",
     "message": "Nested iteration depth 2 detected - potential O(n^2) complexity (threshold: 2)",
     "file": "/media/srv-main-softdev/projects/MCP/btx_fix_mcp/src/btx_fix_mcp/subservers/review/report.py",
-    "line": 485,
-    "pattern": "",
-    "impact": ""
-  },
-  {
-    "type": "nested_iteration",
-    "severity": "warning",
-    "message": "Nested iteration depth 2 detected - potential O(n^2) complexity (threshold: 2)",
-    "file": "/media/srv-main-softdev/projects/MCP/btx_fix_mcp/src/btx_fix_mcp/subservers/review/scope.py",
-    "line": 300,
+    "line": 494,
     "pattern": "",
     "impact": ""
   },

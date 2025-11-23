@@ -12,30 +12,30 @@
 **❌ REJECTED**
 
 - Critical issues: 6 (14.0%)
-- Warnings: 74 (172.1%)
+- Warnings: 66 (153.5%)
 - Total items analyzed: 43
 
 ## Overview
 
 **Files Analyzed**: 43 (43 Python, 0 JS/TS)
-**Functions Analyzed**: 481
-**Total Issues Found**: 107
+**Functions Analyzed**: 503
+**Total Issues Found**: 99
 **Critical Issues**: 6
 
 ## Code Metrics
 
-- Total LOC: **11,211**
-- Source LOC (SLOC): **6,833**
-- Comments: **342**
-- Comment Ratio: **5.0%**
+- Total LOC: **11,297**
+- Source LOC (SLOC): **6,888**
+- Comments: **331**
+- Comment Ratio: **4.8%**
 
 ## Quality Issues Summary
 
-- Functions >50 lines: **21**
-- High cyclomatic complexity (>10): **6**
-- High cognitive complexity (>15): **5**
+- Functions >50 lines: **17**
+- High cyclomatic complexity (>10): **0**
+- High cognitive complexity (>15): **4**
 - Functions with nesting >3: **12**
-- Code duplication blocks: **28**
+- Code duplication blocks: **30**
 - God objects: **5**
 - Highly coupled modules: **0**
 - Import cycles: **0**
@@ -63,7 +63,7 @@
 ## Critical Issues (Must Fix)
 
 - 🔴 `src/btx_fix_mcp/subservers/review/deps.py`: Class 'DepsSubServer' is a god object (27 methods, 623 lines)
-- 🔴 `src/btx_fix_mcp/subservers/review/docs.py`: Class 'DocsSubServer' is a god object (27 methods, 655 lines)
+- 🔴 `src/btx_fix_mcp/subservers/review/docs.py`: Class 'DocsSubServer' is a god object (42 methods, 714 lines)
 - 🔴 `src/btx_fix_mcp/subservers/review/perf.py`: Class 'PerfSubServer' is a god object (19 methods, 526 lines)
 - 🔴 `src/btx_fix_mcp/subservers/review/quality/architecture.py`: Class 'ArchitectureAnalyzer' is a god object (22 methods, 303 lines)
 - 🔴 `src/btx_fix_mcp/subservers/review/security.py`: Class 'SecuritySubServer' is a god object (25 methods, 606 lines)
@@ -71,13 +71,12 @@
 
 ## Refactoring Recommendations
 
-1. **Break Down Long Functions**: 21 functions exceed 50 lines
-2. **Reduce Cyclomatic Complexity**: 6 functions exceed threshold
-3. **Reduce Cognitive Complexity**: 5 functions are too complex
-4. **Extract Duplicated Code**: 28 duplicate blocks found
-5. **Refactor God Objects**: 5 classes need decomposition
-6. **Add Type Annotations**: Coverage is 0%
-7. **Add Docstrings**: Coverage is 0.0%
+1. **Break Down Long Functions**: 17 functions exceed 50 lines
+2. **Reduce Cognitive Complexity**: 4 functions are too complex
+3. **Extract Duplicated Code**: 30 duplicate blocks found
+4. **Refactor God Objects**: 5 classes need decomposition
+5. **Add Type Annotations**: Coverage is 0%
+6. **Add Docstrings**: Coverage is 0.0%
 
 ## Approval Status
 

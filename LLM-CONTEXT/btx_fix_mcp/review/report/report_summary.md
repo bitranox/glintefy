@@ -1,6 +1,6 @@
 # Code Review Report
 
-**Generated**: 2025-11-23T18:08:52.517553
+**Generated**: 2025-11-23T18:31:05.111359
 
 ---
 
@@ -34,11 +34,11 @@
 **Status**: `SUCCESS`
 
 **Key Metrics:**
-- total_files: 4794
+- total_files: 4886
 - code_files: 43
 - test_files: 63
 - doc_files: 60
-- config_files: 961
+- config_files: 959
 - ... and 1 more metrics
 
 ### ⚠️ Quality
@@ -49,8 +49,8 @@
 - files_analyzed: 43
 - python_files: 43
 - js_files: 0
-- total_functions: 481
-- high_complexity_count: 6
+- total_functions: 503
+- high_complexity_count: 0
 - ... and 17 more metrics
 
 **Issues**: 184 (2 critical, 134 warnings)
@@ -99,7 +99,7 @@
 
 **Key Metrics:**
 - files_analyzed: 43
-- patterns_found: 7
+- patterns_found: 8
 - hotspots_found: 4
 - total_issues: 49
 

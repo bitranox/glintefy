@@ -127,17 +127,8 @@
   },
   {
     "file": "src/btx_fix_mcp/subservers/review/docs.py",
-    "function": "__init__",
-    "line": 57,
-    "issue_type": "TOO_LONG",
-    "value": 68,
-    "threshold": 50,
-    "message": "Function '__init__' is 68 lines (max: 50)"
-  },
-  {
-    "file": "src/btx_fix_mcp/subservers/review/docs.py",
     "function": "execute",
-    "line": 177,
+    "line": 207,
     "issue_type": "TOO_LONG",
     "value": 53,
     "threshold": 50,
@@ -146,7 +137,7 @@
   {
     "file": "src/btx_fix_mcp/subservers/review/docs.py",
     "function": "_check_docstring_coverage",
-    "line": 243,
+    "line": 273,
     "issue_type": "TOO_NESTED",
     "value": 5,
     "threshold": 3,
@@ -155,29 +146,11 @@
   {
     "file": "src/btx_fix_mcp/subservers/review/docs.py",
     "function": "_analyze_file_for_docstrings",
-    "line": 327,
+    "line": 357,
     "issue_type": "TOO_NESTED",
     "value": 4,
     "threshold": 3,
     "message": "Function '_analyze_file_for_docstrings' has nesting depth 4 (max: 3)"
-  },
-  {
-    "file": "src/btx_fix_mcp/subservers/review/docs.py",
-    "function": "_validate_docstring_style",
-    "line": 356,
-    "issue_type": "TOO_LONG",
-    "value": 72,
-    "threshold": 50,
-    "message": "Function '_validate_docstring_style' is 72 lines (max: 50)"
-  },
-  {
-    "file": "src/btx_fix_mcp/subservers/review/docs.py",
-    "function": "_check_project_docs",
-    "line": 430,
-    "issue_type": "TOO_LONG",
-    "value": 88,
-    "threshold": 50,
-    "message": "Function '_check_project_docs' is 88 lines (max: 50)"
   },
   {
     "file": "src/btx_fix_mcp/subservers/review/perf.py",
@@ -250,15 +223,6 @@
     "value": 68,
     "threshold": 50,
     "message": "Function 'execute' is 68 lines (max: 50)"
-  },
-  {
-    "file": "src/btx_fix_mcp/subservers/review/scope.py",
-    "function": "_generate_summary",
-    "line": 254,
-    "issue_type": "TOO_LONG",
-    "value": 68,
-    "threshold": 50,
-    "message": "Function '_generate_summary' is 68 lines (max: 50)"
   },
   {
     "file": "src/btx_fix_mcp/subservers/review/security.py",

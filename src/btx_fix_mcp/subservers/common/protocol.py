@@ -23,6 +23,42 @@ class IntegrationProtocol:
     VALID_STATUSES = {"SUCCESS", "FAILED", "IN_PROGRESS", "PARTIAL"}
 
     @staticmethod
+    def _validate_status_file(status_file: Path, violations: list[str]) -> None:
+        """Validate status.txt file exists and has valid status."""
+        if not status_file.exists():
+            violations.append("Missing required file: status.txt")
+            return
+
+        try:
+            status = status_file.read_text().strip()
+            if status not in IntegrationProtocol.VALID_STATUSES:
+                violations.append(f"Invalid status '{status}'. Must be one of: {', '.join(IntegrationProtocol.VALID_STATUSES)}")
+        except Exception as e:
+            violations.append(f"Cannot read status.txt: {e}")
+
+    @staticmethod
+    def _validate_summary_file(summary_file: Path, subagent_name: str, violations: list[str]) -> None:
+        """Validate summary.md file exists and is valid markdown."""
+        if not summary_file.exists():
+            violations.append(f"Missing required file: {subagent_name}_summary.md")
+            return
+
+        try:
+            content = summary_file.read_text().strip()
+            if not content:
+                violations.append(f"{subagent_name}_summary.md is empty")
+            elif not content.startswith("#"):
+                violations.append(f"{subagent_name}_summary.md should start with markdown heading (#)")
+        except Exception as e:
+            violations.append(f"Cannot read {subagent_name}_summary.md: {e}")
+
+    @staticmethod
+    def _validate_result_file(result_file: Path, require_result_json: bool, violations: list[str]) -> None:
+        """Validate result.json file exists if required."""
+        if require_result_json and not result_file.exists():
+            violations.append("Missing required file: result.json")
+
+    @staticmethod
     def validate_outputs(
         output_dir: Path,
         subagent_name: str,
@@ -51,38 +87,9 @@ class IntegrationProtocol:
         """
         violations = []
 
-        # Check status.txt
-        status_file = output_dir / "status.txt"
-        if not status_file.exists():
-            violations.append("Missing required file: status.txt")
-        else:
-            # Validate status content
-            try:
-                status = status_file.read_text().strip()
-                if status not in IntegrationProtocol.VALID_STATUSES:
-                    violations.append(f"Invalid status '{status}'. Must be one of: {', '.join(IntegrationProtocol.VALID_STATUSES)}")
-            except Exception as e:
-                violations.append(f"Cannot read status.txt: {e}")
-
-        # Check summary.md
-        summary_file = output_dir / f"{subagent_name}_summary.md"
-        if not summary_file.exists():
-            violations.append(f"Missing required file: {subagent_name}_summary.md")
-        else:
-            # Validate summary is markdown (starts with #)
-            try:
-                content = summary_file.read_text().strip()
-                if not content:
-                    violations.append(f"{subagent_name}_summary.md is empty")
-                elif not content.startswith("#"):
-                    violations.append(f"{subagent_name}_summary.md should start with markdown heading (#)")
-            except Exception as e:
-                violations.append(f"Cannot read {subagent_name}_summary.md: {e}")
-
-        # Check result.json (optional unless required)
-        result_file = output_dir / "result.json"
-        if require_result_json and not result_file.exists():
-            violations.append("Missing required file: result.json")
+        IntegrationProtocol._validate_status_file(output_dir / "status.txt", violations)
+        IntegrationProtocol._validate_summary_file(output_dir / f"{subagent_name}_summary.md", subagent_name, violations)
+        IntegrationProtocol._validate_result_file(output_dir / "result.json", require_result_json, violations)
 
         return len(violations) == 0, violations
 

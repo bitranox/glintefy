@@ -2,10 +2,10 @@
   {
     "type": "low_maintainability",
     "severity": "warning",
-    "message": "File has maintainability index 17.2 (threshold: 20)",
-    "file": "scripts/menu.py",
+    "message": "File has maintainability index 18.4 (threshold: 20)",
+    "file": "src/btx_fix_mcp/subservers/review/docs.py",
     "line": 0,
-    "value": 17.22511363268717,
+    "value": 18.367572667381697,
     "threshold": 20,
     "name": ""
   }

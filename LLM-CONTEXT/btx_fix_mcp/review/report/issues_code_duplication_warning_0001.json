@@ -135,6 +135,20 @@
   {
     "type": "code_duplication",
     "severity": "warning",
+    "message": "\"\"\"Apply threshold parameter overrides.\"\"\" (duplicate-code)",
+    "file": "",
+    "line": 0
+  },
+  {
+    "type": "code_duplication",
+    "severity": "warning",
+    "message": "src/btx_fix_mcp/tools_venv.py:1:0: R0801: Similar lines in 2 files",
+    "file": "",
+    "line": 0
+  },
+  {
+    "type": "code_duplication",
+    "severity": "warning",
     "message": "(duplicate-code)",
     "file": "",
     "line": 0

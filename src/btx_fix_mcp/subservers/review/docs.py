@@ -137,12 +137,48 @@ class DocsSubServer(BaseSubServer):
 
         return len(missing) == 0, missing
 
+    def _run_docstring_coverage_check(self, results: dict, all_issues: list) -> None:
+        """Run docstring coverage analysis."""
+        log_step(self.logger, 2, "Checking docstring coverage")
+        with LogContext(self.logger, "Docstring coverage"):
+            coverage = self._check_docstring_coverage()
+            results["docstring_coverage"] = coverage
+            if coverage.get("coverage_percent", 100) < self.min_coverage:
+                all_issues.append(
+                    DocstringIssue(
+                        type="low_docstring_coverage",
+                        severity="warning",
+                        message=f"Docstring coverage is {coverage.get('coverage_percent', 0)}% (minimum: {self.min_coverage}%)",
+                        doc_type="coverage",
+                    )
+                )
+
+    def _run_missing_docstrings_check(self, python_files: list[str], results: dict, all_issues: list) -> None:
+        """Find missing docstrings."""
+        log_step(self.logger, 3, "Finding missing docstrings")
+        with LogContext(self.logger, "Missing docstrings"):
+            missing = self._find_missing_docstrings(python_files)
+            results["missing_docstrings"] = missing
+            all_issues.extend(missing)
+
+    def _run_project_docs_check(self, results: dict, all_issues: list) -> None:
+        """Check project documentation."""
+        log_step(self.logger, 4, "Checking project documentation")
+        with LogContext(self.logger, "Project docs"):
+            project_docs = self._check_project_docs()
+            results["project_docs"] = project_docs
+            all_issues.extend(project_docs.get("issues", []))
+
+    def _determine_status(self, all_issues: list[BaseIssue]) -> str:
+        """Determine analysis status based on issues."""
+        critical_count = len([i for i in all_issues if i.severity == "critical"])
+        return "SUCCESS" if critical_count == 0 else "PARTIAL"
+
     def execute(self) -> SubServerResult:
         """Execute documentation analysis."""
         log_section(self.logger, "DOCUMENTATION ANALYSIS")
 
         try:
-            # Ensure tools venv
             log_step(self.logger, 0, "Ensuring tools venv")
             ensure_tools_venv()
 
@@ -154,52 +190,21 @@ class DocsSubServer(BaseSubServer):
             }
             all_issues: list[BaseIssue] = []
 
-            # Step 1: Get files to analyze
             log_step(self.logger, 1, "Loading files to analyze")
             python_files = self._get_python_files()
 
-            # Step 2: Run interrogate for docstring coverage
             if self.check_docstrings and python_files:
-                log_step(self.logger, 2, "Checking docstring coverage")
-                with LogContext(self.logger, "Docstring coverage"):
-                    coverage = self._check_docstring_coverage()
-                    results["docstring_coverage"] = coverage
-                    if coverage.get("coverage_percent", 100) < self.min_coverage:
-                        all_issues.append(
-                            DocstringIssue(
-                                type="low_docstring_coverage",
-                                severity="warning",
-                                message=f"Docstring coverage is {coverage.get('coverage_percent', 0)}% (minimum: {self.min_coverage}%)",
-                                doc_type="coverage",
-                            )
-                        )
+                self._run_docstring_coverage_check(results, all_issues)
+                self._run_missing_docstrings_check(python_files, results, all_issues)
 
-            # Step 3: Find missing docstrings
-            if self.check_docstrings and python_files:
-                log_step(self.logger, 3, "Finding missing docstrings")
-                with LogContext(self.logger, "Missing docstrings"):
-                    missing = self._find_missing_docstrings(python_files)
-                    results["missing_docstrings"] = missing
-                    all_issues.extend(missing)
-
-            # Step 4: Check project documentation
             if self.check_project_docs:
-                log_step(self.logger, 4, "Checking project documentation")
-                with LogContext(self.logger, "Project docs"):
-                    project_docs = self._check_project_docs()
-                    results["project_docs"] = project_docs
-                    all_issues.extend(project_docs.get("issues", []))
+                self._run_project_docs_check(results, all_issues)
 
-            # Step 5: Save results
             log_step(self.logger, 5, "Saving results")
             artifacts = self._save_results(results, all_issues)
 
-            # Step 6: Generate summary
             summary = self._generate_summary(results, all_issues, python_files)
-
-            # Determine status
-            critical_count = len([i for i in all_issues if i.severity == "critical"])
-            status = "SUCCESS" if critical_count == 0 else "PARTIAL"
+            status = self._determine_status(all_issues)
 
             log_result(self.logger, status == "SUCCESS", f"Analysis complete: {len(all_issues)} issues found")
 

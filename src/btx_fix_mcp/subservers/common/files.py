@@ -143,6 +143,64 @@ def get_file_extension(file_path: Path) -> str:
     return file_path.suffix.lstrip(".")
 
 
+def _is_test_file(file_path: Path) -> bool:
+    """Check if file is a test file."""
+    path_str = str(file_path).lower()
+    name = file_path.name.lower()
+    return any(keyword in path_str for keyword in ["test", "spec", "__tests__", "tests/"]) or name.startswith("test_")
+
+
+def _is_docs_file(file_path: Path) -> bool:
+    """Check if file is a documentation file."""
+    return file_path.suffix.lower() in [".md", ".rst", ".txt", ".adoc"]
+
+
+def _is_config_file(file_path: Path) -> bool:
+    """Check if file is a configuration file."""
+    name = file_path.name.lower()
+    return any(keyword in name for keyword in ["config", ".json", ".yml", ".yaml", ".toml", ".ini"])
+
+
+def _is_build_file(file_path: Path) -> bool:
+    """Check if file is a build file."""
+    name = file_path.name.lower()
+    return name in ["dockerfile", "makefile"] or ".dockerfile" in name or ".mk" in name
+
+
+def _is_code_file(file_path: Path) -> bool:
+    """Check if file is a source code file."""
+    return file_path.suffix.lower() in [
+        ".py",
+        ".js",
+        ".ts",
+        ".jsx",
+        ".tsx",
+        ".java",
+        ".go",
+        ".rs",
+        ".cpp",
+        ".c",
+        ".rb",
+        ".php",
+    ]
+
+
+def _determine_category(file_path: Path) -> str:
+    """Determine the category for a file."""
+    if _is_test_file(file_path):
+        return "TEST"
+    elif _is_docs_file(file_path):
+        return "DOCS"
+    elif _is_config_file(file_path):
+        return "CONFIG"
+    elif _is_build_file(file_path):
+        return "BUILD"
+    elif _is_code_file(file_path):
+        return "CODE"
+    else:
+        return "OTHER"
+
+
 def categorize_files(files: list[Path]) -> dict[str, list[Path]]:
     """Categorize files by type.
 
@@ -168,44 +226,7 @@ def categorize_files(files: list[Path]) -> dict[str, list[Path]]:
     }
 
     for file_path in files:
-        path_str = str(file_path).lower()
-        name = file_path.name.lower()
-
-        # Test files
-        if any(keyword in path_str for keyword in ["test", "spec", "__tests__", "tests/"]) or name.startswith("test_"):
-            categories["TEST"].append(file_path)
-
-        # Documentation
-        elif file_path.suffix.lower() in [".md", ".rst", ".txt", ".adoc"]:
-            categories["DOCS"].append(file_path)
-
-        # Config files
-        elif any(keyword in name for keyword in ["config", ".json", ".yml", ".yaml", ".toml", ".ini"]):
-            categories["CONFIG"].append(file_path)
-
-        # Build files
-        elif name in ["dockerfile", "makefile"] or ".dockerfile" in name or ".mk" in name:
-            categories["BUILD"].append(file_path)
-
-        # Code files
-        elif file_path.suffix.lower() in [
-            ".py",
-            ".js",
-            ".ts",
-            ".jsx",
-            ".tsx",
-            ".java",
-            ".go",
-            ".rs",
-            ".cpp",
-            ".c",
-            ".rb",
-            ".php",
-        ]:
-            categories["CODE"].append(file_path)
-
-        # Other
-        else:
-            categories["OTHER"].append(file_path)
+        category = _determine_category(file_path)
+        categories[category].append(file_path)
 
     return categories

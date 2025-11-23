@@ -32,32 +32,12 @@
   {
     "type": "high_complexity",
     "severity": "warning",
-    "message": "Function 'evaluate_results' has complexity 14 (threshold: 10)",
-    "file": "src/btx_fix_mcp/subservers/common/mindsets.py",
-    "line": 150,
-    "value": 14,
-    "threshold": 10,
-    "name": "evaluate_results"
-  },
-  {
-    "type": "high_complexity",
-    "severity": "warning",
     "message": "Function '_save_results' has complexity 14 (threshold: 10)",
     "file": "src/btx_fix_mcp/subservers/review/docs.py",
     "line": 527,
     "value": 14,
     "threshold": 10,
     "name": "_save_results"
-  },
-  {
-    "type": "high_complexity",
-    "severity": "warning",
-    "message": "Function 'build_analyzer_tasks' has complexity 14 (threshold: 10)",
-    "file": "src/btx_fix_mcp/subservers/review/quality/orchestrator.py",
-    "line": 49,
-    "value": 14,
-    "threshold": 10,
-    "name": "build_analyzer_tasks"
   },
   {
     "type": "high_complexity",
@@ -122,22 +102,22 @@
   {
     "type": "high_complexity",
     "severity": "warning",
-    "message": "Function 'DocsSubServer' has complexity 11 (threshold: 10)",
-    "file": "src/btx_fix_mcp/subservers/review/docs.py",
-    "line": 44,
-    "value": 11,
-    "threshold": 10,
-    "name": "DocsSubServer"
-  },
-  {
-    "type": "high_complexity",
-    "severity": "warning",
     "message": "Function 'execute' has complexity 11 (threshold: 10)",
     "file": "src/btx_fix_mcp/subservers/review/docs.py",
     "line": 140,
     "value": 11,
     "threshold": 10,
     "name": "execute"
+  },
+  {
+    "type": "high_complexity",
+    "severity": "warning",
+    "message": "Function '_format_missing_docstrings_section' has complexity 11 (threshold: 10)",
+    "file": "src/btx_fix_mcp/subservers/review/docs.py",
+    "line": 592,
+    "value": 11,
+    "threshold": 10,
+    "name": "_format_missing_docstrings_section"
   },
   {
     "type": "high_complexity",

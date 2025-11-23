@@ -30,7 +30,7 @@ src/btx_fix_mcp/tools_venv.py:1:0: R0801: Similar lines in 2 files
             )
             return SubServerResult(
                 status="FAILED",
-                summary=f"# Performance Analysis Failed\n\n**Error**: {e}",
+                summary=f"# Documentation Analysis Failed\n\n**Error**: {e}",
                 artifacts={},
                 errors=[str(e)],
             )
@@ -46,25 +46,19 @@ src/btx_fix_mcp/tools_venv.py:1:0: R0801: Similar lines in 2 files
         python_files = [f for f in all_files if f.endswith(".py") and f]
         return [str(self.repo_path / f) for f in python_files]
 
-    def _detect_patterns(self, files: list[str]) -> list[PerformanceIssue]:
-        """Detect performance anti-patterns in code."""
-        import re
- (duplicate-code)
+    def _check_docstring_coverage(self) -> dict[str, Any]:
+        """Check docstring coverage using interrogate.""" (duplicate-code)
 src/btx_fix_mcp/tools_venv.py:1:0: R0801: Similar lines in 2 files
-==btx_fix_mcp.subservers.review.docs:[598:628]
-==btx_fix_mcp.subservers.review.perf:[455:485]
-        critical_issues = [i.to_dict() for i in all_issues if i.severity == "critical"]
-        warning_issues = [i.to_dict() for i in all_issues if i.severity == "warning"]
+==btx_fix_mcp.subservers.review.docs:[612:643]
+==btx_fix_mcp.subservers.review.perf:[489:520]
+            )
+        lines.append("")
+        return lines
 
-        verdict = evaluate_results(
-            self.mindset,
-            critical_issues,
-            warning_issues,
-            max(len(files), 1),
-        )
-
-        lines = [
-            "# Performance Analysis Report",
+    def _format_header_section(self, verdict, files_count: int) -> list[str]:
+        """Format report header with mindset and verdict."""
+        return [
+            "# Documentation Analysis Report",
             "",
             "## Reviewer Mindset",
             "",
@@ -78,8 +72,13 @@ src/btx_fix_mcp/tools_venv.py:1:0: R0801: Similar lines in 2 files
             "",
             f"- Critical issues: {verdict.critical_count}",
             f"- Warnings: {verdict.warning_count}",
-            f"- Files analyzed: {len(files)}",
+            f"- Files analyzed: {files_count}",
             "",
+        ]
+
+    def _format_overview_section(self, metrics: dict, doc_cov: dict, project_docs: dict) -> list[str]:
+        """Format overview and project documentation sections."""
+        return [
             "## Overview",
             "",
             f"**Files Analyzed**: {metrics['files_analyzed']}", (duplicate-code)
@@ -97,7 +96,7 @@ src/btx_fix_mcp/tools_venv.py:1:0: R0801: Similar lines in 2 files
             )
             return SubServerResult(
                 status="FAILED",
-                summary=f"# Security Analysis Failed\n\n**Error**: {e}",
+                summary=f"# Documentation Analysis Failed\n\n**Error**: {e}",
                 artifacts={},
                 errors=[str(e)],
             )
@@ -107,18 +106,14 @@ src/btx_fix_mcp/tools_venv.py:1:0: R0801: Similar lines in 2 files
         files_list = self.input_dir / "files_code.txt"
         if not files_list.exists():
             files_list = self.input_dir / "files_to_review.txt"
-
         if not files_list.exists():
             return []
-
         all_files = files_list.read_text().strip().split("\n")
         python_files = [f for f in all_files if f.endswith(".py") and f]
-
-        # Convert to absolute paths
         return [str(self.repo_path / f) for f in python_files]
 
-    def _run_bandit(self, files: list[str]) -> list[dict[str, Any]]:
-        """Run Bandit security scanner on files.""" (duplicate-code)
+    def _check_docstring_coverage(self) -> dict[str, Any]:
+        """Check docstring coverage using interrogate.""" (duplicate-code)
 src/btx_fix_mcp/tools_venv.py:1:0: R0801: Similar lines in 2 files
 ==btx_fix_mcp.subservers.review.quality.__init__:[224:246]
 ==btx_fix_mcp.subservers.review.security:[260:285]
@@ -140,13 +135,10 @@ src/btx_fix_mcp/tools_venv.py:1:0: R0801: Similar lines in 2 files
             )
             return SubServerResult(
                 status="FAILED",
-                summary=f"# Security Analysis Failed\n\n**Error**: {e}",
+                summary=f"# Quality Analysis Failed\n\n**Error**: {e}",
                 artifacts={},
                 errors=[str(e)],
-            )
-
-    def _get_python_files(self) -> list[str]:
-        """Get Python files to analyze.""" (duplicate-code)
+            ) (duplicate-code)
 src/btx_fix_mcp/tools_venv.py:1:0: R0801: Similar lines in 2 files
 ==btx_fix_mcp.subservers.review.docs:[555:583]
 ==btx_fix_mcp.subservers.review.perf:[415:443]
@@ -202,7 +194,7 @@ src/btx_fix_mcp/tools_venv.py:1:0: R0801: Similar lines in 2 files
 
         return artifacts
 
-    def _compile_metrics(self, results: dict[str, Any], all_issues: list[BaseIssue]) -> dict[str, Any]:
+    def _compile_metrics(self, files: list[str], results: dict[str, Any], all_issues: list[BaseIssue]) -> dict[str, Any]:
         """Compile metrics for result.""" (duplicate-code)
 src/btx_fix_mcp/tools_venv.py:1:0: R0801: Similar lines in 2 files
 ==btx_fix_mcp.subservers.review.docs:[210:228]
@@ -218,10 +210,13 @@ src/btx_fix_mcp/tools_venv.py:1:0: R0801: Similar lines in 2 files
             )
             return SubServerResult(
                 status="FAILED",
-                summary=f"# Quality Analysis Failed\n\n**Error**: {e}",
+                summary=f"# Documentation Analysis Failed\n\n**Error**: {e}",
                 artifacts={},
                 errors=[str(e)],
-            ) (duplicate-code)
+            )
+
+    def _get_python_files(self) -> list[str]:
+        """Get Python files to analyze.""" (duplicate-code)
 src/btx_fix_mcp/tools_venv.py:1:0: R0801: Similar lines in 2 files
 ==btx_fix_mcp.subservers.review.perf:[198:216]
 ==btx_fix_mcp.subservers.review.report:[162:180]
@@ -236,13 +231,13 @@ src/btx_fix_mcp/tools_venv.py:1:0: R0801: Similar lines in 2 files
             )
             return SubServerResult(
                 status="FAILED",
-                summary=f"# Performance Analysis Failed\n\n**Error**: {e}",
+                summary=f"# Report Generation Failed\n\n**Error**: {e}",
                 artifacts={},
                 errors=[str(e)],
             )
 
-    def _get_python_files(self) -> list[str]:
-        """Get Python files to analyze.""" (duplicate-code)
+    def _gather_results(self) -> dict[str, dict[str, Any]]:
+        """Gather results from all sub-servers.""" (duplicate-code)
 src/btx_fix_mcp/tools_venv.py:1:0: R0801: Similar lines in 2 files
 ==btx_fix_mcp.subservers.review.docs:[88:107]
 ==btx_fix_mcp.subservers.review.perf:[76:95]
@@ -308,20 +303,23 @@ src/btx_fix_mcp/tools_venv.py:1:0: R0801: Similar lines in 2 files
     def _get_python_files(self) -> list[str]:
         """Get Python files to analyze.""" (duplicate-code)
 src/btx_fix_mcp/tools_venv.py:1:0: R0801: Similar lines in 2 files
-==btx_fix_mcp.subservers.review.docs:[661:673]
-==btx_fix_mcp.subservers.review.perf:[527:539]
-                )
-            lines.append("")
+==btx_fix_mcp.subservers.review.docs:[653:668]
+==btx_fix_mcp.subservers.review.perf:[523:539]
+            "",
+        ]
 
-        # Approval status
-        lines.extend(["## Approval Status", ""])
-        lines.append(f"**{verdict.verdict_text}**")
+    def _format_approval_section(self, verdict) -> list[str]:
+        """Format approval status section."""
+        lines = ["## Approval Status", "", f"**{verdict.verdict_text}**"]
         if verdict.recommendations:
             lines.append("")
             for rec in verdict.recommendations:
                 lines.append(f"- {rec}")
+        return lines
 
-        return "\n".join(lines) (duplicate-code)
+    def _generate_summary(self, results: dict[str, Any], all_issues: list[BaseIssue], files: list[str]) -> str:
+        """Generate markdown summary with mindset evaluation."""
+        metrics = self._compile_metrics(files, results, all_issues) (duplicate-code)
 src/btx_fix_mcp/tools_venv.py:1:0: R0801: Similar lines in 2 files
 ==btx_fix_mcp.subservers.review.docs:[228:239]
 ==btx_fix_mcp.subservers.review.quality.files:[38:54]
@@ -330,17 +328,12 @@ src/btx_fix_mcp/tools_venv.py:1:0: R0801: Similar lines in 2 files
             files_list = self.input_dir / "files_to_review.txt"
         if not files_list.exists():
             return []
-
         all_files = files_list.read_text().strip().split("\n")
         python_files = [f for f in all_files if f.endswith(".py") and f]
         return [str(self.repo_path / f) for f in python_files]
 
-    def load_js_files(self) -> list[str]:
-        """Load JavaScript/TypeScript files from input directory.
-
-        Returns:
-            List of absolute paths to JS/TS files
-        """ (duplicate-code)
+    def _check_docstring_coverage(self) -> dict[str, Any]:
+        """Check docstring coverage using interrogate.""" (duplicate-code)
 src/btx_fix_mcp/tools_venv.py:1:0: R0801: Similar lines in 2 files
 ==btx_fix_mcp.subservers.review.quality.__init__:[228:237]
 ==btx_fix_mcp.subservers.review.scope:[168:177]
@@ -368,7 +361,7 @@ src/btx_fix_mcp/tools_venv.py:1:0: R0801: Similar lines in 2 files
         return len(missing) == 0, missing
 
     def execute(self) -> SubServerResult:
-        """Execute documentation analysis.""" (duplicate-code)
+        """Execute performance analysis.""" (duplicate-code)
 src/btx_fix_mcp/tools_venv.py:1:0: R0801: Similar lines in 2 files
 ==btx_fix_mcp.subservers.review.quality.summary:[220:231]
 ==btx_fix_mcp.subservers.review.security:[598:610]

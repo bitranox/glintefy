@@ -11,32 +11,32 @@
 
 **❌ REJECTED**
 
-- Critical issues: 9 (20.9%)
-- Warnings: 104 (241.9%)
+- Critical issues: 8 (18.6%)
+- Warnings: 98 (227.9%)
 - Total items analyzed: 43
 
 ## Overview
 
 **Files Analyzed**: 43 (43 Python, 0 JS/TS)
-**Functions Analyzed**: 421
-**Total Issues Found**: 139
-**Critical Issues**: 9
+**Functions Analyzed**: 441
+**Total Issues Found**: 132
+**Critical Issues**: 8
 
 ## Code Metrics
 
-- Total LOC: **11,025**
-- Source LOC (SLOC): **6,673**
-- Comments: **409**
-- Comment Ratio: **6.1%**
+- Total LOC: **11,089**
+- Source LOC (SLOC): **6,724**
+- Comments: **391**
+- Comment Ratio: **5.8%**
 
 ## Quality Issues Summary
 
-- Functions >50 lines: **31**
-- High cyclomatic complexity (>10): **20**
+- Functions >50 lines: **27**
+- High cyclomatic complexity (>10): **16**
 - High cognitive complexity (>15): **9**
 - Functions with nesting >3: **14**
 - Code duplication blocks: **32**
-- God objects: **4**
+- God objects: **5**
 - Highly coupled modules: **0**
 - Import cycles: **0**
 - Dead code items: **0**
@@ -62,23 +62,22 @@
 
 ## Critical Issues (Must Fix)
 
-- 🔴 `src/btx_fix_mcp/subservers/review/docs.py`: Function '_generate_summary' has complexity 21 (threshold: 10)
-- 🔴 `src/btx_fix_mcp/subservers/review/perf.py`: Function '_generate_summary' has complexity 22 (threshold: 10)
 - 🔴 `src/btx_fix_mcp/subservers/review/security.py`: Function '_run_bandit' has complexity 21 (threshold: 10)
 - 🔴 `src/btx_fix_mcp/subservers/review/docs.py`: Function '_find_missing_docstrings' has nesting depth 8 (max: 3)
 - 🔴 `src/btx_fix_mcp/subservers/review/deps.py`: Class 'DepsSubServer' is a god object (27 methods, 623 lines)
-- 🔴 `src/btx_fix_mcp/subservers/review/docs.py`: Class 'DocsSubServer' is a god object (12 methods, 629 lines)
+- 🔴 `src/btx_fix_mcp/subservers/review/docs.py`: Class 'DocsSubServer' is a god object (16 methods, 638 lines)
+- 🔴 `src/btx_fix_mcp/subservers/review/perf.py`: Class 'PerfSubServer' is a god object (16 methods, 508 lines)
 - 🔴 `src/btx_fix_mcp/subservers/review/quality/architecture.py`: Class 'ArchitectureAnalyzer' is a god object (22 methods, 303 lines)
 - 🔴 `src/btx_fix_mcp/subservers/review/security.py`: Class 'SecuritySubServer' is a god object (16 methods, 571 lines)
 - 🔴 : Test run timed out
 
 ## Refactoring Recommendations
 
-1. **Break Down Long Functions**: 31 functions exceed 50 lines
-2. **Reduce Cyclomatic Complexity**: 20 functions exceed threshold
+1. **Break Down Long Functions**: 27 functions exceed 50 lines
+2. **Reduce Cyclomatic Complexity**: 16 functions exceed threshold
 3. **Reduce Cognitive Complexity**: 9 functions are too complex
 4. **Extract Duplicated Code**: 32 duplicate blocks found
-5. **Refactor God Objects**: 4 classes need decomposition
+5. **Refactor God Objects**: 5 classes need decomposition
 6. **Add Type Annotations**: Coverage is 0%
 7. **Add Docstrings**: Coverage is 0.0%
 

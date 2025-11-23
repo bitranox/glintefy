@@ -1,6 +1,6 @@
 {
   "status": "PARTIAL",
-  "summary": "# Quality Analysis Report\n\n## Reviewer Mindset\n\n**You are a quality reviewer** - thorough, precise.\n\n**Your approach:**\n- \u2713 **Verify:** Verify all claims with evidence\n\n## Verdict\n\n**\u274c REJECTED**\n\n- Critical issues: 9 (20.9%)\n- Warnings: 104 (241.9%)\n- Total items analyzed: 43\n\n## Overview\n\n**Files Analyzed**: 43 (43 Python, 0 JS/TS)\n**Functions Analyzed**: 421\n**Total Issues Found**: 139\n**Critical Issues**: 9\n\n## Code Metrics\n\n- Total LOC: **11,025**\n- Source LOC (SLOC): **6,673**\n- Comments: **409**\n- Comment Ratio: **6.1%**\n\n## Quality Issues Summary\n\n- Functions >50 lines: **31**\n- High cyclomatic complexity (>10): **20**\n- High cognitive complexity (>15): **9**\n- Functions with nesting >3: **14**\n- Code duplication blocks: **32**\n- God objects: **4**\n- Highly coupled modules: **0**\n- Import cycles: **0**\n- Dead code items: **0**\n\n## Coverage Metrics\n\n- Type coverage: **0%** (minimum: 80%)\n- Docstring coverage: **0.0%** (minimum: 80%)\n\n## Test Suite Analysis\n\n- Total tests: **0**\n- Total assertions: **0**\n- Assertions per test: **0**\n- Unit tests: 0\n- Integration tests: 0\n- E2E tests: 0\n- Test issues: **0**\n\n## Runtime Type Checking (Beartype)\n\n- Status: **\u274c Failed**\n\n## Critical Issues (Must Fix)\n\n- \ud83d\udd34 `src/btx_fix_mcp/subservers/review/docs.py`: Function '_generate_summary' has complexity 21 (threshold: 10)\n- \ud83d\udd34 `src/btx_fix_mcp/subservers/review/perf.py`: Function '_generate_summary' has complexity 22 (threshold: 10)\n- \ud83d\udd34 `src/btx_fix_mcp/subservers/review/security.py`: Function '_run_bandit' has complexity 21 (threshold: 10)\n- \ud83d\udd34 `src/btx_fix_mcp/subservers/review/docs.py`: Function '_find_missing_docstrings' has nesting depth 8 (max: 3)\n- \ud83d\udd34 `src/btx_fix_mcp/subservers/review/deps.py`: Class 'DepsSubServer' is a god object (27 methods, 623 lines)\n- \ud83d\udd34 `src/btx_fix_mcp/subservers/review/docs.py`: Class 'DocsSubServer' is a god object (12 methods, 629 lines)\n- \ud83d\udd34 `src/btx_fix_mcp/subservers/review/quality/architecture.py`: Class 'ArchitectureAnalyzer' is a god object (22 methods, 303 lines)\n- \ud83d\udd34 `src/btx_fix_mcp/subservers/review/security.py`: Class 'SecuritySubServer' is a god object (16 methods, 571 lines)\n- \ud83d\udd34 : Test run timed out\n\n## Refactoring Recommendations\n\n1. **Break Down Long Functions**: 31 functions exceed 50 lines\n2. **Reduce Cyclomatic Complexity**: 20 functions exceed threshold\n3. **Reduce Cognitive Complexity**: 9 functions are too complex\n4. **Extract Duplicated Code**: 32 duplicate blocks found\n5. **Refactor God Objects**: 4 classes need decomposition\n6. **Add Type Annotations**: Coverage is 0%\n7. **Add Docstrings**: Coverage is 0.0%\n\n## Approval Status\n\n**\u274c REJECTED**\n\n- Address critical issues before merging\n- Ask yourself: Is this correct? Let me check.",
+  "summary": "# Quality Analysis Report\n\n## Reviewer Mindset\n\n**You are a quality reviewer** - thorough, precise.\n\n**Your approach:**\n- \u2713 **Verify:** Verify all claims with evidence\n\n## Verdict\n\n**\u274c REJECTED**\n\n- Critical issues: 8 (18.6%)\n- Warnings: 98 (227.9%)\n- Total items analyzed: 43\n\n## Overview\n\n**Files Analyzed**: 43 (43 Python, 0 JS/TS)\n**Functions Analyzed**: 441\n**Total Issues Found**: 132\n**Critical Issues**: 8\n\n## Code Metrics\n\n- Total LOC: **11,089**\n- Source LOC (SLOC): **6,724**\n- Comments: **391**\n- Comment Ratio: **5.8%**\n\n## Quality Issues Summary\n\n- Functions >50 lines: **27**\n- High cyclomatic complexity (>10): **16**\n- High cognitive complexity (>15): **9**\n- Functions with nesting >3: **14**\n- Code duplication blocks: **32**\n- God objects: **5**\n- Highly coupled modules: **0**\n- Import cycles: **0**\n- Dead code items: **0**\n\n## Coverage Metrics\n\n- Type coverage: **0%** (minimum: 80%)\n- Docstring coverage: **0.0%** (minimum: 80%)\n\n## Test Suite Analysis\n\n- Total tests: **0**\n- Total assertions: **0**\n- Assertions per test: **0**\n- Unit tests: 0\n- Integration tests: 0\n- E2E tests: 0\n- Test issues: **0**\n\n## Runtime Type Checking (Beartype)\n\n- Status: **\u274c Failed**\n\n## Critical Issues (Must Fix)\n\n- \ud83d\udd34 `src/btx_fix_mcp/subservers/review/security.py`: Function '_run_bandit' has complexity 21 (threshold: 10)\n- \ud83d\udd34 `src/btx_fix_mcp/subservers/review/docs.py`: Function '_find_missing_docstrings' has nesting depth 8 (max: 3)\n- \ud83d\udd34 `src/btx_fix_mcp/subservers/review/deps.py`: Class 'DepsSubServer' is a god object (27 methods, 623 lines)\n- \ud83d\udd34 `src/btx_fix_mcp/subservers/review/docs.py`: Class 'DocsSubServer' is a god object (16 methods, 638 lines)\n- \ud83d\udd34 `src/btx_fix_mcp/subservers/review/perf.py`: Class 'PerfSubServer' is a god object (16 methods, 508 lines)\n- \ud83d\udd34 `src/btx_fix_mcp/subservers/review/quality/architecture.py`: Class 'ArchitectureAnalyzer' is a god object (22 methods, 303 lines)\n- \ud83d\udd34 `src/btx_fix_mcp/subservers/review/security.py`: Class 'SecuritySubServer' is a god object (16 methods, 571 lines)\n- \ud83d\udd34 : Test run timed out\n\n## Refactoring Recommendations\n\n1. **Break Down Long Functions**: 27 functions exceed 50 lines\n2. **Reduce Cyclomatic Complexity**: 16 functions exceed threshold\n3. **Reduce Cognitive Complexity**: 9 functions are too complex\n4. **Extract Duplicated Code**: 32 duplicate blocks found\n5. **Refactor God Objects**: 5 classes need decomposition\n6. **Add Type Annotations**: Coverage is 0%\n7. **Add Docstrings**: Coverage is 0.0%\n\n## Approval Status\n\n**\u274c REJECTED**\n\n- Address critical issues before merging\n- Ask yourself: Is this correct? Let me check.",
   "artifacts": {
     "complexity": "/media/srv-main-softdev/projects/MCP/btx_fix_mcp/LLM-CONTEXT/btx_fix_mcp/review/quality/complexity.json",
     "maintainability": "/media/srv-main-softdev/projects/MCP/btx_fix_mcp/LLM-CONTEXT/btx_fix_mcp/review/quality/maintainability.json",
@@ -23,13 +23,13 @@
     "files_analyzed": 43,
     "python_files": 43,
     "js_files": 0,
-    "total_functions": 421,
-    "high_complexity_count": 20,
+    "total_functions": 441,
+    "high_complexity_count": 16,
     "high_cognitive_count": 9,
     "low_mi_count": 0,
-    "functions_too_long": 31,
+    "functions_too_long": 27,
     "functions_too_nested": 14,
-    "god_objects": 4,
+    "god_objects": 5,
     "highly_coupled_modules": 0,
     "import_cycles": 0,
     "duplicate_blocks": 32,
@@ -39,10 +39,10 @@
     "test_coverage_percent": 0.0,
     "high_churn_files": 0,
     "beartype_passed": false,
-    "critical_issues": 9,
-    "warning_issues": 130,
-    "total_issues": 139
+    "critical_issues": 8,
+    "warning_issues": 124,
+    "total_issues": 132
   },
   "errors": [],
-  "timestamp": "2025-11-23T13:54:52.224889"
+  "timestamp": "2025-11-23T14:13:40.565733"
 }

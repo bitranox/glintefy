@@ -463,15 +463,43 @@
   },
   {
     "file": "src/btx_fix_mcp/subservers/common/mindsets.py",
-    "name": "evaluate_results",
+    "name": "_calculate_issue_ratios",
     "line": 150,
-    "complexity": 14,
+    "complexity": 1,
+    "exceeds_threshold": false
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/common/mindsets.py",
+    "name": "_get_effective_thresholds",
+    "line": 159,
+    "complexity": 1,
+    "exceeds_threshold": false
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/common/mindsets.py",
+    "name": "_determine_verdict",
+    "line": 171,
+    "complexity": 7,
+    "exceeds_threshold": false
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/common/mindsets.py",
+    "name": "_generate_findings",
+    "line": 191,
+    "complexity": 3,
+    "exceeds_threshold": false
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/common/mindsets.py",
+    "name": "_generate_recommendations",
+    "line": 203,
+    "complexity": 2,
     "exceeds_threshold": false
   },
   {
     "file": "src/btx_fix_mcp/subservers/common/mindsets.py",
     "name": "format_verdict_report",
-    "line": 227,
+    "line": 257,
     "complexity": 5,
     "exceeds_threshold": false
   },
@@ -792,9 +820,16 @@
   },
   {
     "file": "src/btx_fix_mcp/subservers/review/docs.py",
-    "name": "_generate_summary",
+    "name": "_format_missing_docstrings_section",
     "line": 592,
-    "complexity": 9,
+    "complexity": 4,
+    "exceeds_threshold": false
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/docs.py",
+    "name": "_format_approval_section",
+    "line": 657,
+    "complexity": 3,
     "exceeds_threshold": false
   },
   {
@@ -862,9 +897,23 @@
   },
   {
     "file": "src/btx_fix_mcp/subservers/review/perf.py",
-    "name": "_generate_summary",
+    "name": "_format_hotspots_section",
     "line": 451,
-    "complexity": 15,
+    "complexity": 4,
+    "exceeds_threshold": false
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/perf.py",
+    "name": "_format_pattern_issues_section",
+    "line": 470,
+    "complexity": 4,
+    "exceeds_threshold": false
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/perf.py",
+    "name": "_format_perf_approval_section",
+    "line": 527,
+    "complexity": 3,
     "exceeds_threshold": false
   },
   {
@@ -1352,36 +1401,71 @@
   },
   {
     "file": "src/btx_fix_mcp/subservers/review/quality/orchestrator.py",
+    "name": "_add_static_task",
+    "line": 60,
+    "complexity": 2,
+    "exceeds_threshold": false
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/orchestrator.py",
+    "name": "_add_test_task",
+    "line": 72,
+    "complexity": 1,
+    "exceeds_threshold": false
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/orchestrator.py",
+    "name": "_add_architecture_task",
+    "line": 77,
+    "complexity": 3,
+    "exceeds_threshold": false
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/orchestrator.py",
+    "name": "_add_metrics_task",
+    "line": 89,
+    "complexity": 3,
+    "exceeds_threshold": false
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/orchestrator.py",
+    "name": "_add_type_task",
+    "line": 101,
+    "complexity": 3,
+    "exceeds_threshold": false
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/quality/orchestrator.py",
     "name": "build_analyzer_tasks",
-    "line": 49,
-    "complexity": 13,
+    "line": 113,
+    "complexity": 1,
     "exceeds_threshold": false
   },
   {
     "file": "src/btx_fix_mcp/subservers/review/quality/orchestrator.py",
     "name": "execute_tasks",
-    "line": 126,
+    "line": 139,
     "complexity": 1,
     "exceeds_threshold": false
   },
   {
     "file": "src/btx_fix_mcp/subservers/review/quality/orchestrator.py",
     "name": "_run_analyzer",
-    "line": 150,
+    "line": 163,
     "complexity": 1,
     "exceeds_threshold": false
   },
   {
     "file": "src/btx_fix_mcp/subservers/review/quality/orchestrator.py",
     "name": "_collect_results",
-    "line": 159,
+    "line": 172,
     "complexity": 3,
     "exceeds_threshold": false
   },
   {
     "file": "src/btx_fix_mcp/subservers/review/quality/orchestrator.py",
     "name": "_map_analyzer_results",
-    "line": 171,
+    "line": 184,
     "complexity": 7,
     "exceeds_threshold": false
   },

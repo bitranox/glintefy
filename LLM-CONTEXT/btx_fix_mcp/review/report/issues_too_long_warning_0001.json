@@ -12,16 +12,6 @@
   {
     "type": "too_long",
     "severity": "warning",
-    "message": "Function '_generate_summary' is 88 lines (max: 50)",
-    "file": "src/btx_fix_mcp/subservers/review/perf.py",
-    "line": 451,
-    "value": 88,
-    "threshold": 50,
-    "name": "_generate_summary"
-  },
-  {
-    "type": "too_long",
-    "severity": "warning",
     "message": "Function 'execute' is 86 lines (max: 50)",
     "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",
     "line": 160,
@@ -48,16 +38,6 @@
     "value": 84,
     "threshold": 50,
     "name": "execute"
-  },
-  {
-    "type": "too_long",
-    "severity": "warning",
-    "message": "Function '_generate_summary' is 81 lines (max: 50)",
-    "file": "src/btx_fix_mcp/subservers/review/docs.py",
-    "line": 592,
-    "value": 81,
-    "threshold": 50,
-    "name": "_generate_summary"
   },
   {
     "type": "too_long",
@@ -92,26 +72,6 @@
   {
     "type": "too_long",
     "severity": "warning",
-    "message": "Function 'build_analyzer_tasks' is 75 lines (max: 50)",
-    "file": "src/btx_fix_mcp/subservers/review/quality/orchestrator.py",
-    "line": 49,
-    "value": 75,
-    "threshold": 50,
-    "name": "build_analyzer_tasks"
-  },
-  {
-    "type": "too_long",
-    "severity": "warning",
-    "message": "Function 'evaluate_results' is 74 lines (max: 50)",
-    "file": "src/btx_fix_mcp/subservers/common/mindsets.py",
-    "line": 150,
-    "value": 74,
-    "threshold": 50,
-    "name": "evaluate_results"
-  },
-  {
-    "type": "too_long",
-    "severity": "warning",
     "message": "Function '_run_bandit' is 74 lines (max: 50)",
     "file": "src/btx_fix_mcp/subservers/review/security.py",
     "line": 299,
@@ -134,7 +94,7 @@
     "severity": "warning",
     "message": "Function 'format_verdict_report' is 73 lines (max: 50)",
     "file": "src/btx_fix_mcp/subservers/common/mindsets.py",
-    "line": 227,
+    "line": 257,
     "value": 73,
     "threshold": 50,
     "name": "format_verdict_report"

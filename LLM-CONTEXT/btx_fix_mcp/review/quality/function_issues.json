@@ -55,17 +55,8 @@
   },
   {
     "file": "src/btx_fix_mcp/subservers/common/mindsets.py",
-    "function": "evaluate_results",
-    "line": 150,
-    "issue_type": "TOO_LONG",
-    "value": 74,
-    "threshold": 50,
-    "message": "Function 'evaluate_results' is 74 lines (max: 50)"
-  },
-  {
-    "file": "src/btx_fix_mcp/subservers/common/mindsets.py",
     "function": "format_verdict_report",
-    "line": 227,
+    "line": 257,
     "issue_type": "TOO_LONG",
     "value": 73,
     "threshold": 50,
@@ -225,15 +216,6 @@
     "message": "Function '_save_results' is 53 lines (max: 50)"
   },
   {
-    "file": "src/btx_fix_mcp/subservers/review/docs.py",
-    "function": "_generate_summary",
-    "line": 592,
-    "issue_type": "TOO_LONG",
-    "value": 81,
-    "threshold": 50,
-    "message": "Function '_generate_summary' is 81 lines (max: 50)"
-  },
-  {
     "file": "src/btx_fix_mcp/subservers/review/perf.py",
     "function": "__init__",
     "line": 63,
@@ -279,15 +261,6 @@
     "message": "Function '_analyze_complexity' has nesting depth 6 (max: 3)"
   },
   {
-    "file": "src/btx_fix_mcp/subservers/review/perf.py",
-    "function": "_generate_summary",
-    "line": 451,
-    "issue_type": "TOO_LONG",
-    "value": 88,
-    "threshold": 50,
-    "message": "Function '_generate_summary' is 88 lines (max: 50)"
-  },
-  {
     "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",
     "function": "__init__",
     "line": 79,
@@ -313,15 +286,6 @@
     "value": 63,
     "threshold": 50,
     "message": "Function 'compile_all_issues' is 63 lines (max: 50)"
-  },
-  {
-    "file": "src/btx_fix_mcp/subservers/review/quality/orchestrator.py",
-    "function": "build_analyzer_tasks",
-    "line": 49,
-    "issue_type": "TOO_LONG",
-    "value": 75,
-    "threshold": 50,
-    "message": "Function 'build_analyzer_tasks' is 75 lines (max: 50)"
   },
   {
     "file": "src/btx_fix_mcp/subservers/review/quality/writer.py",

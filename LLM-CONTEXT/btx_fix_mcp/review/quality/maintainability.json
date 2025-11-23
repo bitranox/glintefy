@@ -86,7 +86,7 @@
   },
   {
     "file": "src/btx_fix_mcp/subservers/common/mindsets.py",
-    "mi": 56.43589247242063,
+    "mi": 53.960832096009725,
     "rank": "A"
   },
   {
@@ -116,12 +116,12 @@
   },
   {
     "file": "src/btx_fix_mcp/subservers/review/docs.py",
-    "mi": 29.154349326283857,
+    "mi": 27.694891411191225,
     "rank": "A"
   },
   {
     "file": "src/btx_fix_mcp/subservers/review/perf.py",
-    "mi": 33.72978892142603,
+    "mi": 31.578698220645308,
     "rank": "A"
   },
   {
@@ -161,7 +161,7 @@
   },
   {
     "file": "src/btx_fix_mcp/subservers/review/quality/orchestrator.py",
-    "mi": 64.60419593306419,
+    "mi": 60.02379846420851,
     "rank": "A"
   },
   {

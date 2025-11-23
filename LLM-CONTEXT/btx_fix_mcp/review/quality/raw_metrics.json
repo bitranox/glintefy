@@ -171,12 +171,12 @@
   },
   {
     "file": "src/btx_fix_mcp/subservers/common/mindsets.py",
-    "loc": 308,
-    "lloc": 154,
-    "sloc": 200,
-    "comments": 19,
+    "loc": 338,
+    "lloc": 171,
+    "sloc": 222,
+    "comments": 14,
     "multi": 33,
-    "blank": 52,
+    "blank": 60,
     "single_comments": 23
   },
   {
@@ -231,23 +231,23 @@
   },
   {
     "file": "src/btx_fix_mcp/subservers/review/docs.py",
-    "loc": 673,
-    "lloc": 289,
-    "sloc": 487,
-    "comments": 41,
+    "loc": 682,
+    "lloc": 304,
+    "sloc": 494,
+    "comments": 38,
     "multi": 45,
-    "blank": 91,
-    "single_comments": 50
+    "blank": 92,
+    "single_comments": 51
   },
   {
     "file": "src/btx_fix_mcp/subservers/review/perf.py",
-    "loc": 539,
-    "lloc": 266,
-    "sloc": 392,
-    "comments": 43,
+    "loc": 551,
+    "lloc": 285,
+    "sloc": 402,
+    "comments": 39,
     "multi": 20,
-    "blank": 85,
-    "single_comments": 42
+    "blank": 86,
+    "single_comments": 43
   },
   {
     "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",
@@ -321,12 +321,12 @@
   },
   {
     "file": "src/btx_fix_mcp/subservers/review/quality/orchestrator.py",
-    "loc": 191,
-    "lloc": 92,
-    "sloc": 114,
-    "comments": 8,
+    "loc": 204,
+    "lloc": 110,
+    "sloc": 126,
+    "comments": 2,
     "multi": 28,
-    "blank": 35,
+    "blank": 36,
     "single_comments": 14
   },
   {

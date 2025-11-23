@@ -10,6 +10,15 @@
       "churn_score": 7
     },
     {
+      "file": "src/btx_fix_mcp/subservers/review/perf.py",
+      "commits": 6,
+      "authors": 1,
+      "lines_added": 627,
+      "lines_deleted": 76,
+      "total_changes": 703,
+      "churn_score": 6
+    },
+    {
       "file": "src/btx_fix_mcp/subservers/review/security.py",
       "commits": 6,
       "authors": 1,
@@ -19,12 +28,12 @@
       "churn_score": 6
     },
     {
-      "file": "src/btx_fix_mcp/subservers/review/perf.py",
+      "file": "src/btx_fix_mcp/subservers/review/docs.py",
       "commits": 5,
       "authors": 1,
-      "lines_added": 559,
-      "lines_deleted": 20,
-      "total_changes": 579,
+      "lines_added": 737,
+      "lines_deleted": 55,
+      "total_changes": 792,
       "churn_score": 5
     },
     {
@@ -91,21 +100,21 @@
       "churn_score": 5
     },
     {
+      "file": "src/btx_fix_mcp/subservers/review/quality/orchestrator.py",
+      "commits": 4,
+      "authors": 1,
+      "lines_added": 296,
+      "lines_deleted": 92,
+      "total_changes": 388,
+      "churn_score": 4
+    },
+    {
       "file": "src/btx_fix_mcp/servers/review.py",
       "commits": 4,
       "authors": 1,
       "lines_added": 530,
       "lines_deleted": 0,
       "total_changes": 530,
-      "churn_score": 4
-    },
-    {
-      "file": "src/btx_fix_mcp/subservers/review/docs.py",
-      "commits": 4,
-      "authors": 1,
-      "lines_added": 686,
-      "lines_deleted": 13,
-      "total_changes": 699,
       "churn_score": 4
     },
     {
@@ -190,6 +199,15 @@
       "churn_score": 4
     },
     {
+      "file": "src/btx_fix_mcp/subservers/common/mindsets.py",
+      "commits": 3,
+      "authors": 1,
+      "lines_added": 379,
+      "lines_deleted": 41,
+      "total_changes": 420,
+      "churn_score": 3
+    },
+    {
       "file": "src/btx_fix_mcp/servers/review_handlers.py",
       "commits": 3,
       "authors": 1,
@@ -268,15 +286,6 @@
       "lines_added": 65,
       "lines_deleted": 3,
       "total_changes": 68,
-      "churn_score": 3
-    },
-    {
-      "file": "src/btx_fix_mcp/subservers/review/quality/orchestrator.py",
-      "commits": 3,
-      "authors": 1,
-      "lines_added": 260,
-      "lines_deleted": 69,
-      "total_changes": 329,
       "churn_score": 3
     },
     {
@@ -361,15 +370,6 @@
       "churn_score": 2
     },
     {
-      "file": "src/btx_fix_mcp/subservers/common/mindsets.py",
-      "commits": 2,
-      "authors": 1,
-      "lines_added": 308,
-      "lines_deleted": 0,
-      "total_changes": 308,
-      "churn_score": 2
-    },
-    {
       "file": "src/btx_fix_mcp/subservers/fix/__init__.py",
       "commits": 2,
       "authors": 1,
@@ -389,6 +389,6 @@
     }
   ],
   "high_churn_files": [],
-  "total_commits_analyzed": 20,
+  "total_commits_analyzed": 21,
   "analysis_period_days": 90
 }

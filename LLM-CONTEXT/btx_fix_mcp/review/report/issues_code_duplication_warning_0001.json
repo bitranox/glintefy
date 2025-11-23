@@ -9,7 +9,7 @@
   {
     "type": "code_duplication",
     "severity": "warning",
-    "message": "(duplicate-code)",
+    "message": "\"\"\"Check docstring coverage using interrogate.\"\"\" (duplicate-code)",
     "file": "",
     "line": 0
   },
@@ -37,49 +37,7 @@
   {
     "type": "code_duplication",
     "severity": "warning",
-    "message": "\"\"\"Run Bandit security scanner on files.\"\"\" (duplicate-code)",
-    "file": "",
-    "line": 0
-  },
-  {
-    "type": "code_duplication",
-    "severity": "warning",
-    "message": "src/btx_fix_mcp/tools_venv.py:1:0: R0801: Similar lines in 2 files",
-    "file": "",
-    "line": 0
-  },
-  {
-    "type": "code_duplication",
-    "severity": "warning",
-    "message": "\"\"\"Get Python files to analyze.\"\"\" (duplicate-code)",
-    "file": "",
-    "line": 0
-  },
-  {
-    "type": "code_duplication",
-    "severity": "warning",
-    "message": "src/btx_fix_mcp/tools_venv.py:1:0: R0801: Similar lines in 2 files",
-    "file": "",
-    "line": 0
-  },
-  {
-    "type": "code_duplication",
-    "severity": "warning",
-    "message": "\"\"\"Compile metrics for result.\"\"\" (duplicate-code)",
-    "file": "",
-    "line": 0
-  },
-  {
-    "type": "code_duplication",
-    "severity": "warning",
-    "message": "src/btx_fix_mcp/tools_venv.py:1:0: R0801: Similar lines in 2 files",
-    "file": "",
-    "line": 0
-  },
-  {
-    "type": "code_duplication",
-    "severity": "warning",
-    "message": "\"\"\"Compile metrics for result.\"\"\" (duplicate-code)",
+    "message": "\"\"\"Check docstring coverage using interrogate.\"\"\" (duplicate-code)",
     "file": "",
     "line": 0
   },
@@ -107,7 +65,49 @@
   {
     "type": "code_duplication",
     "severity": "warning",
+    "message": "\"\"\"Compile metrics for result.\"\"\" (duplicate-code)",
+    "file": "",
+    "line": 0
+  },
+  {
+    "type": "code_duplication",
+    "severity": "warning",
+    "message": "src/btx_fix_mcp/tools_venv.py:1:0: R0801: Similar lines in 2 files",
+    "file": "",
+    "line": 0
+  },
+  {
+    "type": "code_duplication",
+    "severity": "warning",
+    "message": "\"\"\"Compile metrics for result.\"\"\" (duplicate-code)",
+    "file": "",
+    "line": 0
+  },
+  {
+    "type": "code_duplication",
+    "severity": "warning",
+    "message": "src/btx_fix_mcp/tools_venv.py:1:0: R0801: Similar lines in 2 files",
+    "file": "",
+    "line": 0
+  },
+  {
+    "type": "code_duplication",
+    "severity": "warning",
     "message": "\"\"\"Get Python files to analyze.\"\"\" (duplicate-code)",
+    "file": "",
+    "line": 0
+  },
+  {
+    "type": "code_duplication",
+    "severity": "warning",
+    "message": "src/btx_fix_mcp/tools_venv.py:1:0: R0801: Similar lines in 2 files",
+    "file": "",
+    "line": 0
+  },
+  {
+    "type": "code_duplication",
+    "severity": "warning",
+    "message": "\"\"\"Gather results from all sub-servers.\"\"\" (duplicate-code)",
     "file": "",
     "line": 0
   },
@@ -163,7 +163,7 @@
   {
     "type": "code_duplication",
     "severity": "warning",
-    "message": "return \"\\n\".join(lines) (duplicate-code)",
+    "message": "metrics = self._compile_metrics(files, results, all_issues) (duplicate-code)",
     "file": "",
     "line": 0
   },
@@ -177,7 +177,7 @@
   {
     "type": "code_duplication",
     "severity": "warning",
-    "message": "\"\"\" (duplicate-code)",
+    "message": "\"\"\"Check docstring coverage using interrogate.\"\"\" (duplicate-code)",
     "file": "",
     "line": 0
   },
@@ -205,7 +205,7 @@
   {
     "type": "code_duplication",
     "severity": "warning",
-    "message": "\"\"\"Execute documentation analysis.\"\"\" (duplicate-code)",
+    "message": "\"\"\"Execute performance analysis.\"\"\" (duplicate-code)",
     "file": "",
     "line": 0
   },

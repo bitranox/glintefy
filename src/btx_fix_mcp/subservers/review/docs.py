@@ -272,67 +272,80 @@ class DocsSubServer(BaseSubServer):
 
         return coverage
 
-    def _find_missing_docstrings(self, files: list[str]) -> list[DocstringIssue]:
-        """Find functions/classes without docstrings."""
+    def _check_function_docstring(self, node, file_path: str, issues: list) -> None:
+        """Check if a function has docstring and validate style."""
+        import ast
+
+        if node.name.startswith("_") and not node.name.startswith("__"):
+            return  # Skip private functions
+
+        docstring = ast.get_docstring(node)
+        if not docstring:
+            issues.append(
+                DocstringIssue(
+                    type="missing_docstring",
+                    severity="warning",
+                    file=file_path,
+                    line=node.lineno,
+                    name=node.name,
+                    doc_type="function",
+                    message=f"Function '{node.name}' is missing a docstring",
+                )
+            )
+        else:
+            style_issue = self._validate_docstring_style(docstring, node.name, file_path, node.lineno, "function")
+            if style_issue:
+                issues.append(style_issue)
+
+    def _check_class_docstring(self, node, file_path: str, issues: list) -> None:
+        """Check if a class has docstring and validate style."""
+        import ast
+
+        docstring = ast.get_docstring(node)
+        if not docstring:
+            issues.append(
+                DocstringIssue(
+                    type="missing_docstring",
+                    severity="warning",
+                    file=file_path,
+                    line=node.lineno,
+                    name=node.name,
+                    doc_type="class",
+                    message=f"Class '{node.name}' is missing a docstring",
+                )
+            )
+        else:
+            style_issue = self._validate_docstring_style(docstring, node.name, file_path, node.lineno, "class")
+            if style_issue:
+                issues.append(style_issue)
+
+    def _analyze_file_for_docstrings(self, file_path: str) -> list[DocstringIssue]:
+        """Analyze a single file for missing docstrings."""
         import ast
 
         issues: list[DocstringIssue] = []
+        try:
+            content = Path(file_path).read_text()
+            tree = ast.parse(content)
 
+            for node in ast.walk(tree):
+                if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
+                    self._check_function_docstring(node, file_path, issues)
+                elif isinstance(node, ast.ClassDef):
+                    self._check_class_docstring(node, file_path, issues)
+
+        except SyntaxError:
+            self.logger.warning(f"Syntax error in {file_path}")
+        except Exception as e:
+            self.logger.warning(f"Error analyzing {file_path}: {e}")
+
+        return issues
+
+    def _find_missing_docstrings(self, files: list[str]) -> list[DocstringIssue]:
+        """Find functions/classes without docstrings."""
+        issues: list[DocstringIssue] = []
         for file_path in files:
-            try:
-                content = Path(file_path).read_text()
-                tree = ast.parse(content)
-
-                for node in ast.walk(tree):
-                    if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
-                        # Skip private functions
-                        if node.name.startswith("_") and not node.name.startswith("__"):
-                            continue
-                        # Check for docstring
-                        docstring = ast.get_docstring(node)
-                        if not docstring:
-                            issues.append(
-                                DocstringIssue(
-                                    type="missing_docstring",
-                                    severity="warning",
-                                    file=file_path,
-                                    line=node.lineno,
-                                    name=node.name,
-                                    doc_type="function",
-                                    message=f"Function '{node.name}' is missing a docstring",
-                                )
-                            )
-                        elif docstring:
-                            # Validate docstring style if configured
-                            style_issue = self._validate_docstring_style(docstring, node.name, file_path, node.lineno, "function")
-                            if style_issue:
-                                issues.append(style_issue)
-
-                    elif isinstance(node, ast.ClassDef):
-                        docstring = ast.get_docstring(node)
-                        if not docstring:
-                            issues.append(
-                                DocstringIssue(
-                                    type="missing_docstring",
-                                    severity="warning",
-                                    file=file_path,
-                                    line=node.lineno,
-                                    name=node.name,
-                                    doc_type="class",
-                                    message=f"Class '{node.name}' is missing a docstring",
-                                )
-                            )
-                        elif docstring:
-                            # Validate docstring style if configured
-                            style_issue = self._validate_docstring_style(docstring, node.name, file_path, node.lineno, "class")
-                            if style_issue:
-                                issues.append(style_issue)
-
-            except SyntaxError:
-                self.logger.warning(f"Syntax error in {file_path}")
-            except Exception as e:
-                self.logger.warning(f"Error analyzing {file_path}: {e}")
-
+            issues.extend(self._analyze_file_for_docstrings(file_path))
         return issues
 
     def _validate_docstring_style(

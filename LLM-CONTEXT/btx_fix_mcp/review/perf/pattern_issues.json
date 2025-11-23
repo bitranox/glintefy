@@ -3,15 +3,6 @@
     "type": "nested_loop",
     "severity": "warning",
     "message": "Nested loop detected",
-    "file": "/media/srv-main-softdev/projects/MCP/btx_fix_mcp/scripts/clean.py",
-    "line": 34,
-    "pattern": "for .+ in .+:\\s*for .+ in .+:",
-    "impact": ""
-  },
-  {
-    "type": "nested_loop",
-    "severity": "warning",
-    "message": "Nested loop detected",
     "file": "/media/srv-main-softdev/projects/MCP/btx_fix_mcp/src/btx_fix_mcp/subservers/common/chunked_writer.py",
     "line": 161,
     "pattern": "for .+ in .+:\\s*for .+ in .+:",
@@ -22,7 +13,7 @@
     "severity": "warning",
     "message": "Nested loop detected",
     "file": "/media/srv-main-softdev/projects/MCP/btx_fix_mcp/src/btx_fix_mcp/subservers/review/deps_scanners.py",
-    "line": 47,
+    "line": 49,
     "pattern": "for .+ in .+:\\s*for .+ in .+:",
     "impact": ""
   },
@@ -49,7 +40,7 @@
     "severity": "warning",
     "message": "Nested loop detected",
     "file": "/media/srv-main-softdev/projects/MCP/btx_fix_mcp/src/btx_fix_mcp/subservers/review/quality/complexity.py",
-    "line": 76,
+    "line": 78,
     "pattern": "for .+ in .+:\\s*for .+ in .+:",
     "impact": ""
   },
@@ -58,7 +49,7 @@
     "severity": "warning",
     "message": "Nested loop detected",
     "file": "/media/srv-main-softdev/projects/MCP/btx_fix_mcp/src/btx_fix_mcp/subservers/review/report.py",
-    "line": 413,
+    "line": 419,
     "pattern": "for .+ in .+:\\s*for .+ in .+:",
     "impact": ""
   },
@@ -67,7 +58,7 @@
     "severity": "warning",
     "message": "Nested loop detected",
     "file": "/media/srv-main-softdev/projects/MCP/btx_fix_mcp/src/btx_fix_mcp/subservers/review/report.py",
-    "line": 470,
+    "line": 484,
     "pattern": "for .+ in .+:\\s*for .+ in .+:",
     "impact": ""
   }

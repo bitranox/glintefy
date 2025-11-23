@@ -45,9 +45,12 @@ class SubServerResult:
             raise ValueError(f"Invalid status: {self.status}. Must be SUCCESS, FAILED, or PARTIAL")
 
     def to_dict(self) -> dict:
-        """Convert result to dictionary with Path objects as strings."""
+        """Convert result to dictionary with Path objects as strings.
+
+        Uses POSIX-style paths (forward slashes) for cross-platform consistency.
+        """
         result = asdict(self)
-        result["artifacts"] = {k: str(v) for k, v in self.artifacts.items()}
+        result["artifacts"] = {k: v.as_posix() for k, v in self.artifacts.items()}
         return result
 
 

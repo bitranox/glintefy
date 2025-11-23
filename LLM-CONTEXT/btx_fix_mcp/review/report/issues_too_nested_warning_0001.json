@@ -4,7 +4,7 @@
     "severity": "warning",
     "message": "Function 'categorize_files' has nesting depth 6 (max: 3)",
     "file": "src/btx_fix_mcp/subservers/common/files.py",
-    "line": 140,
+    "line": 146,
     "value": 6,
     "threshold": 3,
     "name": "categorize_files"
@@ -14,7 +14,7 @@
     "severity": "warning",
     "message": "Function '_find_missing_docstrings' has nesting depth 6 (max: 3)",
     "file": "src/btx_fix_mcp/subservers/review/docs.py",
-    "line": 251,
+    "line": 275,
     "value": 6,
     "threshold": 3,
     "name": "_find_missing_docstrings"
@@ -34,7 +34,7 @@
     "severity": "warning",
     "message": "Function '_analyze_complexity' has nesting depth 6 (max: 3)",
     "file": "src/btx_fix_mcp/subservers/review/perf.py",
-    "line": 309,
+    "line": 310,
     "value": 6,
     "threshold": 3,
     "name": "_analyze_complexity"
@@ -44,7 +44,7 @@
     "severity": "warning",
     "message": "Function 'run_pip_audit' has nesting depth 5 (max: 3)",
     "file": "src/btx_fix_mcp/subservers/review/deps_scanners.py",
-    "line": 31,
+    "line": 32,
     "value": 5,
     "threshold": 3,
     "name": "run_pip_audit"
@@ -54,7 +54,7 @@
     "severity": "warning",
     "message": "Function 'check_outdated_packages' has nesting depth 5 (max: 3)",
     "file": "src/btx_fix_mcp/subservers/review/deps_scanners.py",
-    "line": 160,
+    "line": 164,
     "value": 5,
     "threshold": 3,
     "name": "check_outdated_packages"
@@ -64,7 +64,7 @@
     "severity": "warning",
     "message": "Function '_check_docstring_coverage' has nesting depth 5 (max: 3)",
     "file": "src/btx_fix_mcp/subservers/review/docs.py",
-    "line": 215,
+    "line": 238,
     "value": 5,
     "threshold": 3,
     "name": "_check_docstring_coverage"
@@ -74,30 +74,10 @@
     "severity": "warning",
     "message": "Function '_run_bandit' has nesting depth 5 (max: 3)",
     "file": "src/btx_fix_mcp/subservers/review/security.py",
-    "line": 262,
+    "line": 280,
     "value": 5,
     "threshold": 3,
     "name": "_run_bandit"
-  },
-  {
-    "type": "too_nested",
-    "severity": "warning",
-    "message": "Function 'clean' has nesting depth 4 (max: 3)",
-    "file": "scripts/clean.py",
-    "line": 31,
-    "value": 4,
-    "threshold": 3,
-    "name": "clean"
-  },
-  {
-    "type": "too_nested",
-    "severity": "warning",
-    "message": "Function 'compose' has nesting depth 4 (max: 3)",
-    "file": "scripts/menu.py",
-    "line": 275,
-    "value": 4,
-    "threshold": 3,
-    "name": "compose"
   },
   {
     "type": "too_nested",
@@ -114,7 +94,7 @@
     "severity": "warning",
     "message": "Function 'run_safety' has nesting depth 4 (max: 3)",
     "file": "src/btx_fix_mcp/subservers/review/deps_scanners.py",
-    "line": 72,
+    "line": 74,
     "value": 4,
     "threshold": 3,
     "name": "run_safety"
@@ -124,7 +104,7 @@
     "severity": "warning",
     "message": "Function 'run_npm_audit' has nesting depth 4 (max: 3)",
     "file": "src/btx_fix_mcp/subservers/review/deps_scanners.py",
-    "line": 109,
+    "line": 112,
     "value": 4,
     "threshold": 3,
     "name": "run_npm_audit"
@@ -134,7 +114,7 @@
     "severity": "warning",
     "message": "Function 'execute' has nesting depth 4 (max: 3)",
     "file": "src/btx_fix_mcp/subservers/review/docs.py",
-    "line": 117,
+    "line": 140,
     "value": 4,
     "threshold": 3,
     "name": "execute"

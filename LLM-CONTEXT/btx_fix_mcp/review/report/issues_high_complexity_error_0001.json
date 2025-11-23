@@ -1,0 +1,32 @@
+[
+  {
+    "type": "high_complexity",
+    "severity": "error",
+    "message": "Function '_generate_summary' has complexity 22 (threshold: 10)",
+    "file": "src/btx_fix_mcp/subservers/review/perf.py",
+    "line": 426,
+    "value": 22,
+    "threshold": 10,
+    "name": "_generate_summary"
+  },
+  {
+    "type": "high_complexity",
+    "severity": "error",
+    "message": "Function '_generate_summary' has complexity 21 (threshold: 10)",
+    "file": "src/btx_fix_mcp/subservers/review/docs.py",
+    "line": 508,
+    "value": 21,
+    "threshold": 10,
+    "name": "_generate_summary"
+  },
+  {
+    "type": "high_complexity",
+    "severity": "error",
+    "message": "Function '_run_bandit' has complexity 21 (threshold: 10)",
+    "file": "src/btx_fix_mcp/subservers/review/security.py",
+    "line": 280,
+    "value": 21,
+    "threshold": 10,
+    "name": "_run_bandit"
+  }
+]

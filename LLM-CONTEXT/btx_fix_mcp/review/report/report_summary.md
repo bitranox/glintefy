@@ -1,6 +1,6 @@
 # Code Review Report
 
-**Generated**: 2025-11-22T22:13:41.571874
+**Generated**: 2025-11-23T01:21:04.478821
 
 ---
 
@@ -20,7 +20,7 @@
 - **Sub-servers run**: 6
 - **Sub-servers passed**: 3
 - **Sub-servers failed**: 0
-- **Files analyzed**: 63
+- **Files analyzed**: 43
 - **Total issues**: 278
 - **Critical issues**: 4
 - **Warnings**: 226
@@ -34,22 +34,24 @@
 **Status**: `SUCCESS`
 
 **Key Metrics:**
-- total_files: 4095
-- code_files: 63
-- test_files: 66
+- total_files: 4271
+- code_files: 43
+- test_files: 63
 - doc_files: 60
-- config_files: 995
+- config_files: 955
+- ... and 1 more metrics
 
 ### ⚠️ Quality
 
 **Status**: `PARTIAL`
 
 **Key Metrics:**
-- files_analyzed: 63
-- python_files: 63
+- files_analyzed: 43
+- python_files: 43
 - js_files: 0
-- total_functions: 572
-- high_complexity_count: 17
+- total_functions: 420
+- high_complexity_count: 19
+- ... and 17 more metrics
 
 **Issues**: 184 (2 critical, 134 warnings)
 
@@ -58,11 +60,11 @@
 **Status**: `SUCCESS`
 
 **Key Metrics:**
-- files_scanned: 63
-- issues_found: 0
+- files_scanned: 43
+- issues_found: 59
 - high_severity: 0
 - medium_severity: 0
-- low_severity: 0
+- low_severity: 59
 
 ### ⚠️ Deps
 
@@ -74,6 +76,7 @@
 - direct_dependencies: 10
 - vulnerabilities_count: 0
 - outdated_count: 7
+- ... and 3 more metrics
 
 **Issues**: 7 (0 critical, 7 warnings)
 
@@ -82,11 +85,11 @@
 **Status**: `SUCCESS`
 
 **Key Metrics:**
-- files_analyzed: 63
+- files_analyzed: 43
 - coverage_percent: 99.2
-- missing_docstrings: 48
+- missing_docstrings: 0
 - project_docs_found: 3
-- total_issues: 48
+- total_issues: 1
 
 **Issues**: 48 (0 critical, 48 warnings)
 
@@ -95,16 +98,16 @@
 **Status**: `PARTIAL`
 
 **Key Metrics:**
-- files_analyzed: 63
-- patterns_found: 8
+- files_analyzed: 43
+- patterns_found: 7
 - hotspots_found: 4
-- total_issues: 43
+- total_issues: 40
 
 **Issues**: 39 (2 critical, 37 warnings)
 
 ---
 
-## Critical Issues (Must Fix)
+## Critical Issues (Must Fix) - showing 4 of 4
 
 - **[quality]** `src/btx_fix_mcp/subservers/review/deps.py:46` Class 'DepsSubServer' is a god object (27 methods, 566 lines)
 - **[quality]** `src/btx_fix_mcp/subservers/review/quality/architecture.py:18` Class 'ArchitectureAnalyzer' is a god object (22 methods, 293 lines)

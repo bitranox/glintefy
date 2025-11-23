@@ -2,19 +2,19 @@
   {
     "type": "slow_test",
     "severity": "critical",
-    "message": "Slow test: tests/subservers/review/test_deps.py::TestDepsSubServer::test_execute_python_project takes 5.91s",
+    "message": "Slow test: tests/subservers/review/test_deps.py::TestDepsSubServer::test_execute_python_project takes 5.64s",
     "file": "",
     "function": "tests/subservers/review/test_deps.py::TestDepsSubServer::test_execute_python_project",
-    "time_percent": 5.91,
+    "time_percent": 5.64,
     "calls": 0
   },
   {
     "type": "slow_test",
     "severity": "critical",
-    "message": "Slow test: tests/subservers/review/test_deps.py::TestDepsSubServer::test_summary_includes_mindset takes 5.53s",
+    "message": "Slow test: tests/subservers/review/test_deps.py::TestDepsSubServer::test_summary_includes_mindset takes 5.39s",
     "file": "",
     "function": "tests/subservers/review/test_deps.py::TestDepsSubServer::test_summary_includes_mindset",
-    "time_percent": 5.53,
+    "time_percent": 5.39,
     "calls": 0
   }
 ]

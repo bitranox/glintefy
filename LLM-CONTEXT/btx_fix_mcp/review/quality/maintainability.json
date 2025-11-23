@@ -1,105 +1,5 @@
 [
   {
-    "file": "scripts/__init__.py",
-    "mi": 100.0,
-    "rank": "A"
-  },
-  {
-    "file": "scripts/__main__.py",
-    "mi": 100.0,
-    "rank": "A"
-  },
-  {
-    "file": "scripts/_utils.py",
-    "mi": 30.370137016153183,
-    "rank": "A"
-  },
-  {
-    "file": "scripts/build.py",
-    "mi": 69.97565086890167,
-    "rank": "A"
-  },
-  {
-    "file": "scripts/bump.py",
-    "mi": 72.57153428709272,
-    "rank": "A"
-  },
-  {
-    "file": "scripts/bump_major.py",
-    "mi": 89.26587099756442,
-    "rank": "A"
-  },
-  {
-    "file": "scripts/bump_minor.py",
-    "mi": 89.26587099756442,
-    "rank": "A"
-  },
-  {
-    "file": "scripts/bump_patch.py",
-    "mi": 89.26587099756442,
-    "rank": "A"
-  },
-  {
-    "file": "scripts/bump_version.py",
-    "mi": 51.5277053141986,
-    "rank": "A"
-  },
-  {
-    "file": "scripts/clean.py",
-    "mi": 75.25327812445563,
-    "rank": "A"
-  },
-  {
-    "file": "scripts/cli.py",
-    "mi": 42.80415266687684,
-    "rank": "A"
-  },
-  {
-    "file": "scripts/dev.py",
-    "mi": 90.9005658016036,
-    "rank": "A"
-  },
-  {
-    "file": "scripts/help.py",
-    "mi": 69.24838340422251,
-    "rank": "A"
-  },
-  {
-    "file": "scripts/install.py",
-    "mi": 90.9005658016036,
-    "rank": "A"
-  },
-  {
-    "file": "scripts/menu.py",
-    "mi": 17.22511363268717,
-    "rank": "B"
-  },
-  {
-    "file": "scripts/push.py",
-    "mi": 60.70927869366828,
-    "rank": "A"
-  },
-  {
-    "file": "scripts/release.py",
-    "mi": 70.02416691090913,
-    "rank": "A"
-  },
-  {
-    "file": "scripts/run_cli.py",
-    "mi": 41.337065343939024,
-    "rank": "A"
-  },
-  {
-    "file": "scripts/target_metadata.py",
-    "mi": 71.4273477221073,
-    "rank": "A"
-  },
-  {
-    "file": "scripts/version_current.py",
-    "mi": 85.70169791537606,
-    "rank": "A"
-  },
-  {
     "file": "src/btx_fix_mcp/__init__.py",
     "mi": 100.0,
     "rank": "A"
@@ -166,12 +66,12 @@
   },
   {
     "file": "src/btx_fix_mcp/subservers/common/files.py",
-    "mi": 69.92147326284982,
+    "mi": 69.42743331007983,
     "rank": "A"
   },
   {
     "file": "src/btx_fix_mcp/subservers/common/git.py",
-    "mi": 63.11934628854574,
+    "mi": 62.98405308428825,
     "rank": "A"
   },
   {
@@ -206,22 +106,22 @@
   },
   {
     "file": "src/btx_fix_mcp/subservers/review/deps.py",
-    "mi": 26.462851510972207,
+    "mi": 22.37399499903161,
     "rank": "A"
   },
   {
     "file": "src/btx_fix_mcp/subservers/review/deps_scanners.py",
-    "mi": 42.02127861520436,
+    "mi": 41.369966946272044,
     "rank": "A"
   },
   {
     "file": "src/btx_fix_mcp/subservers/review/docs.py",
-    "mi": 34.01868967196061,
+    "mi": 31.862861292000062,
     "rank": "A"
   },
   {
     "file": "src/btx_fix_mcp/subservers/review/perf.py",
-    "mi": 34.62711896529708,
+    "mi": 32.42376703593062,
     "rank": "A"
   },
   {
@@ -231,7 +131,7 @@
   },
   {
     "file": "src/btx_fix_mcp/subservers/review/quality/architecture.py",
-    "mi": 35.33642251100725,
+    "mi": 34.80236333776348,
     "rank": "A"
   },
   {
@@ -241,7 +141,7 @@
   },
   {
     "file": "src/btx_fix_mcp/subservers/review/quality/complexity.py",
-    "mi": 40.71948519983588,
+    "mi": 40.44562879950745,
     "rank": "A"
   },
   {
@@ -256,7 +156,7 @@
   },
   {
     "file": "src/btx_fix_mcp/subservers/review/quality/metrics.py",
-    "mi": 41.63361639752397,
+    "mi": 41.21428782105351,
     "rank": "A"
   },
   {
@@ -271,7 +171,7 @@
   },
   {
     "file": "src/btx_fix_mcp/subservers/review/quality/static.py",
-    "mi": 67.54297067557447,
+    "mi": 66.4488297618787,
     "rank": "A"
   },
   {
@@ -281,7 +181,7 @@
   },
   {
     "file": "src/btx_fix_mcp/subservers/review/quality/types.py",
-    "mi": 48.18869630349521,
+    "mi": 47.61835094194181,
     "rank": "A"
   },
   {
@@ -291,17 +191,17 @@
   },
   {
     "file": "src/btx_fix_mcp/subservers/review/report.py",
-    "mi": 38.22815114002692,
+    "mi": 36.41748211142709,
     "rank": "A"
   },
   {
     "file": "src/btx_fix_mcp/subservers/review/scope.py",
-    "mi": 64.11280932460777,
+    "mi": 60.863423780469745,
     "rank": "A"
   },
   {
     "file": "src/btx_fix_mcp/subservers/review/security.py",
-    "mi": 39.00129979749232,
+    "mi": 35.551514374741146,
     "rank": "A"
   },
   {

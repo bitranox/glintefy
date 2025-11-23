@@ -2,32 +2,12 @@
   {
     "type": "high_complexity",
     "severity": "warning",
-    "message": "Function '_generate_summary' has complexity 18 (threshold: 10)",
+    "message": "Function '_check_project_docs' has complexity 15 (threshold: 10)",
     "file": "src/btx_fix_mcp/subservers/review/docs.py",
-    "line": 419,
-    "value": 18,
-    "threshold": 10,
-    "name": "_generate_summary"
-  },
-  {
-    "type": "high_complexity",
-    "severity": "warning",
-    "message": "Function '_generate_summary' has complexity 15 (threshold: 10)",
-    "file": "src/btx_fix_mcp/subservers/review/perf.py",
-    "line": 425,
+    "line": 328,
     "value": 15,
     "threshold": 10,
-    "name": "_generate_summary"
-  },
-  {
-    "type": "high_complexity",
-    "severity": "warning",
-    "message": "Function 'bootstrap_dev' has complexity 14 (threshold: 10)",
-    "file": "scripts/_utils.py",
-    "line": 691,
-    "value": 14,
-    "threshold": 10,
-    "name": "bootstrap_dev"
+    "name": "_check_project_docs"
   },
   {
     "type": "high_complexity",
@@ -44,7 +24,7 @@
     "severity": "warning",
     "message": "Function '_save_results' has complexity 14 (threshold: 10)",
     "file": "src/btx_fix_mcp/subservers/review/docs.py",
-    "line": 354,
+    "line": 443,
     "value": 14,
     "threshold": 10,
     "name": "_save_results"
@@ -62,19 +42,29 @@
   {
     "type": "high_complexity",
     "severity": "warning",
-    "message": "Function '_gather_values' has complexity 12 (threshold: 10)",
-    "file": "scripts/menu.py",
-    "line": 337,
-    "value": 12,
+    "message": "Function '__init__' has complexity 14 (threshold: 10)",
+    "file": "src/btx_fix_mcp/subservers/review/security.py",
+    "line": 74,
+    "value": 14,
     "threshold": 10,
-    "name": "_gather_values"
+    "name": "__init__"
+  },
+  {
+    "type": "high_complexity",
+    "severity": "warning",
+    "message": "Function '__init__' has complexity 13 (threshold: 10)",
+    "file": "src/btx_fix_mcp/subservers/review/docs.py",
+    "line": 57,
+    "value": 13,
+    "threshold": 10,
+    "name": "__init__"
   },
   {
     "type": "high_complexity",
     "severity": "warning",
     "message": "Function 'categorize_files' has complexity 12 (threshold: 10)",
     "file": "src/btx_fix_mcp/subservers/common/files.py",
-    "line": 140,
+    "line": 146,
     "value": 12,
     "threshold": 10,
     "name": "categorize_files"
@@ -102,29 +92,29 @@
   {
     "type": "high_complexity",
     "severity": "warning",
-    "message": "Function '_run_bandit' has complexity 12 (threshold: 10)",
-    "file": "src/btx_fix_mcp/subservers/review/security.py",
-    "line": 262,
+    "message": "Function '_generate_summary' has complexity 12 (threshold: 10)",
+    "file": "src/btx_fix_mcp/subservers/review/scope.py",
+    "line": 254,
     "value": 12,
     "threshold": 10,
-    "name": "_run_bandit"
+    "name": "_generate_summary"
   },
   {
     "type": "high_complexity",
     "severity": "warning",
-    "message": "Function '_extract_author_info' has complexity 11 (threshold: 10)",
-    "file": "scripts/_utils.py",
-    "line": 365,
+    "message": "Function 'DocsSubServer' has complexity 11 (threshold: 10)",
+    "file": "src/btx_fix_mcp/subservers/review/docs.py",
+    "line": 44,
     "value": 11,
     "threshold": 10,
-    "name": "_extract_author_info"
+    "name": "DocsSubServer"
   },
   {
     "type": "high_complexity",
     "severity": "warning",
     "message": "Function 'execute' has complexity 11 (threshold: 10)",
     "file": "src/btx_fix_mcp/subservers/review/docs.py",
-    "line": 117,
+    "line": 140,
     "value": 11,
     "threshold": 10,
     "name": "execute"
@@ -134,7 +124,7 @@
     "severity": "warning",
     "message": "Function '_find_missing_docstrings' has complexity 11 (threshold: 10)",
     "file": "src/btx_fix_mcp/subservers/review/docs.py",
-    "line": 251,
+    "line": 275,
     "value": 11,
     "threshold": 10,
     "name": "_find_missing_docstrings"
@@ -162,11 +152,11 @@
   {
     "type": "high_complexity",
     "severity": "warning",
-    "message": "Function '__init__' has complexity 11 (threshold: 10)",
-    "file": "src/btx_fix_mcp/subservers/review/security.py",
-    "line": 69,
+    "message": "Function '_format_critical_issues' has complexity 11 (threshold: 10)",
+    "file": "src/btx_fix_mcp/subservers/review/report.py",
+    "line": 416,
     "value": 11,
     "threshold": 10,
-    "name": "__init__"
+    "name": "_format_critical_issues"
   }
 ]

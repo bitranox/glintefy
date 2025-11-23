@@ -1,175 +1,9 @@
 {
   "cycles": [],
   "import_graph": {
-    "scripts.__init__": [
-      "__future__"
-    ],
-    "scripts.__main__": [
-      "cli",
-      "__future__"
-    ],
-    "scripts._utils": [
-      "os",
-      "shutil",
-      "urllib.parse",
-      "tomllib",
-      "__future__",
-      "subprocess",
-      "sys",
-      "shlex",
-      "tomli",
-      "re",
-      "dataclasses",
-      "typing",
-      "textwrap",
-      "json",
-      "pathlib",
-      "importlib"
-    ],
-    "scripts.build": [
-      "_utils",
-      "shutil",
-      "__future__",
-      "sys",
-      "cli",
-      "rich_click",
-      "pathlib"
-    ],
-    "scripts.bum": [
-      "_utils",
-      "__future__",
-      "sys",
-      "cli",
-      "pathlib"
-    ],
-    "scripts.bump_major": [
-      "__future__",
-      "bump",
-      "sys",
-      "cli",
-      "pathlib"
-    ],
-    "scripts.bump_minor": [
-      "__future__",
-      "bump",
-      "sys",
-      "cli",
-      "pathlib"
-    ],
-    "scripts.bump_patch": [
-      "__future__",
-      "bump",
-      "sys",
-      "cli",
-      "pathlib"
-    ],
-    "scripts.bump_version": [
-      "__future__",
-      "datetime",
-      "re",
-      "argparse",
-      "pathlib"
-    ],
-    "scripts.clean": [
-      "shutil",
-      "__future__",
-      "cli",
-      "collections.abc",
-      "pathlib"
-    ],
-    "scripts.cli": [
-      "os",
-      "bump_minor",
-      "__future__",
-      "bump_major",
-      "rich_click",
-      "bump_patch",
-      "collections.abc",
-      "pathlib"
-    ],
-    "scripts.dev": [
-      "sys",
-      "_utils",
-      "cli",
-      "__future__"
-    ],
-    "scripts.hel": [
-      "__future__",
-      "sys",
-      "typing",
-      "target_metadata",
-      "collections.abc"
-    ],
-    "scripts.install": [
-      "sys",
-      "_utils",
-      "cli",
-      "__future__"
-    ],
-    "scripts.menu": [
-      "textual.app",
-      "os",
-      "signal",
-      "__future__",
-      "rich.text",
-      "contextlib",
-      "sys",
-      "scripts.target_metadata",
-      "textual",
-      "textual.reactive",
-      "textual.screen",
-      "typing",
-      "asyncio",
-      "textual.containers",
-      "scripts._utils",
-      "traceback",
-      "pathlib",
-      "textual.widgets"
-    ],
-    "scripts.push": [
-      "_utils",
-      "os",
-      "__future__",
-      "sys",
-      "cli",
-      "rich_click",
-      "pathlib"
-    ],
-    "scripts.release": [
-      "_utils",
-      "__future__",
-      "sys",
-      "cli",
-      "re",
-      "click",
-      "pathlib"
-    ],
-    "scripts.run_cli": [
-      "_utils",
-      "__future__",
-      "importlib.machinery",
-      "sys",
-      "contextlib",
-      "types",
-      "importlib.util",
-      "collections.abc",
-      "pathlib",
-      "importlib"
-    ],
-    "scripts.target_metadata": [
-      "dataclasses",
-      "os",
-      "collections.abc",
-      "__future__"
-    ],
-    "scripts.version_current": [
-      "_utils",
-      "pathlib",
-      "__future__"
-    ],
     "src.btx_fix_mcp.__init__": [
-      "behaviors",
       "__init__conf__",
+      "behaviors",
       "__future__"
     ],
     "src.btx_fix_mcp.__init__conf__": [
@@ -180,43 +14,43 @@
       "__future__"
     ],
     "src.btx_fix_mcp.behaviors": [
-      "sys",
       "typing",
+      "sys",
       "__future__"
     ],
     "src.btx_fix_mcp.cli": [
-      "click.core",
+      "collections.abc",
       "rich.style",
-      "rich.console",
+      "pathlib",
       "__future__",
-      "sys",
+      "click.core",
+      "rich.console",
+      "behaviors",
       "servers.review",
       "rich.traceback",
-      "behaviors",
-      "rich.markdown",
+      "sys",
       "rich_click",
-      "collections.abc",
-      "pathlib"
+      "rich.markdown"
     ],
     "src.btx_fix_mcp.servers.__init__": [
       "btx_fix_mcp.servers.review"
     ],
     "src.btx_fix_mcp.servers.review": [
-      "btx_fix_mcp.servers.review_tools",
-      "btx_fix_mcp.subservers.review.perf",
-      "btx_fix_mcp.subservers.review.deps",
-      "btx_fix_mcp.subservers.review.report",
-      "btx_fix_mcp.config",
-      "btx_fix_mcp.subservers.review.scope",
-      "btx_fix_mcp.subservers.review.security",
-      "time",
-      "btx_fix_mcp.servers.review_handlers",
       "btx_fix_mcp.subservers.common.logging",
-      "typing",
-      "btx_fix_mcp.subservers.review.docs",
+      "pathlib",
+      "btx_fix_mcp.subservers.review.deps",
+      "btx_fix_mcp.subservers.review.perf",
+      "btx_fix_mcp.subservers.review.security",
+      "btx_fix_mcp.servers.review_handlers",
+      "time",
       "btx_fix_mcp.subservers.review.quality",
       "concurrent.futures",
-      "pathlib"
+      "btx_fix_mcp.servers.review_tools",
+      "btx_fix_mcp.subservers.review.docs",
+      "typing",
+      "btx_fix_mcp.subservers.review.scope",
+      "btx_fix_mcp.subservers.review.report",
+      "btx_fix_mcp.config"
     ],
     "src.btx_fix_mcp.servers.review_handlers": [
       "btx_fix_mcp.subservers.common.logging",
@@ -224,28 +58,29 @@
       "typing"
     ],
     "src.btx_fix_mcp.servers.review_tools": [
-      "typing",
-      "btx_fix_mcp.subservers.common.mindsets"
+      "btx_fix_mcp.subservers.common.mindsets",
+      "typing"
     ],
     "src.btx_fix_mcp.subservers.base": [
-      "abc",
-      "datetime",
       "dataclasses",
-      "typing",
+      "pathlib",
       "json",
-      "pathlib"
+      "datetime",
+      "abc",
+      "typing"
     ],
     "src.btx_fix_mcp.subservers.common.chunked_writer": [
-      "typing",
       "collections",
       "json",
-      "pathlib"
+      "pathlib",
+      "typing"
     ],
     "src.btx_fix_mcp.subservers.common.files": [
       "pathlib"
     ],
     "src.btx_fix_mcp.subservers.common.git": [
       "pathlib",
+      "btx_fix_mcp.config",
       "subprocess"
     ],
     "src.btx_fix_mcp.subservers.common.issues": [
@@ -254,14 +89,14 @@
       "typing"
     ],
     "src.btx_fix_mcp.subservers.common.logging": [
+      "pathlib",
+      "traceback",
       "functools",
-      "sys",
       "datetime",
       "time",
-      "typing",
       "logging",
-      "traceback",
-      "pathlib"
+      "sys",
+      "typing"
     ],
     "src.btx_fix_mcp.subservers.common.mindsets": [
       "dataclasses",
@@ -273,213 +108,219 @@
       "time"
     ],
     "src.btx_fix_mcp.subservers.review.__init__": [
-      "btx_fix_mcp.subservers.review.perf",
       "btx_fix_mcp.subservers.review.deps",
-      "btx_fix_mcp.subservers.review.report",
-      "btx_fix_mcp.subservers.review.scope",
+      "btx_fix_mcp.subservers.review.security",
+      "btx_fix_mcp.subservers.review.perf",
       "btx_fix_mcp.subservers.review.quality",
       "btx_fix_mcp.subservers.review.docs",
-      "btx_fix_mcp.subservers.review.security"
+      "btx_fix_mcp.subservers.review.report",
+      "btx_fix_mcp.subservers.review.scope"
     ],
     "src.btx_fix_mcp.subservers.review.deps": [
-      "tomllib",
-      "subprocess",
-      "btx_fix_mcp.config",
-      "btx_fix_mcp.subservers.review.deps_scanners",
+      "btx_fix_mcp.subservers.common.logging",
+      "pathlib",
       "btx_fix_mcp.subservers.common.chunked_writer",
-      "btx_fix_mcp.subservers.common.issues",
+      "subprocess",
+      "btx_fix_mcp.subservers.review.deps_scanners",
+      "json",
+      "btx_fix_mcp.subservers.common.mindsets",
+      "tomllib",
+      "btx_fix_mcp.tools_venv",
       "typing",
       "btx_fix_mcp.subservers.base",
-      "json",
-      "btx_fix_mcp.subservers.common.logging",
-      "btx_fix_mcp.subservers.common.mindsets",
-      "pathlib",
-      "btx_fix_mcp.tools_venv"
+      "btx_fix_mcp.subservers.common.issues",
+      "btx_fix_mcp.config"
     ],
     "src.btx_fix_mcp.subservers.review.deps_scanners": [
-      "subprocess",
-      "typing",
-      "logging",
-      "json",
       "pathlib",
-      "btx_fix_mcp.tools_venv"
+      "subprocess",
+      "json",
+      "btx_fix_mcp.tools_venv",
+      "logging",
+      "typing",
+      "btx_fix_mcp.config"
     ],
     "src.btx_fix_mcp.subservers.review.docs": [
-      "subprocess",
-      "btx_fix_mcp.config",
+      "btx_fix_mcp.subservers.common.logging",
+      "pathlib",
       "btx_fix_mcp.subservers.common.chunked_writer",
-      "btx_fix_mcp.subservers.common.issues",
-      "re",
+      "subprocess",
+      "json",
+      "btx_fix_mcp.subservers.common.mindsets",
       "ast",
+      "btx_fix_mcp.tools_venv",
+      "re",
       "typing",
       "btx_fix_mcp.subservers.base",
-      "json",
-      "btx_fix_mcp.subservers.common.logging",
-      "btx_fix_mcp.subservers.common.mindsets",
-      "pathlib",
-      "btx_fix_mcp.tools_venv"
+      "btx_fix_mcp.subservers.common.issues",
+      "btx_fix_mcp.config"
     ],
     "src.btx_fix_mcp.subservers.review.perf": [
-      "subprocess",
-      "btx_fix_mcp.config",
+      "btx_fix_mcp.subservers.common.logging",
+      "pathlib",
       "btx_fix_mcp.subservers.common.chunked_writer",
-      "btx_fix_mcp.subservers.common.issues",
+      "subprocess",
+      "json",
+      "btx_fix_mcp.subservers.common.mindsets",
       "re",
       "typing",
       "btx_fix_mcp.subservers.base",
-      "json",
-      "btx_fix_mcp.subservers.common.logging",
-      "btx_fix_mcp.subservers.common.mindsets",
-      "pathlib"
+      "btx_fix_mcp.subservers.common.issues",
+      "btx_fix_mcp.config"
     ],
     "src.btx_fix_mcp.subservers.review.quality.__init__": [
+      "results",
       "config",
-      "summary",
+      "btx_fix_mcp.subservers.base",
+      "btx_fix_mcp.config",
       "static",
       "writer",
-      "btx_fix_mcp.subservers.base",
+      "orchestrator",
       "complexity",
-      "btx_fix_mcp.tools_venv",
       "files",
+      "tests",
+      "btx_fix_mcp.subservers.common.mindsets",
+      "summary",
+      "btx_fix_mcp.tools_venv",
       "metrics",
       "types",
-      "pathlib",
-      "tests",
       "architecture",
-      "results",
-      "btx_fix_mcp.subservers.common.mindsets",
       "special_analyzers",
-      "btx_fix_mcp.config",
-      "orchestrator",
-      "btx_fix_mcp.subservers.common.logging"
+      "btx_fix_mcp.subservers.common.logging",
+      "pathlib"
     ],
     "src.btx_fix_mcp.subservers.review.quality.architecture": [
-      "base",
-      "collections",
       "pathlib",
+      "collections",
       "typing",
+      "base",
       "ast"
     ],
     "src.btx_fix_mcp.subservers.review.quality.base": [
-      "typing",
-      "abc",
       "logging",
-      "pathlib"
+      "typing",
+      "pathlib",
+      "abc"
     ],
     "src.btx_fix_mcp.subservers.review.quality.complexit": [
-      "base",
-      "subprocess",
       "pathlib",
-      "typing",
+      "subprocess",
       "json",
-      "ast",
-      "btx_fix_mcp.tools_venv"
+      "btx_fix_mcp.tools_venv",
+      "typing",
+      "base",
+      "btx_fix_mcp.config",
+      "ast"
     ],
     "src.btx_fix_mcp.subservers.review.quality.files": [
       "pathlib"
     ],
     "src.btx_fix_mcp.subservers.review.quality.issues": [
-      "dataclasses",
       "config",
+      "dataclasses",
       "typing",
       "pathlib"
     ],
     "src.btx_fix_mcp.subservers.review.quality.metrics": [
-      "base",
-      "subprocess",
-      "typing",
-      "json",
       "pathlib",
-      "btx_fix_mcp.tools_venv"
+      "subprocess",
+      "json",
+      "btx_fix_mcp.tools_venv",
+      "typing",
+      "base",
+      "btx_fix_mcp.config"
     ],
     "src.btx_fix_mcp.subservers.review.quality.orchestrator": [
-      "config",
+      "pathlib",
       "static",
-      "metrics",
-      "types",
       "tests",
-      "typing",
-      "architecture",
-      "logging",
       "complexity",
       "concurrent.futures",
-      "pathlib"
+      "config",
+      "logging",
+      "metrics",
+      "typing",
+      "architecture",
+      "types"
     ],
     "src.btx_fix_mcp.subservers.review.quality.results": [
-      "config",
+      "pathlib",
       "issues",
-      "btx_fix_mcp.subservers.common.issues",
-      "typing",
-      "pathlib"
-    ],
-    "src.btx_fix_mcp.subservers.review.quality.static": [
-      "base",
-      "subprocess",
-      "typing",
-      "json",
-      "btx_fix_mcp.tools_venv"
-    ],
-    "src.btx_fix_mcp.subservers.review.quality.summar": [
-      "btx_fix_mcp.subservers.common.mindsets",
       "config",
       "typing",
       "btx_fix_mcp.subservers.common.issues"
     ],
-    "src.btx_fix_mcp.subservers.review.quality.types": [
-      "base",
+    "src.btx_fix_mcp.subservers.review.quality.static": [
       "subprocess",
+      "json",
+      "btx_fix_mcp.tools_venv",
+      "typing",
+      "base",
+      "btx_fix_mcp.config"
+    ],
+    "src.btx_fix_mcp.subservers.review.quality.summar": [
+      "config",
       "btx_fix_mcp.subservers.common.issues",
+      "btx_fix_mcp.subservers.common.mindsets",
+      "typing"
+    ],
+    "src.btx_fix_mcp.subservers.review.quality.types": [
+      "subprocess",
+      "btx_fix_mcp.tools_venv",
       "re",
       "typing",
-      "btx_fix_mcp.tools_venv"
+      "base",
+      "btx_fix_mcp.subservers.common.issues",
+      "btx_fix_mcp.config"
     ],
     "src.btx_fix_mcp.subservers.review.quality.writer": [
-      "typing",
-      "btx_fix_mcp.subservers.common.chunked_writer",
       "json",
-      "pathlib"
+      "pathlib",
+      "btx_fix_mcp.subservers.common.chunked_writer",
+      "typing"
     ],
     "src.btx_fix_mcp.subservers.review.report": [
-      "pydantic",
-      "btx_fix_mcp.config",
-      "datetime",
+      "btx_fix_mcp.subservers.common.logging",
+      "pathlib",
       "btx_fix_mcp.subservers.common.chunked_writer",
+      "json",
+      "datetime",
       "typing",
       "btx_fix_mcp.subservers.base",
-      "json",
-      "btx_fix_mcp.subservers.common.logging",
-      "pathlib"
+      "pydantic",
+      "btx_fix_mcp.config"
     ],
     "src.btx_fix_mcp.subservers.review.scope": [
       "btx_fix_mcp.subservers.common.git",
-      "btx_fix_mcp.subservers.common.files",
-      "btx_fix_mcp.subservers.common.issues",
+      "pathlib",
       "btx_fix_mcp.subservers.common.logging",
+      "btx_fix_mcp.subservers.common.files",
       "btx_fix_mcp.subservers.base",
-      "pathlib"
+      "btx_fix_mcp.subservers.common.issues",
+      "btx_fix_mcp.config"
     ],
     "src.btx_fix_mcp.subservers.review.securit": [
-      "subprocess",
-      "btx_fix_mcp.config",
-      "btx_fix_mcp.subservers.common.chunked_writer",
-      "btx_fix_mcp.subservers.common.issues",
-      "typing",
-      "yaml",
-      "json",
-      "btx_fix_mcp.subservers.base",
       "btx_fix_mcp.subservers.common.logging",
+      "pathlib",
+      "btx_fix_mcp.subservers.common.chunked_writer",
+      "subprocess",
+      "json",
       "btx_fix_mcp.subservers.common.mindsets",
-      "pathlib"
+      "yaml",
+      "typing",
+      "btx_fix_mcp.subservers.base",
+      "btx_fix_mcp.subservers.common.issues",
+      "btx_fix_mcp.config"
     ],
     "src.btx_fix_mcp.tools_venv": [
-      "os",
-      "shutil",
-      "functools",
-      "tomllib",
+      "pathlib",
       "subprocess",
+      "tomllib",
+      "functools",
+      "shutil",
       "sys",
       "tomli",
-      "pathlib"
+      "os"
     ]
   }
 }

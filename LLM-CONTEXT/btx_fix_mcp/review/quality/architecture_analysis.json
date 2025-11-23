@@ -5,7 +5,16 @@
       "class": "DepsSubServer",
       "line": 50,
       "methods": 27,
-      "lines": 586,
+      "lines": 623,
+      "methods_threshold": 20,
+      "lines_threshold": 500
+    },
+    {
+      "file": "src/btx_fix_mcp/subservers/review/docs.py",
+      "class": "DocsSubServer",
+      "line": 44,
+      "methods": 11,
+      "lines": 545,
       "methods_threshold": 20,
       "lines_threshold": 500
     },
@@ -14,41 +23,22 @@
       "class": "ArchitectureAnalyzer",
       "line": 18,
       "methods": 22,
-      "lines": 279,
+      "lines": 303,
+      "methods_threshold": 20,
+      "lines_threshold": 500
+    },
+    {
+      "file": "src/btx_fix_mcp/subservers/review/security.py",
+      "class": "SecuritySubServer",
+      "line": 39,
+      "methods": 16,
+      "lines": 550,
       "methods_threshold": 20,
       "lines_threshold": 500
     }
   ],
-  "highly_coupled": [
-    {
-      "file": "scripts/_utils.py",
-      "import_count": 16,
-      "threshold": 15
-    }
-  ],
+  "highly_coupled": [],
   "module_structure": {
-    "scripts": [
-      "scripts/__init__.py",
-      "scripts/__main__.py",
-      "scripts/_utils.py",
-      "scripts/build.py",
-      "scripts/bump.py",
-      "scripts/bump_major.py",
-      "scripts/bump_minor.py",
-      "scripts/bump_patch.py",
-      "scripts/bump_version.py",
-      "scripts/clean.py",
-      "scripts/cli.py",
-      "scripts/dev.py",
-      "scripts/help.py",
-      "scripts/install.py",
-      "scripts/menu.py",
-      "scripts/push.py",
-      "scripts/release.py",
-      "scripts/run_cli.py",
-      "scripts/target_metadata.py",
-      "scripts/version_current.py"
-    ],
     "src": [
       "src/btx_fix_mcp/__init__.py",
       "src/btx_fix_mcp/__init__conf__.py",

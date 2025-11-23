@@ -2,21 +2,41 @@
   {
     "type": "god_object",
     "severity": "error",
-    "message": "Class 'DepsSubServer' is a god object (27 methods, 586 lines)",
+    "message": "Class 'DepsSubServer' is a god object (27 methods, 623 lines)",
     "file": "src/btx_fix_mcp/subservers/review/deps.py",
     "line": 50,
-    "value": "27 methods, 586 lines",
+    "value": "27 methods, 623 lines",
     "threshold": 0,
     "name": "DepsSubServer"
   },
   {
     "type": "god_object",
     "severity": "error",
-    "message": "Class 'ArchitectureAnalyzer' is a god object (22 methods, 279 lines)",
+    "message": "Class 'DocsSubServer' is a god object (11 methods, 545 lines)",
+    "file": "src/btx_fix_mcp/subservers/review/docs.py",
+    "line": 44,
+    "value": "11 methods, 545 lines",
+    "threshold": 0,
+    "name": "DocsSubServer"
+  },
+  {
+    "type": "god_object",
+    "severity": "error",
+    "message": "Class 'ArchitectureAnalyzer' is a god object (22 methods, 303 lines)",
     "file": "src/btx_fix_mcp/subservers/review/quality/architecture.py",
     "line": 18,
-    "value": "22 methods, 279 lines",
+    "value": "22 methods, 303 lines",
     "threshold": 0,
     "name": "ArchitectureAnalyzer"
+  },
+  {
+    "type": "god_object",
+    "severity": "error",
+    "message": "Class 'SecuritySubServer' is a god object (16 methods, 550 lines)",
+    "file": "src/btx_fix_mcp/subservers/review/security.py",
+    "line": 39,
+    "value": "16 methods, 550 lines",
+    "threshold": 0,
+    "name": "SecuritySubServer"
   }
 ]

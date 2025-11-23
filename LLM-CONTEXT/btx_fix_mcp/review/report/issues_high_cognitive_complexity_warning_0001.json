@@ -4,7 +4,7 @@
     "severity": "warning",
     "message": "Function '_find_missing_docstrings' has cognitive complexity 28 (threshold: 15)",
     "file": "src/btx_fix_mcp/subservers/review/docs.py",
-    "line": 251,
+    "line": 275,
     "value": 28,
     "threshold": 15,
     "name": "_find_missing_docstrings"
@@ -12,22 +12,22 @@
   {
     "type": "high_cognitive_complexity",
     "severity": "warning",
-    "message": "Function 'categorize_files' has cognitive complexity 24 (threshold: 15)",
-    "file": "src/btx_fix_mcp/subservers/common/files.py",
-    "line": 140,
-    "value": 24,
+    "message": "Function '_run_bandit' has cognitive complexity 28 (threshold: 15)",
+    "file": "src/btx_fix_mcp/subservers/review/security.py",
+    "line": 280,
+    "value": 28,
     "threshold": 15,
-    "name": "categorize_files"
+    "name": "_run_bandit"
   },
   {
     "type": "high_cognitive_complexity",
     "severity": "warning",
-    "message": "Function 'bootstrap_dev' has cognitive complexity 21 (threshold: 15)",
-    "file": "scripts/_utils.py",
-    "line": 691,
-    "value": 21,
+    "message": "Function 'categorize_files' has cognitive complexity 24 (threshold: 15)",
+    "file": "src/btx_fix_mcp/subservers/common/files.py",
+    "line": 146,
+    "value": 24,
     "threshold": 15,
-    "name": "bootstrap_dev"
+    "name": "categorize_files"
   },
   {
     "type": "high_cognitive_complexity",
@@ -44,7 +44,7 @@
     "severity": "warning",
     "message": "Function '_analyze_complexity' has cognitive complexity 19 (threshold: 15)",
     "file": "src/btx_fix_mcp/subservers/review/perf.py",
-    "line": 309,
+    "line": 310,
     "value": 19,
     "threshold": 15,
     "name": "_analyze_complexity"
@@ -52,19 +52,19 @@
   {
     "type": "high_cognitive_complexity",
     "severity": "warning",
-    "message": "Function '_extract_author_info' has cognitive complexity 17 (threshold: 15)",
-    "file": "scripts/_utils.py",
-    "line": 365,
-    "value": 17,
+    "message": "Function '_check_project_docs' has cognitive complexity 18 (threshold: 15)",
+    "file": "src/btx_fix_mcp/subservers/review/docs.py",
+    "line": 328,
+    "value": 18,
     "threshold": 15,
-    "name": "_extract_author_info"
+    "name": "_check_project_docs"
   },
   {
     "type": "high_cognitive_complexity",
     "severity": "warning",
     "message": "Function 'check_outdated_packages' has cognitive complexity 17 (threshold: 15)",
     "file": "src/btx_fix_mcp/subservers/review/deps_scanners.py",
-    "line": 160,
+    "line": 164,
     "value": 17,
     "threshold": 15,
     "name": "check_outdated_packages"
@@ -82,19 +82,9 @@
   {
     "type": "high_cognitive_complexity",
     "severity": "warning",
-    "message": "Function '_gather_values' has cognitive complexity 16 (threshold: 15)",
-    "file": "scripts/menu.py",
-    "line": 337,
-    "value": 16,
-    "threshold": 15,
-    "name": "_gather_values"
-  },
-  {
-    "type": "high_cognitive_complexity",
-    "severity": "warning",
     "message": "Function '_check_docstring_coverage' has cognitive complexity 16 (threshold: 15)",
     "file": "src/btx_fix_mcp/subservers/review/docs.py",
-    "line": 215,
+    "line": 238,
     "value": 16,
     "threshold": 15,
     "name": "_check_docstring_coverage"

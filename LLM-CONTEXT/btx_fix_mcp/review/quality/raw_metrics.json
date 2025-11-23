@@ -1,205 +1,5 @@
 [
   {
-    "file": "scripts/__init__.py",
-    "loc": 3,
-    "lloc": 2,
-    "sloc": 2,
-    "comments": 0,
-    "multi": 0,
-    "blank": 1,
-    "single_comments": 0
-  },
-  {
-    "file": "scripts/__main__.py",
-    "loc": 7,
-    "lloc": 4,
-    "sloc": 4,
-    "comments": 1,
-    "multi": 0,
-    "blank": 3,
-    "single_comments": 0
-  },
-  {
-    "file": "scripts/_utils.py",
-    "loc": 736,
-    "lloc": 421,
-    "sloc": 494,
-    "comments": 14,
-    "multi": 73,
-    "blank": 136,
-    "single_comments": 33
-  },
-  {
-    "file": "scripts/build.py",
-    "loc": 52,
-    "lloc": 34,
-    "sloc": 31,
-    "comments": 2,
-    "multi": 0,
-    "blank": 19,
-    "single_comments": 2
-  },
-  {
-    "file": "scripts/bump.py",
-    "loc": 32,
-    "lloc": 18,
-    "sloc": 22,
-    "comments": 1,
-    "multi": 0,
-    "blank": 9,
-    "single_comments": 1
-  },
-  {
-    "file": "scripts/bump_major.py",
-    "loc": 20,
-    "lloc": 12,
-    "sloc": 10,
-    "comments": 1,
-    "multi": 0,
-    "blank": 9,
-    "single_comments": 1
-  },
-  {
-    "file": "scripts/bump_minor.py",
-    "loc": 20,
-    "lloc": 12,
-    "sloc": 10,
-    "comments": 1,
-    "multi": 0,
-    "blank": 9,
-    "single_comments": 1
-  },
-  {
-    "file": "scripts/bump_patch.py",
-    "loc": 20,
-    "lloc": 12,
-    "sloc": 10,
-    "comments": 1,
-    "multi": 0,
-    "blank": 9,
-    "single_comments": 1
-  },
-  {
-    "file": "scripts/bump_version.py",
-    "loc": 80,
-    "lloc": 63,
-    "sloc": 65,
-    "comments": 1,
-    "multi": 0,
-    "blank": 15,
-    "single_comments": 0
-  },
-  {
-    "file": "scripts/clean.py",
-    "loc": 48,
-    "lloc": 21,
-    "sloc": 38,
-    "comments": 1,
-    "multi": 0,
-    "blank": 9,
-    "single_comments": 1
-  },
-  {
-    "file": "scripts/cli.py",
-    "loc": 213,
-    "lloc": 127,
-    "sloc": 149,
-    "comments": 1,
-    "multi": 0,
-    "blank": 58,
-    "single_comments": 6
-  },
-  {
-    "file": "scripts/dev.py",
-    "loc": 19,
-    "lloc": 11,
-    "sloc": 9,
-    "comments": 1,
-    "multi": 0,
-    "blank": 9,
-    "single_comments": 1
-  },
-  {
-    "file": "scripts/help.py",
-    "loc": 41,
-    "lloc": 25,
-    "sloc": 21,
-    "comments": 1,
-    "multi": 0,
-    "blank": 16,
-    "single_comments": 4
-  },
-  {
-    "file": "scripts/install.py",
-    "loc": 19,
-    "lloc": 11,
-    "sloc": 9,
-    "comments": 1,
-    "multi": 0,
-    "blank": 9,
-    "single_comments": 1
-  },
-  {
-    "file": "scripts/menu.py",
-    "loc": 568,
-    "lloc": 400,
-    "sloc": 490,
-    "comments": 23,
-    "multi": 0,
-    "blank": 73,
-    "single_comments": 5
-  },
-  {
-    "file": "scripts/push.py",
-    "loc": 77,
-    "lloc": 54,
-    "sloc": 58,
-    "comments": 4,
-    "multi": 0,
-    "blank": 18,
-    "single_comments": 1
-  },
-  {
-    "file": "scripts/release.py",
-    "loc": 90,
-    "lloc": 47,
-    "sloc": 60,
-    "comments": 8,
-    "multi": 0,
-    "blank": 23,
-    "single_comments": 7
-  },
-  {
-    "file": "scripts/run_cli.py",
-    "loc": 154,
-    "lloc": 117,
-    "sloc": 111,
-    "comments": 1,
-    "multi": 0,
-    "blank": 34,
-    "single_comments": 9
-  },
-  {
-    "file": "scripts/target_metadata.py",
-    "loc": 174,
-    "lloc": 43,
-    "sloc": 125,
-    "comments": 0,
-    "multi": 19,
-    "blank": 24,
-    "single_comments": 6
-  },
-  {
-    "file": "scripts/version_current.py",
-    "loc": 20,
-    "lloc": 12,
-    "sloc": 11,
-    "comments": 1,
-    "multi": 0,
-    "blank": 8,
-    "single_comments": 1
-  },
-  {
     "file": "src/btx_fix_mcp/__init__.py",
     "loc": 19,
     "lloc": 5,
@@ -331,22 +131,22 @@
   },
   {
     "file": "src/btx_fix_mcp/subservers/common/files.py",
-    "loc": 205,
+    "loc": 211,
     "lloc": 65,
     "sloc": 90,
     "comments": 7,
-    "multi": 61,
-    "blank": 46,
+    "multi": 66,
+    "blank": 47,
     "single_comments": 8
   },
   {
     "file": "src/btx_fix_mcp/subservers/common/git.py",
-    "loc": 448,
-    "lloc": 154,
-    "sloc": 244,
+    "loc": 451,
+    "lloc": 156,
+    "sloc": 246,
     "comments": 6,
     "multi": 122,
-    "blank": 74,
+    "blank": 75,
     "single_comments": 8
   },
   {
@@ -411,19 +211,19 @@
   },
   {
     "file": "src/btx_fix_mcp/subservers/review/deps.py",
-    "loc": 636,
-    "lloc": 328,
-    "sloc": 468,
+    "loc": 673,
+    "lloc": 350,
+    "sloc": 496,
     "comments": 25,
     "multi": 25,
-    "blank": 91,
+    "blank": 100,
     "single_comments": 52
   },
   {
     "file": "src/btx_fix_mcp/subservers/review/deps_scanners.py",
-    "loc": 203,
-    "lloc": 108,
-    "sloc": 165,
+    "loc": 209,
+    "lloc": 114,
+    "sloc": 171,
     "comments": 0,
     "multi": 3,
     "blank": 29,
@@ -431,22 +231,22 @@
   },
   {
     "file": "src/btx_fix_mcp/subservers/review/docs.py",
-    "loc": 491,
-    "lloc": 232,
-    "sloc": 367,
-    "comments": 31,
-    "multi": 14,
-    "blank": 69,
-    "single_comments": 41
+    "loc": 589,
+    "lloc": 264,
+    "sloc": 428,
+    "comments": 35,
+    "multi": 35,
+    "blank": 82,
+    "single_comments": 44
   },
   {
     "file": "src/btx_fix_mcp/subservers/review/perf.py",
-    "loc": 495,
-    "lloc": 244,
-    "sloc": 368,
+    "loc": 514,
+    "lloc": 255,
+    "sloc": 381,
     "comments": 33,
     "multi": 14,
-    "blank": 73,
+    "blank": 79,
     "single_comments": 40
   },
   {
@@ -461,13 +261,13 @@
   },
   {
     "file": "src/btx_fix_mcp/subservers/review/quality/architecture.py",
-    "loc": 297,
-    "lloc": 185,
-    "sloc": 206,
-    "comments": 0,
+    "loc": 321,
+    "lloc": 189,
+    "sloc": 227,
+    "comments": 1,
     "multi": 11,
-    "blank": 58,
-    "single_comments": 22
+    "blank": 60,
+    "single_comments": 23
   },
   {
     "file": "src/btx_fix_mcp/subservers/review/quality/base.py",
@@ -481,9 +281,9 @@
   },
   {
     "file": "src/btx_fix_mcp/subservers/review/quality/complexity.py",
-    "loc": 285,
-    "lloc": 161,
-    "sloc": 196,
+    "loc": 288,
+    "lloc": 164,
+    "sloc": 199,
     "comments": 1,
     "multi": 11,
     "blank": 60,
@@ -511,9 +311,9 @@
   },
   {
     "file": "src/btx_fix_mcp/subservers/review/quality/metrics.py",
-    "loc": 324,
-    "lloc": 181,
-    "sloc": 234,
+    "loc": 329,
+    "lloc": 186,
+    "sloc": 239,
     "comments": 8,
     "multi": 16,
     "blank": 54,
@@ -541,13 +341,13 @@
   },
   {
     "file": "src/btx_fix_mcp/subservers/review/quality/static.py",
-    "loc": 85,
-    "lloc": 54,
-    "sloc": 59,
-    "comments": 0,
+    "loc": 97,
+    "lloc": 58,
+    "sloc": 69,
+    "comments": 1,
     "multi": 9,
-    "blank": 14,
-    "single_comments": 3
+    "blank": 15,
+    "single_comments": 4
   },
   {
     "file": "src/btx_fix_mcp/subservers/review/quality/summary.py",
@@ -561,9 +361,9 @@
   },
   {
     "file": "src/btx_fix_mcp/subservers/review/quality/types.py",
-    "loc": 175,
-    "lloc": 111,
-    "sloc": 123,
+    "loc": 179,
+    "lloc": 115,
+    "sloc": 127,
     "comments": 1,
     "multi": 10,
     "blank": 30,
@@ -581,33 +381,33 @@
   },
   {
     "file": "src/btx_fix_mcp/subservers/review/report.py",
-    "loc": 488,
-    "lloc": 272,
-    "sloc": 330,
+    "loc": 502,
+    "lloc": 280,
+    "sloc": 340,
     "comments": 26,
     "multi": 25,
-    "blank": 90,
+    "blank": 94,
     "single_comments": 43
   },
   {
     "file": "src/btx_fix_mcp/subservers/review/scope.py",
-    "loc": 292,
-    "lloc": 106,
-    "sloc": 156,
-    "comments": 20,
-    "multi": 66,
-    "blank": 51,
-    "single_comments": 19
+    "loc": 322,
+    "lloc": 119,
+    "sloc": 176,
+    "comments": 23,
+    "multi": 68,
+    "blank": 56,
+    "single_comments": 22
   },
   {
     "file": "src/btx_fix_mcp/subservers/review/security.py",
-    "loc": 521,
-    "lloc": 250,
-    "sloc": 352,
-    "comments": 27,
-    "multi": 40,
-    "blank": 87,
-    "single_comments": 42
+    "loc": 589,
+    "lloc": 283,
+    "sloc": 392,
+    "comments": 35,
+    "multi": 48,
+    "blank": 99,
+    "single_comments": 50
   },
   {
     "file": "src/btx_fix_mcp/tools/__init__.py",

@@ -13,12 +13,12 @@
 
 - High severity: 0
 - Medium severity: 0
-- Files scanned: 63
+- Files scanned: 43
 
 ## Overview
 
-**Files Scanned**: 63
-**Issues Found**: 0
+**Files Scanned**: 43
+**Issues Found**: 59
 
 ## Configuration
 
@@ -29,11 +29,10 @@
 
 - 🔴 **High**: 0
 - 🟠 **Medium**: 0
-- 🟡 **Low**: 0
+- 🟡 **Low**: 59
 
 ## Recommendations
 
-✅ No security issues detected!
 
 ## Approval Status
 

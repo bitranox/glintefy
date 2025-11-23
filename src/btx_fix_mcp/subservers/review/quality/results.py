@@ -101,6 +101,22 @@ class ResultsCompiler:
             "js_files": len(js_files),
         }
 
+    def _count_high_complexity(self, complexity_results: list, threshold: int) -> int:
+        """Count functions exceeding complexity threshold."""
+        return len([r for r in complexity_results if r.get("complexity", 0) > threshold])
+
+    def _count_low_maintainability(self, maintainability_results: list, threshold: int) -> int:
+        """Count functions below maintainability threshold."""
+        return len([r for r in maintainability_results if r.get("mi", 100) < threshold])
+
+    def _count_function_issues_by_type(self, function_issues: list, issue_type: str) -> int:
+        """Count function issues of specific type."""
+        return len([i for i in function_issues if i["issue_type"] == issue_type])
+
+    def _count_high_cognitive(self, cognitive_results: list) -> int:
+        """Count functions exceeding cognitive complexity threshold."""
+        return len([r for r in cognitive_results if r.get("exceeds_threshold")])
+
     def _compile_complexity_metrics(self, results: dict[str, Any]) -> dict[str, int]:
         """Compile complexity-related metrics.
 
@@ -118,11 +134,11 @@ class ResultsCompiler:
 
         return {
             "total_functions": len(complexity_results),
-            "high_complexity_count": len([r for r in complexity_results if r.get("complexity", 0) > thresholds.complexity]),
-            "low_mi_count": len([r for r in maintainability_results if r.get("mi", 100) < thresholds.maintainability]),
-            "functions_too_long": len([i for i in function_issues if i["issue_type"] == "TOO_LONG"]),
-            "functions_too_nested": len([i for i in function_issues if i["issue_type"] == "TOO_NESTED"]),
-            "high_cognitive_count": len([r for r in cognitive_results if r.get("exceeds_threshold")]),
+            "high_complexity_count": self._count_high_complexity(complexity_results, thresholds.complexity),
+            "low_mi_count": self._count_low_maintainability(maintainability_results, thresholds.maintainability),
+            "functions_too_long": self._count_function_issues_by_type(function_issues, "TOO_LONG"),
+            "functions_too_nested": self._count_function_issues_by_type(function_issues, "TOO_NESTED"),
+            "high_cognitive_count": self._count_high_cognitive(cognitive_results),
             "duplicate_blocks": len(results.get("duplication", {}).get("duplicates", [])),
         }
 

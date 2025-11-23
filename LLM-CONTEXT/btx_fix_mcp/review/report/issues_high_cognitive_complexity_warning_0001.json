@@ -34,7 +34,7 @@
     "severity": "warning",
     "message": "Function '_analyze_complexity' has cognitive complexity 24 (threshold: 15)",
     "file": "src/btx_fix_mcp/subservers/review/perf.py",
-    "line": 318,
+    "line": 319,
     "value": 24,
     "threshold": 15,
     "name": "_analyze_complexity"
@@ -44,7 +44,7 @@
     "severity": "warning",
     "message": "Function '_profile_tests' has cognitive complexity 19 (threshold: 15)",
     "file": "src/btx_fix_mcp/subservers/review/perf.py",
-    "line": 268,
+    "line": 269,
     "value": 19,
     "threshold": 15,
     "name": "_profile_tests"

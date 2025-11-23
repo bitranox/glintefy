@@ -19,6 +19,15 @@
       "churn_score": 6
     },
     {
+      "file": "src/btx_fix_mcp/subservers/review/perf.py",
+      "commits": 5,
+      "authors": 1,
+      "lines_added": 559,
+      "lines_deleted": 20,
+      "total_changes": 579,
+      "churn_score": 5
+    },
+    {
       "file": "src/btx_fix_mcp/subservers/common/issues.py",
       "commits": 5,
       "authors": 1,
@@ -88,15 +97,6 @@
       "lines_added": 530,
       "lines_deleted": 0,
       "total_changes": 530,
-      "churn_score": 4
-    },
-    {
-      "file": "src/btx_fix_mcp/subservers/review/perf.py",
-      "commits": 4,
-      "authors": 1,
-      "lines_added": 557,
-      "lines_deleted": 19,
-      "total_changes": 576,
       "churn_score": 4
     },
     {
@@ -389,6 +389,6 @@
     }
   ],
   "high_churn_files": [],
-  "total_commits_analyzed": 19,
+  "total_commits_analyzed": 20,
   "analysis_period_days": 90
 }

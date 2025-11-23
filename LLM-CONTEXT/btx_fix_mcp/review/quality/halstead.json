@@ -338,16 +338,16 @@
   {
     "file": "src/btx_fix_mcp/subservers/review/perf.py",
     "h1": 14,
-    "h2": 95,
-    "N1": 68,
-    "N2": 128,
-    "vocabulary": 109,
-    "length": 196,
-    "volume": 1326.5641276562776,
-    "difficulty": 9.43157894736842,
-    "effort": 12511.594298737102,
-    "time": 695.0885721520613,
-    "bugs": 0.44218804255209254
+    "h2": 96,
+    "N1": 69,
+    "N2": 130,
+    "vocabulary": 110,
+    "length": 199,
+    "volume": 1349.4905829914073,
+    "difficulty": 9.479166666666666,
+    "effort": 12792.046151272714,
+    "time": 710.6692306262619,
+    "bugs": 0.4498301943304691
   },
   {
     "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",

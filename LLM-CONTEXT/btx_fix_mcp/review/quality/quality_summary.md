@@ -24,8 +24,8 @@
 
 ## Code Metrics
 
-- Total LOC: **11,024**
-- Source LOC (SLOC): **6,672**
+- Total LOC: **11,025**
+- Source LOC (SLOC): **6,673**
 - Comments: **409**
 - Comment Ratio: **6.1%**
 

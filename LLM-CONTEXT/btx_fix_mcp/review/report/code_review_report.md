@@ -1,6 +1,6 @@
 # Code Review Report
 
-**Generated**: 2025-11-23T13:50:59.449563
+**Generated**: 2025-11-23T13:55:05.344785
 
 ---
 
@@ -34,11 +34,11 @@
 **Status**: `SUCCESS`
 
 **Key Metrics:**
-- total_files: 4468
+- total_files: 4526
 - code_files: 43
 - test_files: 63
 - doc_files: 60
-- config_files: 959
+- config_files: 961
 - ... and 1 more metrics
 
 ### ⚠️ Quality
@@ -101,7 +101,7 @@
 - files_analyzed: 43
 - patterns_found: 7
 - hotspots_found: 4
-- total_issues: 40
+- total_issues: 55
 
 **Issues**: 39 (2 critical, 37 warnings)
 

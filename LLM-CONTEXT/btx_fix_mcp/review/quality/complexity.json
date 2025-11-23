@@ -1669,7 +1669,7 @@
     "type": "method",
     "complexity": 22,
     "rank": "D",
-    "line": 450
+    "line": 451
   },
   {
     "file": "src/btx_fix_mcp/subservers/review/perf.py",
@@ -1677,7 +1677,15 @@
     "type": "method",
     "complexity": 12,
     "rank": "C",
-    "line": 268
+    "line": 269
+  },
+  {
+    "file": "src/btx_fix_mcp/subservers/review/perf.py",
+    "name": "__init__",
+    "type": "method",
+    "complexity": 10,
+    "rank": "B",
+    "line": 63
   },
   {
     "file": "src/btx_fix_mcp/subservers/review/perf.py",
@@ -1685,7 +1693,7 @@
     "type": "method",
     "complexity": 10,
     "rank": "B",
-    "line": 318
+    "line": 319
   },
   {
     "file": "src/btx_fix_mcp/subservers/review/perf.py",
@@ -1693,7 +1701,7 @@
     "type": "method",
     "complexity": 10,
     "rank": "B",
-    "line": 393
+    "line": 394
   },
   {
     "file": "src/btx_fix_mcp/subservers/review/perf.py",
@@ -1705,19 +1713,11 @@
   },
   {
     "file": "src/btx_fix_mcp/subservers/review/perf.py",
-    "name": "__init__",
-    "type": "method",
-    "complexity": 9,
-    "rank": "B",
-    "line": 63
-  },
-  {
-    "file": "src/btx_fix_mcp/subservers/review/perf.py",
     "name": "execute",
     "type": "method",
     "complexity": 9,
     "rank": "B",
-    "line": 131
+    "line": 132
   },
   {
     "file": "src/btx_fix_mcp/subservers/review/perf.py",
@@ -1725,7 +1725,7 @@
     "type": "method",
     "complexity": 8,
     "rank": "B",
-    "line": 225
+    "line": 226
   },
   {
     "file": "src/btx_fix_mcp/subservers/review/perf.py",
@@ -1733,7 +1733,7 @@
     "type": "method",
     "complexity": 7,
     "rank": "B",
-    "line": 214
+    "line": 215
   },
   {
     "file": "src/btx_fix_mcp/subservers/review/perf.py",
@@ -1741,7 +1741,7 @@
     "type": "method",
     "complexity": 4,
     "rank": "A",
-    "line": 370
+    "line": 371
   },
   {
     "file": "src/btx_fix_mcp/subservers/review/perf.py",
@@ -1749,7 +1749,7 @@
     "type": "method",
     "complexity": 3,
     "rank": "A",
-    "line": 118
+    "line": 119
   },
   {
     "file": "src/btx_fix_mcp/subservers/review/perf.py",
@@ -1757,7 +1757,7 @@
     "type": "method",
     "complexity": 1,
     "rank": "A",
-    "line": 441
+    "line": 442
   },
   {
     "file": "src/btx_fix_mcp/subservers/review/quality/__init__.py",

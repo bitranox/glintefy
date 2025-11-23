@@ -1,22 +1,22 @@
 [
   {
-    "name": "tests/subservers/review/test_deps.py::TestDepsSubServer::test_execute_python_project",
-    "duration": 5.64,
+    "name": "tests/subservers/review/test_deps.py::TestDepsSubServer::test_summary_includes_mindset",
+    "duration": 7.84,
     "type": "slow_test"
   },
   {
-    "name": "tests/subservers/review/test_deps.py::TestDepsSubServer::test_summary_includes_mindset",
-    "duration": 5.39,
+    "name": "tests/subservers/review/test_deps.py::TestDepsSubServer::test_execute_python_project",
+    "duration": 7.79,
     "type": "slow_test"
   },
   {
     "name": "tests/servers/test_review.py::TestReviewMCPServer::test_run_quality",
-    "duration": 1.39,
+    "duration": 1.51,
     "type": "slow_test"
   },
   {
     "name": "tests/servers/test_review.py::TestReviewMCPServer::test_run_all",
-    "duration": 1.02,
+    "duration": 1.2,
     "type": "slow_test"
   }
 ]

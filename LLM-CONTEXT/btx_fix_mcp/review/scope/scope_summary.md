@@ -5,18 +5,18 @@
 **Mode**: full
 **Repository**: /media/srv-main-softdev/projects/MCP/btx_fix_mcp
 **Branch**: master
-**Total Files**: 4468
+**Total Files**: 4526
 
 ## File Breakdown by Category
 
 - **CODE**: 43 files
 - **TEST**: 63 files
 - **DOCS**: 60 files
-- **CONFIG**: 959 files
+- **CONFIG**: 961 files
 - **BUILD**: 1 files
-- **OTHER**: 3342 files
+- **OTHER**: 3398 files
 
-## Sample Files (showing 10 of 4468)
+## Sample Files (showing 10 of 4526)
 
 - `.btx-review.yaml.example`
 - `.claude/settings.local.json`
@@ -29,7 +29,7 @@
 - `.git/hooks/fsmonitor-watchman.sample`
 - `.git/hooks/post-update.sample`
 
-*Note: 4458 more files not shown. Set `output.display.max_sample_files = 0` in config for unlimited display.*
+*Note: 4516 more files not shown. Set `output.display.max_sample_files = 0` in config for unlimited display.*
 
 ## Next Steps
 

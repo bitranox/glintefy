@@ -241,9 +241,9 @@
   },
   {
     "file": "src/btx_fix_mcp/subservers/review/perf.py",
-    "loc": 538,
+    "loc": 539,
     "lloc": 266,
-    "sloc": 391,
+    "sloc": 392,
     "comments": 43,
     "multi": 20,
     "blank": 85,

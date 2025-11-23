@@ -1,7 +1,7 @@
 ************* Module btx_fix_mcp.tools_venv
 src/btx_fix_mcp/tools_venv.py:1:0: R0801: Similar lines in 2 files
 ==btx_fix_mcp.subservers.review.docs:[193:239]
-==btx_fix_mcp.subservers.review.perf:[180:228]
+==btx_fix_mcp.subservers.review.perf:[181:229]
             log_step(self.logger, 5, "Saving results")
             artifacts = self._save_results(results, all_issues)
 
@@ -30,7 +30,7 @@ src/btx_fix_mcp/tools_venv.py:1:0: R0801: Similar lines in 2 files
             )
             return SubServerResult(
                 status="FAILED",
-                summary=f"# Documentation Analysis Failed\n\n**Error**: {e}",
+                summary=f"# Performance Analysis Failed\n\n**Error**: {e}",
                 artifacts={},
                 errors=[str(e)],
             )
@@ -46,11 +46,13 @@ src/btx_fix_mcp/tools_venv.py:1:0: R0801: Similar lines in 2 files
         python_files = [f for f in all_files if f.endswith(".py") and f]
         return [str(self.repo_path / f) for f in python_files]
 
-    def _check_docstring_coverage(self) -> dict[str, Any]:
-        """Check docstring coverage using interrogate.""" (duplicate-code)
+    def _detect_patterns(self, files: list[str]) -> list[PerformanceIssue]:
+        """Detect performance anti-patterns in code."""
+        import re
+ (duplicate-code)
 src/btx_fix_mcp/tools_venv.py:1:0: R0801: Similar lines in 2 files
 ==btx_fix_mcp.subservers.review.docs:[598:628]
-==btx_fix_mcp.subservers.review.perf:[454:484]
+==btx_fix_mcp.subservers.review.perf:[455:485]
         critical_issues = [i.to_dict() for i in all_issues if i.severity == "critical"]
         warning_issues = [i.to_dict() for i in all_issues if i.severity == "warning"]
 
@@ -62,7 +64,7 @@ src/btx_fix_mcp/tools_venv.py:1:0: R0801: Similar lines in 2 files
         )
 
         lines = [
-            "# Documentation Analysis Report",
+            "# Performance Analysis Report",
             "",
             "## Reviewer Mindset",
             "",
@@ -95,7 +97,7 @@ src/btx_fix_mcp/tools_venv.py:1:0: R0801: Similar lines in 2 files
             )
             return SubServerResult(
                 status="FAILED",
-                summary=f"# Documentation Analysis Failed\n\n**Error**: {e}",
+                summary=f"# Security Analysis Failed\n\n**Error**: {e}",
                 artifacts={},
                 errors=[str(e)],
             )
@@ -105,14 +107,18 @@ src/btx_fix_mcp/tools_venv.py:1:0: R0801: Similar lines in 2 files
         files_list = self.input_dir / "files_code.txt"
         if not files_list.exists():
             files_list = self.input_dir / "files_to_review.txt"
+
         if not files_list.exists():
             return []
+
         all_files = files_list.read_text().strip().split("\n")
         python_files = [f for f in all_files if f.endswith(".py") and f]
+
+        # Convert to absolute paths
         return [str(self.repo_path / f) for f in python_files]
 
-    def _check_docstring_coverage(self) -> dict[str, Any]:
-        """Check docstring coverage using interrogate.""" (duplicate-code)
+    def _run_bandit(self, files: list[str]) -> list[dict[str, Any]]:
+        """Run Bandit security scanner on files.""" (duplicate-code)
 src/btx_fix_mcp/tools_venv.py:1:0: R0801: Similar lines in 2 files
 ==btx_fix_mcp.subservers.review.quality.__init__:[224:246]
 ==btx_fix_mcp.subservers.review.security:[260:285]
@@ -143,7 +149,7 @@ src/btx_fix_mcp/tools_venv.py:1:0: R0801: Similar lines in 2 files
         """Get Python files to analyze.""" (duplicate-code)
 src/btx_fix_mcp/tools_venv.py:1:0: R0801: Similar lines in 2 files
 ==btx_fix_mcp.subservers.review.docs:[555:583]
-==btx_fix_mcp.subservers.review.perf:[414:442]
+==btx_fix_mcp.subservers.review.perf:[415:443]
         if all_issues:
             # Convert to dicts
             issues_dicts = [i.to_dict() for i in all_issues]
@@ -196,7 +202,7 @@ src/btx_fix_mcp/tools_venv.py:1:0: R0801: Similar lines in 2 files
 
         return artifacts
 
-    def _compile_metrics(self, files: list[str], results: dict[str, Any], all_issues: list[BaseIssue]) -> dict[str, Any]:
+    def _compile_metrics(self, results: dict[str, Any], all_issues: list[BaseIssue]) -> dict[str, Any]:
         """Compile metrics for result.""" (duplicate-code)
 src/btx_fix_mcp/tools_venv.py:1:0: R0801: Similar lines in 2 files
 ==btx_fix_mcp.subservers.review.docs:[210:228]
@@ -217,7 +223,7 @@ src/btx_fix_mcp/tools_venv.py:1:0: R0801: Similar lines in 2 files
                 errors=[str(e)],
             ) (duplicate-code)
 src/btx_fix_mcp/tools_venv.py:1:0: R0801: Similar lines in 2 files
-==btx_fix_mcp.subservers.review.perf:[197:215]
+==btx_fix_mcp.subservers.review.perf:[198:216]
 ==btx_fix_mcp.subservers.review.report:[162:180]
             )
 
@@ -230,16 +236,16 @@ src/btx_fix_mcp/tools_venv.py:1:0: R0801: Similar lines in 2 files
             )
             return SubServerResult(
                 status="FAILED",
-                summary=f"# Report Generation Failed\n\n**Error**: {e}",
+                summary=f"# Performance Analysis Failed\n\n**Error**: {e}",
                 artifacts={},
                 errors=[str(e)],
             )
 
-    def _gather_results(self) -> dict[str, dict[str, Any]]:
-        """Gather results from all sub-servers.""" (duplicate-code)
+    def _get_python_files(self) -> list[str]:
+        """Get Python files to analyze.""" (duplicate-code)
 src/btx_fix_mcp/tools_venv.py:1:0: R0801: Similar lines in 2 files
 ==btx_fix_mcp.subservers.review.docs:[88:107]
-==btx_fix_mcp.subservers.review.perf:[75:94]
+==btx_fix_mcp.subservers.review.perf:[76:95]
         base_config = get_config(start_dir=str(repo_path or Path.cwd()))
         output_base = base_config.get("review", {}).get("output_dir", "LLM-CONTEXT/btx_fix_mcp/review")
 
@@ -303,7 +309,7 @@ src/btx_fix_mcp/tools_venv.py:1:0: R0801: Similar lines in 2 files
         """Get Python files to analyze.""" (duplicate-code)
 src/btx_fix_mcp/tools_venv.py:1:0: R0801: Similar lines in 2 files
 ==btx_fix_mcp.subservers.review.docs:[661:673]
-==btx_fix_mcp.subservers.review.perf:[526:538]
+==btx_fix_mcp.subservers.review.perf:[527:539]
                 )
             lines.append("")
 
@@ -349,7 +355,7 @@ src/btx_fix_mcp/tools_venv.py:1:0: R0801: Similar lines in 2 files
                 e, (duplicate-code)
 src/btx_fix_mcp/tools_venv.py:1:0: R0801: Similar lines in 2 files
 ==btx_fix_mcp.subservers.review.docs:[128:141]
-==btx_fix_mcp.subservers.review.perf:[119:132]
+==btx_fix_mcp.subservers.review.perf:[120:133]
         missing = []
 
         # Check for files to analyze
@@ -362,7 +368,7 @@ src/btx_fix_mcp/tools_venv.py:1:0: R0801: Similar lines in 2 files
         return len(missing) == 0, missing
 
     def execute(self) -> SubServerResult:
-        """Execute performance analysis.""" (duplicate-code)
+        """Execute documentation analysis.""" (duplicate-code)
 src/btx_fix_mcp/tools_venv.py:1:0: R0801: Similar lines in 2 files
 ==btx_fix_mcp.subservers.review.quality.summary:[220:231]
 ==btx_fix_mcp.subservers.review.security:[598:610]

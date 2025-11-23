@@ -807,63 +807,63 @@
   {
     "file": "src/btx_fix_mcp/subservers/review/perf.py",
     "name": "validate_inputs",
-    "line": 118,
+    "line": 119,
     "complexity": 3,
     "exceeds_threshold": false
   },
   {
     "file": "src/btx_fix_mcp/subservers/review/perf.py",
     "name": "execute",
-    "line": 131,
+    "line": 132,
     "complexity": 5,
     "exceeds_threshold": false
   },
   {
     "file": "src/btx_fix_mcp/subservers/review/perf.py",
     "name": "_get_python_files",
-    "line": 214,
+    "line": 215,
     "complexity": 3,
     "exceeds_threshold": false
   },
   {
     "file": "src/btx_fix_mcp/subservers/review/perf.py",
     "name": "_detect_patterns",
-    "line": 225,
+    "line": 226,
     "complexity": 14,
     "exceeds_threshold": false
   },
   {
     "file": "src/btx_fix_mcp/subservers/review/perf.py",
     "name": "_profile_tests",
-    "line": 268,
+    "line": 269,
     "complexity": 19,
     "exceeds_threshold": true
   },
   {
     "file": "src/btx_fix_mcp/subservers/review/perf.py",
     "name": "_analyze_complexity",
-    "line": 318,
+    "line": 319,
     "complexity": 24,
     "exceeds_threshold": true
   },
   {
     "file": "src/btx_fix_mcp/subservers/review/perf.py",
     "name": "_hotspots_to_issues",
-    "line": 370,
+    "line": 371,
     "complexity": 6,
     "exceeds_threshold": false
   },
   {
     "file": "src/btx_fix_mcp/subservers/review/perf.py",
     "name": "_save_results",
-    "line": 393,
+    "line": 394,
     "complexity": 6,
     "exceeds_threshold": false
   },
   {
     "file": "src/btx_fix_mcp/subservers/review/perf.py",
     "name": "_generate_summary",
-    "line": 450,
+    "line": 451,
     "complexity": 15,
     "exceeds_threshold": false
   },

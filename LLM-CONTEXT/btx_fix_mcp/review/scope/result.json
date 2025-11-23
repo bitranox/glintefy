@@ -1,6 +1,6 @@
 {
   "status": "SUCCESS",
-  "summary": "# Scope Analysis Report\n\n## Overview\n\n**Mode**: full\n**Repository**: /media/srv-main-softdev/projects/MCP/btx_fix_mcp\n**Branch**: master\n**Total Files**: 4468\n\n## File Breakdown by Category\n\n- **CODE**: 43 files\n- **TEST**: 63 files\n- **DOCS**: 60 files\n- **CONFIG**: 959 files\n- **BUILD**: 1 files\n- **OTHER**: 3342 files\n\n## Sample Files (showing 10 of 4468)\n\n- `.btx-review.yaml.example`\n- `.claude/settings.local.json`\n- `.devcontainer/devcontainer.json`\n- `.devcontainer/settings.json`\n- `.env`\n- `.env.example`\n- `.git/hooks/applypatch-msg.sample`\n- `.git/hooks/commit-msg.sample`\n- `.git/hooks/fsmonitor-watchman.sample`\n- `.git/hooks/post-update.sample`\n\n*Note: 4458 more files not shown. Set `output.display.max_sample_files = 0` in config for unlimited display.*\n\n## Next Steps\n\n1. Review code files for quality issues\n2. Check test coverage\n3. Scan for security vulnerabilities\n4. Review documentation completeness",
+  "summary": "# Scope Analysis Report\n\n## Overview\n\n**Mode**: full\n**Repository**: /media/srv-main-softdev/projects/MCP/btx_fix_mcp\n**Branch**: master\n**Total Files**: 4526\n\n## File Breakdown by Category\n\n- **CODE**: 43 files\n- **TEST**: 63 files\n- **DOCS**: 60 files\n- **CONFIG**: 961 files\n- **BUILD**: 1 files\n- **OTHER**: 3398 files\n\n## Sample Files (showing 10 of 4526)\n\n- `.btx-review.yaml.example`\n- `.claude/settings.local.json`\n- `.devcontainer/devcontainer.json`\n- `.devcontainer/settings.json`\n- `.env`\n- `.env.example`\n- `.git/hooks/applypatch-msg.sample`\n- `.git/hooks/commit-msg.sample`\n- `.git/hooks/fsmonitor-watchman.sample`\n- `.git/hooks/post-update.sample`\n\n*Note: 4516 more files not shown. Set `output.display.max_sample_files = 0` in config for unlimited display.*\n\n## Next Steps\n\n1. Review code files for quality issues\n2. Check test coverage\n3. Scan for security vulnerabilities\n4. Review documentation completeness",
   "artifacts": {
     "files_to_review": "/media/srv-main-softdev/projects/MCP/btx_fix_mcp/LLM-CONTEXT/btx_fix_mcp/review/scope/files_to_review.txt",
     "files_code": "/media/srv-main-softdev/projects/MCP/btx_fix_mcp/LLM-CONTEXT/btx_fix_mcp/review/scope/files_code.txt",
@@ -11,13 +11,13 @@
     "files_other": "/media/srv-main-softdev/projects/MCP/btx_fix_mcp/LLM-CONTEXT/btx_fix_mcp/review/scope/files_other.txt"
   },
   "metrics": {
-    "total_files": 4468,
+    "total_files": 4526,
     "code_files": 43,
     "test_files": 63,
     "doc_files": 60,
-    "config_files": 959,
+    "config_files": 961,
     "mode": "full"
   },
   "errors": [],
-  "timestamp": "2025-11-23T13:50:43.205166"
+  "timestamp": "2025-11-23T13:54:35.300221"
 }

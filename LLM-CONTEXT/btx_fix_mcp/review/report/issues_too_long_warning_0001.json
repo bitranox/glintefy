@@ -14,7 +14,7 @@
     "severity": "warning",
     "message": "Function '_generate_summary' is 88 lines (max: 50)",
     "file": "src/btx_fix_mcp/subservers/review/perf.py",
-    "line": 450,
+    "line": 451,
     "value": 88,
     "threshold": 50,
     "name": "_generate_summary"
@@ -64,7 +64,7 @@
     "severity": "warning",
     "message": "Function 'execute' is 81 lines (max: 50)",
     "file": "src/btx_fix_mcp/subservers/review/perf.py",
-    "line": 131,
+    "line": 132,
     "value": 81,
     "threshold": 50,
     "name": "execute"
@@ -282,22 +282,22 @@
   {
     "type": "too_long",
     "severity": "warning",
+    "message": "Function '__init__' is 54 lines (max: 50)",
+    "file": "src/btx_fix_mcp/subservers/review/perf.py",
+    "line": 63,
+    "value": 54,
+    "threshold": 50,
+    "name": "__init__"
+  },
+  {
+    "type": "too_long",
+    "severity": "warning",
     "message": "Function '_save_results' is 53 lines (max: 50)",
     "file": "src/btx_fix_mcp/subservers/review/docs.py",
     "line": 527,
     "value": 53,
     "threshold": 50,
     "name": "_save_results"
-  },
-  {
-    "type": "too_long",
-    "severity": "warning",
-    "message": "Function '__init__' is 53 lines (max: 50)",
-    "file": "src/btx_fix_mcp/subservers/review/perf.py",
-    "line": 63,
-    "value": 53,
-    "threshold": 50,
-    "name": "__init__"
   },
   {
     "type": "too_long",

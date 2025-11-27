@@ -1,9 +1,17 @@
 # btx_fix_mcp
 
+<!-- Badges -->
 [![CI](https://github.com/bitranox/btx_fix_mcp/actions/workflows/ci.yml/badge.svg)](https://github.com/bitranox/btx_fix_mcp/actions/workflows/ci.yml)
-[![PyPI](https://img.shields.io/pypi/v/btx_fix_mcp.svg)](https://pypi.org/project/btx_fix_mcp/)
+[![CodeQL](https://github.com/bitranox/btx_fix_mcp/actions/workflows/codeql.yml/badge.svg)](https://github.com/bitranox/btx_fix_mcp/actions/workflows/codeql.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Open in Codespaces](https://img.shields.io/badge/Codespaces-Open-blue?logo=github&logoColor=white&style=flat-square)](https://codespaces.new/bitranox/btx_fix_mcp?quickstart=1)
+[![PyPI](https://img.shields.io/pypi/v/btx_fix_mcp.svg)](https://pypi.org/project/btx_fix_mcp/)
+[![PyPI - Downloads](https://img.shields.io/pypi/dm/btx_fix_mcp.svg)](https://pypi.org/project/btx_fix_mcp/)
+[![Code Style: Ruff](https://img.shields.io/badge/Code%20Style-Ruff-46A3FF?logo=ruff&labelColor=000)](https://docs.astral.sh/ruff/)
 [![codecov](https://codecov.io/gh/bitranox/btx_fix_mcp/graph/badge.svg?token=UFBaUDIgRk)](https://codecov.io/gh/bitranox/btx_fix_mcp)
+[![Maintainability](https://qlty.sh/badges/041ba2c1-37d6-40bb-85a0-ec5a8a0aca0c/maintainability.svg)](https://qlty.sh/gh/bitranox/projects/btx_fix_mcp)
+[![Known Vulnerabilities](https://snyk.io/test/github/bitranox/btx_fix_mcp/badge.svg)](https://snyk.io/test/github/bitranox/btx_fix_mcp)
+[![security: bandit](https://img.shields.io/badge/security-bandit-yellow.svg)](https://github.com/PyCQA/bandit)
 
 **Code review and automated fixing tools - available as CLI and MCP server.**
 

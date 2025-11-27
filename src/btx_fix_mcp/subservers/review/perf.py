@@ -273,16 +273,44 @@ class PerfSubServer(BaseSubServer):
         return issues
 
     def _run_pytest_with_profiling(self) -> subprocess.CompletedProcess | None:
-        """Run pytest with profiling flags."""
+        """Run pytest with profiling flags and cProfile."""
         try:
             timeout = get_timeout("profile_tests", 300, start_dir=str(self.repo_path))
-            return subprocess.run(
-                ["python", "-m", "pytest", "tests/", "-v", "--tb=no", "-q", "--durations=10"],
+
+            # Create profile output path
+            prof_file = self.output_dir / "test_profile.prof"
+
+            # Run pytest with cProfile profiling
+            # Use -m cProfile to profile the entire test run
+            result = subprocess.run(
+                [
+                    "python",
+                    "-m",
+                    "cProfile",
+                    "-o",
+                    str(prof_file),
+                    "-m",
+                    "pytest",
+                    "tests/",
+                    "-v",
+                    "--tb=no",
+                    "-q",
+                    "--durations=10",
+                ],
                 capture_output=True,
                 text=True,
                 timeout=timeout,
                 cwd=str(self.repo_path),
             )
+
+            # Verify profile file was created
+            if prof_file.exists():
+                self.logger.info(f"Created profile data: {prof_file}")
+            else:
+                self.logger.warning("Profile file was not created")
+
+            return result
+
         except FileNotFoundError:
             self.logger.info("pytest not available")
             return None

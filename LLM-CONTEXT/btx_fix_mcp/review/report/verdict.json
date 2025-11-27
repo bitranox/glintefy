@@ -1,7 +1,0 @@
-{
-  "status": "REJECTED",
-  "message": "\u274c Code review failed - 4 critical issues found",
-  "recommendations": [
-    "Address all critical issues before merging"
-  ]
-}

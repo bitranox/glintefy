@@ -290,6 +290,94 @@ def review_perf(ctx: click.Context, no_profiling: bool) -> None:
     _print_review_result(result)
 
 
+@review_group.command("profile", context_settings=CLICK_CONTEXT_SETTINGS)
+@click.argument("command", nargs=-1, required=True)
+@click.pass_context
+def review_profile(ctx: click.Context, command: tuple[str, ...]) -> None:
+    """Profile a command and save data for cache analysis.
+
+    Examples:
+        python -m btx_fix_mcp review profile -- python my_app.py
+        python -m btx_fix_mcp review profile -- pytest tests/
+        python -m btx_fix_mcp review profile -- python -m my_module
+    """
+    import cProfile
+    import subprocess
+    from pathlib import Path
+
+    repo_path = ctx.obj["repo_path"]
+
+    # Create profiling output directory
+    output_dir = repo_path / "LLM-CONTEXT" / "btx_fix_mcp" / "review" / "perf"
+    output_dir.mkdir(parents=True, exist_ok=True)
+    output_path = output_dir / "test_profile.prof"
+
+    console.print(f"[bold cyan]Profiling:[/bold cyan] {' '.join(command)}")
+    console.print(f"[dim]Output will be saved to: {output_path}[/dim]\n")
+
+    # Run command with profiling
+    profiler = cProfile.Profile()
+    profiler.enable()
+
+    try:
+        result = subprocess.run(
+            list(command),
+            cwd=repo_path,
+            capture_output=False,
+        )
+        exit_code = result.returncode
+    except Exception as e:
+        console.print(f"[red]Error running command: {e}[/red]")
+        exit_code = 1
+    finally:
+        profiler.disable()
+        profiler.dump_stats(output_path)
+
+    if exit_code == 0:
+        console.print(f"\n[green]✓[/green] Profiling complete")
+    else:
+        console.print(f"\n[yellow]⚠[/yellow] Command exited with code {exit_code}, but profiling data saved")
+
+    console.print(f"[green]✓[/green] Profile saved to: {output_path}")
+    console.print("\n[bold]Next step:[/bold]")
+    console.print("  python -m btx_fix_mcp review cache")
+
+
+@review_group.command("cache", context_settings=CLICK_CONTEXT_SETTINGS)
+@click.option(
+    "--cache-size",
+    type=int,
+    default=128,
+    help="LRU cache size for testing (default: 128)",
+)
+@click.option(
+    "--hit-rate",
+    type=float,
+    default=20.0,
+    help="Minimum cache hit rate threshold (default: 20.0%)",
+)
+@click.option(
+    "--speedup",
+    type=float,
+    default=5.0,
+    help="Minimum speedup threshold (default: 5.0%)",
+)
+@click.pass_context
+def review_cache(ctx: click.Context, cache_size: int, hit_rate: float, speedup: float) -> None:
+    """Analyze caching opportunities and evaluate existing caches."""
+    from .servers.review import ReviewMCPServer
+
+    repo_path = ctx.obj["repo_path"]
+    server = ReviewMCPServer(repo_path=repo_path)
+    result = server.run_cache(
+        cache_size=cache_size,
+        hit_rate_threshold=hit_rate,
+        speedup_threshold=speedup,
+    )
+
+    _print_review_result(result)
+
+
 @review_group.command("report", context_settings=CLICK_CONTEXT_SETTINGS)
 @click.pass_context
 def review_report(ctx: click.Context) -> None:

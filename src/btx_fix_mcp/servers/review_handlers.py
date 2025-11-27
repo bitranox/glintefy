@@ -66,6 +66,15 @@ def _handle_perf(server: "ReviewMCPServer", arguments: dict[str, Any]) -> dict[s
     )
 
 
+def _handle_cache(server: "ReviewMCPServer", arguments: dict[str, Any]) -> dict[str, Any]:
+    """Handle review_cache tool call."""
+    return server.run_cache(
+        cache_size=arguments.get("cache_size", 128),
+        hit_rate_threshold=arguments.get("hit_rate_threshold", 20.0),
+        speedup_threshold=arguments.get("speedup_threshold", 5.0),
+    )
+
+
 def _handle_report(server: "ReviewMCPServer", arguments: dict[str, Any]) -> dict[str, Any]:
     """Handle review_report tool call."""
     return server.run_report()
@@ -88,6 +97,7 @@ TOOL_HANDLERS: dict[str, ToolHandler] = {
     "review_deps": _handle_deps,
     "review_docs": _handle_docs,
     "review_perf": _handle_perf,
+    "review_cache": _handle_cache,
     "review_report": _handle_report,
     "review_all": _handle_all,
 }

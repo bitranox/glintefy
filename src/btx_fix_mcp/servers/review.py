@@ -17,6 +17,7 @@ from btx_fix_mcp.subservers.common.logging import (
     log_error_detailed,
     log_tool_execution,
 )
+from btx_fix_mcp.subservers.review.cache import CacheSubServer
 from btx_fix_mcp.subservers.review.deps import DepsSubServer
 from btx_fix_mcp.subservers.review.docs import DocsSubServer
 from btx_fix_mcp.subservers.review.perf import PerfSubServer
@@ -340,6 +341,63 @@ class ReviewMCPServer:
         }
 
     @debug_log(logger)
+    def run_cache(
+        self,
+        input_dir: Path | None = None,
+        output_dir: Path | None = None,
+        cache_size: int | None = None,
+        hit_rate_threshold: float | None = None,
+        speedup_threshold: float | None = None,
+    ) -> dict[str, Any]:
+        """Run cache analysis.
+
+        Args:
+            input_dir: Input directory with scope + perf results
+            output_dir: Output directory (default: LLM-CONTEXT/btx_fix_mcp/review/cache)
+            cache_size: Override cache size
+            hit_rate_threshold: Override hit rate threshold
+            speedup_threshold: Override speedup threshold
+
+        Returns:
+            Dictionary with status, summary, metrics, and artifact paths
+        """
+        input_path = input_dir or self._output_base / "scope"
+        output_path = output_dir or self._output_base / "cache"
+
+        server = CacheSubServer(
+            input_dir=input_path,
+            output_dir=output_path,
+            repo_path=self.repo_path,
+            cache_size=cache_size,
+            hit_rate_threshold=hit_rate_threshold,
+            speedup_threshold=speedup_threshold,
+            mcp_mode=True,
+        )
+
+        import time
+
+        start = time.perf_counter()
+        result = server.run()
+        duration_ms = (time.perf_counter() - start) * 1000
+
+        log_tool_execution(
+            logger,
+            "cache",
+            result.metrics.get("cache_candidates", 0),
+            result.status,
+            result.metrics.get("recommendations", 0),
+            duration_ms,
+        )
+
+        return {
+            "status": result.status,
+            "summary": result.summary,
+            "metrics": result.metrics,
+            "artifacts": {k: str(v) for k, v in result.artifacts.items()},
+            "errors": result.errors,
+        }
+
+    @debug_log(logger)
     def run_report(self) -> dict[str, Any]:
         """Generate consolidated report from all analysis results.
 
@@ -378,10 +436,17 @@ class ReviewMCPServer:
         complexity_threshold: int | None = None,
         severity_threshold: str = "low",
     ) -> dict[str, Any]:
-        """Run all review sub-servers with parallel execution.
+        """Run all review sub-servers.
 
-        Scope runs first (required by other sub-servers), then quality,
-        security, deps, docs, and perf run in parallel. Report runs last.
+        Execution order:
+        1. Scope (sequential, required by others)
+        2. Quality, security, deps, docs, perf (parallel)
+        3. Cache (sequential, modifies source files)
+        4. Report (sequential, consolidates results)
+
+        Note: Cache runs sequentially after parallel analyses because it
+        modifies source files, which would interfere with other sub-servers
+        if run in parallel.
 
         Args:
             mode: Scope mode ("git" or "full")
@@ -391,7 +456,7 @@ class ReviewMCPServer:
         Returns:
             Combined results from all sub-servers
         """
-        log_debug(logger, "Starting full review (parallel)", mode=mode)
+        log_debug(logger, "Starting full review", mode=mode)
 
         results = self._init_results()
 
@@ -402,13 +467,16 @@ class ReviewMCPServer:
         # Step 2: Run quality, security, deps, docs, perf in parallel
         self._run_parallel_analyses(results, complexity_threshold, severity_threshold)
 
-        # Step 3: Generate consolidated report
+        # Step 3: Run cache analysis (sequential, after parallel analyses)
+        self._run_cache_step(results)
+
+        # Step 4: Generate consolidated report
         self._run_report_step(results)
 
         # Determine final status
         self._determine_final_status(results)
 
-        log_debug(logger, "Full review complete (parallel)", status=results["overall_status"], errors=len(results["errors"]))
+        log_debug(logger, "Full review complete", status=results["overall_status"], errors=len(results["errors"]))
 
         return results
 
@@ -422,6 +490,7 @@ class ReviewMCPServer:
             "deps": None,
             "docs": None,
             "perf": None,
+            "cache": None,
             "report": None,
             "errors": [],
         }
@@ -481,6 +550,17 @@ class ReviewMCPServer:
                 if error:
                     results["overall_status"] = "PARTIAL"
                     results["errors"].append(error)
+
+    def _run_cache_step(self, results: dict[str, Any]) -> None:
+        """Run cache analysis (sequential, modifies source files)."""
+        try:
+            results["cache"] = self.run_cache()
+            if results["cache"]["status"] == "FAILED":
+                results["overall_status"] = "PARTIAL"
+                results["errors"].append("Cache analysis failed")
+        except Exception as e:
+            log_error_detailed(logger, e, context={"step": "cache"})
+            results["errors"].append(f"Cache error: {e}")
 
     def _run_report_step(self, results: dict[str, Any]) -> None:
         """Generate consolidated report."""

@@ -1,0 +1,707 @@
+"""Cache Analysis Sub-Server.
+
+Identifies caching opportunities using hybrid approach:
+1. AST analysis - identify pure functions
+2. Profiling cross-reference - find hot spots
+3. Batch screening - filter by hit rate
+4. Individual validation - measure precise impact
+"""
+
+import json
+from pathlib import Path
+
+from btx_fix_mcp.config import get_config
+from btx_fix_mcp.subservers.base import BaseSubServer, SubServerResult
+from btx_fix_mcp.subservers.common.chunked_writer import cleanup_chunked_issues, write_chunked_issues
+from btx_fix_mcp.subservers.common.logging import debug_log, get_mcp_logger, log_debug, setup_logger
+from btx_fix_mcp.subservers.review.cache.batch_screener import BatchScreener
+from btx_fix_mcp.subservers.review.cache.cache_models import CacheRecommendation
+from btx_fix_mcp.subservers.review.cache.hotspot_analyzer import HotspotAnalyzer
+from btx_fix_mcp.subservers.review.cache.individual_validator import IndividualValidator
+from btx_fix_mcp.subservers.review.cache.pure_function_detector import PureFunctionDetector
+
+
+class CacheSubServer(BaseSubServer):
+    """Cache analysis sub-server."""
+
+    def __init__(
+        self,
+        input_dir: Path,
+        output_dir: Path,
+        repo_path: Path,
+        cache_size: int | None = None,
+        hit_rate_threshold: float | None = None,
+        speedup_threshold: float | None = None,
+        min_calls: int | None = None,
+        min_cumtime: float | None = None,
+        test_timeout: int | None = None,
+        num_runs: int | None = None,
+        mcp_mode: bool = False,
+    ):
+        """Initialize cache sub-server.
+
+        Args:
+            input_dir: Input directory (scope results)
+            output_dir: Output directory for cache analysis
+            repo_path: Repository root path
+            cache_size: LRU cache maxsize (default: 128)
+            hit_rate_threshold: Minimum hit rate % (default: 20)
+            speedup_threshold: Minimum speedup % (default: 5)
+            min_calls: Minimum calls for hotspot (default: 100)
+            min_cumtime: Minimum cumtime for hotspot (default: 0.1)
+            test_timeout: Test suite timeout in seconds (default: 300)
+            num_runs: Number of runs to average (default: 3)
+            mcp_mode: Enable MCP logging mode
+        """
+        super().__init__(name="cache", input_dir=input_dir, output_dir=output_dir)
+
+        self.repo_path = repo_path
+        self.mcp_mode = mcp_mode
+        self._logger = self._init_logger("cache", mcp_mode)
+
+        # Load config
+        config = get_config(start_dir=str(repo_path))
+        cache_config = config.get("review", {}).get("cache", {})
+
+        # Apply config with constructor overrides
+        self.cache_size = cache_size or cache_config.get("cache_size", 128)
+        self.hit_rate_threshold = hit_rate_threshold or cache_config.get("hit_rate_threshold", 20.0)
+        self.speedup_threshold = speedup_threshold or cache_config.get("speedup_threshold", 5.0)
+        self.min_calls = min_calls or cache_config.get("min_calls", 100)
+        self.min_cumtime = min_cumtime or cache_config.get("min_cumtime", 0.1)
+        self.test_timeout = test_timeout or cache_config.get("test_timeout", 300)
+        self.num_runs = num_runs or cache_config.get("num_runs", 3)
+
+        # Initialize analyzers
+        self.pure_detector = PureFunctionDetector()
+        self.hotspot_analyzer = HotspotAnalyzer(
+            min_calls=self.min_calls,
+            min_cumtime=self.min_cumtime,
+        )
+        self.batch_screener = BatchScreener(
+            cache_size=self.cache_size,
+            hit_rate_threshold=self.hit_rate_threshold,
+            test_timeout=self.test_timeout,
+            logger=self._logger,
+        )
+        self.individual_validator = IndividualValidator(
+            cache_size=self.cache_size,
+            speedup_threshold=self.speedup_threshold,
+            test_timeout=self.test_timeout,
+            num_runs=self.num_runs,
+        )
+
+    def _init_logger(self, name: str, mcp_mode: bool):
+        """Initialize logger based on mode."""
+        if mcp_mode:
+            return get_mcp_logger(f"btx_fix_mcp.{name}")
+        else:
+            return setup_logger(name, log_file=None, level=20)
+
+    def validate_inputs(self) -> tuple[bool, list[str]]:
+        """Validate inputs for cache analysis.
+
+        Returns:
+            Tuple of (valid, missing_files)
+        """
+        missing = []
+
+        # Check for files to analyze
+        files_list = self.input_dir / "files_to_review.txt"
+        if not files_list.exists():
+            missing.append(f"No files list found at {files_list}. Run scope sub-server first.")
+
+        # Check for profiling data (optional but recommended)
+        prof_file = self.input_dir.parent / "perf" / "test_profile.prof"
+        if not prof_file.exists():
+            # Not a blocker, just a warning
+            pass
+
+        return len(missing) == 0, missing
+
+    def execute(self) -> SubServerResult:
+        """Execute cache analysis - wrapper for run()."""
+        return self.run()
+
+    @debug_log(get_mcp_logger("btx_fix_mcp.subservers.review.cache"))
+    def run(self) -> SubServerResult:
+        """Run cache analysis pipeline."""
+        log_debug(self._logger, "Starting cache analysis")
+
+        try:
+            # Stage 1: Identify pure functions and existing caches
+            pure_candidates, existing_caches = self._identify_pure_functions()
+            log_debug(self._logger, f"Found {len(pure_candidates)} pure function candidates")
+            log_debug(self._logger, f"Found {len(existing_caches)} existing caches")
+
+            # Stage 1B: Evaluate existing caches
+            existing_evaluations = []
+            if existing_caches:
+                existing_evaluations = self._evaluate_existing_caches(existing_caches)
+                log_debug(self._logger, f"Evaluated {len(existing_evaluations)} existing caches")
+
+            # Stage 2: Cross-reference with profiling data
+            cache_candidates = self._cross_reference_hotspots(pure_candidates)
+            log_debug(self._logger, f"Found {len(cache_candidates)} cache candidates (pure + hot)")
+
+            if not cache_candidates and not existing_evaluations:
+                return self._create_empty_result(
+                    "No cache candidates found (no pure functions that are also hotspots) and no existing caches to evaluate",
+                    pure_candidates=pure_candidates,
+                )
+
+            # Stage 3A: Batch screening (only for new candidates)
+            screening_results = []
+            validation_results = []
+            if cache_candidates:
+                screening_results = self._batch_screen(cache_candidates)
+                survivors = [r for r in screening_results if r.passed_screening]
+                log_debug(self._logger, f"Batch screening: {len(survivors)}/{len(cache_candidates)} passed")
+
+                # Stage 3B: Individual validation
+                if survivors:
+                    validation_results = self._individual_validate(screening_results)
+                    recommendations = [r for r in validation_results if r.recommendation == "APPLY"]
+                    log_debug(self._logger, f"Individual validation: {len(recommendations)} recommended")
+
+            # Generate outputs
+            return self._create_final_result(
+                pure_candidates,
+                cache_candidates,
+                screening_results,
+                validation_results,
+                existing_evaluations,
+            )
+
+        except Exception as e:
+            self._logger.error(f"Cache analysis failed: {e}", exc_info=True)
+            return SubServerResult(
+                status="FAILED",
+                summary=f"# Cache Analysis Failed\n\nError: {e}",
+                metrics={},
+                artifacts={},
+                errors=[str(e)],
+            )
+
+    def _identify_pure_functions(self) -> tuple[list, list]:
+        """Stage 1: AST-based pure function detection.
+
+        Returns:
+            Tuple of (new_candidates, existing_caches)
+        """
+        # Read files from scope
+        files_list = self.input_dir / "files_to_review.txt"
+        if not files_list.exists():
+            return ([], [])
+
+        python_files = []
+        for line in files_list.read_text().splitlines():
+            line = line.strip()
+            if not line:
+                continue
+            path = Path(line)
+            if path.suffix == ".py" and path.exists():
+                python_files.append(path)
+
+        # Analyze each file
+        all_new_candidates = []
+        all_existing_caches = []
+        for file_path in python_files:
+            new_candidates, existing_caches = self.pure_detector.analyze_file(file_path)
+            all_new_candidates.extend(new_candidates)
+            all_existing_caches.extend(existing_caches)
+
+        return (all_new_candidates, all_existing_caches)
+
+    def _cross_reference_hotspots(self, pure_candidates: list) -> list:
+        """Stage 2: Cross-reference with profiling data."""
+        # Look for profiling data from perf sub-server
+        prof_file = self.input_dir.parent / "perf" / "test_profile.prof"
+
+        if not prof_file.exists():
+            # No profiling data - return empty
+            log_debug(self._logger, f"No profiling data found at {prof_file}")
+            return []
+
+        hotspots = self.hotspot_analyzer.analyze_profile(prof_file)
+        log_debug(self._logger, f"Found {len(hotspots)} hotspots from profiling")
+
+        cache_candidates = self.hotspot_analyzer.cross_reference(
+            pure_candidates,
+            hotspots,
+        )
+
+        return cache_candidates
+
+    def _batch_screen(self, candidates: list) -> list:
+        """Stage 3A: Batch screening."""
+        log_debug(self._logger, f"Starting batch screening for {len(candidates)} candidates")
+        results = self.batch_screener.screen_candidates(
+            candidates,
+            self.repo_path,
+        )
+        return results
+
+    def _individual_validate(self, screening_results: list) -> list:
+        """Stage 3B: Individual validation."""
+        survivors = [r for r in screening_results if r.passed_screening]
+        log_debug(self._logger, f"Starting individual validation for {len(survivors)} survivors")
+        results = self.individual_validator.validate_candidates(
+            screening_results,
+            self.repo_path,
+        )
+        return results
+
+    def _evaluate_existing_caches(self, existing_caches: list) -> list:
+        """Stage 1B: Evaluate existing cache decorators."""
+        log_debug(self._logger, f"Evaluating {len(existing_caches)} existing caches")
+        results = self.batch_screener.evaluate_existing_caches(
+            existing_caches,
+            self.repo_path,
+        )
+        return results
+
+    def _save_base_analysis(self, pure_count=0, candidates_count=0, screened_count=0, passed_count=0, validated_count=0, recs_count=0, existing_count=0, keep_count=0, remove_count=0, adjust_count=0) -> dict:
+        """Save base analysis file and return artifacts dict."""
+        artifacts = {}
+
+        # Always save analysis file
+        analysis_file = self.output_dir / "cache_analysis.json"
+        analysis_data = {
+            "pure_functions_count": pure_count,
+            "cache_candidates_count": candidates_count,
+            "batch_screened": screened_count,
+            "batch_passed": passed_count,
+            "validated_count": validated_count,
+            "recommendations_count": recs_count,
+            "existing_caches_count": existing_count,
+            "existing_keep_count": keep_count,
+            "existing_remove_count": remove_count,
+            "existing_adjust_count": adjust_count,
+            "thresholds": {
+                "hit_rate_threshold": self.hit_rate_threshold,
+                "speedup_threshold": self.speedup_threshold,
+                "min_calls": self.min_calls,
+                "min_cumtime": self.min_cumtime,
+            },
+        }
+        analysis_file.write_text(json.dumps(analysis_data, indent=2))
+        artifacts["analysis"] = analysis_file
+
+        return artifacts
+
+    def _create_empty_result(self, reason: str, pure_candidates: list = None) -> SubServerResult:
+        """Create result when no candidates found."""
+        pure_candidates = pure_candidates or []
+        pure_count = len([c for c in pure_candidates if c.is_pure])
+
+        summary = f"# Cache Analysis\n\n{reason}"
+        if pure_count > 0:
+            summary += f"\n\n**Found {pure_count} pure functions**, but none were identified as hot spots by profiling."
+
+        # Save base analysis file
+        artifacts = self._save_base_analysis(pure_count=pure_count)
+
+        return SubServerResult(
+            status="SUCCESS",
+            summary=summary,
+            metrics={
+                "pure_functions": pure_count,
+                "cache_candidates": 0,
+                "batch_passed": 0,
+                "recommendations": 0,
+            },
+            artifacts=artifacts,
+            errors=[],
+        )
+
+    def _create_screening_result(self, screening_results: list) -> SubServerResult:
+        """Create result when screening filtered all candidates."""
+        summary = f"# Cache Analysis\n\n{len(screening_results)} candidates screened, none passed hit rate threshold ({self.hit_rate_threshold}%)."
+
+        # Save base analysis file
+        artifacts = self._save_base_analysis(
+            screened_count=len(screening_results),
+            candidates_count=len(screening_results),
+        )
+
+        return SubServerResult(
+            status="SUCCESS",
+            summary=summary,
+            metrics={
+                "cache_candidates": len(screening_results),
+                "batch_passed": 0,
+                "recommendations": 0,
+            },
+            artifacts=artifacts,
+            errors=[],
+        )
+
+    def _create_final_result(
+        self,
+        pure_candidates: list,
+        cache_candidates: list,
+        screening_results: list,
+        validation_results: list,
+        existing_evaluations: list,
+    ) -> SubServerResult:
+        """Create final result with all data."""
+        recommendations = [r for r in validation_results if r.recommendation == "APPLY"]
+
+        # Generate summary
+        summary = self._generate_summary(
+            pure_candidates,
+            cache_candidates,
+            screening_results,
+            validation_results,
+            existing_evaluations,
+        )
+
+        # Save artifacts
+        artifacts = self._save_artifacts(
+            pure_candidates,
+            cache_candidates,
+            screening_results,
+            validation_results,
+            existing_evaluations,
+        )
+
+        status = "SUCCESS" if len(recommendations) > 0 or len(existing_evaluations) > 0 else "PARTIAL"
+
+        return SubServerResult(
+            status=status,
+            summary=summary,
+            metrics={
+                "pure_functions": len([c for c in pure_candidates if c.is_pure]),
+                "cache_candidates": len(cache_candidates),
+                "batch_screened": len(screening_results),
+                "batch_passed": len([r for r in screening_results if r.passed_screening]),
+                "validated": len(validation_results),
+                "recommendations": len(recommendations),
+                "existing_caches": len(existing_evaluations),
+                "existing_keep": len([e for e in existing_evaluations if e.recommendation == "KEEP"]),
+                "existing_remove": len([e for e in existing_evaluations if e.recommendation == "REMOVE"]),
+                "existing_adjust": len([e for e in existing_evaluations if e.recommendation == "ADJUST_SIZE"]),
+            },
+            artifacts=artifacts,
+            errors=[],
+        )
+
+    def _generate_summary(self, pure, candidates, screening, validation, existing_evals) -> str:
+        """Generate markdown summary."""
+        recommendations = [r for r in validation if r.recommendation == "APPLY"]
+
+        # Check if we used production data or static analysis
+        used_production_data = any(
+            e.hits > 0 or e.misses > 0 for e in existing_evals
+        )
+
+        lines = [
+            "# Cache Analysis Report",
+            "",
+            "## Analysis Method",
+            "",
+        ]
+
+        if used_production_data:
+            lines.extend([
+                "✅ **Using Production Cache Data**",
+                "",
+                "Recommendations based on real cache statistics from your application.",
+                "",
+            ])
+        else:
+            lines.extend([
+                "⚠️  **Using Static Code Analysis**",
+                "",
+                "No production profiling data available. Recommendations based on static code analysis.",
+                "",
+                "### 💡 Get More Accurate Results with Profiling Data",
+                "",
+                "Profile your application with a single command:",
+                "",
+                "```bash",
+                "# Profile any command",
+                "python -m btx_fix_mcp review profile -- python my_app.py",
+                "python -m btx_fix_mcp review profile -- pytest tests/",
+                "python -m btx_fix_mcp review profile -- python -m my_module",
+                "",
+                "# Then analyze caches",
+                "python -m btx_fix_mcp review cache",
+                "```",
+                "",
+                "📚 **Full examples:** See btx_fix_mcp's `docs/HOW_TO_PROFILE.md`",
+                "",
+            ])
+
+        lines.extend([
+            "## Overview",
+            "",
+            f"- Pure functions identified: {len([c for c in pure if c.is_pure])}",
+            f"- Cache candidates (pure + hot): {len(candidates)}",
+            f"- Batch screening passed: {len([r for r in screening if r.passed_screening])}/{len(screening) if screening else 0}",
+            f"- Individual validation: {len(validation)} tested",
+            f"- **New cache recommendations: {len(recommendations)}**",
+            f"- **Existing caches evaluated: {len(existing_evals)}**",
+            "",
+        ])
+
+        # Existing cache evaluations
+        if existing_evals:
+            keep_caches = [e for e in existing_evals if e.recommendation == "KEEP"]
+            remove_caches = [e for e in existing_evals if e.recommendation == "REMOVE"]
+            adjust_caches = [e for e in existing_evals if e.recommendation == "ADJUST_SIZE"]
+
+            lines.extend(
+                [
+                    "## Existing Cache Evaluation",
+                    "",
+                    f"- **Keep:** {len(keep_caches)} caches performing well",
+                    f"- **Remove:** {len(remove_caches)} caches with low hit rates",
+                    f"- **Adjust:** {len(adjust_caches)} caches with suboptimal maxsize",
+                    "",
+                ]
+            )
+
+            if remove_caches:
+                lines.extend(["### Remove (Low Hit Rate)", ""])
+                for eval_result in remove_caches:
+                    c = eval_result.candidate
+                    lines.extend(
+                        [
+                            f"#### `{c.function_name}` ({c.file_path.name}:{c.line_number})",
+                            f"- **Current:** `@lru_cache(maxsize={c.current_maxsize if c.current_maxsize >= 0 else 'unbounded'})`",
+                            f"- **Hit rate:** {eval_result.hit_rate:.1f}%",
+                            f"- **Recommendation:** {eval_result.reason}",
+                            "",
+                        ]
+                    )
+
+            if adjust_caches:
+                lines.extend(["### Adjust Size", ""])
+                for eval_result in adjust_caches:
+                    c = eval_result.candidate
+                    lines.extend(
+                        [
+                            f"#### `{c.function_name}` ({c.file_path.name}:{c.line_number})",
+                            f"- **Current:** `@lru_cache(maxsize={c.current_maxsize if c.current_maxsize >= 0 else 'unbounded'})`",
+                            f"- **Suggested:** `@lru_cache(maxsize={eval_result.suggested_maxsize})`",
+                            f"- **Hit rate:** {eval_result.hit_rate:.1f}%",
+                            f"- **Reason:** {eval_result.reason}",
+                            "",
+                        ]
+                    )
+
+            if keep_caches:
+                lines.extend(["### Keep (Performing Well)", ""])
+                for eval_result in keep_caches:
+                    c = eval_result.candidate
+                    lines.extend(
+                        [
+                            f"- `{c.function_name}` ({c.file_path.name}:{c.line_number}): {eval_result.hit_rate:.1f}% hit rate",
+                        ]
+                    )
+                lines.append("")
+
+        # New cache recommendations
+        if recommendations:
+            lines.extend(
+                [
+                    "## Recommended New Caching",
+                    "",
+                ]
+            )
+
+            for result in recommendations:
+                c = result.candidate
+                lines.extend(
+                    [
+                        f"### `{c.function_name}` ({c.file_path.name}:{c.line_number})",
+                        f"- **Module:** `{c.module_path}`",
+                        f"- **Expected speedup:** {result.speedup_percent:.1f}%",
+                        f"- **Cache hit rate:** {result.hit_rate:.1f}%",
+                        f"- **Decorator:** `@lru_cache(maxsize={self.cache_size})`",
+                        f"- **Evidence:** {result.hits} hits, {result.misses} misses in test suite",
+                        "",
+                    ]
+                )
+        elif not existing_evals:
+            lines.extend(
+                [
+                    "## No Recommendations",
+                    "",
+                    "No functions met both criteria:",
+                    f"- Cache hit rate ≥ {self.hit_rate_threshold}%",
+                    f"- Performance speedup ≥ {self.speedup_threshold}%",
+                    "",
+                ]
+            )
+
+        return "\n".join(lines)
+
+    def _generate_issues(self, validation, existing_evals) -> list[dict]:
+        """Convert cache analysis results to issues for the report.
+
+        Args:
+            validation: Individual validation results
+            existing_evals: Existing cache evaluations
+
+        Returns:
+            List of issue dictionaries
+        """
+        issues = []
+
+        # Generate issues for new cache recommendations
+        recommendations = [r for r in validation if r.recommendation == "APPLY"]
+        for result in recommendations:
+            c = result.candidate
+            issues.append(
+                {
+                    "type": "cache_opportunity",
+                    "severity": "info",
+                    "message": f"Cache opportunity: {c.function_name} - {result.speedup_percent:.1f}% speedup, {result.hit_rate:.1f}% hit rate",
+                    "file": str(c.file_path),
+                    "line": c.line_number,
+                    "function": c.function_name,
+                    "speedup_percent": round(result.speedup_percent, 2),
+                    "hit_rate": round(result.hit_rate, 2),
+                    "recommended_decorator": f"@lru_cache(maxsize={self.cache_size})",
+                }
+            )
+
+        # Generate issues for existing caches that should be removed
+        remove_evals = [e for e in existing_evals if e.recommendation == "REMOVE"]
+        for eval_result in remove_evals:
+            c = eval_result.candidate
+            issues.append(
+                {
+                    "type": "ineffective_cache",
+                    "severity": "warning",
+                    "message": f"Ineffective cache: {c.function_name} - {eval_result.hit_rate:.1f}% hit rate (remove @lru_cache)",
+                    "file": str(c.file_path),
+                    "line": c.line_number,
+                    "function": c.function_name,
+                    "hit_rate": round(eval_result.hit_rate, 2),
+                    "reason": eval_result.reason,
+                }
+            )
+
+        # Generate issues for existing caches that need size adjustment
+        adjust_evals = [e for e in existing_evals if e.recommendation == "ADJUST_SIZE"]
+        for eval_result in adjust_evals:
+            c = eval_result.candidate
+            current_size = c.current_maxsize if c.current_maxsize >= 0 else "unbounded"
+            issues.append(
+                {
+                    "type": "cache_size_adjustment",
+                    "severity": "info",
+                    "message": f"Cache size adjustment: {c.function_name} - {'reduce' if eval_result.suggested_maxsize < c.current_maxsize else 'increase'} maxsize from {current_size} to {eval_result.suggested_maxsize}",
+                    "file": str(c.file_path),
+                    "line": c.line_number,
+                    "function": c.function_name,
+                    "current_maxsize": current_size,
+                    "suggested_maxsize": eval_result.suggested_maxsize,
+                    "hit_rate": round(eval_result.hit_rate, 2),
+                    "reason": eval_result.reason,
+                }
+            )
+
+        return issues
+
+    def _save_artifacts(self, pure, candidates, screening, validation, existing_evals) -> dict:
+        """Save all artifacts to output directory."""
+        # Calculate counts
+        recommendations = [r for r in validation if r.recommendation == "APPLY"]
+        pure_count = len([c for c in pure if c.is_pure])
+        screened_count = len(screening)
+        passed_count = len([r for r in screening if r.passed_screening]) if screening else 0
+
+        # Save base analysis file
+        artifacts = self._save_base_analysis(
+            pure_count=pure_count,
+            candidates_count=len(candidates),
+            screened_count=screened_count,
+            passed_count=passed_count,
+            validated_count=len(validation),
+            recs_count=len(recommendations),
+            existing_count=len(existing_evals),
+            keep_count=len([e for e in existing_evals if e.recommendation == "KEEP"]),
+            remove_count=len([e for e in existing_evals if e.recommendation == "REMOVE"]),
+            adjust_count=len([e for e in existing_evals if e.recommendation == "ADJUST_SIZE"]),
+        )
+
+        # Save recommendations as JSON
+        if recommendations:
+            recs_file = self.output_dir / "cache_recommendations.json"
+            recs_data = [
+                {
+                    "file": str(r.candidate.file_path),
+                    "function": r.candidate.function_name,
+                    "line": r.candidate.line_number,
+                    "module": r.candidate.module_path,
+                    "decorator": f"@lru_cache(maxsize={self.cache_size})",
+                    "speedup_percent": round(r.speedup_percent, 2),
+                    "hit_rate_percent": round(r.hit_rate, 2),
+                    "evidence": {
+                        "hits": r.hits,
+                        "misses": r.misses,
+                        "baseline_time": round(r.baseline_time, 4),
+                        "cached_time": round(r.cached_time, 4),
+                    },
+                }
+                for r in recommendations
+            ]
+            recs_file.write_text(json.dumps(recs_data, indent=2))
+            artifacts["recommendations"] = recs_file
+
+        # Save existing cache evaluations as JSON
+        if existing_evals:
+            existing_file = self.output_dir / "existing_cache_evaluations.json"
+            existing_data = [
+                {
+                    "file": str(e.candidate.file_path),
+                    "function": e.candidate.function_name,
+                    "line": e.candidate.line_number,
+                    "module": e.candidate.module_path,
+                    "current_maxsize": e.candidate.current_maxsize if e.candidate.current_maxsize >= 0 else "unbounded",
+                    "hit_rate_percent": round(e.hit_rate, 2),
+                    "recommendation": e.recommendation,
+                    "reason": e.reason,
+                    "suggested_maxsize": e.suggested_maxsize,
+                    "evidence": {
+                        "hits": e.hits,
+                        "misses": e.misses,
+                    },
+                }
+                for e in existing_evals
+            ]
+            existing_file.write_text(json.dumps(existing_data, indent=2))
+            artifacts["existing_evaluations"] = existing_file
+
+        # Generate and save issues in chunked format
+        all_issues = self._generate_issues(validation, existing_evals)
+        if all_issues:
+            # Get report directory (parent of output_dir / "report")
+            report_dir = self.output_dir.parent / "report"
+
+            # Get unique issue types
+            issue_types = list({issue.get("type", "unknown") for issue in all_issues})
+
+            # Cleanup old chunked files for these issue types
+            cleanup_chunked_issues(
+                output_dir=report_dir,
+                issue_types=issue_types,
+                prefix="issues",
+            )
+
+            # Write chunked issues
+            written_files = write_chunked_issues(
+                issues=all_issues,
+                output_dir=report_dir,
+                prefix="issues",
+            )
+
+            if written_files:
+                artifacts["issues"] = written_files[0]  # First chunk for reference
+
+        return artifacts

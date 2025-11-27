@@ -425,6 +425,32 @@ detect_complexity = true
 nested_loop_threshold = 2
 
 
+# -----------------------------------------------------------------------------
+# Cache Analysis Sub-Server
+# -----------------------------------------------------------------------------
+[review.cache]
+# LRU cache size for testing
+cache_size = 128
+
+# Minimum cache hit rate % (batch screening threshold)
+hit_rate_threshold = 20.0
+
+# Minimum speedup % (individual validation threshold)
+speedup_threshold = 5.0
+
+# Minimum function call count to be considered a hotspot
+min_calls = 100
+
+# Minimum cumulative time (seconds) to be considered a hotspot
+min_cumtime = 0.1
+
+# Test suite timeout in seconds (applies to both batch and individual testing)
+test_timeout = 300
+
+# Number of test runs to average for individual validation (for measurement stability)
+num_runs = 3
+
+
 # =============================================================================
 # FIX ANALYSIS SETTINGS
 # =============================================================================
@@ -827,6 +853,97 @@ verdict_pass = "✅ SECURE - Dependencies are secure and up-to-date"
 verdict_warning = "⚠️ UPDATE RECOMMENDED - Minor updates available"
 verdict_needs_work = "🔧 ACTION NEEDED - Security patches required"
 verdict_reject = "❌ VULNERABLE - Critical security issues found"
+
+
+# -----------------------------------------------------------------------------
+# Cache Optimization Mindset
+# -----------------------------------------------------------------------------
+[review.mindsets.cache]
+role = "cache optimization reviewer"
+traits = ["skeptical", "evidence-driven", "data-obsessed"]
+
+[review.mindsets.cache.approach]
+real_test_data = "Profile with REAL test suite, never synthetic benchmarks"
+evidence_required = "Show cache hit rate, speedup metrics for every recommendation"
+no_trust = "Don't believe claims without profiling data"
+minimum_threshold = "Hit rate >20%, speedup >5% to justify complexity"
+
+[review.mindsets.cache.questions]
+items = [
+    "Is this actually faster? Let me profile it.",
+    "What's the cache hit rate with REAL data? Let me measure.",
+    "Is this optimization worth the complexity? Show me the numbers.",
+    "Where's the actual bottleneck? Let me profile with the test suite.",
+]
+
+[review.mindsets.cache.judgment]
+critical_threshold = 0    # No critical issues concept for cache analysis
+warning_threshold = 0     # No warnings concept for cache analysis
+verdict_pass = "✅ RECOMMENDATIONS AVAILABLE - Evidence-based caching opportunities found"
+verdict_warning = "⚠️ LIMITED OPPORTUNITIES - Some candidates found but marginal benefits"
+verdict_needs_work = "🔧 NO RECOMMENDATIONS - No functions met both hit rate and speedup thresholds"
+verdict_reject = "❌ NO ANALYSIS - Missing profiling data or pure functions"
+
+
+# =============================================================================
+# INTERNAL LLM CONFIGURATION
+# =============================================================================
+# The MCP server can use an internal LLM client for classification, analysis,
+# and verification tasks. This is SEPARATE from the caller's context and does
+# not affect the user's token budget or conversation history.
+#
+# Architecture:
+#   Claude Desktop (caller) → MCP Server → Internal LLM Client (isolated)
+#                                    ↓
+#                              Structured results only
+
+[llm]
+# Enable internal LLM usage for analysis enhancement
+# When disabled, the server falls back to rule-based analysis
+enable_internal_llm = false
+
+# Anthropic API key (leave empty to read from environment)
+# Priority: config > BTX_FIX_MCP_ANTHROPIC_API_KEY > ANTHROPIC_API_KEY
+anthropic_api_key = ""
+
+# Model for complex analysis (reasoning, suggestions, verification)
+model = "claude-3-5-sonnet-20241022"
+
+# Fast model for simple classification tasks
+fast_model = "claude-3-5-haiku-20241022"
+
+# Maximum tokens for different operation types
+max_tokens_classification = 10   # Simple severity/category classification
+max_tokens_suggestion = 500      # Fix strategy suggestions
+max_tokens_verification = 300    # Fix verification
+
+# Rate limiting (calls per minute to avoid hitting API limits)
+rate_limit = 60
+
+# Enable prompt caching to save tokens on repeated analysis
+enable_prompt_caching = true
+
+# Feature flags - enable specific LLM use cases
+[llm.features]
+# Classify issue severity (low/medium/high/critical) with LLM
+# Falls back to rule-based if disabled or on error
+classify_severity = false
+
+# Suggest fix strategies for code issues (more expensive)
+# Provides structured fix recommendations with steps
+suggest_fixes = false
+
+# Verify that fixes actually resolve reported issues (future feature)
+# Cross-checks fix results against issue descriptions
+verify_fixes = false
+
+# Generate commit messages for automated fixes
+# Creates conventional commit messages from change summaries
+generate_commit_messages = false
+
+# Analyze code patterns for deeper insights (experimental)
+# Identifies anti-patterns and suggests improvements
+analyze_patterns = false
 
 
 # =============================================================================

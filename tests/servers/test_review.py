@@ -121,7 +121,7 @@ def test_hello():
 
         tools = server.get_tool_definitions()
 
-        assert len(tools) == 8
+        assert len(tools) == 9
         tool_names = [t["name"] for t in tools]
         assert "review_scope" in tool_names
         assert "review_quality" in tool_names
@@ -129,6 +129,7 @@ def test_hello():
         assert "review_deps" in tool_names
         assert "review_docs" in tool_names
         assert "review_perf" in tool_names
+        assert "review_cache" in tool_names
         assert "review_report" in tool_names
         assert "review_all" in tool_names
 

@@ -1,9 +1,0 @@
-[
-  {
-    "type": "missing_readme_section",
-    "severity": "warning",
-    "message": "README is missing required section: Usage",
-    "doc_file": "README",
-    "required": true
-  }
-]

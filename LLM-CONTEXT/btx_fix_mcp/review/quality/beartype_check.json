@@ -1,8 +1,0 @@
-{
-  "passed": false,
-  "errors": [
-    "Test run timed out"
-  ],
-  "raw_output": "Beartype available\n",
-  "skipped": false
-}

@@ -6,6 +6,7 @@ Extracted from ReviewMCPServer to reduce class size and improve maintainability.
 from typing import Any
 
 from btx_fix_mcp.subservers.common.mindsets import (
+    CACHE_MINDSET,
     DEPS_MINDSET,
     DOCS_MINDSET,
     PERF_MINDSET,
@@ -28,6 +29,7 @@ def get_review_tool_definitions() -> list[dict[str, Any]]:
     deps_mindset = get_mindset(DEPS_MINDSET)
     docs_mindset = get_mindset(DOCS_MINDSET)
     perf_mindset = get_mindset(PERF_MINDSET)
+    cache_mindset = get_mindset(CACHE_MINDSET)
 
     return [
         _scope_tool_definition(),
@@ -36,6 +38,7 @@ def get_review_tool_definitions() -> list[dict[str, Any]]:
         _deps_tool_definition(deps_mindset),
         _docs_tool_definition(docs_mindset),
         _perf_tool_definition(perf_mindset),
+        _cache_tool_definition(cache_mindset),
         _report_tool_definition(),
         _all_tool_definition(),
     ]
@@ -190,6 +193,35 @@ def _perf_tool_definition(mindset: Any) -> dict[str, Any]:
                 "nested_loop_threshold": {
                     "type": "integer",
                     "description": "Nesting depth to trigger warning (2=O(n²), 3=O(n³), default: 2)",
+                },
+            },
+        },
+    }
+
+
+def _cache_tool_definition(mindset: Any) -> dict[str, Any]:
+    """Return cache tool definition."""
+    return {
+        "name": "review_cache",
+        "description": f"""Identify caching opportunities using hybrid evidence-based approach.
+
+Requires perf sub-server to run first (generates test_profile.prof).
+
+{mindset.format_for_tool_description()}""",
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "cache_size": {
+                    "type": "integer",
+                    "description": "LRU cache maxsize (default: 128)",
+                },
+                "hit_rate_threshold": {
+                    "type": "number",
+                    "description": "Minimum cache hit rate % for batch screening (default: 20.0)",
+                },
+                "speedup_threshold": {
+                    "type": "number",
+                    "description": "Minimum speedup % for individual validation (default: 5.0)",
                 },
             },
         },

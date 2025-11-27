@@ -7,6 +7,7 @@ import pytest
 from btx_fix_mcp.servers.review_handlers import (
     TOOL_HANDLERS,
     _handle_all,
+    _handle_cache,
     _handle_deps,
     _handle_docs,
     _handle_perf,
@@ -28,6 +29,7 @@ def mock_server():
     server.run_deps.return_value = {"status": "SUCCESS"}
     server.run_docs.return_value = {"status": "SUCCESS"}
     server.run_perf.return_value = {"status": "SUCCESS"}
+    server.run_cache.return_value = {"status": "SUCCESS"}
     server.run_report.return_value = {"status": "SUCCESS"}
     server.run_all.return_value = {"status": "SUCCESS"}
     return server
@@ -163,6 +165,31 @@ class TestHandleFunctions:
         mock_server.run_perf.assert_called_once_with(
             run_profiling=False,
             nested_loop_threshold=3,
+        )
+
+    def test_handle_cache_default(self, mock_server):
+        """Test _handle_cache with default arguments."""
+        _handle_cache(mock_server, {})
+        mock_server.run_cache.assert_called_once_with(
+            cache_size=128,
+            hit_rate_threshold=20.0,
+            speedup_threshold=5.0,
+        )
+
+    def test_handle_cache_custom(self, mock_server):
+        """Test _handle_cache with custom parameters."""
+        _handle_cache(
+            mock_server,
+            {
+                "cache_size": 256,
+                "hit_rate_threshold": 30.0,
+                "speedup_threshold": 10.0,
+            },
+        )
+        mock_server.run_cache.assert_called_once_with(
+            cache_size=256,
+            hit_rate_threshold=30.0,
+            speedup_threshold=10.0,
         )
 
     def test_handle_report(self, mock_server):

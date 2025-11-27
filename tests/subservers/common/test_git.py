@@ -176,13 +176,13 @@ class TestGitOperations:
 
     def test_get_file_history(self, git_repo):
         """Test getting file commit history."""
-        # Create multiple commits for same file
+        # Create multiple commits for same file (use_prefix=False for clean messages)
         test_file = git_repo / "history.txt"
         test_file.write_text("version 1")
-        GitOperations.create_commit(["history.txt"], "Version 1", path=git_repo)
+        GitOperations.create_commit(["history.txt"], "Version 1", path=git_repo, use_prefix=False)
 
         test_file.write_text("version 2")
-        GitOperations.create_commit(["history.txt"], "Version 2", path=git_repo)
+        GitOperations.create_commit(["history.txt"], "Version 2", path=git_repo, use_prefix=False)
 
         history = GitOperations.get_file_history("history.txt", limit=5, path=git_repo)
 

@@ -80,12 +80,10 @@ class SecuritySubServer(BaseSubServer):
         base_config = get_config(start_dir=str(repo_path))
         output_base = base_config.get("review", {}).get("output_dir", "LLM-CONTEXT/btx_fix_mcp/review")
 
-        if input_dir is None:
-            input_dir = Path.cwd() / output_base / "scope"
-        if output_dir is None:
-            output_dir = Path.cwd() / output_base / name
+        resolved_input = input_dir if input_dir is not None else Path.cwd() / output_base / "scope"
+        resolved_output = output_dir if output_dir is not None else Path.cwd() / output_base / name
 
-        return input_dir, output_dir
+        return resolved_input, resolved_output
 
     def _init_logger(self, name: str, mcp_mode: bool):
         """Initialize logger based on mode."""
@@ -387,8 +385,8 @@ class SecuritySubServer(BaseSubServer):
 
         try:
             cmd = self._build_bandit_command(filtered_files)
-            timeout = get_timeout("tool_analysis", 60, start_dir=str(self.repo_path))
-            result = subprocess.run(cmd, capture_output=True, text=True, timeout=timeout)
+            bandit_timeout = get_timeout("tool_analysis", 60, start_dir=str(self.repo_path))
+            result = subprocess.run(cmd, capture_output=True, text=True, timeout=bandit_timeout)
 
             if result.stdout.strip():
                 data = json.loads(result.stdout)

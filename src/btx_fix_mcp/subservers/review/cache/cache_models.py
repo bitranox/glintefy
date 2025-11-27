@@ -49,10 +49,7 @@ class Hotspot:
 
     def __str__(self) -> str:
         """String representation."""
-        return (
-            f"{self.function_name} at {self.file_path}:{self.line_number} "
-            f"({self.call_count} calls, {self.cumulative_time:.4f}s cumtime)"
-        )
+        return f"{self.function_name} at {self.file_path}:{self.line_number} ({self.call_count} calls, {self.cumulative_time:.4f}s cumtime)"
 
 
 @dataclass
@@ -93,10 +90,7 @@ class BatchScreeningResult:
     def __str__(self) -> str:
         """String representation."""
         status = "PASS" if self.passed_screening else "FAIL"
-        return (
-            f"{status}: {self.candidate.function_name} "
-            f"(hit_rate={self.hit_rate:.1f}%, hits={self.hits}, misses={self.misses})"
-        )
+        return f"{status}: {self.candidate.function_name} (hit_rate={self.hit_rate:.1f}%, hits={self.hits}, misses={self.misses})"
 
 
 @dataclass
@@ -116,10 +110,7 @@ class IndividualValidationResult:
     def __str__(self) -> str:
         """String representation."""
         if self.recommendation == "APPLY":
-            return (
-                f"RECOMMEND: {self.candidate.function_name} "
-                f"(speedup={self.speedup_percent:.1f}%, hit_rate={self.hit_rate:.1f}%)"
-            )
+            return f"RECOMMEND: {self.candidate.function_name} (speedup={self.speedup_percent:.1f}%, hit_rate={self.hit_rate:.1f}%)"
         return f"REJECT: {self.candidate.function_name} ({self.rejection_reason})"
 
 

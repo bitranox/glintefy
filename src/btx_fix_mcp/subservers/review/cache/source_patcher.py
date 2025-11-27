@@ -20,8 +20,8 @@ IMPORTANT: Requires git repository and clean working tree.
 
 import ast
 import re
+import secrets
 import subprocess
-import tempfile
 from pathlib import Path
 
 
@@ -81,8 +81,8 @@ class SourcePatcher:
             if result.stdout.strip():
                 return (False, "Working tree not clean (uncommitted changes)")
 
-            # Create temporary branch
-            branch_suffix = tempfile.mktemp(prefix='', suffix='', dir='').replace('/', '')[-8:]
+            # Create temporary branch with random suffix
+            branch_suffix = secrets.token_hex(4)
             self.branch_name = f"cache-analysis-{branch_suffix}"
 
             result = subprocess.run(
@@ -315,6 +315,7 @@ class SourcePatcher:
 
         try:
             import shutil
+
             backup_path = file_path.with_suffix(file_path.suffix + ".cache_backup")
             shutil.copy2(file_path, backup_path)
             self.backups[file_path] = backup_path
@@ -336,6 +337,7 @@ class SourcePatcher:
 
         try:
             import shutil
+
             backup_path = self.backups[file_path]
             if backup_path.exists():
                 shutil.copy2(backup_path, file_path)
@@ -344,8 +346,3 @@ class SourcePatcher:
             return True
         except Exception:
             return False
-
-    def restore_all_files(self) -> None:
-        """Restore all backed-up files."""
-        for file_path in list(self.backups.keys()):
-            self.restore_file(file_path)

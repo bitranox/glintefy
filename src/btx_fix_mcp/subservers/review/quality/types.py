@@ -13,7 +13,7 @@ from btx_fix_mcp.subservers.common.issues import (
     DocstringCoverageMetrics,
     TypeCoverageMetrics,
 )
-from btx_fix_mcp.config import get_timeout
+from btx_fix_mcp.config import get_timeout, get_tool_config
 from btx_fix_mcp.tools_venv import get_tool_path
 
 from .base import BaseAnalyzer
@@ -57,12 +57,33 @@ class TypeAnalyzer(BaseAnalyzer):
 
     def _run_mypy(self, mypy: str, files: list[str]) -> subprocess.CompletedProcess:
         """Run mypy on files."""
-        timeout = get_timeout("tool_long", 120)
+        mypy_timeout = get_timeout("tool_long", 120)
+
+        # Get mypy config settings
+        mypy_config = get_tool_config("mypy")
+        python_version = mypy_config.get("python_version", "3.13")
+        strict = mypy_config.get("strict", False)
+        ignore_missing_imports = mypy_config.get("ignore_missing_imports", True)
+        show_error_codes = mypy_config.get("show_error_codes", True)
+        pretty = mypy_config.get("pretty", True)
+
+        # Build command with config options
+        cmd = [mypy, f"--python-version={python_version}", "--no-error-summary"]
+
+        if strict:
+            cmd.append("--strict")
+        if ignore_missing_imports:
+            cmd.append("--ignore-missing-imports")
+        if show_error_codes:
+            cmd.append("--show-error-codes")
+        if pretty:
+            cmd.append("--pretty")
+
         return subprocess.run(
-            [mypy, "--ignore-missing-imports", "--show-error-codes", "--no-error-summary"] + files,
+            cmd + files,
             capture_output=True,
             text=True,
-            timeout=timeout,
+            timeout=mypy_timeout,
         )
 
     def _parse_mypy_output(self, stdout: str, metrics: TypeCoverageMetrics) -> None:
@@ -109,12 +130,12 @@ class TypeAnalyzer(BaseAnalyzer):
 
     def _run_vulture(self, vulture: str, confidence: int, files: list[str]) -> subprocess.CompletedProcess:
         """Run vulture on files."""
-        timeout = get_timeout("tool_analysis", 60)
+        vulture_timeout = get_timeout("tool_analysis", 60)
         return subprocess.run(
             [vulture, f"--min-confidence={confidence}"] + files,
             capture_output=True,
             text=True,
-            timeout=timeout,
+            timeout=vulture_timeout,
         )
 
     def _parse_vulture_output(self, stdout: str, results: dict[str, Any]) -> None:
@@ -158,12 +179,12 @@ class TypeAnalyzer(BaseAnalyzer):
 
     def _run_interrogate(self, interrogate: str, files: list[str]) -> subprocess.CompletedProcess:
         """Run interrogate on files."""
-        timeout = get_timeout("tool_analysis", 60)
+        interrogate_timeout = get_timeout("tool_analysis", 60)
         return subprocess.run(
             [interrogate, "-v", "--fail-under=0"] + files,
             capture_output=True,
             text=True,
-            timeout=timeout,
+            timeout=interrogate_timeout,
         )
 
     def _parse_interrogate_output(self, stdout: str, metrics: DocstringCoverageMetrics) -> None:

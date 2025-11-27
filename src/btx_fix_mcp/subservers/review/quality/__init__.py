@@ -21,9 +21,11 @@ This sub-server analyzes code quality using multiple tools:
 """
 
 from pathlib import Path
+from typing import Any
 
 from btx_fix_mcp.config import get_config, get_subserver_config
 from btx_fix_mcp.subservers.base import BaseSubServer, SubServerResult
+from btx_fix_mcp.subservers.common.issues import QualityMetrics
 from btx_fix_mcp.subservers.common.logging import (
     LogContext,
     get_mcp_logger,
@@ -192,8 +194,8 @@ class QualitySubServer(BaseSubServer):
                 results["beartype"] = self.beartype_analyzer.analyze()
 
     def _compile_and_save_results(
-        self, results: dict, python_files: list[str], js_files: list[str]
-    ) -> tuple[list, dict, dict, str]:
+        self, results: dict[str, Any], python_files: list[str], js_files: list[str]
+    ) -> tuple[list[dict[str, Any]], dict[str, Path], QualityMetrics, str]:
         """Compile issues, save results, and generate summary."""
         log_step(self.logger, 20, "Compiling issues")
         all_issues = self.results_compiler.compile_issues(results, self.quality_config)

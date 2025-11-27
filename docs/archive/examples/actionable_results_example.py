@@ -3,15 +3,12 @@
 This demonstrates how the server tells the caller what to do with results.
 """
 
-from pathlib import Path
-
 
 def example_basic_result():
     """Basic result with recommendations."""
     return {
         "status": "PARTIAL",
         "summary": "Found 15 code quality issues requiring attention",
-
         # What was found
         "issues": [
             {
@@ -19,38 +16,21 @@ def example_basic_result():
                 "line": 42,
                 "severity": "high",
                 "type": "high_complexity",
-                "description": "Function complexity of 18 exceeds threshold of 10"
+                "description": "Function complexity of 18 exceeds threshold of 10",
             },
             # ... more issues
         ],
-
         # What to do about it (server's recommendations)
         "recommendations": [
             "⚠️ Fix high complexity in process() function (main.py:42) first",
             "Add type hints to 5 functions for better type safety",
-            "Extract duplicate validation logic into shared helper"
+            "Extract duplicate validation logic into shared helper",
         ],
-
         # Step-by-step guidance
-        "next_steps": [
-            "Review critical issues in main.py and utils.py",
-            "Run automated fixes for safe changes",
-            "Re-run quality check after fixes"
-        ],
-
+        "next_steps": ["Review critical issues in main.py and utils.py", "Run automated fixes for safe changes", "Re-run quality check after fixes"],
         # Exact commands to run
-        "suggested_commands": [
-            "btx_fix_mcp fix --severity high --interactive",
-            "btx_fix_mcp fix --add-types --auto",
-            "btx_fix_mcp review quality --recheck"
-        ],
-
-        "metrics": {
-            "total_issues": 15,
-            "critical": 3,
-            "high": 5,
-            "medium": 7
-        }
+        "suggested_commands": ["btx_fix_mcp fix --severity high --interactive", "btx_fix_mcp fix --add-types --auto", "btx_fix_mcp review quality --recheck"],
+        "metrics": {"total_issues": 15, "critical": 3, "high": 5, "medium": 7},
     }
 
 
@@ -59,7 +39,6 @@ def example_with_workflow():
     return {
         "status": "PARTIAL",
         "summary": "Found security and quality issues",
-
         # Guided workflow (server tells caller the process)
         "workflow": {
             "title": "Fix Critical Issues",
@@ -70,7 +49,7 @@ def example_with_workflow():
                     "title": "Backup Code",
                     "description": "Create snapshot before making changes",
                     "command": "git commit -am 'pre-fix snapshot'",
-                    "required": True
+                    "required": True,
                 },
                 {
                     "number": 2,
@@ -78,40 +57,30 @@ def example_with_workflow():
                     "description": "Address 2 SQL injection vulnerabilities",
                     "priority": "CRITICAL",
                     "command": "btx_fix_mcp fix --security --verify",
-                    "expected_outcome": "All security issues resolved"
+                    "expected_outcome": "All security issues resolved",
                 },
                 {
                     "number": 3,
                     "title": "Refactor Complex Functions",
                     "description": "Reduce complexity in 3 functions",
                     "command": "btx_fix_mcp fix --complexity --interactive",
-                    "review_required": True
+                    "review_required": True,
                 },
                 {
                     "number": 4,
                     "title": "Verify Changes",
                     "description": "Run tests and re-check quality",
                     "command": "pytest && btx_fix_mcp review quality",
-                    "success_criteria": "All tests pass, <5 issues remain"
-                }
-            ]
+                    "success_criteria": "All tests pass, <5 issues remain",
+                },
+            ],
         },
-
         # Priority matrix (helps caller decide what to do first)
         "priority_matrix": {
-            "immediate": [
-                "Fix SQL injection in query() function",
-                "Fix hardcoded credentials in config.py"
-            ],
-            "this_week": [
-                "Refactor process() to reduce complexity",
-                "Add type hints to public API"
-            ],
-            "nice_to_have": [
-                "Extract duplicate code",
-                "Improve docstring coverage"
-            ]
-        }
+            "immediate": ["Fix SQL injection in query() function", "Fix hardcoded credentials in config.py"],
+            "this_week": ["Refactor process() to reduce complexity", "Add type hints to public API"],
+            "nice_to_have": ["Extract duplicate code", "Improve docstring coverage"],
+        },
     }
 
 
@@ -120,39 +89,29 @@ def example_with_explanations():
     return {
         "status": "PARTIAL",
         "issues": [...],
-
         # Explain issues to help user understand
         "explanations": {
             "high_complexity": {
                 "what": "Functions with cyclomatic complexity >10",
                 "why_it_matters": "Complex functions are harder to test and maintain",
-                "consequences": [
-                    "3x more likely to contain bugs",
-                    "Harder for new developers to understand",
-                    "Difficult to write comprehensive tests"
-                ],
+                "consequences": ["3x more likely to contain bugs", "Harder for new developers to understand", "Difficult to write comprehensive tests"],
                 "how_to_fix": "Extract helper methods, simplify conditionals",
-                "example": "Break 100-line function into 5 smaller functions of 20 lines each"
+                "example": "Break 100-line function into 5 smaller functions of 20 lines each",
             },
             "missing_type_hints": {
                 "what": "Functions without type annotations",
                 "why_it_matters": "Type hints catch errors before runtime",
-                "benefits": [
-                    "IDE autocomplete and type checking",
-                    "Prevents common type-related bugs",
-                    "Self-documenting code"
-                ],
+                "benefits": ["IDE autocomplete and type checking", "Prevents common type-related bugs", "Self-documenting code"],
                 "how_to_fix": "Add type annotations to function signatures",
-                "example": "def process(data: list[str]) -> dict[str, int]:"
-            }
+                "example": "def process(data: list[str]) -> dict[str, int]:",
+            },
         },
-
         # Provide learning resources
         "learn_more": {
             "complexity": "https://docs.python.org/3/faq/programming.html",
             "type_hints": "https://mypy.readthedocs.io/en/stable/",
-            "refactoring": "https://refactoring.guru/extract-method"
-        }
+            "refactoring": "https://refactoring.guru/extract-method",
+        },
     }
 
 
@@ -161,7 +120,6 @@ def example_with_fix_preview():
     return {
         "status": "PARTIAL",
         "issues": [...],
-
         # Show preview of fixes (helps caller decide)
         "fix_previews": [
             {
@@ -191,10 +149,9 @@ def process_item(item):
                 "risk": "Low - pure refactoring",
                 "tests_affected": 1,
                 "auto_fixable": False,
-                "review_required": True
+                "review_required": True,
             }
         ],
-
         # Options for applying fixes
         "fix_options": [
             {
@@ -203,7 +160,7 @@ def process_item(item):
                 "fixes_count": 8,
                 "time": "5 minutes",
                 "risk": "low",
-                "command": "btx_fix_mcp fix --auto --safe"
+                "command": "btx_fix_mcp fix --auto --safe",
             },
             {
                 "approach": "interactive",
@@ -211,7 +168,7 @@ def process_item(item):
                 "fixes_count": 15,
                 "time": "20 minutes",
                 "risk": "none",
-                "command": "btx_fix_mcp fix --interactive"
+                "command": "btx_fix_mcp fix --interactive",
             },
             {
                 "approach": "manual",
@@ -219,9 +176,9 @@ def process_item(item):
                 "fixes_count": 15,
                 "time": "45 minutes",
                 "risk": "none",
-                "provides": "Step-by-step instructions"
-            }
-        ]
+                "provides": "Step-by-step instructions",
+            },
+        ],
     }
 
 
@@ -235,37 +192,26 @@ def example_conversation_flow():
     mcp_result = {
         "status": "PARTIAL",
         "summary": "Found 15 issues: 3 critical, 5 high, 7 medium",
-        "recommendations": [
-            "Fix high complexity in process() first",
-            "Add type hints to public API",
-            "Extract duplicate validation logic"
-        ],
-        "next_steps": [
-            "Review critical issues in main.py",
-            "Run automated fixes",
-            "Re-check quality"
-        ],
-        "suggested_commands": [
-            "btx_fix_mcp fix --severity high --interactive",
-            "btx_fix_mcp fix --add-types"
-        ]
+        "recommendations": ["Fix high complexity in process() first", "Add type hints to public API", "Extract duplicate validation logic"],
+        "next_steps": ["Review critical issues in main.py", "Run automated fixes", "Re-check quality"],
+        "suggested_commands": ["btx_fix_mcp fix --severity high --interactive", "btx_fix_mcp fix --add-types"],
     }
 
     # Step 3: Claude interprets and presents to user
     claude_response = f"""
 I've completed a code quality review. Here's what I found:
 
-📊 **Summary**: {mcp_result['summary']}
+📊 **Summary**: {mcp_result["summary"]}
 
 🎯 **Recommendations**:
-{chr(10).join(f'{i+1}. {rec}' for i, rec in enumerate(mcp_result['recommendations']))}
+{chr(10).join(f"{i + 1}. {rec}" for i, rec in enumerate(mcp_result["recommendations"]))}
 
 📋 **Next Steps**:
-{chr(10).join(f'- {step}' for step in mcp_result['next_steps'])}
+{chr(10).join(f"- {step}" for step in mcp_result["next_steps"])}
 
 💻 **Commands to Fix**:
 ```bash
-{chr(10).join(mcp_result['suggested_commands'])}
+{chr(10).join(mcp_result["suggested_commands"])}
 ```
 
 Would you like me to:
@@ -275,11 +221,7 @@ Would you like me to:
 - Create a step-by-step guide?
 """
 
-    return {
-        "user_message": user_message,
-        "mcp_result": mcp_result,
-        "claude_response": claude_response
-    }
+    return {"user_message": user_message, "mcp_result": mcp_result, "claude_response": claude_response}
 
 
 def example_full_interaction():
@@ -297,20 +239,20 @@ def example_full_interaction():
                     "line": 42,
                     "issue": "High complexity (18)",
                     "fix": "Extract 3 helper methods",
-                    "command": "btx_fix_mcp fix main.py:42 --refactor"
+                    "command": "btx_fix_mcp fix main.py:42 --refactor",
                 }
             ],
             "recommendations": [
                 "Fix process() complexity first - biggest impact",
                 "Then add type hints - prevents future issues",
-                "Finally refactor duplicates - improves maintainability"
+                "Finally refactor duplicates - improves maintainability",
             ],
             "workflow": {
                 "1": "Backup: git commit -am 'pre-fix'",
                 "2": "Fix critical: btx_fix_mcp fix --critical",
                 "3": "Verify: pytest",
-                "4": "Re-check: btx_fix_mcp review"
-            }
+                "4": "Re-check: btx_fix_mcp review",
+            },
         },
         "claude_presents": """
 I found 15 code quality issues. Here's my analysis:
@@ -354,7 +296,7 @@ D) Just do it automatically
             "changes": "Refactored process() into 4 functions",
             "new_complexity": 6,
             "tests_status": "All 15 tests passing",
-            "next": "Review changes and commit if satisfied"
+            "next": "Review changes and commit if satisfied",
         },
         "claude_shows_result": """
 ✅ Done! I've refactored the code.
@@ -388,7 +330,7 @@ btx_fix_mcp review quality
 ```
 
 The code is now much cleaner! Want me to explain any of the changes?
-"""
+""",
     }
 
     return interaction
@@ -407,20 +349,20 @@ if __name__ == "__main__":
     print(f"Status: {result['status']}")
     print(f"Summary: {result['summary']}")
     print("\nRecommendations:")
-    for rec in result['recommendations']:
+    for rec in result["recommendations"]:
         print(f"  • {rec}")
     print("\nSuggested Commands:")
-    for cmd in result['suggested_commands']:
+    for cmd in result["suggested_commands"]:
         print(f"  $ {cmd}")
 
     print("\n\n2. WORKFLOW RESULT (step-by-step)")
     print("-" * 70)
     result = example_with_workflow()
-    workflow = result['workflow']
+    workflow = result["workflow"]
     print(f"Workflow: {workflow['title']}")
     print(f"Estimated Time: {workflow['estimated_time']}")
     print("\nSteps:")
-    for step in workflow['steps']:
+    for step in workflow["steps"]:
         print(f"\n  Step {step['number']}: {step['title']}")
         print(f"    Description: {step['description']}")
         print(f"    Command: {step['command']}")
@@ -429,8 +371,8 @@ if __name__ == "__main__":
     print("-" * 70)
     flow = example_conversation_flow()
     print(f"User: {flow['user_message']}")
-    print(f"\nClaude Desktop presents:")
-    print(flow['claude_response'])
+    print("\nClaude Desktop presents:")
+    print(flow["claude_response"])
 
     print("\n\n" + "=" * 70)
     print("KEY TAKEAWAY:")

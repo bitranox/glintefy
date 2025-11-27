@@ -3,7 +3,13 @@
 import subprocess
 from pathlib import Path
 
-from btx_fix_mcp.config import get_timeout
+from btx_fix_mcp.config import (
+    get_branch_template,
+    get_commit_prefix,
+    get_create_branch,
+    get_sign_commits,
+    get_timeout,
+)
 
 
 class GitOperationError(Exception):
@@ -43,12 +49,12 @@ class GitOperations:
                 cmd.extend(["-C", str(path)])
             cmd.extend(["rev-parse", "--is-inside-work-tree"])
 
-            timeout = get_timeout("git_quick_op", 5)
+            git_is_repo_timeout = get_timeout("git_quick_op", 5)
             result = subprocess.run(
                 cmd,
                 capture_output=True,
                 text=True,
-                timeout=timeout,
+                timeout=git_is_repo_timeout,
             )
             return result.returncode == 0
         except (subprocess.SubprocessError, FileNotFoundError):
@@ -75,11 +81,13 @@ class GitOperations:
                 cmd.extend(["-C", str(path)])
             cmd.extend(["rev-parse", "--show-toplevel"])
 
+            start_dir = str(path) if path else None
+            git_root_timeout = get_timeout("git_quick_op", 5, start_dir)
             result = subprocess.run(
                 cmd,
                 capture_output=True,
                 text=True,
-                timeout=5,
+                timeout=git_root_timeout,
                 check=True,
             )
             return Path(result.stdout.strip())
@@ -106,11 +114,13 @@ class GitOperations:
                 cmd.extend(["-C", str(path)])
             cmd.extend(["rev-parse", "--abbrev-ref", "HEAD"])
 
+            start_dir = str(path) if path else None
+            git_branch_timeout = get_timeout("git_quick_op", 5, start_dir)
             result = subprocess.run(
                 cmd,
                 capture_output=True,
                 text=True,
-                timeout=5,
+                timeout=git_branch_timeout,
                 check=True,
             )
             return result.stdout.strip()
@@ -122,6 +132,8 @@ class GitOperations:
         files: list[str],
         message: str,
         path: Path | None = None,
+        use_prefix: bool = True,
+        sign: bool | None = None,
     ) -> str:
         """Create git commit with specified files.
 
@@ -129,6 +141,8 @@ class GitOperations:
             files: List of file paths to commit
             message: Commit message
             path: Repository directory (default: current directory)
+            use_prefix: If True, prepend commit_prefix from config (default: True)
+            sign: Override for GPG signing (None = use config)
 
         Returns:
             Commit hash (SHA)
@@ -145,21 +159,37 @@ class GitOperations:
             a1b2c3d4...
         """
         try:
+            start_dir = str(path) if path else None
+            timeout_commit = get_timeout("git_commit", 30, start_dir)
+
             # Add files
             add_cmd = ["git", "add"] + files
             if path:
                 add_cmd.insert(1, "-C")
                 add_cmd.insert(2, str(path))
 
+            timeout_add = get_timeout("git_quick_op", 10, start_dir)
             subprocess.run(
                 add_cmd,
                 capture_output=True,
-                timeout=10,
+                timeout=timeout_add,
                 check=True,
             )
 
-            # Commit
+            # Build commit message with optional prefix
+            if use_prefix:
+                prefix = get_commit_prefix(start_dir)
+                if prefix and not message.startswith(prefix):
+                    message = f"{prefix} {message}"
+
+            # Build commit command
             commit_cmd = ["git", "commit", "-m", message]
+
+            # Handle GPG signing
+            should_sign = sign if sign is not None else get_sign_commits(start_dir)
+            if should_sign:
+                commit_cmd.append("-S")
+
             if path:
                 commit_cmd.insert(1, "-C")
                 commit_cmd.insert(2, str(path))
@@ -168,7 +198,7 @@ class GitOperations:
                 commit_cmd,
                 capture_output=True,
                 text=True,
-                timeout=10,
+                timeout=timeout_commit,
                 check=True,
             )
 
@@ -178,11 +208,12 @@ class GitOperations:
                 hash_cmd.insert(1, "-C")
                 hash_cmd.insert(2, str(path))
 
+            timeout_hash = get_timeout("git_quick_op", 5, start_dir)
             hash_result = subprocess.run(
                 hash_cmd,
                 capture_output=True,
                 text=True,
-                timeout=5,
+                timeout=timeout_hash,
                 check=True,
             )
 
@@ -216,10 +247,12 @@ class GitOperations:
                 cmd.insert(1, "-C")
                 cmd.insert(2, str(path))
 
+            start_dir = str(path) if path else None
+            git_revert_timeout = get_timeout("git_quick_op", 10, start_dir)
             subprocess.run(
                 cmd,
                 capture_output=True,
-                timeout=10,
+                timeout=git_revert_timeout,
                 check=True,
             )
         except subprocess.CalledProcessError as e:
@@ -254,11 +287,13 @@ class GitOperations:
                 cmd.insert(1, "-C")
                 cmd.insert(2, str(path))
 
+            start_dir = str(path) if path else None
+            git_diff_timeout = get_timeout("git_diff", 30, start_dir)
             result = subprocess.run(
                 cmd,
                 capture_output=True,
                 text=True,
-                timeout=30,
+                timeout=git_diff_timeout,
                 check=True,
             )
             return result.stdout
@@ -291,11 +326,13 @@ class GitOperations:
                 cmd.insert(1, "-C")
                 cmd.insert(2, str(path))
 
+            start_dir = str(path) if path else None
+            git_status_timeout = get_timeout("git_status", 10, start_dir)
             result = subprocess.run(
                 cmd,
                 capture_output=True,
                 text=True,
-                timeout=10,
+                timeout=git_status_timeout,
                 check=True,
             )
             return result.stdout
@@ -318,6 +355,9 @@ class GitOperations:
             ['src/main.py', 'tests/test_main.py', 'new_file.py']
         """
         try:
+            start_dir = str(path) if path else None
+            git_files_timeout = get_timeout("git_quick_op", 10, start_dir)
+
             # Get modified files (staged + unstaged)
             diff_cmd = ["git", "diff", "--name-only", "HEAD"]
             if path:
@@ -328,7 +368,7 @@ class GitOperations:
                 diff_cmd,
                 capture_output=True,
                 text=True,
-                timeout=10,
+                timeout=git_files_timeout,
                 check=True,
             )
 
@@ -342,7 +382,7 @@ class GitOperations:
                 untracked_cmd,
                 capture_output=True,
                 text=True,
-                timeout=10,
+                timeout=git_files_timeout,
                 check=True,
             )
 
@@ -390,11 +430,13 @@ class GitOperations:
                 cmd.insert(1, "-C")
                 cmd.insert(2, str(path))
 
+            start_dir = str(path) if path else None
+            git_log_timeout = get_timeout("git_log", 10, start_dir)
             result = subprocess.run(
                 cmd,
                 capture_output=True,
                 text=True,
-                timeout=10,
+                timeout=git_log_timeout,
                 check=True,
             )
 
@@ -439,13 +481,116 @@ class GitOperations:
                 cmd.insert(1, "-C")
                 cmd.insert(2, str(path))
 
+            start_dir = str(path) if path else None
+            git_hash_timeout = get_timeout("git_quick_op", 5, start_dir)
             result = subprocess.run(
                 cmd,
                 capture_output=True,
                 text=True,
-                timeout=5,
+                timeout=git_hash_timeout,
                 check=True,
             )
             return result.stdout.strip()
         except subprocess.CalledProcessError:
             return None
+
+    @staticmethod
+    def create_fix_branch(
+        issue_id: str,
+        path: Path | None = None,
+        checkout: bool = True,
+    ) -> str:
+        """Create a new branch for fixing an issue using config template.
+
+        Args:
+            issue_id: Issue identifier to use in branch name
+            path: Repository directory (default: current directory)
+            checkout: If True, checkout the new branch (default: True)
+
+        Returns:
+            Name of the created branch
+
+        Raises:
+            GitOperationError: If branch creation fails
+
+        Example:
+            >>> branch = GitOperations.create_fix_branch("ISSUE-123")
+            >>> print(branch)
+            fix/ISSUE-123
+        """
+        start_dir = str(path) if path else None
+
+        # Check if branch creation is enabled
+        if not get_create_branch(start_dir):
+            raise GitOperationError("Branch creation is disabled in config (git.create_branch = false)")
+
+        # Get branch name from template
+        template = get_branch_template(start_dir)
+        branch_name = template.format(issue_id=issue_id)
+
+        try:
+            git_branch_op_timeout = get_timeout("git_quick_op", 5, start_dir)
+
+            # Create branch
+            create_cmd = ["git", "branch", branch_name]
+            if path:
+                create_cmd.insert(1, "-C")
+                create_cmd.insert(2, str(path))
+
+            subprocess.run(
+                create_cmd,
+                capture_output=True,
+                text=True,
+                timeout=git_branch_op_timeout,
+                check=True,
+            )
+
+            # Optionally checkout
+            if checkout:
+                checkout_cmd = ["git", "checkout", branch_name]
+                if path:
+                    checkout_cmd.insert(1, "-C")
+                    checkout_cmd.insert(2, str(path))
+
+                subprocess.run(
+                    checkout_cmd,
+                    capture_output=True,
+                    text=True,
+                    timeout=git_branch_op_timeout,
+                    check=True,
+                )
+
+            return branch_name
+
+        except subprocess.CalledProcessError as e:
+            raise GitOperationError(f"Failed to create branch: {e.stderr}") from e
+        except subprocess.TimeoutExpired as e:
+            raise GitOperationError("Git branch operation timed out") from e
+
+    @staticmethod
+    def should_create_branch(path: Path | None = None) -> bool:
+        """Check if branch creation is enabled in config.
+
+        Args:
+            path: Repository directory to determine config context
+
+        Returns:
+            True if create_branch is enabled in config
+        """
+        start_dir = str(path) if path else None
+        return get_create_branch(start_dir)
+
+    @staticmethod
+    def should_auto_commit(path: Path | None = None) -> bool:
+        """Check if auto-commit is enabled in config.
+
+        Args:
+            path: Repository directory to determine config context
+
+        Returns:
+            True if auto_commit is enabled in config
+        """
+        from btx_fix_mcp.config import get_auto_commit
+
+        start_dir = str(path) if path else None
+        return get_auto_commit(start_dir)

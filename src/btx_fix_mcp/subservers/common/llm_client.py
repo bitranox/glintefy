@@ -37,7 +37,7 @@ from btx_fix_mcp.subservers.common.logging import (
     log_debug,
     log_error_detailed,
 )
-from btx_fix_mcp.subservers.common.llm_providers import LLMProvider, create_provider, get_provider_cost
+from btx_fix_mcp.subservers.common.llm_providers import LLMProvider
 
 # Type aliases
 SeverityLevel = Literal["low", "medium", "high", "critical"]
@@ -301,9 +301,9 @@ class InternalLLMClient:
 
         prompt = f"""Suggest a fix strategy for this code issue:
 
-Issue: {issue['type']}
-Location: {issue['file']}:{issue.get('line', '?')}
-Description: {issue.get('description', 'No description')}
+Issue: {issue["type"]}
+Location: {issue["file"]}:{issue.get("line", "?")}
+Description: {issue.get("description", "No description")}
 
 Code Context:
 ```python
@@ -440,7 +440,7 @@ Respond with ONLY the JSON object, no other text."""
         prompt = f"""Generate a concise git commit message:
 
 Changes: {changes_summary}
-Files: {', '.join(files_changed[:5])}
+Files: {", ".join(files_changed[:5])}
 
 Format: <type>: <description>
 Types: fix, feat, refactor, docs, test, chore
@@ -471,7 +471,7 @@ Respond with ONLY the commit message, one line, no quotes."""
         return f"""Classify the severity of this code issue:
 
 Issue Type: {issue_type}
-File: {context.get('file_path', 'unknown')}
+File: {context.get("file_path", "unknown")}
 
 Code:
 ```python
@@ -479,9 +479,9 @@ Code:
 ```
 
 Metrics:
-- Cyclomatic Complexity: {context.get('complexity', 'N/A')}
-- Lines of Code: {context.get('lines', 'N/A')}
-- Nesting Depth: {context.get('nesting', 'N/A')}
+- Cyclomatic Complexity: {context.get("complexity", "N/A")}
+- Lines of Code: {context.get("lines", "N/A")}
+- Nesting Depth: {context.get("nesting", "N/A")}
 
 Severity Criteria:
 - low: Cosmetic issues, minor improvements
@@ -542,10 +542,7 @@ Respond with ONLY one word: low, medium, high, or critical"""
 
         # Warn if usage is high
         if total > 100_000:
-            logger.warning(
-                f"High token usage in internal LLM: total_tokens={total}, "
-                f"calls={self.call_count}, estimated_cost_usd={self._calculate_cost()}"
-            )
+            logger.warning(f"High token usage in internal LLM: total_tokens={total}, calls={self.call_count}, estimated_cost_usd={self._calculate_cost()}")
 
     def _calculate_cost(self) -> float:
         """Estimate cost based on token usage.

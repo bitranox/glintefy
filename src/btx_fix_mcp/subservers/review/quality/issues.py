@@ -77,10 +77,10 @@ def compile_all_issues(
     t = config.thresholds
 
     # Complexity issues
-    _add_complexity_issues(issues, results, t.complexity)
+    _add_complexity_issues(issues, results, t.complexity, t.complexity_error)
 
     # Maintainability issues
-    _add_maintainability_issues(issues, results, t.maintainability)
+    _add_maintainability_issues(issues, results, t.maintainability, t.maintainability_error)
 
     # Function issues
     _add_function_issues(issues, results)
@@ -128,19 +128,28 @@ def _add_complexity_issues(
     issues: list[dict[str, Any]],
     results: dict[str, Any],
     threshold: int,
+    error_threshold: int,
 ) -> None:
-    """Add cyclomatic complexity issues."""
+    """Add cyclomatic complexity issues.
+
+    Args:
+        issues: List to append issues to
+        results: Analysis results dictionary
+        threshold: Warning threshold for complexity
+        error_threshold: Error threshold for complexity (above this = error severity)
+    """
     for r in results.get("complexity", []):
         if r.get("complexity", 0) > threshold:
+            complexity_value = r["complexity"]
             issue = ThresholdIssue(
                 type="high_complexity",
-                severity="warning" if r["complexity"] <= 20 else "error",
+                severity="warning" if complexity_value <= error_threshold else "error",
                 file=r["file"],
                 line=r.get("line", 0),
                 name=r["name"],
-                value=r["complexity"],
+                value=complexity_value,
                 threshold=threshold,
-                message=f"Function '{r['name']}' has complexity {r['complexity']} (threshold: {threshold})",
+                message=f"Function '{r['name']}' has complexity {complexity_value} (threshold: {threshold})",
             )
             issues.append(issue.to_dict())
 
@@ -149,17 +158,26 @@ def _add_maintainability_issues(
     issues: list[dict[str, Any]],
     results: dict[str, Any],
     threshold: int,
+    error_threshold: int,
 ) -> None:
-    """Add maintainability index issues."""
+    """Add maintainability index issues.
+
+    Args:
+        issues: List to append issues to
+        results: Analysis results dictionary
+        threshold: Warning threshold for MI (below this = warning)
+        error_threshold: Error threshold for MI (below this = error severity)
+    """
     for r in results.get("maintainability", []):
-        if r.get("mi", 100) < threshold:
+        mi_value = r.get("mi", 100)
+        if mi_value < threshold:
             issue = ThresholdIssue(
                 type="low_maintainability",
-                severity="warning" if r["mi"] >= 10 else "error",
+                severity="warning" if mi_value >= error_threshold else "error",
                 file=r["file"],
-                value=r["mi"],
+                value=mi_value,
                 threshold=threshold,
-                message=f"File has maintainability index {r['mi']:.1f} (threshold: {threshold})",
+                message=f"File has maintainability index {mi_value:.1f} (threshold: {threshold})",
             )
             issues.append(issue.to_dict())
 
@@ -378,13 +396,15 @@ def _add_churn_issues(
     results: dict[str, Any],
 ) -> None:
     """Add high churn file issues."""
-    for churn_file in results.get("code_churn", {}).get("high_churn_files", []):
+    churn_data = results.get("code_churn", {})
+    analysis_period = churn_data.get("analysis_period_days", 90)
+    for churn_file in churn_data.get("high_churn_files", []):
         issue = ThresholdIssue(
             type="high_churn",
             severity="warning",
             file=churn_file["file"],
             value=f"{churn_file['commits']} commits, {churn_file['authors']} authors",
-            message=f"High churn file: {churn_file['file']} ({churn_file['commits']} commits by {churn_file['authors']} authors in 90 days)",
+            message=f"High churn file: {churn_file['file']} ({churn_file['commits']} commits by {churn_file['authors']} authors in {analysis_period} days)",
         )
         issues.append(issue.to_dict())
 

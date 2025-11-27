@@ -52,12 +52,12 @@ class MetricsAnalyzer(BaseAnalyzer):
     def _analyze_file_halstead(self, file_path: str, radon: str, results: list[dict[str, Any]]) -> None:
         """Analyze Halstead metrics for a single file."""
         try:
-            timeout = get_timeout("tool_quick", 30)
+            radon_hal_timeout = get_timeout("tool_quick", 30)
             result = subprocess.run(
                 [radon, "hal", "-j", file_path],
                 capture_output=True,
                 text=True,
-                timeout=timeout,
+                timeout=radon_hal_timeout,
             )
 
             if result.returncode != 0 or not result.stdout.strip():
@@ -121,12 +121,12 @@ class MetricsAnalyzer(BaseAnalyzer):
     def _analyze_file_raw_metrics(self, file_path: str, radon: str, results: list[dict[str, Any]]) -> None:
         """Analyze raw metrics for a single file."""
         try:
-            timeout = get_timeout("tool_quick", 30)
+            radon_raw_timeout = get_timeout("tool_quick", 30)
             result = subprocess.run(
                 [radon, "raw", "-j", file_path],
                 capture_output=True,
                 text=True,
-                timeout=timeout,
+                timeout=radon_raw_timeout,
             )
 
             if result.returncode != 0 or not result.stdout.strip():
@@ -209,12 +209,12 @@ class MetricsAnalyzer(BaseAnalyzer):
     def _is_git_repository(self) -> bool:
         """Check if current directory is a git repository."""
         try:
-            timeout = get_timeout("git_log", 10)
+            git_check_timeout = get_timeout("git_log", 10)
             git_check = subprocess.run(
                 ["git", "rev-parse", "--git-dir"],
                 capture_output=True,
                 text=True,
-                timeout=timeout,
+                timeout=git_check_timeout,
                 cwd=str(self.repo_path),
             )
             if git_check.returncode != 0:
@@ -238,20 +238,22 @@ class MetricsAnalyzer(BaseAnalyzer):
 
     def _run_git_log(self, relative_files: list[str]) -> str | None:
         """Run git log command to get file change history."""
-        timeout = get_timeout("tool_analysis", 60)
+        git_log_timeout = get_timeout("tool_analysis", 60)
+        churn_period_days = self.config.get("churn_period_days", 90)
+
         result = subprocess.run(
             [
                 "git",
                 "log",
                 "--numstat",
                 "--format=%H|%ae|%at",
-                "--since=90 days ago",
+                f"--since={churn_period_days} days ago",
                 "--",
                 *relative_files,
             ],
             capture_output=True,
             text=True,
-            timeout=timeout,
+            timeout=git_log_timeout,
             cwd=str(self.repo_path),
         )
 

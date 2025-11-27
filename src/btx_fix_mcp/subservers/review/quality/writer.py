@@ -74,9 +74,7 @@ class ResultsWriter:
             path = self._save_text("duplication_analysis.txt", results["duplication"]["raw_output"])
             artifacts["duplication"] = path
 
-    def _save_if_exists(
-        self, results: dict[str, Any], key: str, filename: str, artifact_key: str, artifacts: dict[str, Path]
-    ) -> None:
+    def _save_if_exists(self, results: dict[str, Any], key: str, filename: str, artifact_key: str, artifacts: dict[str, Path]) -> None:
         """Save result if key exists in results."""
         if results.get(key):
             path = self._save_json(filename, results[key])

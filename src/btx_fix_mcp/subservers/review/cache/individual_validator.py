@@ -15,6 +15,7 @@ import sys
 import time
 from pathlib import Path
 
+from btx_fix_mcp.config import get_tool_config
 from btx_fix_mcp.subservers.review.cache.cache_models import BatchScreeningResult, IndividualValidationResult
 from btx_fix_mcp.subservers.review.cache.source_patcher import SourcePatcher
 
@@ -63,7 +64,7 @@ class IndividualValidator:
 
         # Create patcher and start session (ONE branch for all candidate tests)
         patcher = SourcePatcher(repo_path=repo_path)
-        success, error = patcher.start()
+        success, _error = patcher.start()
 
         if not success:
             # Failed to create branch - return empty results
@@ -114,6 +115,25 @@ class IndividualValidator:
             # Delete branch and restore original
             patcher.end()
 
+    def _build_pytest_command(self) -> list[str]:
+        """Build pytest command from config settings.
+
+        Returns:
+            Command list for subprocess
+        """
+        pytest_config = get_tool_config("pytest")
+        testpaths = pytest_config.get("testpaths", ["tests"])
+        # Use first test path for cache validation
+        test_path = testpaths[0] if testpaths else "tests"
+
+        cmd = [sys.executable, "-m", "pytest", test_path, "-v", "--tb=short"]
+
+        # Add fail-fast if configured (useful for cache validation)
+        if pytest_config.get("fail_fast", False):
+            cmd.append("-x")
+
+        return cmd
+
     def _measure_baseline(self, repo_path: Path) -> float | None:
         """Measure test suite time without caching.
 
@@ -121,13 +141,14 @@ class IndividualValidator:
             Average time in seconds, or None if tests failed
         """
         times = []
+        cmd = self._build_pytest_command()
 
         for _ in range(self.num_runs):
             start = time.perf_counter()
 
             try:
                 result = subprocess.run(
-                    [sys.executable, "-m", "pytest", "tests/", "-v", "--tb=short"],
+                    cmd,
                     cwd=repo_path,
                     capture_output=True,
                     timeout=self.test_timeout,
@@ -180,13 +201,14 @@ class IndividualValidator:
 
             # Run tests multiple times
             times = []
+            cmd = self._build_pytest_command()
 
             for _ in range(self.num_runs):
                 start = time.perf_counter()
 
                 try:
                     result = subprocess.run(
-                        [sys.executable, "-m", "pytest", "tests/", "-v", "--tb=short"],
+                        cmd,
                         cwd=repo_path,
                         capture_output=True,
                         timeout=self.test_timeout,

@@ -15,38 +15,57 @@ Static code analysis (default) makes recommendations based on **call frequency**
 
 **Production profiling data** gives you the real story about which caches are worth keeping.
 
-## Quick Start: 2-Step Workflow
+## How Cache Analysis Uses Runtime Data
 
-### Step 1: Collect Profiling Data
+The cache subserver can use two types of runtime data:
 
-Run your application with profiling enabled using your typical workload:
+### 1. cProfile Data (Function-Level Profiling)
+
+Captures which functions are called, how often, and how long they take:
+
+```
+ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+5000    0.125    0.000    2.500    0.001 utils.py:42(expensive_calc)
+```
+
+Used for: **Identifying cache candidates** (pure functions that are hot spots)
+
+### 2. lru_cache Statistics (Cache-Level Metrics)
+
+Captures actual cache performance for existing `@lru_cache` decorators:
 
 ```python
-import cProfile
-import pstats
-from pathlib import Path
-
-# Profile your application
-profiler = cProfile.Profile()
-profiler.enable()
-
-# Run your typical workload here
-# Example: Process files, handle requests, run operations, etc.
-run_your_application()
-
-profiler.disable()
-
-# Save profiling data
-output_dir = Path("LLM-CONTEXT/btx_fix_mcp/review/perf")
-output_dir.mkdir(parents=True, exist_ok=True)
-profiler.dump_stats(output_dir / "test_profile.prof")
-
-print(f"✓ Profiling data saved to {output_dir / 'test_profile.prof'}")
+>>> my_cached_func.cache_info()
+CacheInfo(hits=1234, misses=56, maxsize=128, currsize=56)
 ```
+
+Used for: **Evaluating existing caches** (keep, remove, or adjust size)
+
+## Quick Start: 2-Step Workflow
+
+### Step 1: Profile Your Application (Easy CLI Method)
+
+The simplest way to profile is using the built-in CLI:
+
+```bash
+# Profile any Python command
+python -m btx_fix_mcp review profile -- python my_app.py
+
+# Profile your test suite
+python -m btx_fix_mcp review profile -- pytest tests/
+
+# Profile a module
+python -m btx_fix_mcp review profile -- python -m my_module
+```
+
+The `review profile` command automatically:
+- Wraps your command with cProfile
+- Saves the profile to `LLM-CONTEXT/btx_fix_mcp/review/perf/test_profile.prof`
+- Works with any Python script, module, or pytest
 
 ### Step 2: Run Cache Analysis
 
-With profiling data available, cache analysis will automatically detect and use it:
+With profiling data available, cache analysis automatically detects and uses it:
 
 ```bash
 python -m btx_fix_mcp review cache
@@ -60,6 +79,24 @@ from btx_fix_mcp.servers.review import ReviewMCPServer
 server = ReviewMCPServer(repo_path=".")
 result = server.run_cache()
 print(result["summary"])
+```
+
+### Cleaning Up Old Profile Data
+
+Before re-profiling, you can clean old data:
+
+```bash
+# Delete old profile only
+python -m btx_fix_mcp review clean -s profile
+
+# Delete all cache analysis data
+python -m btx_fix_mcp review clean -s cache
+
+# Delete all review data
+python -m btx_fix_mcp review clean
+
+# Preview what would be deleted
+python -m btx_fix_mcp review clean --dry-run
 ```
 
 ## Detailed Workflows
@@ -172,9 +209,16 @@ if __name__ == "__main__":
     print("✓ Profiling data saved")
 ```
 
-### Workflow 4: Profile Test Suite
+### Workflow 4: Profile Test Suite (Limited Accuracy)
 
-Use your test suite as a proxy for real usage:
+You can use your test suite as a quick proxy, but be aware of limitations:
+
+```bash
+# Easy way
+python -m btx_fix_mcp review profile -- pytest tests/ -v
+```
+
+Or manually:
 
 ```python
 # profile_tests.py
@@ -201,6 +245,17 @@ if __name__ == "__main__":
 
     print("✓ Profiling data saved")
 ```
+
+> **⚠️ Important Limitation**: Test suite profiling often gives **inaccurate cache statistics**:
+>
+> | Issue | Why It Happens |
+> |-------|----------------|
+> | **Low hit rates** | Caches are often cleared between tests via `cache_clear()` or fixtures |
+> | **Missing data** | Tests run in isolation, so cache hits don't accumulate across test functions |
+> | **Synthetic patterns** | Test data often has high uniqueness (random IDs, unique inputs) |
+> | **Unrealistic workloads** | Tests exercise edge cases, not typical user workflows |
+>
+> **Recommendation**: Use test suite profiling for quick initial analysis, but profile your **actual application workload** for production cache optimization decisions.
 
 ## Understanding Profiling Results
 
@@ -452,11 +507,254 @@ python -m btx_fix_mcp review cache
 cat LLM-CONTEXT/btx_fix_mcp/review/cache/existing_cache_evaluations.json
 ```
 
+## Collecting Runtime Cache Statistics
+
+### Method 1: Inspect Existing Caches After Workload
+
+After running your application, inspect cache statistics directly:
+
+```python
+#!/usr/bin/env python3
+"""Collect cache statistics from existing @lru_cache decorators."""
+
+import importlib
+import json
+from pathlib import Path
+
+def get_cache_stats(module_path: str, function_name: str) -> dict:
+    """Get cache statistics from an lru_cache decorated function.
+
+    Args:
+        module_path: Dotted module path (e.g., "myapp.utils")
+        function_name: Name of the cached function
+
+    Returns:
+        Dictionary with cache statistics
+    """
+    module = importlib.import_module(module_path)
+    func = getattr(module, function_name)
+
+    try:
+        info = func.cache_info()
+        total = info.hits + info.misses
+        hit_rate = (info.hits / total * 100) if total > 0 else 0.0
+
+        return {
+            "module": module_path,
+            "function": function_name,
+            "hits": info.hits,
+            "misses": info.misses,
+            "hit_rate_percent": round(hit_rate, 2),
+            "maxsize": info.maxsize,
+            "currsize": info.currsize,
+            "utilization_percent": round(info.currsize / info.maxsize * 100, 2) if info.maxsize else 0,
+        }
+    except AttributeError:
+        return {"error": f"{function_name} is not an lru_cache decorated function"}
+
+
+# Example usage after running your application:
+if __name__ == "__main__":
+    # List your cached functions here
+    cached_functions = [
+        ("myapp.database", "get_user"),
+        ("myapp.utils", "compute_hash"),
+        ("myapp.config", "load_settings"),
+    ]
+
+    results = []
+    for module_path, func_name in cached_functions:
+        stats = get_cache_stats(module_path, func_name)
+        results.append(stats)
+        print(f"{module_path}.{func_name}:")
+        print(f"  Hit rate: {stats.get('hit_rate_percent', 'N/A')}%")
+        print(f"  Hits/Misses: {stats.get('hits', 0)}/{stats.get('misses', 0)}")
+        print()
+
+    # Save to JSON for analysis
+    Path("cache_stats.json").write_text(json.dumps(results, indent=2))
+```
+
+### Method 2: Profile with Cache Stats Collection
+
+Combine cProfile with cache statistics collection:
+
+```python
+#!/usr/bin/env python3
+"""Profile application and collect cache statistics."""
+
+import cProfile
+import json
+from pathlib import Path
+
+def main():
+    """Run your application workload."""
+    from myapp import run_application
+    run_application()
+
+def collect_all_cache_stats():
+    """Collect statistics from all @lru_cache functions."""
+    from myapp.database import get_user, get_permissions
+    from myapp.utils import compute_hash
+
+    results = {}
+    for name, func in [
+        ("database.get_user", get_user),
+        ("database.get_permissions", get_permissions),
+        ("utils.compute_hash", compute_hash),
+    ]:
+        try:
+            info = func.cache_info()
+            total = info.hits + info.misses
+            results[name] = {
+                "hits": info.hits,
+                "misses": info.misses,
+                "hit_rate": round(info.hits / total * 100, 2) if total > 0 else 0,
+                "maxsize": info.maxsize,
+                "currsize": info.currsize,
+            }
+        except AttributeError:
+            pass
+
+    return results
+
+if __name__ == "__main__":
+    # Profile the application
+    profiler = cProfile.Profile()
+    profiler.enable()
+
+    main()
+
+    profiler.disable()
+
+    # Save cProfile data
+    output_dir = Path("LLM-CONTEXT/btx_fix_mcp/review/perf")
+    output_dir.mkdir(parents=True, exist_ok=True)
+    profiler.dump_stats(output_dir / "test_profile.prof")
+
+    # Collect and save cache statistics
+    cache_stats = collect_all_cache_stats()
+    (output_dir / "cache_stats.json").write_text(json.dumps(cache_stats, indent=2))
+
+    print("Profiling data and cache stats saved!")
+    print("\nCache Statistics:")
+    for name, stats in cache_stats.items():
+        print(f"  {name}: {stats['hit_rate']}% hit rate "
+              f"({stats['hits']} hits, {stats['misses']} misses)")
+```
+
+### Method 3: Continuous Cache Monitoring
+
+Add cache monitoring to your production application:
+
+```python
+import logging
+import threading
+import time
+from functools import lru_cache
+
+logger = logging.getLogger(__name__)
+
+# Registry of cached functions to monitor
+_cache_registry = []
+
+def monitored_cache(maxsize=128):
+    """LRU cache decorator that registers function for monitoring."""
+    def decorator(func):
+        cached_func = lru_cache(maxsize=maxsize)(func)
+        _cache_registry.append((func.__qualname__, cached_func))
+        return cached_func
+    return decorator
+
+def log_cache_stats():
+    """Log statistics for all registered caches."""
+    for name, func in _cache_registry:
+        info = func.cache_info()
+        total = info.hits + info.misses
+        hit_rate = (info.hits / total * 100) if total > 0 else 0
+        logger.info(
+            f"Cache {name}: "
+            f"hit_rate={hit_rate:.1f}% "
+            f"hits={info.hits} misses={info.misses} "
+            f"size={info.currsize}/{info.maxsize}"
+        )
+
+def start_cache_monitor(interval_seconds=300):
+    """Start background thread to log cache stats periodically."""
+    def monitor():
+        while True:
+            time.sleep(interval_seconds)
+            log_cache_stats()
+
+    thread = threading.Thread(target=monitor, daemon=True)
+    thread.start()
+
+# Usage in your application:
+@monitored_cache(maxsize=256)
+def expensive_operation(key):
+    return do_computation(key)
+
+# Start monitoring when app starts
+start_cache_monitor(interval_seconds=60)  # Log every minute
+```
+
+## Interpreting Cache Statistics
+
+### Hit Rate Guidelines
+
+| Hit Rate | Interpretation | Recommendation |
+|----------|----------------|----------------|
+| **>80%** | Excellent | Keep cache, possibly increase maxsize |
+| **50-80%** | Good | Keep cache, current config is reasonable |
+| **20-50%** | Marginal | Monitor performance, may need tuning |
+| **<20%** | Poor | Consider removing cache |
+
+### Cache Utilization
+
+```python
+info = my_func.cache_info()
+utilization = info.currsize / info.maxsize * 100
+
+if utilization > 90:
+    print("Cache is nearly full - consider increasing maxsize")
+elif utilization < 30:
+    print("Cache is underutilized - consider decreasing maxsize")
+```
+
+### Diagnosing Low Hit Rates
+
+1. **Arguments not repeating**: Cache only helps if same args are called multiple times
+2. **maxsize too small**: Cache evicting entries before they're reused
+3. **Unhashable arguments**: Check if args are truly hashable
+
+```python
+# Debug: Track unique arguments
+call_args = []
+
+@lru_cache(maxsize=128)
+def my_func(arg):
+    call_args.append(arg)  # Track before caching
+    return compute(arg)
+
+# After workload:
+unique_args = len(set(call_args))
+total_calls = len(call_args)
+print(f"Unique args: {unique_args} / Total calls: {total_calls}")
+print(f"Potential hit rate: {(1 - unique_args/total_calls) * 100:.1f}%")
+```
+
 ## Summary
 
 | Method | Pros | Cons | Use When |
 |--------|------|------|----------|
 | **Production Profiling** | Accurate, real data, shows actual hit rates | Requires running app, needs representative workload | You can simulate typical usage |
 | **Static Analysis** | No execution needed, fast, always works | Estimates only, can't measure hit rates | Quick analysis or can't run app |
+| **Cache Stats Collection** | Direct cache metrics, precise hit rates | Must run after workload, need code access | Evaluating existing caches |
+| **Continuous Monitoring** | Real production data, trends over time | Adds overhead, requires instrumentation | Production optimization |
 
 **Recommendation**: Start with static analysis for quick wins, then use production profiling to validate and optimize further.
+
+## See Also
+
+- [Cache Subserver Documentation](CACHE_SUBSERVER.md) - Complete cache analysis reference
+- [Getting Started](GETTING_STARTED.md) - Project overview

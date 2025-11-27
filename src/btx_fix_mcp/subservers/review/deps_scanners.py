@@ -67,12 +67,12 @@ def run_pip_audit(repo_path: Path, logger: Logger) -> list[dict[str, Any]]:
     """Run pip-audit for Python vulnerability scanning."""
     try:
         python_path = get_tool_path("python")
-        timeout = get_timeout("vuln_scan", 120)
+        pip_audit_timeout = get_timeout("vuln_scan", 120)
         result = subprocess.run(
             [str(python_path), "-m", "pip_audit", "--format=json", "--strict"],
             capture_output=True,
             text=True,
-            timeout=timeout,
+            timeout=pip_audit_timeout,
             cwd=str(repo_path),
         )
         return _parse_pip_audit_output(result.stdout, logger)
@@ -114,12 +114,12 @@ def run_safety(repo_path: Path, logger: Logger) -> list[dict[str, Any]]:
     """Run safety for Python vulnerability scanning."""
     try:
         python_path = get_tool_path("python")
-        timeout = get_timeout("vuln_scan", 120)
+        safety_timeout = get_timeout("vuln_scan", 120)
         result = subprocess.run(
             [str(python_path), "-m", "safety", "check", "--json"],
             capture_output=True,
             text=True,
-            timeout=timeout,
+            timeout=safety_timeout,
             cwd=str(repo_path),
         )
         return _parse_safety_output(result.stdout)
@@ -158,12 +158,12 @@ def _parse_npm_audit_output(output: str) -> list[dict[str, Any]]:
 def run_npm_audit(repo_path: Path, logger: Logger) -> list[dict[str, Any]]:
     """Run npm audit for Node.js vulnerability scanning."""
     try:
-        timeout = get_timeout("vuln_scan", 120)
+        npm_audit_timeout = get_timeout("vuln_scan", 120)
         result = subprocess.run(
             ["npm", "audit", "--json"],
             capture_output=True,
             text=True,
-            timeout=timeout,
+            timeout=npm_audit_timeout,
             cwd=str(repo_path),
         )
         return _parse_npm_audit_output(result.stdout)
@@ -194,12 +194,12 @@ def classify_vuln_severity(vuln: dict) -> str:
 def _check_python_outdated(logger: Logger) -> list[dict[str, Any]]:
     """Check for outdated Python packages."""
     try:
-        timeout = get_timeout("tool_analysis", 60)
+        pip_outdated_timeout = get_timeout("tool_analysis", 60)
         result = subprocess.run(
             ["pip", "list", "--outdated", "--format=json"],
             capture_output=True,
             text=True,
-            timeout=timeout,
+            timeout=pip_outdated_timeout,
         )
         if result.stdout.strip():
             return json.loads(result.stdout)
@@ -221,12 +221,12 @@ def _parse_npm_outdated_entry(pkg: str, info: dict) -> dict[str, Any]:
 def _check_nodejs_outdated(repo_path: Path, logger: Logger) -> list[dict[str, Any]]:
     """Check for outdated Node.js packages."""
     try:
-        timeout = get_timeout("tool_analysis", 60)
+        npm_outdated_timeout = get_timeout("tool_analysis", 60)
         result = subprocess.run(
             ["npm", "outdated", "--json"],
             capture_output=True,
             text=True,
-            timeout=timeout,
+            timeout=npm_outdated_timeout,
             cwd=str(repo_path),
         )
         if not result.stdout.strip():

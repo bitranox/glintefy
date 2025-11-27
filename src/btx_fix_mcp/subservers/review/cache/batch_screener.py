@@ -11,11 +11,10 @@ Uses temporary source modification instead of monkey-patching because:
 
 import importlib
 import os
-import subprocess
-import sys
 from pathlib import Path
 from typing import Any
 
+from btx_fix_mcp.config import get_tool_config
 from btx_fix_mcp.subservers.review.cache.cache_models import (
     BatchScreeningResult,
     CacheCandidate,
@@ -32,6 +31,9 @@ class BatchScreener:
         self,
         cache_size: int = 128,
         hit_rate_threshold: float = 20.0,
+        remove_threshold: float = 10.0,
+        size_adjustment_threshold: float = 50.0,
+        min_suggested_maxsize: int = 16,
         test_timeout: int = 300,
         logger: Any | None = None,
     ):
@@ -39,12 +41,18 @@ class BatchScreener:
 
         Args:
             cache_size: LRU cache maxsize
-            hit_rate_threshold: Minimum hit rate percentage to pass
+            hit_rate_threshold: Minimum hit rate percentage to pass screening
+            remove_threshold: Hit rate below this recommends removal
+            size_adjustment_threshold: Cache usage below this % triggers size adjustment
+            min_suggested_maxsize: Minimum suggested maxsize when reducing
             test_timeout: Test suite timeout in seconds
             logger: Logger instance for debugging
         """
         self.cache_size = cache_size
         self.hit_rate_threshold = hit_rate_threshold
+        self.remove_threshold = remove_threshold
+        self.size_adjustment_threshold = size_adjustment_threshold
+        self.min_suggested_maxsize = min_suggested_maxsize
         self.test_timeout = test_timeout
         self.logger = logger
         self.patcher = None  # Created in screen_candidates()
@@ -69,7 +77,7 @@ class BatchScreener:
         # Create patcher and start session (creates git branch)
         self.patcher = SourcePatcher(repo_path=repo_path)
 
-        success, error = self.patcher.start()
+        success, _error = self.patcher.start()
         if not success:
             # Failed to start (git not clean, not a repo, etc.)
             return []
@@ -124,59 +132,76 @@ class BatchScreener:
     ) -> tuple[str, str, int | None]:
         """Analyze cache usage through static code analysis.
 
-        Instead of running code, analyze the codebase to predict cache benefit:
-        - Count call sites
-        - Check if called in loops
-        - Analyze parameter patterns
+        Instead of running code, analyze the codebase to predict cache benefit
+        by counting call sites in production code.
 
         Returns:
             (recommendation, reason, suggested_maxsize)
         """
+
+        call_count = self._count_function_calls(candidate.function_name, repo_path)
+
+        if call_count == 0:
+            return ("REMOVE", "Function not called in production code (only in tests)", None)
+        if call_count == 1:
+            return ("REMOVE", f"Function called only {call_count} time in codebase - no cache benefit", None)
+        if call_count >= 2:
+            return ("KEEP", f"Function called {call_count} times in codebase - likely benefits from caching", None)
+
+        return ("KEEP", "Insufficient data to determine", None)
+
+    def _count_function_calls(self, function_name: str, repo_path: Path) -> int:
+        """Count how many times a function is called in production code.
+
+        Args:
+            function_name: Name of the function to search for
+            repo_path: Repository root path
+
+        Returns:
+            Number of call sites found
+        """
         import ast
 
-        # Search all Python files for calls to this function
         call_count = 0
-        in_loop_count = 0
 
         for py_file in repo_path.rglob("*.py"):
             if "test" in str(py_file).lower():
-                # Skip test files - they don't represent production usage
                 continue
 
             try:
                 content = py_file.read_text()
                 tree = ast.parse(content)
 
-                # Find calls to this function
                 for node in ast.walk(tree):
-                    if isinstance(node, ast.Call):
-                        # Check if this is a call to our function
-                        func_name = None
-                        if isinstance(node.func, ast.Name):
-                            func_name = node.func.id
-                        elif isinstance(node.func, ast.Attribute):
-                            func_name = node.func.attr
+                    if not isinstance(node, ast.Call):
+                        continue
 
-                        if func_name == candidate.function_name:
-                            call_count += 1
+                    func_name = self._extract_called_function_name(node)
+                    if func_name == function_name:
+                        call_count += 1
 
-                            # Check if call is inside a loop
-                            # Walk up the tree to find parent nodes
-                            # (This is simplified - proper implementation would need parent tracking)
-
-            except Exception:
+            except (SyntaxError, UnicodeDecodeError):
+                # Skip files that can't be parsed
                 continue
 
-        # Make recommendation based on static analysis
-        if call_count == 0:
-            return ("REMOVE", "Function not called in production code (only in tests)", None)
-        elif call_count == 1:
-            return ("REMOVE", f"Function called only {call_count} time in codebase - no cache benefit", None)
-        elif call_count >= 2:
-            # Function is called multiple times - likely beneficial
-            return ("KEEP", f"Function called {call_count} times in codebase - likely benefits from caching", None)
+        return call_count
 
-        return ("KEEP", "Insufficient data to determine", None)
+    def _extract_called_function_name(self, call_node) -> str | None:
+        """Extract function name from a Call AST node.
+
+        Args:
+            call_node: AST Call node
+
+        Returns:
+            Function name or None if not extractable
+        """
+        import ast
+
+        if isinstance(call_node.func, ast.Name):
+            return call_node.func.id
+        if isinstance(call_node.func, ast.Attribute):
+            return call_node.func.attr
+        return None
 
     def _run_test_suite(self, repo_path: Path) -> bool:
         """Run pytest test suite in-process to preserve cache statistics.
@@ -187,6 +212,11 @@ class BatchScreener:
         try:
             import pytest
 
+            # Get pytest config settings
+            pytest_config = get_tool_config("pytest")
+            testpaths = pytest_config.get("testpaths", ["tests"])
+            test_path = testpaths[0] if testpaths else "tests"
+
             # Save current directory
             old_cwd = Path.cwd()
 
@@ -194,15 +224,24 @@ class BatchScreener:
                 # Change to repo directory
                 os.chdir(repo_path)
 
-                # Run pytest in-process (preserves cache stats)
-                # Use -q for minimal output, --tb=no to suppress tracebacks
-                exit_code = pytest.main([
-                    "tests/",
+                # Build pytest args from config
+                pytest_args = [
+                    test_path,
                     "-q",
                     "--tb=no",
-                    "-p", "no:warnings",  # Suppress warnings
-                    "-p", "no:cacheprovider",  # Disable pytest cache
-                ])
+                    "-p",
+                    "no:warnings",  # Suppress warnings
+                    "-p",
+                    "no:cacheprovider",  # Disable pytest cache
+                ]
+
+                # Add disabled plugins from config
+                disabled_plugins = pytest_config.get("disabled_plugins", [])
+                for plugin in disabled_plugins:
+                    pytest_args.extend(["-p", f"no:{plugin}"])
+
+                # Run pytest in-process (preserves cache stats)
+                exit_code = pytest.main(pytest_args)
 
                 if self.logger and exit_code != 0:
                     self.logger.debug(f"pytest.main() returned exit code: {exit_code}")
@@ -275,10 +314,9 @@ class BatchScreener:
         existing_caches: list[ExistingCacheCandidate],
         repo_path: Path,
     ) -> list[ExistingCacheEvaluation]:
-        """Evaluate existing @lru_cache decorators using static code analysis.
+        """Evaluate existing @lru_cache decorators.
 
-        Instead of running tests or simulating usage, we analyze the codebase
-        statically to predict cache effectiveness based on call patterns.
+        Tries runtime analysis first, falls back to static code analysis.
 
         Args:
             existing_caches: Functions with existing cache decorators
@@ -291,131 +329,185 @@ class BatchScreener:
             return []
 
         results = []
-
         for candidate in existing_caches:
-            try:
-                # Try to get real cache statistics from production profile if available
-                # Otherwise fall back to static analysis
-
-                # First attempt: Import module and check if it has real usage data
-                # (This works if user ran their app with profiling before cache analysis)
-                module = importlib.import_module(candidate.module_path)
-
-                # Get cached function - handle both module-level and class methods
-                cached_func = None
-
-                # Try module-level function first
-                try:
-                    cached_func = getattr(module, candidate.function_name)
-                except AttributeError:
-                    # Not a module-level function - might be a class method
-                    # Search all classes in module for the method
-                    for name in dir(module):
-                        obj = getattr(module, name)
-                        if isinstance(obj, type):  # It's a class
-                            # Try direct attribute access
-                            if hasattr(obj, candidate.function_name):
-                                cached_func = getattr(obj, candidate.function_name)
-                                break
-                            # Try name-mangled private methods (_ClassName__method)
-                            if candidate.function_name.startswith("_"):
-                                mangled_name = f"_{obj.__name__}{candidate.function_name}"
-                                if hasattr(obj, mangled_name):
-                                    cached_func = getattr(obj, mangled_name)
-                                    break
-
-                if cached_func is None:
-                    # Function not found - use static analysis
-                    if self.logger:
-                        self.logger.debug(
-                            f"Function {candidate.function_name} not found in module, using static analysis"
-                        )
-                    recommendation, reason, suggested_maxsize = self._analyze_cache_usage_statically(
-                        candidate, repo_path
-                    )
-                    results.append(
-                        ExistingCacheEvaluation(
-                            candidate=candidate,
-                            hits=0,
-                            misses=0,
-                            hit_rate=0.0,
-                            recommendation=recommendation,
-                            reason=f"Static analysis: {reason}",
-                            suggested_maxsize=suggested_maxsize,
-                        )
-                    )
-                    continue
-
-                # Get cache statistics
-                cache_info = cached_func.cache_info()
-
-                if self.logger:
-                    self.logger.debug(
-                        f"Cache stats for {candidate.function_name}: "
-                        f"hits={cache_info.hits}, misses={cache_info.misses}, "
-                        f"currsize={cache_info.currsize}, maxsize={cache_info.maxsize}"
-                    )
-
-                # Check if we have real production data (hits + misses > 0)
-                total_calls = cache_info.hits + cache_info.misses
-
-                if total_calls == 0:
-                    # No production data - use static analysis
-                    if self.logger:
-                        self.logger.debug(
-                            f"No cache usage data for {candidate.function_name}, using static analysis"
-                        )
-                    recommendation, reason, suggested_maxsize = self._analyze_cache_usage_statically(
-                        candidate, repo_path
-                    )
-                    results.append(
-                        ExistingCacheEvaluation(
-                            candidate=candidate,
-                            hits=0,
-                            misses=0,
-                            hit_rate=0.0,
-                            recommendation=recommendation,
-                            reason=f"Static analysis: {reason}",
-                            suggested_maxsize=suggested_maxsize,
-                        )
-                    )
-                else:
-                    # We have real production data! Use it
-                    hit_rate = self._calculate_hit_rate(cache_info.hits, cache_info.misses)
-
-                    if self.logger:
-                        self.logger.info(
-                            f"Using production cache data for {candidate.function_name}: "
-                            f"{cache_info.hits} hits, {cache_info.misses} misses ({hit_rate:.1f}% hit rate)"
-                        )
-
-                    # Make recommendation based on real hit rate
-                    recommendation, reason, suggested_maxsize = self._evaluate_cache_effectiveness(
-                        hit_rate=hit_rate,
-                        current_maxsize=candidate.current_maxsize,
-                        currsize=cache_info.currsize,
-                    )
-
-                    results.append(
-                        ExistingCacheEvaluation(
-                            candidate=candidate,
-                            hits=cache_info.hits,
-                            misses=cache_info.misses,
-                            hit_rate=hit_rate,
-                            recommendation=recommendation,
-                            reason=f"Production data: {reason}",
-                            suggested_maxsize=suggested_maxsize,
-                        )
-                    )
-
-            except Exception as e:
-                if self.logger:
-                    self.logger.warning(
-                        f"Failed to evaluate cache {candidate.function_name} in {candidate.module_path}: {e}"
-                    )
-                continue
+            evaluation = self._evaluate_single_cache(candidate, repo_path)
+            if evaluation:
+                results.append(evaluation)
 
         return results
+
+    def _evaluate_single_cache(
+        self,
+        candidate: ExistingCacheCandidate,
+        repo_path: Path,
+    ) -> ExistingCacheEvaluation | None:
+        """Evaluate a single existing cache decorator.
+
+        Args:
+            candidate: Cache candidate to evaluate
+            repo_path: Repository root path
+
+        Returns:
+            Evaluation result or None if evaluation failed
+        """
+        try:
+            cached_func = self._resolve_cached_function(candidate)
+
+            if cached_func is None:
+                return self._create_static_analysis_result(candidate, repo_path)
+
+            return self._create_runtime_analysis_result(candidate, cached_func, repo_path)
+
+        except (ImportError, ModuleNotFoundError) as e:
+            if self.logger:
+                self.logger.warning(f"Failed to import module {candidate.module_path}: {e}")
+            return None
+
+    def _resolve_cached_function(self, candidate: ExistingCacheCandidate):
+        """Resolve a cached function from its module.
+
+        Handles module-level functions and class methods (including private).
+
+        Args:
+            candidate: Cache candidate with module and function info
+
+        Returns:
+            The cached function or None if not found
+        """
+        module = importlib.import_module(candidate.module_path)
+
+        # Try module-level function first
+        cached_func = getattr(module, candidate.function_name, None)
+        if cached_func is not None:
+            return cached_func
+
+        # Search class methods
+        return self._find_method_in_classes(module, candidate.function_name)
+
+    def _find_method_in_classes(self, module, function_name: str):
+        """Find a method in any class within a module.
+
+        Args:
+            module: The imported module
+            function_name: Name of the method to find
+
+        Returns:
+            The method or None if not found
+        """
+        for name in dir(module):
+            obj = getattr(module, name)
+            if not isinstance(obj, type):
+                continue
+
+            # Try direct attribute access
+            if hasattr(obj, function_name):
+                return getattr(obj, function_name)
+
+            # Try name-mangled private methods (_ClassName__method)
+            if function_name.startswith("_"):
+                mangled_name = f"_{obj.__name__}{function_name}"
+                if hasattr(obj, mangled_name):
+                    return getattr(obj, mangled_name)
+
+        return None
+
+    def _create_static_analysis_result(
+        self,
+        candidate: ExistingCacheCandidate,
+        repo_path: Path,
+    ) -> ExistingCacheEvaluation:
+        """Create evaluation result using static code analysis.
+
+        Args:
+            candidate: Cache candidate to analyze
+            repo_path: Repository root path
+
+        Returns:
+            Evaluation based on static analysis
+        """
+        if self.logger:
+            self.logger.debug(f"Using static analysis for {candidate.function_name}")
+
+        recommendation, reason, suggested_maxsize = self._analyze_cache_usage_statically(candidate, repo_path)
+
+        return ExistingCacheEvaluation(
+            candidate=candidate,
+            hits=0,
+            misses=0,
+            hit_rate=0.0,
+            recommendation=recommendation,
+            reason=f"Static analysis: {reason}",
+            suggested_maxsize=suggested_maxsize,
+        )
+
+    def _create_runtime_analysis_result(
+        self,
+        candidate: ExistingCacheCandidate,
+        cached_func,
+        repo_path: Path,
+    ) -> ExistingCacheEvaluation:
+        """Create evaluation result using runtime cache statistics.
+
+        Args:
+            candidate: Cache candidate
+            cached_func: The resolved cached function
+            repo_path: Repository root path
+
+        Returns:
+            Evaluation based on runtime data or fallback to static analysis
+        """
+        cache_info = cached_func.cache_info()
+
+        if self.logger:
+            self.logger.debug(
+                f"Cache stats for {candidate.function_name}: "
+                f"hits={cache_info.hits}, misses={cache_info.misses}, "
+                f"currsize={cache_info.currsize}, maxsize={cache_info.maxsize}"
+            )
+
+        total_calls = cache_info.hits + cache_info.misses
+
+        if total_calls == 0:
+            return self._create_static_analysis_result(candidate, repo_path)
+
+        return self._create_production_data_result(candidate, cache_info)
+
+    def _create_production_data_result(
+        self,
+        candidate: ExistingCacheCandidate,
+        cache_info,
+    ) -> ExistingCacheEvaluation:
+        """Create evaluation result from production cache data.
+
+        Args:
+            candidate: Cache candidate
+            cache_info: Cache statistics from lru_cache
+
+        Returns:
+            Evaluation based on production hit/miss data
+        """
+        hit_rate = self._calculate_hit_rate(cache_info.hits, cache_info.misses)
+
+        if self.logger:
+            self.logger.info(
+                f"Using production cache data for {candidate.function_name}: {cache_info.hits} hits, {cache_info.misses} misses ({hit_rate:.1f}% hit rate)"
+            )
+
+        recommendation, reason, suggested_maxsize = self._evaluate_cache_effectiveness(
+            hit_rate=hit_rate,
+            current_maxsize=candidate.current_maxsize,
+            currsize=cache_info.currsize,
+        )
+
+        return ExistingCacheEvaluation(
+            candidate=candidate,
+            hits=cache_info.hits,
+            misses=cache_info.misses,
+            hit_rate=hit_rate,
+            recommendation=recommendation,
+            reason=f"Production data: {reason}",
+            suggested_maxsize=suggested_maxsize,
+        )
 
     def _evaluate_cache_effectiveness(
         self,
@@ -434,7 +526,7 @@ class BatchScreener:
             (recommendation, reason, suggested_maxsize)
         """
         # Low hit rate - remove cache
-        if hit_rate < 10.0:
+        if hit_rate < self.remove_threshold:
             return (
                 "REMOVE",
                 f"Very low hit rate ({hit_rate:.1f}%) - cache not beneficial",
@@ -442,11 +534,12 @@ class BatchScreener:
             )
 
         # Acceptable hit rate - keep cache
-        if hit_rate >= 20.0:
+        if hit_rate >= self.hit_rate_threshold:
             # Check if maxsize is too large (cache not filling up)
-            if current_maxsize > 0 and currsize < current_maxsize * 0.5:
-                # Cache using less than 50% of allocated size - suggest reducing
-                suggested = max(16, currsize * 2)  # 2x current usage, minimum 16
+            usage_ratio = (currsize / current_maxsize * 100) if current_maxsize > 0 else 100
+            if current_maxsize > 0 and usage_ratio < self.size_adjustment_threshold:
+                # Cache using less than threshold% of allocated size - suggest reducing
+                suggested = max(self.min_suggested_maxsize, currsize * 2)  # 2x current usage, minimum from config
                 return (
                     "ADJUST_SIZE",
                     f"Good hit rate ({hit_rate:.1f}%) but maxsize too large (using {currsize}/{current_maxsize}) - can reduce",
@@ -460,7 +553,7 @@ class BatchScreener:
                 None,
             )
 
-        # Marginal hit rate (10-20%)
+        # Marginal hit rate (between remove_threshold and hit_rate_threshold)
         return (
             "KEEP",
             f"Marginal hit rate ({hit_rate:.1f}%) - monitor performance",

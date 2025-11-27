@@ -11,6 +11,22 @@ from typing import Any, Callable, TypeVar
 F = TypeVar("F", bound=Callable[..., Any])
 
 
+def get_configured_log_level(start_dir: str | None = None) -> int:
+    """Get the configured log level from config.
+
+    Imports config lazily to avoid circular imports.
+
+    Returns:
+        int: Log level (10=DEBUG, 20=INFO, 30=WARNING, 40=ERROR, 50=CRITICAL)
+    """
+    try:
+        from btx_fix_mcp.config import get_log_level
+
+        return get_log_level(start_dir)
+    except ImportError:
+        return logging.INFO
+
+
 def setup_logger(
     name: str,
     log_file: Path | None = None,

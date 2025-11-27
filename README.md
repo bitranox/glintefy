@@ -1,146 +1,163 @@
 # btx_fix_mcp
 
-<!-- Badges -->
 [![CI](https://github.com/bitranox/btx_fix_mcp/actions/workflows/ci.yml/badge.svg)](https://github.com/bitranox/btx_fix_mcp/actions/workflows/ci.yml)
-[![CodeQL](https://github.com/bitranox/btx_fix_mcp/actions/workflows/codeql.yml/badge.svg)](https://github.com/bitranox/btx_fix_mcp/actions/workflows/codeql.yml)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Open in Codespaces](https://img.shields.io/badge/Codespaces-Open-blue?logo=github&logoColor=white&style=flat-square)](https://codespaces.new/bitranox/btx_fix_mcp?quickstart=1)
 [![PyPI](https://img.shields.io/pypi/v/btx_fix_mcp.svg)](https://pypi.org/project/btx_fix_mcp/)
-[![PyPI - Downloads](https://img.shields.io/pypi/dm/btx_fix_mcp.svg)](https://pypi.org/project/btx_fix_mcp/)
-[![Code Style: Ruff](https://img.shields.io/badge/Code%20Style-Ruff-46A3FF?logo=ruff&labelColor=000)](https://docs.astral.sh/ruff/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![codecov](https://codecov.io/gh/bitranox/btx_fix_mcp/graph/badge.svg?token=UFBaUDIgRk)](https://codecov.io/gh/bitranox/btx_fix_mcp)
-[![Maintainability](https://qlty.sh/badges/041ba2c1-37d6-40bb-85a0-ec5a8a0aca0c/maintainability.svg)](https://qlty.sh/gh/bitranox/projects/btx_fix_mcp)
-[![Known Vulnerabilities](https://snyk.io/test/github/bitranox/btx_fix_mcp/badge.svg)](https://snyk.io/test/github/bitranox/btx_fix_mcp)
-[![security: bandit](https://img.shields.io/badge/security-bandit-yellow.svg)](https://github.com/PyCQA/bandit)
 
-**MCP servers for comprehensive code review and automated fixing.**
+**Code review and automated fixing tools - available as CLI and MCP server.**
 
-## Overview
+## What is btx_fix_mcp?
 
-btx_fix_mcp provides two MCP (Model Context Protocol) servers:
+btx_fix_mcp provides comprehensive code analysis:
 
-- **btx-review**: Analyzes code for quality, security, and documentation issues
-- **btx-fix**: Automated code fixing with evidence-based verification (planned)
-
-### Key Features
-
-- **18+ Quality Analyses**: Complexity, maintainability, duplication, type coverage, dead code, and more
+- **18+ Quality Analyses**: Complexity, maintainability, duplication, type coverage, dead code
 - **Security Scanning**: Bandit integration for vulnerability detection
-- **Isolated Tool Environment**: Analysis tools run in a dedicated venv (`~/.cache/btx-fix-mcp/tools-venv/`)
-- **Flexible Configuration**: TOML-based config with parameter overrides
-- **Comprehensive Testing**: 219 tests with full coverage
+- **Cache Optimization**: Evidence-based `@lru_cache` recommendations
+- **Documentation Coverage**: Docstring completeness analysis
 
-## Installation
+**Two ways to use it:**
 
-```bash
-# Install via uv (recommended)
-pip install --upgrade uv
-uv venv && source .venv/bin/activate
-uv pip install btx_fix_mcp
+| Mode | Best For |
+|------|----------|
+| **CLI** | Direct command-line usage, CI/CD pipelines, scripts |
+| **MCP Server** | Integration with Claude Desktop, AI-assisted workflows |
 
-# Or install via pip
-pip install btx_fix_mcp
-
-# For development
-git clone https://github.com/bitranox/btx_fix_mcp
-cd btx_fix_mcp
-make dev
-```
+---
 
 ## Quick Start
 
-```python
-from pathlib import Path
-from btx_fix_mcp.subservers.review.scope import ScopeSubServer
-from btx_fix_mcp.subservers.review.quality import QualitySubServer
-from btx_fix_mcp.subservers.review.security import SecuritySubServer
-
-# Run scope analysis (discovers files to review)
-scope = ScopeSubServer(
-    output_dir=Path("LLM-CONTEXT/review-anal/scope"),
-    repo_path=Path.cwd(),
-    mode="full",
-)
-scope.run()
-
-# Run quality analysis
-quality = QualitySubServer(
-    input_dir=Path("LLM-CONTEXT/review-anal/scope"),
-    output_dir=Path("LLM-CONTEXT/review-anal/quality"),
-    repo_path=Path.cwd(),
-)
-result = quality.run()
-
-print(f"Issues found: {result.metrics['issues_count']}")
-print(f"High complexity: {result.metrics['high_complexity_count']}")
-```
-
-## Quality Analyses
-
-The quality sub-server provides:
-
-| Analysis | Tool | Description |
-|----------|------|-------------|
-| Cyclomatic Complexity | radon | Function complexity scoring |
-| Cognitive Complexity | custom | Mental effort to understand code |
-| Maintainability Index | radon | Overall maintainability score |
-| Code Duplication | pylint | Duplicate code detection |
-| Static Analysis | ruff | Linting and style issues |
-| Type Coverage | mypy | Type annotation coverage |
-| Dead Code | vulture | Unused code detection |
-| Import Cycles | custom | Circular import detection |
-| Docstring Coverage | interrogate | Documentation completeness |
-| Architecture | custom | God objects, coupling analysis |
-| Code Churn | git | Frequently modified files |
-| Test Analysis | custom | Test coverage and assertions |
-
-## Configuration
-
-Configuration is loaded from (lowest to highest priority):
-1. `defaultconfig.toml` (bundled)
-2. `~/.config/btx-fix-mcp/config.toml`
-3. Environment variables
-4. Constructor parameters
-
-Example:
-```python
-quality = QualitySubServer(
-    complexity_threshold=15,      # Override default
-    enable_dead_code_detection=False,
-)
-```
-
-See [README_MCP.md](README_MCP.md) for full configuration reference.
-
-## Development
+### Installation
 
 ```bash
-# Run tests
-make test
+# Recommended: uv
+pip install uv
+uv pip install btx_fix_mcp
 
-# Run without coverage (faster)
-python -m pytest tests/ --no-cov
+# Alternative: pip
+pip install btx_fix_mcp
 
-# Linting
-ruff check src/ tests/
-
-# Type checking
-pyright src/
+# Development
+git clone https://github.com/bitranox/btx_fix_mcp
+cd btx_fix_mcp && make dev
 ```
 
-### Python 3.13+ Support
+### CLI Usage (Simple)
 
-The project requires Python 3.13 or newer, tested on 3.13 and 3.14.
+```bash
+# Review current git changes
+python -m btx_fix_mcp review all
+
+# Review entire repository
+python -m btx_fix_mcp review all --mode full
+
+# Run specific analysis
+python -m btx_fix_mcp review quality
+python -m btx_fix_mcp review security
+
+# Cache optimization with profiling (recommended)
+python -m btx_fix_mcp review profile -- python -m your_app    # Profile your app
+python -m btx_fix_mcp review profile -- pytest tests/         # Or profile tests
+python -m btx_fix_mcp review cache                            # Then analyze
+
+# Clean up analysis data
+python -m btx_fix_mcp review clean                            # Delete all
+python -m btx_fix_mcp review clean -s profile                 # Delete profile only
+python -m btx_fix_mcp review clean --dry-run                  # Preview deletion
+```
+
+### MCP Server Usage (Simple)
+
+Add to Claude Desktop config (`~/.config/claude/claude_desktop_config.json`):
+
+```json
+{
+  "mcpServers": {
+    "btx-review": {
+      "command": "python",
+      "args": ["-m", "btx_fix_mcp.servers.review"]
+    }
+  }
+}
+```
+
+Then in Claude Desktop:
+> "Review the code quality of this project"
+
+---
 
 ## Documentation
 
-- [MCP Server Guide](README_MCP.md) - Detailed usage and configuration
-- [Install Guide](INSTALL.md) - Installation options
-- [Development Handbook](DEVELOPMENT.md) - Development setup
-- [Contributor Guide](CONTRIBUTING.md) - How to contribute
-- [Changelog](CHANGELOG.md) - Version history
-- [Architecture](docs/ARCHITECTURE_SUMMARY.md) - System design
+### Getting Started
+
+| Document | Description |
+|----------|-------------|
+| [CLI Quickstart](docs/cli/QUICKSTART.md) | Start using CLI in 5 minutes |
+| [MCP Quickstart](docs/mcp/QUICKSTART.md) | Set up MCP server for Claude Desktop |
+| [Installation Guide](INSTALL.md) | All installation methods |
+
+### User Guides
+
+| Document | Description |
+|----------|-------------|
+| [CLI Reference](docs/cli/REFERENCE.md) | All CLI commands and options |
+| [MCP Tools Reference](docs/mcp/TOOLS.md) | MCP tools and resources |
+| [Configuration](docs/reference/CONFIGURATION.md) | All configuration options |
+| [Cache Profiling](docs/CACHE_SUBSERVER.md) | LRU cache optimization guide |
+
+### Development
+
+| Document | Description |
+|----------|-------------|
+| [Development Guide](DEVELOPMENT.md) | Setup, testing, make targets |
+| [Architecture](docs/architecture/OVERVIEW.md) | System design overview |
+| [Contributing](CONTRIBUTING.md) | How to contribute |
+
+---
+
+## Features Overview
+
+### Analyses Available
+
+| Analysis | Description | CLI Command |
+|----------|-------------|-------------|
+| **Scope** | File discovery, git changes | `review scope` |
+| **Quality** | Complexity, maintainability, duplication | `review quality` |
+| **Security** | Vulnerability scanning (Bandit) | `review security` |
+| **Dependencies** | Outdated packages, vulnerabilities | `review deps` |
+| **Documentation** | Docstring coverage | `review docs` |
+| **Performance** | Hotspot detection, profiling | `review perf` |
+| **Cache** | LRU cache optimization | `review cache` |
+
+### Quality Metrics
+
+| Metric | Tool | Threshold |
+|--------|------|-----------|
+| Cyclomatic Complexity | radon | ≤10 |
+| Function Length | custom | ≤50 lines |
+| Nesting Depth | custom | ≤3 levels |
+| Maintainability Index | radon | ≥20 |
+| Type Coverage | mypy | ≥80% |
+| Docstring Coverage | interrogate | ≥80% |
+
+---
+
+## Requirements
+
+- Python 3.13+
+- Git (for scope analysis)
+
+---
 
 ## License
 
 [MIT License](LICENSE)
+
+---
+
+## Links
+
+- [PyPI](https://pypi.org/project/btx_fix_mcp/)
+- [GitHub](https://github.com/bitranox/btx_fix_mcp)
+- [Issues](https://github.com/bitranox/btx_fix_mcp/issues)
+- [Changelog](CHANGELOG.md)

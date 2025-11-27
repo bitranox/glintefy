@@ -41,7 +41,7 @@ class TestDefaultConfigStructure:
 
     def test_required_top_level_sections(self, default_config):
         """Test that all required top-level sections exist."""
-        required_sections = ["general", "review", "fix", "tools", "git", "output"]
+        required_sections = ["general", "review", "llm", "output", "fix", "tools", "git"]
         for section in required_sections:
             assert section in default_config, f"Missing required section: [{section}]"
 
@@ -52,21 +52,47 @@ class TestDefaultConfigStructure:
         for subsection in required_subsections:
             assert subsection in review, f"Missing required subsection: [review.{subsection}]"
 
-    def test_quality_subsection_structure(self, default_config):
-        """Test that [review.quality] has expected nested sections."""
+    def test_quality_subsection_has_thresholds(self, default_config):
+        """Test that [review.quality] has expected threshold settings."""
         quality = default_config.get("review", {}).get("quality", {})
-        # Quality can have nested tool configs
-        nested_sections = ["pylint", "flake8", "radon"]
-        for section in nested_sections:
-            assert section in quality, f"Missing nested section: [review.quality.{section}]"
+        # Quality must have key thresholds
+        required_keys = ["complexity_threshold", "maintainability_threshold", "max_function_length"]
+        for key in required_keys:
+            assert key in quality, f"Missing quality config: {key}"
+
+    def test_llm_section_has_model_settings(self, default_config):
+        """Test that [llm] section has model configuration."""
+        llm = default_config.get("llm", {})
+        assert "model" in llm, "llm should have model setting"
+        assert "enable_internal_llm" in llm, "llm should have enable_internal_llm setting"
+
+    def test_fix_section_has_required_structure(self, default_config):
+        """Test that [fix] section has the required structure (not yet implemented)."""
+        fix = default_config.get("fix", {})
+        assert "output_dir" in fix, "fix should have output_dir"
+        # Fix sub-sections (currently not used)
+        assert "scope" in fix, "fix should have [fix.scope]"
+        assert "test" in fix, "fix should have [fix.test]"
+        assert "lint" in fix, "fix should have [fix.lint]"
 
     def test_tools_section_has_all_tools(self, default_config):
-        """Test that [tools] section has all expected tool configurations."""
+        """Test that [tools] section has all required tool configs (not yet used)."""
         tools = default_config.get("tools", {})
-        # Only test tools that are actually documented in defaultconfig.toml
-        expected_tools = ["bandit", "radon", "pylint", "flake8", "ruff", "mypy", "black", "pytest"]
-        for tool in expected_tools:
-            assert tool in tools, f"Missing tool configuration: [tools.{tool}]"
+        required_tools = ["bandit", "radon", "pylint", "ruff", "mypy", "black", "pytest"]
+        for tool in required_tools:
+            assert tool in tools, f"tools should have [{tool}] section"
+
+    def test_git_section_exists(self, default_config):
+        """Test that [git] section exists (not yet used)."""
+        git = default_config.get("git", {})
+        assert "commit_prefix" in git, "git should have commit_prefix"
+        assert "auto_commit" in git, "git should have auto_commit"
+
+    def test_quality_subsection_has_tool_configs(self, default_config):
+        """Test that [review.quality] has tool-specific subsections (not yet used)."""
+        quality = default_config.get("review", {}).get("quality", {})
+        # Radon is documented but not yet used (controlled via complexity_threshold above)
+        assert "radon" in quality, "quality should have [review.quality.radon]"
 
 
 class TestQualitySubServerConfigKeys:
@@ -297,31 +323,31 @@ class TestConfigSectionHierarchy:
         assert "quality" in review, "quality should be under [review.quality]"
         assert "security" in review, "security should be under [review.security]"
 
-    def test_tool_configs_are_under_tools(self, default_config):
-        """Test that tool-specific configs are under [tools], not scattered."""
-        tools = default_config.get("tools", {})
+    def test_mindsets_are_under_review(self, default_config):
+        """Test that mindsets configs are under [review.mindsets]."""
+        review = default_config.get("review", {})
+        mindsets = review.get("mindsets", {})
 
-        # Tool configs should be under tools section
-        tool_names = ["bandit", "radon", "ruff", "mypy", "pylint", "flake8"]
-        for tool in tool_names:
-            assert tool in tools, f"{tool} config should be under [tools.{tool}]"
+        # Mindsets should be under review.mindsets section
+        mindset_names = ["quality", "security", "docs", "perf", "deps", "cache"]
+        for mindset in mindset_names:
+            assert mindset in mindsets, f"{mindset} mindset should be under [review.mindsets.{mindset}]"
 
-    def test_no_duplicate_keys_across_sections(self, default_config):
-        """Test that the same key isn't defined in multiple incompatible sections."""
-        # Keys that might be duplicated but shouldn't have conflicting meanings
-        default_config.get("review", {}).get("quality", {})
-        default_config.get("tools", {}).get("radon", {})
+    def test_no_duplicate_output_settings(self, default_config):
+        """Test that output settings are consolidated in [output] section."""
+        output = default_config.get("output", {})
 
-        # If both have 'show_complexity', they should be for different purposes
-        # This test documents the expected behavior
+        # Output should have display limits
+        assert "display" in output, "output should have [output.display] for display limits"
 
-    def test_fix_section_mirrors_review_structure(self, default_config):
-        """Test that [fix] section has parallel structure to [review] where applicable."""
-        fix = default_config.get("fix", {})
+    def test_review_section_has_required_structure(self, default_config):
+        """Test that [review] section has the required structure."""
+        review = default_config.get("review", {})
 
-        # Fix should have scope and test sub-sections
-        assert "scope" in fix, "fix should have [fix.scope] for fix-specific scope settings"
-        assert "test" in fix, "fix should have [fix.test] for test runner settings"
+        # Review should have key sub-sections
+        assert "scope" in review, "review should have [review.scope]"
+        assert "quality" in review, "review should have [review.quality]"
+        assert "security" in review, "review should have [review.security]"
 
 
 class TestConfigValuesAreReasonable:
@@ -333,24 +359,22 @@ class TestConfigValuesAreReasonable:
         with open(_DEFAULT_CONFIG_FILE, "rb") as f:
             return tomllib.load(f)
 
-    def test_line_length_values_are_consistent(self, default_config):
-        """Test that line length values are consistent across tools."""
-        default_config.get("tools", {})
+    def test_reasonable_threshold_values(self, default_config):
+        """Test that threshold values are reasonable."""
+        quality = default_config.get("review", {}).get("quality", {})
 
-        # All formatters/linters should use same line length (typically 88)
-        # Read from comments since values are commented out
+        # Complexity threshold should be reasonable (5-15)
+        assert 5 <= quality.get("complexity_threshold", 10) <= 15
+
+        # Function length should be reasonable (30-100)
+        assert 30 <= quality.get("max_function_length", 50) <= 100
+
+    def test_llm_model_values_are_current(self):
+        """Test that LLM model references are reasonably current."""
         config_text = _DEFAULT_CONFIG_FILE.read_text()
 
-        # Just verify the config file mentions consistent values
-        assert "line_length = 88" in config_text or "max_line_length = 88" in config_text
-
-    def test_python_version_values_are_current(self):
-        """Test that Python version references are reasonably current."""
-        config_text = _DEFAULT_CONFIG_FILE.read_text()
-
-        # Should reference Python 3.13 or newer, not old versions
-        # Allow 3.9+ for compatibility
-        assert "py39" in config_text or "py313" in config_text or "3.13" in config_text or "3.9" in config_text
+        # Should reference Claude models
+        assert "claude" in config_text.lower() or "sonnet" in config_text.lower()
 
 
 class TestQualityConfigIntegration:

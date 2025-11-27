@@ -47,15 +47,33 @@ The quality sub-server provides comprehensive code analysis:
 - **JS/TS Support**: ESLint integration
 - **Beartype**: Runtime type checking verification
 
-### In Progress / Planned
+### Cache Sub-server Features
+
+The cache sub-server identifies `@lru_cache` optimization opportunities using a 4-stage pipeline:
+
+1. **AST Analysis**: Detect pure functions (deterministic, no side effects)
+2. **Profiling Cross-reference**: Match pure functions with runtime hotspots
+3. **Batch Screening**: Test candidates for cache hit rate
+4. **Individual Validation**: Measure precise performance impact
+
+Key capabilities:
+- **Pure Function Detection**: Identifies functions safe to cache
+- **Existing Cache Evaluation**: Analyzes current `@lru_cache` decorators
+- **Runtime Profiling Integration**: Uses cProfile data for accurate analysis
+- **Static Fallback**: Works without profiling data using call-site analysis
+
+See [Cache Subserver Documentation](docs/CACHE_SUBSERVER.md) for details.
+
+### Additional Sub-servers
 
 | Component | Status | Description |
 |-----------|--------|-------------|
-| **Review Orchestrator** | :construction: Planned | Coordinates all review sub-servers |
+| **Performance Sub-server** | :white_check_mark: Complete | Runtime profiling analysis |
+| **Docs Sub-server** | :white_check_mark: Complete | Documentation coverage |
+| **Deps Sub-server** | :white_check_mark: Complete | Dependency analysis |
+| **Cache Sub-server** | :white_check_mark: Complete | LRU cache optimization |
+| **Review Orchestrator** | :white_check_mark: Complete | Coordinates all review sub-servers |
 | **Fix Sub-servers** | :construction: Planned | Automated code fixing |
-| **Performance Sub-server** | :construction: Planned | Performance analysis |
-| **Docs Sub-server** | :construction: Planned | Documentation analysis |
-| **Deps Sub-server** | :construction: Planned | Dependency analysis |
 
 ## Quick Start
 

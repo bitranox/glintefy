@@ -9,7 +9,7 @@ The server uses stderr for logging (MCP protocol uses stdout for messages).
 from pathlib import Path
 from typing import Any
 
-from btx_fix_mcp.config import get_config
+from btx_fix_mcp.config import get_config, get_max_workers
 from btx_fix_mcp.subservers.common.logging import (
     debug_log,
     get_mcp_logger,
@@ -45,6 +45,9 @@ class ReviewMCPServer:
     All logging goes to stderr (MCP protocol uses stdout).
     """
 
+    # Default subservers to run (in order)
+    DEFAULT_SUBSERVERS = ["scope", "quality", "security", "deps", "docs", "perf"]
+
     def __init__(self, repo_path: Path | None = None):
         """Initialize the review MCP server.
 
@@ -53,12 +56,26 @@ class ReviewMCPServer:
         """
         self.repo_path = repo_path or Path.cwd()
 
-        # Load output directory from config
+        # Load configuration
         config = get_config(start_dir=str(self.repo_path))
-        output_dir = config.get("review", {}).get("output_dir", DEFAULT_OUTPUT_DIR)
+        review_config = config.get("review", {})
+
+        # Output directory
+        output_dir = review_config.get("output_dir", DEFAULT_OUTPUT_DIR)
         self._output_base = self.repo_path / output_dir
 
-        log_debug(logger, "ReviewMCPServer initialized", repo_path=str(self.repo_path), output_base=str(self._output_base))
+        # Configurable subserver list and behavior
+        self._subservers = review_config.get("subservers", self.DEFAULT_SUBSERVERS)
+        self._stop_on_failure = review_config.get("stop_on_failure", False)
+
+        log_debug(
+            logger,
+            "ReviewMCPServer initialized",
+            repo_path=str(self.repo_path),
+            output_base=str(self._output_base),
+            subservers=self._subservers,
+            stop_on_failure=self._stop_on_failure,
+        )
 
     @debug_log(logger)
     def run_scope(
@@ -516,7 +533,7 @@ class ReviewMCPServer:
         complexity_threshold: int | None,
         severity_threshold: str,
     ) -> None:
-        """Run quality, security, deps, docs, perf in parallel."""
+        """Run configured subservers (except scope) in parallel."""
         from concurrent.futures import ThreadPoolExecutor, as_completed
 
         def make_task(name: str, runner: Any) -> Any:
@@ -534,15 +551,27 @@ class ReviewMCPServer:
 
             return task
 
-        tasks = [
-            make_task("quality", lambda: self.run_quality(complexity_threshold=complexity_threshold)),
-            make_task("security", lambda: self.run_security(severity_threshold=severity_threshold)),
-            make_task("deps", self.run_deps),
-            make_task("docs", self.run_docs),
-            make_task("perf", self.run_perf),
-        ]
+        # Build task list based on configured subservers (skip 'scope' - runs first)
+        subserver_runners = {
+            "quality": lambda: self.run_quality(complexity_threshold=complexity_threshold),
+            "security": lambda: self.run_security(severity_threshold=severity_threshold),
+            "deps": self.run_deps,
+            "docs": self.run_docs,
+            "perf": self.run_perf,
+        }
 
-        with ThreadPoolExecutor(max_workers=5) as executor:
+        tasks = []
+        for name in self._subservers:
+            if name == "scope":
+                continue  # Scope runs first, not in parallel
+            if name in subserver_runners:
+                tasks.append(make_task(name, subserver_runners[name]))
+
+        if not tasks:
+            return
+
+        max_workers = get_max_workers(start_dir=str(self.repo_path))
+        with ThreadPoolExecutor(max_workers=max_workers) as executor:
             futures = [executor.submit(task) for task in tasks]
             for future in as_completed(futures):
                 name, result, error = future.result()
@@ -550,9 +579,21 @@ class ReviewMCPServer:
                 if error:
                     results["overall_status"] = "PARTIAL"
                     results["errors"].append(error)
+                    if self._stop_on_failure:
+                        # Cancel remaining futures and exit
+                        for f in futures:
+                            f.cancel()
+                        return
 
     def _run_cache_step(self, results: dict[str, Any]) -> None:
-        """Run cache analysis (sequential, modifies source files)."""
+        """Run cache analysis (sequential, modifies source files).
+
+        Only runs if 'cache' is in the configured subservers list.
+        Cache always runs last and sequentially because it modifies source files.
+        """
+        if "cache" not in self._subservers:
+            return
+
         try:
             results["cache"] = self.run_cache()
             if results["cache"]["status"] == "FAILED":

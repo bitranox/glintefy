@@ -375,24 +375,39 @@ def _extract_author_info(
     Returns:
         Tuple of (author_name, author_email)
     """
+    authors_list = _get_authors_list(project_table)
+    author_name, author_email = _find_first_author(authors_list)
+    return author_name or fallback_name, author_email
+
+
+def _get_authors_list(project_table: dict[str, object]) -> list[dict[str, object]]:
+    """Extract the authors list from project table."""
+    authors_value = project_table.get("authors")
+    if not isinstance(authors_value, list):
+        return []
+    return [cast(dict[str, object], entry) for entry in cast(list[object], authors_value) if isinstance(entry, dict)]
+
+
+def _find_first_author(authors_list: list[dict[str, object]]) -> tuple[str, str]:
+    """Find the first valid author name and email from authors list."""
     author_name = ""
     author_email = ""
-    authors_value = project_table.get("authors")
-    if isinstance(authors_value, list):
-        authors_list = cast(list[object], authors_value)
-        for author_entry in authors_list:
-            if not isinstance(author_entry, dict):
-                continue
-            author_dict = cast(dict[str, object], author_entry)
-            name_field = author_dict.get("name")
-            email_field = author_dict.get("email")
-            if not author_name and isinstance(name_field, str) and name_field.strip():
-                author_name = name_field.strip()
-            if not author_email and isinstance(email_field, str) and email_field.strip():
-                author_email = email_field.strip()
-    if not author_name:
-        author_name = fallback_name
+    for author_dict in authors_list:
+        if not author_name:
+            author_name = _extract_str_field(author_dict, "name")
+        if not author_email:
+            author_email = _extract_str_field(author_dict, "email")
+        if author_name and author_email:
+            break
     return author_name, author_email
+
+
+def _extract_str_field(data: dict[str, object], key: str) -> str:
+    """Extract a string field from a dict, returning empty string if not found."""
+    value = data.get(key)
+    if isinstance(value, str) and value.strip():
+        return value.strip()
+    return ""
 
 
 def _extract_summary(
@@ -690,41 +705,71 @@ def gh_release_edit(tag: str, title: str, body: str) -> None:
 
 def bootstrap_dev() -> None:
     """Bootstrap development environment with required tools."""
-    needs_dev_install = False
-    if not (cmd_exists("ruff") and cmd_exists("pyright")):
-        needs_dev_install = True
-    else:
-        try:
-            from importlib import import_module
+    _upgrade_pip()
+    if _needs_dev_install():
+        _install_dev_dependencies()
+    _ensure_sqlite3()
 
-            import_module("pytest_asyncio")
-        except ModuleNotFoundError:
-            needs_dev_install = True
-    # Ensure pip itself is patched so security audits do not flag known CVEs on the runner.
+
+def _needs_dev_install() -> bool:
+    """Check if dev dependencies need to be installed."""
+    if not (cmd_exists("ruff") and cmd_exists("pyright")):
+        return True
+    try:
+        from importlib import import_module
+
+        import_module("pytest_asyncio")
+        return False
+    except ModuleNotFoundError:
+        return True
+
+
+def _upgrade_pip() -> None:
+    """Upgrade pip, handling CI-specific errors."""
     pip_upgrade = run(
         [sys.executable, "-m", "pip", "install", "--upgrade", "pip"],
         check=False,
         capture=True,
     )
-    if pip_upgrade.code != 0:
-        combined_output = f"{pip_upgrade.out}\n{pip_upgrade.err}".lower()
-        ci_token = os.getenv("CI", "").strip().lower()
-        is_ci = ci_token in {"1", "true", "yes"}
-        sha_error = "sha256" in combined_output and "hash" in combined_output
-        if is_ci and sha_error:
-            print("[bootstrap] pip upgrade failed due to SHA256 verification; continuing on CI")
-        else:
-            if pip_upgrade.out:
-                print(pip_upgrade.out, end="")
-            if pip_upgrade.err:
-                print(pip_upgrade.err, end="", file=sys.stderr)
-            raise SystemExit("pip upgrade failed; see output above")
-    if needs_dev_install:
-        print("[bootstrap] Installing dev dependencies via 'pip install -e .[dev]'")
-        install_cmd = [sys.executable, "-m", "pip", "install", "-e", ".[dev]"]
-        if sys.platform.startswith("linux"):
-            install_cmd.insert(4, "--break-system-packages")
-        run(install_cmd)
+    if pip_upgrade.code == 0:
+        return
+
+    if _is_ci_sha_error(pip_upgrade):
+        print("[bootstrap] pip upgrade failed due to SHA256 verification; continuing on CI")
+        return
+
+    _print_pip_error(pip_upgrade)
+    raise SystemExit("pip upgrade failed; see output above")
+
+
+def _is_ci_sha_error(result: RunResult) -> bool:
+    """Check if pip upgrade failed due to SHA256 verification on CI."""
+    combined_output = f"{result.out}\n{result.err}".lower()
+    ci_token = os.getenv("CI", "").strip().lower()
+    is_ci = ci_token in {"1", "true", "yes"}
+    sha_error = "sha256" in combined_output and "hash" in combined_output
+    return is_ci and sha_error
+
+
+def _print_pip_error(result: RunResult) -> None:
+    """Print pip upgrade error output."""
+    if result.out:
+        print(result.out, end="")
+    if result.err:
+        print(result.err, end="", file=sys.stderr)
+
+
+def _install_dev_dependencies() -> None:
+    """Install dev dependencies with pip."""
+    print("[bootstrap] Installing dev dependencies via 'pip install -e .[dev]'")
+    install_cmd = [sys.executable, "-m", "pip", "install", "-e", ".[dev]"]
+    if sys.platform.startswith("linux"):
+        install_cmd.insert(4, "--break-system-packages")
+    run(install_cmd)
+
+
+def _ensure_sqlite3() -> None:
+    """Ensure sqlite3 is available, installing pysqlite3-binary if needed."""
     try:
         from importlib import import_module
 
@@ -734,3 +779,24 @@ def bootstrap_dev() -> None:
         if sys.platform.startswith("linux"):
             sqlite_cmd.insert(4, "--break-system-packages")
         run(sqlite_cmd, check=False)
+
+
+def get_default_remote(pyproject: Path = Path("pyproject.toml")) -> str:
+    """Read default git remote from pyproject.toml [tool.git].default-remote.
+
+    Args:
+        pyproject: Path to pyproject.toml file
+
+    Returns:
+        The configured default remote, or "origin" if not configured.
+    """
+    try:
+        data = _load_pyproject(pyproject)
+        tool = _as_str_mapping(data.get("tool"))
+        git_config = _as_str_mapping(tool.get("git"))
+        remote = git_config.get("default-remote")
+        if isinstance(remote, str) and remote.strip():
+            return remote.strip()
+    except Exception:
+        pass
+    return "origin"

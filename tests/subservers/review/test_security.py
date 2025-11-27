@@ -659,14 +659,10 @@ def execute(user_cmd):
 
     def test_thresholds_override_config_file(self, tmp_path):
         """Test that constructor parameters override config file values."""
-        import yaml
 
         repo_dir = tmp_path / "repo"
         repo_dir.mkdir()
-
-        config_file = repo_dir / "defaultconfig.toml"
-        # Note: Since we're using TOML config, this test is conceptual
-        # The actual config loading uses get_subserver_config
+        # Note: Config loading uses get_subserver_config, not direct file reading
 
         scope_dir = tmp_path / "scope"
         scope_dir.mkdir()

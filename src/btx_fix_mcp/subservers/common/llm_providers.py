@@ -12,11 +12,10 @@ without being locked into a single provider.
 
 from __future__ import annotations
 
-import json
 from abc import ABC, abstractmethod
 from typing import Any, Literal
 
-from btx_fix_mcp.subservers.common.logging import get_mcp_logger, log_debug
+from btx_fix_mcp.subservers.common.logging import get_mcp_logger
 
 logger = get_mcp_logger("btx_fix_mcp.llm_providers")
 

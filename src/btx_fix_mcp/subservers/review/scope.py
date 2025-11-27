@@ -301,9 +301,7 @@ class ScopeSubServer(BaseSubServer):
 
         if limit is not None and len(files) > limit:
             lines.append("")
-            lines.append(
-                f"*Note: {len(files) - limit} more files not shown. Set `output.display.max_sample_files = 0` in config for unlimited display.*"
-            )
+            lines.append(f"*Note: {len(files) - limit} more files not shown. Set `output.display.max_sample_files = 0` in config for unlimited display.*")
 
         return lines
 

@@ -59,12 +59,10 @@ class DocsSubServer(BaseSubServer):
         base_config = get_config(start_dir=str(repo_path))
         output_base = base_config.get("review", {}).get("output_dir", "LLM-CONTEXT/btx_fix_mcp/review")
 
-        if input_dir is None:
-            input_dir = Path.cwd() / output_base / "scope"
-        if output_dir is None:
-            output_dir = Path.cwd() / output_base / name
+        resolved_input = input_dir if input_dir is not None else Path.cwd() / output_base / "scope"
+        resolved_output = output_dir if output_dir is not None else Path.cwd() / output_base / name
 
-        return input_dir, output_dir
+        return resolved_input, resolved_output
 
     def _init_logger(self, name: str, mcp_mode: bool):
         """Initialize logger based on mode."""
@@ -73,17 +71,13 @@ class DocsSubServer(BaseSubServer):
         else:
             return setup_logger(name, log_file=None, level=20)
 
-    def _apply_feature_overrides(
-        self, check_docstrings: bool | None, check_project_docs: bool | None, config: dict
-    ) -> tuple[bool, bool]:
+    def _apply_feature_overrides(self, check_docstrings: bool | None, check_project_docs: bool | None, config: dict) -> tuple[bool, bool]:
         """Apply feature flag overrides."""
         check_docs = check_docstrings if check_docstrings is not None else config.get("check_docstrings", True)
         check_proj = check_project_docs if check_project_docs is not None else config.get("check_project_docs", True)
         return check_docs, check_proj
 
-    def _apply_threshold_overrides(
-        self, min_coverage: int | None, docstring_style: str | None, config: dict
-    ) -> tuple[int, str]:
+    def _apply_threshold_overrides(self, min_coverage: int | None, docstring_style: str | None, config: dict) -> tuple[int, str]:
         """Apply threshold and style overrides."""
         coverage = min_coverage if min_coverage is not None else config.get("min_coverage", 80)
         style = docstring_style if docstring_style is not None else config.get("docstring_style", "google")
@@ -316,12 +310,12 @@ class DocsSubServer(BaseSubServer):
 
         try:
             python_path = get_tool_path("python")
-            timeout = get_timeout("tool_analysis", 60, start_dir=str(self.repo_path))
+            interrogate_timeout = get_timeout("tool_analysis", 60, start_dir=str(self.repo_path))
             result = subprocess.run(
                 [str(python_path), "-m", "interrogate", "-v", str(self.repo_path / "src")],
                 capture_output=True,
                 text=True,
-                timeout=timeout,
+                timeout=interrogate_timeout,
             )
             self._parse_interrogate_output(result.stdout, coverage)
 

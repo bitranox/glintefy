@@ -17,9 +17,7 @@ class PureFunctionDetector:
     IO_OPERATIONS = {"print", "open", "input", "write", "read", "execute", "compile"}
     NON_DETERMINISTIC = {"now", "today", "random", "randint", "uuid", "uuid4", "choice", "shuffle"}
 
-    def analyze_file(
-        self, file_path: Path
-    ) -> tuple[list[PureFunctionCandidate], list[ExistingCacheCandidate]]:
+    def analyze_file(self, file_path: Path) -> tuple[list[PureFunctionCandidate], list[ExistingCacheCandidate]]:
         """Analyze a single Python file for pure functions and existing caches.
 
         Args:
@@ -104,19 +102,9 @@ class PureFunctionDetector:
 
         return ".".join(module_parts)
 
-    def _has_cache_decorator(self, func_node: ast.FunctionDef) -> bool:
-        """Check if function already has a cache decorator."""
-        for decorator in func_node.decorator_list:
-            # Simple decorator: @cache
-            if isinstance(decorator, ast.Name) and "cache" in decorator.id.lower():
-                return True
-            # Call decorator: @lru_cache()
-            if isinstance(decorator, ast.Call):
-                if hasattr(decorator.func, "id") and "cache" in decorator.func.id.lower():
-                    return True
-                if hasattr(decorator.func, "attr") and "cache" in decorator.func.attr.lower():
-                    return True
-        return False
+    # Cache size constants
+    UNBOUNDED_CACHE = -1
+    DEFAULT_LRU_MAXSIZE = 128
 
     def _get_cache_maxsize(self, func_node: ast.FunctionDef) -> int | None:
         """Extract maxsize from cache decorator if present.
@@ -125,36 +113,81 @@ class PureFunctionDetector:
             func_node: Function AST node
 
         Returns:
-            maxsize value, -1 for unbounded (@lru_cache with no args), or None if no cache
+            maxsize value, UNBOUNDED_CACHE for unbounded, or None if no cache
         """
         for decorator in func_node.decorator_list:
-            # @lru_cache or @cache (unbounded by default)
-            if isinstance(decorator, ast.Name) and "cache" in decorator.id.lower():
-                return -1  # Unbounded
+            maxsize = self._extract_maxsize_from_decorator(decorator)
+            if maxsize is not None:
+                return maxsize
 
-            # @lru_cache() or @lru_cache(maxsize=X)
-            if isinstance(decorator, ast.Call):
-                is_cache = False
-                if hasattr(decorator.func, "id") and "cache" in decorator.func.id.lower():
-                    is_cache = True
-                if hasattr(decorator.func, "attr") and "cache" in decorator.func.attr.lower():
-                    is_cache = True
+        return None
 
-                if is_cache:
-                    # Extract maxsize argument
-                    for keyword in decorator.keywords:
-                        if keyword.arg == "maxsize":
-                            if isinstance(keyword.value, ast.Constant):
-                                val = keyword.value.value
-                                # None means unbounded in lru_cache
-                                return -1 if val is None else val
-                            # If maxsize is a variable/expression, return -1 (unknown)
-                            return -1
+    def _extract_maxsize_from_decorator(self, decorator: ast.expr) -> int | None:
+        """Extract maxsize from a single decorator.
 
-                    # No maxsize specified (defaults to 128 for lru_cache)
-                    return 128
+        Args:
+            decorator: AST decorator node
 
-        return None  # No cache decorator
+        Returns:
+            maxsize value or None if not a cache decorator
+        """
+        # @lru_cache or @cache (unbounded by default)
+        if isinstance(decorator, ast.Name) and "cache" in decorator.id.lower():
+            return self.UNBOUNDED_CACHE
+
+        # @lru_cache() or @lru_cache(maxsize=X)
+        if not isinstance(decorator, ast.Call):
+            return None
+
+        if not self._is_cache_call(decorator):
+            return None
+
+        return self._extract_maxsize_from_keywords(decorator.keywords)
+
+    def _is_cache_call(self, decorator: ast.Call) -> bool:
+        """Check if a Call decorator is a cache decorator.
+
+        Args:
+            decorator: AST Call node
+
+        Returns:
+            True if this is a cache decorator call
+        """
+        func = decorator.func
+
+        if isinstance(func, ast.Name) and "cache" in func.id.lower():
+            return True
+        if isinstance(func, ast.Attribute) and "cache" in func.attr.lower():
+            return True
+
+        return False
+
+    def _extract_maxsize_from_keywords(self, keywords: list[ast.keyword]) -> int:
+        """Extract maxsize from decorator keyword arguments.
+
+        Args:
+            keywords: List of keyword arguments
+
+        Returns:
+            maxsize value (defaults to DEFAULT_LRU_MAXSIZE if not specified)
+        """
+        for keyword in keywords:
+            if keyword.arg != "maxsize":
+                continue
+
+            if isinstance(keyword.value, ast.Constant):
+                val = keyword.value.value
+                # None means unbounded in lru_cache
+                if val is None:
+                    return self.UNBOUNDED_CACHE
+                # Ensure we return an int
+                return int(val) if isinstance(val, (int, float)) else self.UNBOUNDED_CACHE
+
+            # maxsize is a variable/expression - treat as unknown (unbounded)
+            return self.UNBOUNDED_CACHE
+
+        # No maxsize specified - defaults to 128 for lru_cache
+        return self.DEFAULT_LRU_MAXSIZE
 
     def _is_pure_function(self, func_node: ast.FunctionDef) -> tuple[bool, list[str]]:
         """Check if function is pure (deterministic, no side effects).
@@ -218,22 +251,28 @@ class PureFunctionDetector:
 
     def _has_nested_loops(self, func_node: ast.FunctionDef, depth: int = 2) -> bool:
         """Check for nested loops (depth >= 2)."""
+        return self._count_loop_nesting(func_node, 0) >= depth
 
-        def count_nesting(node: ast.AST, current_depth: int = 0) -> int:
-            """Recursively count maximum nesting depth."""
-            max_depth = current_depth
+    def _count_loop_nesting(self, node: ast.AST, current_depth: int) -> int:
+        """Recursively count maximum loop nesting depth.
 
-            for child in ast.iter_child_nodes(node):
-                if isinstance(child, (ast.For, ast.While)):
-                    child_depth = count_nesting(child, current_depth + 1)
-                    max_depth = max(max_depth, child_depth)
-                else:
-                    child_depth = count_nesting(child, current_depth)
-                    max_depth = max(max_depth, child_depth)
+        Args:
+            node: AST node to analyze
+            current_depth: Current nesting depth
 
-            return max_depth
+        Returns:
+            Maximum nesting depth found in subtree
+        """
+        max_depth = current_depth
 
-        return count_nesting(func_node) >= depth
+        for child in ast.iter_child_nodes(node):
+            if isinstance(child, (ast.For, ast.While)):
+                child_depth = self._count_loop_nesting(child, current_depth + 1)
+            else:
+                child_depth = self._count_loop_nesting(child, current_depth)
+            max_depth = max(max_depth, child_depth)
+
+        return max_depth
 
     def _is_recursive(self, func_node: ast.FunctionDef) -> bool:
         """Check if function calls itself."""

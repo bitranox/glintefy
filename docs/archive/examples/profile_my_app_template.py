@@ -74,6 +74,7 @@ def main():
         print(f"⚠️  Workload raised exception: {e}")
         print("Profiling data will still be saved.")
         import traceback
+
         traceback.print_exc()
 
     finally:

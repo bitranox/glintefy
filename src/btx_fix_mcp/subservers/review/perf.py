@@ -275,7 +275,7 @@ class PerfSubServer(BaseSubServer):
     def _run_pytest_with_profiling(self) -> subprocess.CompletedProcess | None:
         """Run pytest with profiling flags and cProfile."""
         try:
-            timeout = get_timeout("profile_tests", 300, start_dir=str(self.repo_path))
+            pytest_profile_timeout = get_timeout("profile_tests", 300, start_dir=str(self.repo_path))
 
             # Create profile output path
             prof_file = self.output_dir / "test_profile.prof"
@@ -299,7 +299,7 @@ class PerfSubServer(BaseSubServer):
                 ],
                 capture_output=True,
                 text=True,
-                timeout=timeout,
+                timeout=pytest_profile_timeout,
                 cwd=str(self.repo_path),
             )
 

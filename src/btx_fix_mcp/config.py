@@ -298,3 +298,171 @@ def get_display_limit(
     display = get_section("output.display", start_dir=start_dir)
     limit = int(display.get(key, default))
     return None if limit == 0 else limit
+
+
+def get_general_config(start_dir: str | None = None) -> dict[str, Any]:
+    """Get general configuration settings.
+
+    Returns
+    -------
+    dict
+        General configuration with log_level, verbose, max_workers.
+    """
+    return get_section("general", start_dir=start_dir)
+
+
+def get_log_level(start_dir: str | None = None) -> int:
+    """Get the configured log level.
+
+    Returns
+    -------
+    int
+        Log level (10=DEBUG, 20=INFO, 30=WARNING, 40=ERROR, 50=CRITICAL).
+    """
+    import logging
+
+    general = get_general_config(start_dir)
+    level_str = general.get("log_level", "INFO")
+
+    # Handle both string and int values
+    if isinstance(level_str, int):
+        return level_str
+
+    level_map = {
+        "DEBUG": logging.DEBUG,
+        "INFO": logging.INFO,
+        "WARNING": logging.WARNING,
+        "ERROR": logging.ERROR,
+        "CRITICAL": logging.CRITICAL,
+    }
+    return level_map.get(level_str.upper(), logging.INFO)
+
+
+def get_verbose(start_dir: str | None = None) -> bool:
+    """Get the verbose output setting.
+
+    Returns
+    -------
+    bool
+        True if verbose output is enabled.
+    """
+    general = get_general_config(start_dir)
+    return bool(general.get("verbose", False))
+
+
+def get_max_workers(start_dir: str | None = None) -> int:
+    """Get the maximum number of parallel workers.
+
+    Returns
+    -------
+    int
+        Maximum parallel workers (default: 4).
+    """
+    general = get_general_config(start_dir)
+    return int(general.get("max_workers", 4))
+
+
+def get_output_config(start_dir: str | None = None) -> dict[str, Any]:
+    """Get output configuration settings.
+
+    Returns
+    -------
+    dict
+        Output configuration with format, color, show_progress, etc.
+    """
+    return get_section("output", start_dir=start_dir)
+
+
+def get_json_indent(start_dir: str | None = None) -> int:
+    """Get JSON indentation level.
+
+    Returns
+    -------
+    int
+        JSON indent spaces (default: 2).
+    """
+    output = get_output_config(start_dir)
+    return int(output.get("json_indent", 2))
+
+
+def get_chunk_size(start_dir: str | None = None) -> int:
+    """Get chunk size for splitting large issue files.
+
+    Returns
+    -------
+    int
+        Chunk size (default: 50).
+    """
+    output = get_output_config(start_dir)
+    return int(output.get("chunk_size", 50))
+
+
+def get_git_config(start_dir: str | None = None) -> dict[str, Any]:
+    """Get git configuration settings.
+
+    Returns
+    -------
+    dict
+        Git configuration with commit_prefix, auto_commit, sign_commits, etc.
+    """
+    return get_section("git", start_dir=start_dir)
+
+
+def get_commit_prefix(start_dir: str | None = None) -> str:
+    """Get commit message prefix for automated commits.
+
+    Returns
+    -------
+    str
+        Commit prefix (default: "[btx-fix]").
+    """
+    git = get_git_config(start_dir)
+    return str(git.get("commit_prefix", "[btx-fix]"))
+
+
+def get_auto_commit(start_dir: str | None = None) -> bool:
+    """Get auto-commit setting.
+
+    Returns
+    -------
+    bool
+        True if auto-commit is enabled (default: False).
+    """
+    git = get_git_config(start_dir)
+    return bool(git.get("auto_commit", False))
+
+
+def get_sign_commits(start_dir: str | None = None) -> bool:
+    """Get GPG signing setting for commits.
+
+    Returns
+    -------
+    bool
+        True if commits should be signed (default: False).
+    """
+    git = get_git_config(start_dir)
+    return bool(git.get("sign_commits", False))
+
+
+def get_create_branch(start_dir: str | None = None) -> bool:
+    """Get create branch setting for fixes.
+
+    Returns
+    -------
+    bool
+        True if a new branch should be created (default: False).
+    """
+    git = get_git_config(start_dir)
+    return bool(git.get("create_branch", False))
+
+
+def get_branch_template(start_dir: str | None = None) -> str:
+    """Get branch name template for fix branches.
+
+    Returns
+    -------
+    str
+        Branch template (default: "fix/{issue_id}").
+    """
+    git = get_git_config(start_dir)
+    return str(git.get("branch_template", "fix/{issue_id}"))

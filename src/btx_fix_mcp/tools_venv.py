@@ -31,8 +31,8 @@ from pathlib import Path
 _venv_initialized = False
 _venv_path: Path | None = None
 
-# Python version for the tools venv (matches requires-python in pyproject.toml)
-PYTHON_VERSION = "3.13"
+# Minimum supported Python version
+MIN_PYTHON_VERSION = (3, 13)
 
 # Tools to install in the venv (read from pyproject.toml at runtime)
 DEFAULT_TOOLS = [
@@ -141,16 +141,18 @@ def _get_tools_from_pyproject() -> list[str]:
 def _find_python() -> str:
     """Find a suitable Python interpreter for the venv.
 
-    Tries to find Python 3.13+, falls back to current interpreter.
+    Tries to find the latest Python (3.20 down to 3.13), falls back to current interpreter.
+    Minimum supported version is 3.13.
     """
-    # Try specific version first
-    for version in ["3.13", "3.14", "3.12"]:
-        python_name = f"python{version}"
+    # Try versions in descending order (newest first)
+    # Range: 3.20 down to 3.13 (covers future versions)
+    for minor in range(20, MIN_PYTHON_VERSION[1] - 1, -1):
+        python_name = f"python3.{minor}"
         python_path = shutil.which(python_name)
         if python_path:
             return python_path
 
-    # Fall back to generic python3
+    # Fall back to generic python3 (may be 3.13+)
     python3 = shutil.which("python3")
     if python3:
         return python3
@@ -203,12 +205,11 @@ def _install_uv_if_needed() -> Path:
 def ensure_tools_venv(force_update: bool = False) -> Path:
     """Ensure the tools virtual environment exists and has required tools.
 
-    This function is idempotent and fast if the venv already exists.
-    It should be called by the orchestrator agent at startup, and by
-    sub-agents if they're run independently.
+    Creates the venv if needed and always upgrades tools to latest versions.
+    The upgrade is fast (uv checks versions quickly) and ensures tools stay current.
 
     Args:
-        force_update: If True, reinstall all tools even if venv exists
+        force_update: If True, recreate venv from scratch
 
     Returns:
         Path to the venv directory
@@ -218,17 +219,11 @@ def ensure_tools_venv(force_update: bool = False) -> Path:
     """
     global _venv_initialized, _venv_path
 
-    # Fast path: already initialized in this process
+    # Fast path: already initialized AND upgraded in this process
     if _venv_initialized and not force_update:
         return get_venv_path()
 
     venv_path = get_venv_path()
-
-    # Check if already initialized on disk
-    if is_venv_initialized() and not force_update:
-        _venv_initialized = True
-        _venv_path = venv_path
-        return venv_path
 
     # Create cache directory
     venv_path.parent.mkdir(parents=True, exist_ok=True)
@@ -236,8 +231,10 @@ def ensure_tools_venv(force_update: bool = False) -> Path:
     # Find Python interpreter
     python = _find_python()
 
-    # Create venv if it doesn't exist
-    if not venv_path.exists():
+    # Create venv if it doesn't exist (or force recreate)
+    if not venv_path.exists() or force_update:
+        if venv_path.exists():
+            shutil.rmtree(venv_path)
         subprocess.run(
             [python, "-m", "venv", str(venv_path)],
             check=True,
@@ -250,11 +247,13 @@ def ensure_tools_venv(force_update: bool = False) -> Path:
     # Get tools list
     tools = _get_tools_from_pyproject()
 
-    # Install tools using uv
+    # Install/upgrade tools using uv
+    # Always upgrade to latest versions matching the version specs
+    # uv is fast - it checks versions and only downloads if needed
     venv_python = venv_path / "bin" / "python" if sys.platform != "win32" else venv_path / "Scripts" / "python.exe"
 
     subprocess.run(
-        [str(uv), "pip", "install", "--python", str(venv_python), "--quiet"] + tools,
+        [str(uv), "pip", "install", "--upgrade", "--python", str(venv_python), "--quiet"] + tools,
         check=True,
         capture_output=True,
     )

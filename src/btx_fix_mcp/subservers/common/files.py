@@ -149,8 +149,18 @@ CONFIG_KEYWORDS = ["config", ".json", ".yml", ".yaml", ".toml", ".ini"]
 BUILD_FILES = {"dockerfile", "makefile"}
 BUILD_PATTERNS = {".dockerfile", ".mk"}
 CODE_EXTENSIONS = {
-    ".py", ".js", ".ts", ".jsx", ".tsx", ".java",
-    ".go", ".rs", ".cpp", ".c", ".rb", ".php",
+    ".py",
+    ".js",
+    ".ts",
+    ".jsx",
+    ".tsx",
+    ".java",
+    ".go",
+    ".rs",
+    ".cpp",
+    ".c",
+    ".rb",
+    ".php",
 }
 
 

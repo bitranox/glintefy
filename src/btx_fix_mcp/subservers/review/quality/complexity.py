@@ -14,7 +14,7 @@ from pathlib import Path
 from typing import Any
 
 from btx_fix_mcp.tools_venv import get_tool_path
-from btx_fix_mcp.config import get_timeout
+from btx_fix_mcp.config import get_timeout, get_tool_config
 
 from .base import BaseAnalyzer
 
@@ -51,12 +51,32 @@ class ComplexityAnalyzer(BaseAnalyzer):
     def _analyze_file_cyclomatic(self, file_path: str, radon: str, results: list[dict[str, Any]]) -> None:
         """Analyze cyclomatic complexity for a single file."""
         try:
-            timeout = get_timeout("tool_quick", 30)
+            radon_cc_timeout = get_timeout("tool_quick", 30)
+
+            # Get radon config settings
+            radon_config = get_tool_config("radon")
+            show_all = radon_config.get("show_all", True)
+            show_average = radon_config.get("show_average", True)
+            sort_by = radon_config.get("sort_by", "SCORE").upper()
+
+            # Validate sort_by option
+            valid_sort_options = ["SCORE", "LINES", "ALPHA"]
+            if sort_by not in valid_sort_options:
+                sort_by = "SCORE"
+
+            # Build command with config options
+            cmd = [radon, "cc", "-j", "-o", sort_by]
+            if show_all:
+                cmd.append("-a")  # Show all complexity ranks
+            if show_average:
+                cmd.append("-s")  # Show average complexity
+            cmd.append(file_path)
+
             result = subprocess.run(
-                [radon, "cc", "-j", file_path],
+                cmd,
                 capture_output=True,
                 text=True,
-                timeout=timeout,
+                timeout=radon_cc_timeout,
             )
 
             if result.returncode != 0 or not result.stdout.strip():
@@ -105,12 +125,12 @@ class ComplexityAnalyzer(BaseAnalyzer):
     def _analyze_file_maintainability(self, file_path: str, radon: str, results: list[dict[str, Any]]) -> None:
         """Analyze maintainability index for a single file."""
         try:
-            timeout = get_timeout("tool_quick", 30)
+            radon_mi_timeout = get_timeout("tool_quick", 30)
             result = subprocess.run(
                 [radon, "mi", "-j", file_path],
                 capture_output=True,
                 text=True,
-                timeout=timeout,
+                timeout=radon_mi_timeout,
             )
 
             if result.returncode != 0 or not result.stdout.strip():

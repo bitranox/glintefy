@@ -34,6 +34,7 @@ from rich.traceback import Traceback, install as install_rich_traceback
 
 from . import __init__conf__
 from .behaviors import emit_greeting, noop_main, raise_intentional_failure
+from .config import get_config
 
 #: Shared Click context flags for consistent help output.
 CLICK_CONTEXT_SETTINGS = {"help_option_names": ["-h", "--help"]}  # noqa: C408
@@ -296,32 +297,51 @@ def review_perf(ctx: click.Context, no_profiling: bool) -> None:
 def review_profile(ctx: click.Context, command: tuple[str, ...]) -> None:
     """Profile a command and save data for cache analysis.
 
+    The profiling wraps your command with cProfile to capture function-level
+    timing data. This data is then used by the cache subserver to identify
+    which functions are called frequently and would benefit from caching.
+
     Examples:
         python -m btx_fix_mcp review profile -- python my_app.py
         python -m btx_fix_mcp review profile -- pytest tests/
         python -m btx_fix_mcp review profile -- python -m my_module
     """
-    import cProfile
     import subprocess
-    from pathlib import Path
+    import sys
 
     repo_path = ctx.obj["repo_path"]
 
-    # Create profiling output directory
-    output_dir = repo_path / "LLM-CONTEXT" / "btx_fix_mcp" / "review" / "perf"
+    # Get output directory from config
+    config = get_config(start_dir=str(repo_path))
+    review_output_dir = config.get("review", {}).get("output_dir", "LLM-CONTEXT/btx_fix_mcp/review")
+    output_dir = repo_path / review_output_dir / "perf"
     output_dir.mkdir(parents=True, exist_ok=True)
     output_path = output_dir / "test_profile.prof"
 
     console.print(f"[bold cyan]Profiling:[/bold cyan] {' '.join(command)}")
     console.print(f"[dim]Output will be saved to: {output_path}[/dim]\n")
 
-    # Run command with profiling
-    profiler = cProfile.Profile()
-    profiler.enable()
+    # Build the profiled command
+    # If command starts with 'python', replace with profiled version
+    # Otherwise wrap with python -m cProfile
+    cmd_list = list(command)
+
+    if cmd_list[0] in ("python", "python3", sys.executable):
+        # Replace python with profiled version: python -m cProfile -o output ...rest
+        profiled_cmd = [cmd_list[0], "-m", "cProfile", "-o", str(output_path)] + cmd_list[1:]
+    elif cmd_list[0] == "pytest":
+        # pytest is often run directly, wrap it
+        profiled_cmd = [sys.executable, "-m", "cProfile", "-o", str(output_path), "-m", "pytest"] + cmd_list[1:]
+    else:
+        # For other commands, try wrapping with python -m cProfile -m
+        # This works for modules (e.g., `mymodule` -> `python -m cProfile -m mymodule`)
+        profiled_cmd = [sys.executable, "-m", "cProfile", "-o", str(output_path), "-m"] + cmd_list
+
+    console.print(f"[dim]Running: {' '.join(profiled_cmd)}[/dim]\n")
 
     try:
         result = subprocess.run(
-            list(command),
+            profiled_cmd,
             cwd=repo_path,
             capture_output=False,
         )
@@ -329,18 +349,20 @@ def review_profile(ctx: click.Context, command: tuple[str, ...]) -> None:
     except Exception as e:
         console.print(f"[red]Error running command: {e}[/red]")
         exit_code = 1
-    finally:
-        profiler.disable()
-        profiler.dump_stats(output_path)
 
-    if exit_code == 0:
-        console.print(f"\n[green]✓[/green] Profiling complete")
+    # Check if profile was created
+    if output_path.exists():
+        if exit_code == 0:
+            console.print("\n[green]✓[/green] Profiling complete")
+        else:
+            console.print(f"\n[yellow]⚠[/yellow] Command exited with code {exit_code}, but profiling data saved")
+
+        console.print(f"[green]✓[/green] Profile saved to: {output_path}")
+        console.print("\n[bold]Next step:[/bold]")
+        console.print("  python -m btx_fix_mcp review cache")
     else:
-        console.print(f"\n[yellow]⚠[/yellow] Command exited with code {exit_code}, but profiling data saved")
-
-    console.print(f"[green]✓[/green] Profile saved to: {output_path}")
-    console.print("\n[bold]Next step:[/bold]")
-    console.print("  python -m btx_fix_mcp review cache")
+        console.print("\n[red]✗[/red] Profiling failed - no profile data generated")
+        console.print("[dim]Make sure the command is a Python script or module[/dim]")
 
 
 @review_group.command("cache", context_settings=CLICK_CONTEXT_SETTINGS)
@@ -445,6 +467,117 @@ def review_all(ctx: click.Context, mode: str, complexity: int | None, severity: 
         if sub_result:
             sub_status = sub_result.get("status", "N/A")
             console.print(f"\n[bold]{name.title()}[/]: {sub_status}")
+
+
+@review_group.command("clean", context_settings=CLICK_CONTEXT_SETTINGS)
+@click.option(
+    "--subserver",
+    "-s",
+    type=click.Choice(["all", "scope", "quality", "security", "deps", "docs", "perf", "cache", "report", "profile"]),
+    default="all",
+    help="Clean specific subserver output (default: all)",
+)
+@click.option(
+    "--dry-run",
+    is_flag=True,
+    help="Show what would be deleted without actually deleting",
+)
+@click.pass_context
+def review_clean(ctx: click.Context, subserver: str, dry_run: bool) -> None:
+    """Clean analysis output files and cached data.
+
+    Remove old analysis results, profile data, and cached files
+    to start fresh or free up disk space.
+
+    Examples:
+        python -m btx_fix_mcp review clean              # Clean all
+        python -m btx_fix_mcp review clean -s profile   # Clean profile data only
+        python -m btx_fix_mcp review clean -s cache     # Clean cache analysis only
+        python -m btx_fix_mcp review clean --dry-run    # Show what would be deleted
+    """
+    import shutil
+
+    repo_path = ctx.obj["repo_path"]
+
+    # Get output directory from config
+    config = get_config(start_dir=str(repo_path))
+    review_output_dir = config.get("review", {}).get("output_dir", "LLM-CONTEXT/btx_fix_mcp/review")
+    base_dir = repo_path / review_output_dir
+
+    # Map subserver names to directories
+    subserver_dirs = {
+        "scope": base_dir / "scope",
+        "quality": base_dir / "quality",
+        "security": base_dir / "security",
+        "deps": base_dir / "deps",
+        "docs": base_dir / "docs",
+        "perf": base_dir / "perf",
+        "cache": base_dir / "cache",
+        "report": base_dir / "report",
+        "profile": base_dir / "perf" / "test_profile.prof",  # Special case: just the profile file
+    }
+
+    if subserver == "all":
+        targets = [base_dir]
+        target_names = ["all review data"]
+    elif subserver == "profile":
+        # Special handling for profile - just the .prof file
+        targets = [subserver_dirs["profile"]]
+        target_names = ["profile data"]
+    else:
+        targets = [subserver_dirs[subserver]]
+        target_names = [f"{subserver} data"]
+
+    deleted_count = 0
+    total_size = 0
+
+    for target, name in zip(targets, target_names):
+        if not target.exists():
+            console.print(f"[dim]No {name} found at {target}[/dim]")
+            continue
+
+        # Calculate size
+        if target.is_file():
+            size = target.stat().st_size
+            total_size += size
+            size_str = _format_size(size)
+
+            if dry_run:
+                console.print(f"[yellow]Would delete:[/yellow] {target} ({size_str})")
+            else:
+                target.unlink()
+                console.print(f"[green]✓[/green] Deleted {target} ({size_str})")
+                deleted_count += 1
+        else:
+            # Directory
+            size = sum(f.stat().st_size for f in target.rglob("*") if f.is_file())
+            total_size += size
+            size_str = _format_size(size)
+            file_count = sum(1 for f in target.rglob("*") if f.is_file())
+
+            if dry_run:
+                console.print(f"[yellow]Would delete:[/yellow] {target}/ ({file_count} files, {size_str})")
+            else:
+                shutil.rmtree(target)
+                console.print(f"[green]✓[/green] Deleted {target}/ ({file_count} files, {size_str})")
+                deleted_count += 1
+
+    # Summary
+    if dry_run:
+        console.print(f"\n[bold]Dry run complete.[/bold] Would free {_format_size(total_size)}")
+    elif deleted_count > 0:
+        console.print(f"\n[bold green]Cleanup complete.[/bold green] Freed {_format_size(total_size)}")
+    else:
+        console.print("\n[dim]Nothing to clean.[/dim]")
+
+
+def _format_size(size_bytes: int) -> str:
+    """Format byte size to human-readable string."""
+    for unit in ["B", "KB", "MB", "GB"]:
+        if size_bytes < 1024:
+            return f"{size_bytes:.1f} {unit}"
+        size_bytes /= 1024
+    return f"{size_bytes:.1f} TB"
 
 
 def _print_review_result(result: dict) -> None:

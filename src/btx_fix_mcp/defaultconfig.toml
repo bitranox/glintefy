@@ -16,9 +16,6 @@
 # =============================================================================
 
 [general]
-# Working directory for analysis output
-output_dir = "LLM-CONTEXT"
-
 # Log level: DEBUG (10), INFO (20), WARNING (30), ERROR (40), CRITICAL (50)
 log_level = "INFO"
 
@@ -54,6 +51,30 @@ profile_tests = 300       # Test profiling with pytest (5 minutes)
 vuln_scan = 120          # Dependency vulnerability scanning
 
 
+# =============================================================================
+# OUTPUT SETTINGS
+# =============================================================================
+
+[output]
+# Output format: "markdown", "json", "html"
+format = "markdown"
+
+# Colorized terminal output
+color = true
+
+# Progress indicators
+show_progress = true
+
+# Summary style: "brief", "detailed", "verbose"
+summary_style = "detailed"
+
+# JSON output indentation (spaces)
+json_indent = 2
+
+# Chunk size for splitting large issue files
+chunk_size = 50
+
+
 # -----------------------------------------------------------------------------
 # Display Limits for Reports
 # -----------------------------------------------------------------------------
@@ -86,13 +107,6 @@ max_critical_display = 20  # Critical issues in final summary
 max_metrics_display = 5   # Metrics shown per sub-server
 
 
-# -----------------------------------------------------------------------------
-# Output Formatting (merged with output section below)
-# -----------------------------------------------------------------------------
-# json_indent - JSON output indentation (spaces) = 2
-# chunk_size - Chunk size for splitting large issue files = 50
-
-
 # =============================================================================
 # REVIEW ANALYSIS SETTINGS
 # =============================================================================
@@ -102,6 +116,7 @@ max_metrics_display = 5   # Metrics shown per sub-server
 output_dir = "LLM-CONTEXT/btx_fix_mcp/review"
 
 # Sub-servers to run (in order)
+# Available: scope, quality, security, deps, docs, perf, cache
 subservers = ["scope", "quality", "security", "deps", "docs", "perf"]
 
 # Stop on first failure
@@ -121,19 +136,6 @@ mode = "git"
 #   *        - Matches one path component (e.g., "*.py" matches "file.py")
 #   **       - Matches zero or more path components (e.g., "**/test/*" matches at any depth)
 #   ?        - Matches one character
-#
-# Common Patterns:
-#   "*.pyc"           - All .pyc files anywhere
-#   "**/vendor/*"     - Files in vendor/ directory at any depth
-#   "*/scripts/*"     - Files in scripts/ with exactly 1 parent directory
-#   "**/test_*.py"    - Test files at any depth
-#
-# Examples:
-#   Pattern             | Matches                          | Doesn't Match
-#   --------------------|----------------------------------|----------------------------------
-#   "scripts/*"         | scripts/file.py                  | repo/scripts/file.py
-#   "*/scripts/*"       | repo/scripts/file.py             | scripts/file.py, a/b/scripts/file.py
-#   "**/scripts/*"      | All files in any scripts/ dir    | (catches everything)
 #
 exclude_patterns = [
     # Dependency directories
@@ -172,10 +174,14 @@ include_patterns = ["**/*"]
 # Maximum cyclomatic complexity before flagging as issue
 # A = 1-5 (low risk), B = 6-10 (moderate), C = 11-20 (complex), D = 21+ (high risk)
 complexity_threshold = 10
+# Complexity above this is "error" severity, below is "warning"
+complexity_error_threshold = 20
 
 # Minimum maintainability index before flagging as issue
 # A = 20+ (good), B = 10-19 (moderate), C = 0-9 (poor)
 maintainability_threshold = 20
+# Maintainability below this is "error" severity, above is "warning"
+maintainability_error_threshold = 10
 
 # Maximum cognitive complexity threshold
 cognitive_complexity_threshold = 15
@@ -190,8 +196,8 @@ max_nesting_depth = 3
 
 # Enable code duplication detection (via pylint)
 enable_duplication_detection = true
-# Minimum duplicate lines to report
-min_duplicate_lines = 6
+# Minimum duplicate lines to report (>5 lines per old commands spec)
+min_duplicate_lines = 5
 
 # Enable static analysis (Ruff)
 enable_static_analysis = true
@@ -249,11 +255,31 @@ enable_js_analysis = true
 
 # Enable code churn analysis (git history)
 enable_code_churn = true
-# High churn threshold (commits in 90 days)
+# Number of days to look back for churn analysis
+churn_period_days = 90
+# High churn threshold (commits in churn_period_days)
 churn_threshold = 20
 
 # Enable beartype runtime type checking
 enable_beartype = true
+
+
+# -----------------------------------------------------------------------------
+# Radon Integration (for quality analysis)
+# not used at the moment - radon controlled via complexity_threshold above
+# -----------------------------------------------------------------------------
+[review.quality.radon]
+# Enable radon complexity analysis
+enabled = true
+
+# Minimum rank to show: A, B, C, D, E, F
+show_complexity = "A"
+
+# Include closures in complexity calculation
+include_closures = true
+
+# Output format: "json", "text"
+output_format = "json"
 
 
 # -----------------------------------------------------------------------------
@@ -281,70 +307,6 @@ critical_threshold = 1
 
 # Number of medium severity issues to trigger WARNING status
 warning_threshold = 5
-
-
-# -----------------------------------------------------------------------------
-# Pylint Integration (for quality analysis)
-# -----------------------------------------------------------------------------
-[review.quality.pylint]
-# Enable pylint integration
-enabled = true
-
-# Pylint configuration file path (optional, auto-detected if not set)
-config_file = ""
-
-# Minimum pylint score to pass (0-10)
-min_score = 7.0
-
-# Pylint message categories to include
-# Enable: convention (C), refactor (R), warning (W), error (E), fatal (F)
-categories = ["W", "E", "F"]
-
-# Specific pylint checks to disable
-disable = []
-
-# Specific pylint checks to enable
-enable = []
-
-
-# -----------------------------------------------------------------------------
-# Flake8 Integration (for quality analysis)
-# -----------------------------------------------------------------------------
-[review.quality.flake8]
-# Enable flake8 integration
-enabled = true
-
-# Flake8 configuration file path (optional, auto-detected if not set)
-config_file = ""
-
-# Maximum line length
-max_line_length = 88
-
-# Error codes to ignore
-ignore = ["E501", "W503"]
-
-# Error codes to select (empty = all)
-select = []
-
-# Maximum complexity threshold
-max_complexity = 10
-
-
-# -----------------------------------------------------------------------------
-# Radon Integration (for quality analysis)
-# -----------------------------------------------------------------------------
-[review.quality.radon]
-# Enable radon complexity analysis
-enabled = true
-
-# Minimum rank to show: A, B, C, D, E, F
-show_complexity = "A"
-
-# Include closures in complexity calculation
-include_closures = true
-
-# Output format: "json", "text"
-output_format = "json"
 
 
 # -----------------------------------------------------------------------------
@@ -435,6 +397,15 @@ cache_size = 128
 # Minimum cache hit rate % (batch screening threshold)
 hit_rate_threshold = 20.0
 
+# Hit rate below this recommends cache removal
+remove_threshold = 10.0
+
+# Cache usage below this % of maxsize triggers size adjustment recommendation
+size_adjustment_threshold = 50.0
+
+# Minimum suggested maxsize when reducing cache size
+min_suggested_maxsize = 16
+
 # Minimum speedup % (individual validation threshold)
 speedup_threshold = 5.0
 
@@ -450,259 +421,20 @@ test_timeout = 300
 # Number of test runs to average for individual validation (for measurement stability)
 num_runs = 3
 
-
-# =============================================================================
-# FIX ANALYSIS SETTINGS
-# =============================================================================
-
-[fix]
-# Base output directory for fix operations
-output_dir = "LLM-CONTEXT/btx_fix_mcp/fix"
-
-# Enable evidence-based fixing (measure -> fix -> verify)
-evidence_based = true
-
-# Number of verification attempts before accepting fix
-verification_attempts = 3
-
-# Auto-revert on failed verification
-auto_revert = true
-
-
-# -----------------------------------------------------------------------------
-# Fix Scope Settings
-# -----------------------------------------------------------------------------
-[fix.scope]
-# Scope mode for fix operations: "single", "related", "module"
-mode = "single"
-
-# Include related test files
-include_tests = true
-
-# Maximum files to include in fix scope
-max_files = 10
-
-
-# -----------------------------------------------------------------------------
-# Test Runner Settings
-# -----------------------------------------------------------------------------
-[fix.test]
-# Test framework: "pytest", "unittest", "nose"
-framework = "pytest"
-
-# Test command (if not using framework auto-detection)
-command = ""
-
-# Test timeout in seconds
-timeout = 300
-
-# Run tests in parallel
-parallel = true
-
-# Stop on first test failure
-fail_fast = false
-
-# Coverage threshold for pass (percentage, 0 = disabled)
-min_coverage = 0
-
-
-# -----------------------------------------------------------------------------
-# Linter Settings
-# -----------------------------------------------------------------------------
-[fix.lint]
-# Linters to run: "ruff", "pylint", "flake8", "mypy"
-linters = ["ruff", "mypy"]
-
-# Auto-fix safe linting issues
-auto_fix = true
-
-# Fail on any linting error
-strict = false
-
-
-# =============================================================================
-# TOOL-SPECIFIC SETTINGS
-# =============================================================================
-
-# -----------------------------------------------------------------------------
-# Bandit (Security Scanner)
-# -----------------------------------------------------------------------------
-[tools.bandit]
-# Bandit severity levels: 1 (LOW), 2 (MEDIUM), 3 (HIGH)
-min_severity = 1
-
-# Bandit confidence levels: 1 (LOW), 2 (MEDIUM), 3 (HIGH)
-min_confidence = 1
-
-# Output format: "json", "txt", "html", "csv"
-format = "json"
-
-# Recursive scan
-recursive = true
-
-# Number of parallel processes
-processes = 4
-
-
-# -----------------------------------------------------------------------------
-# Radon (Complexity Analyzer)
-# -----------------------------------------------------------------------------
-[tools.radon]
-# Show complexity for all ranks (A through F)
-show_all = true
-
-# Include average complexity in output
-show_average = true
-
-# Sort by: "score", "filename", "line"
-sort_by = "score"
-
-
-# -----------------------------------------------------------------------------
-# Pylint (Code Analyzer)
-# -----------------------------------------------------------------------------
-[tools.pylint]
-# Jobs for parallel execution (0 = auto)
-jobs = 0
-
-# Output format: "text", "json", "colorized"
-output_format = "json"
-
-# Reports to generate
-reports = false
-
-# Maximum line length
-max_line_length = 88
-
-# Good variable names (regex)
-good_names = ["i", "j", "k", "ex", "Run", "_", "id", "pk"]
-
-
-# -----------------------------------------------------------------------------
-# Flake8 (Style Checker)
-# -----------------------------------------------------------------------------
-[tools.flake8]
-# Maximum line length
-max_line_length = 88
-
-# Maximum doc line length
-max_doc_length = 88
-
-# Indent size
-indent_size = 4
-
-# Output format
-format = "default"
-
-
-# -----------------------------------------------------------------------------
-# Ruff (Fast Linter)
-# -----------------------------------------------------------------------------
-[tools.ruff]
-# Line length
-line_length = 88
-
-# Target Python version
-target_version = "py313"
-
-# Rules to enable (use "ALL" for all rules)
-select = ["E", "F", "W", "I", "N", "UP", "B", "C4", "SIM"]
-
-# Rules to ignore
-ignore = ["E501"]
-
-# Auto-fix
-fix = true
-
-# Unsafe fixes allowed
-unsafe_fixes = false
-
-
-# -----------------------------------------------------------------------------
-# MyPy (Type Checker)
-# -----------------------------------------------------------------------------
-[tools.mypy]
-# Python version
-python_version = "3.13"
-
-# Strict mode
-strict = false
-
-# Ignore missing imports
-ignore_missing_imports = true
-
-# Show error codes
-show_error_codes = true
-
-# Pretty output
-pretty = true
-
-
-# -----------------------------------------------------------------------------
-# Black (Formatter)
-# -----------------------------------------------------------------------------
-[tools.black]
-# Line length
-line_length = 88
-
-# Target Python versions
-target_version = ["py313"]
-
-# String normalization
-skip_string_normalization = false
-
-# Magic trailing comma
-skip_magic_trailing_comma = false
-
-
-# -----------------------------------------------------------------------------
-# Pytest (Test Runner)
-# -----------------------------------------------------------------------------
-[tools.pytest]
-# Test paths
-testpaths = ["tests"]
-
-# Python files pattern
-python_files = ["test_*.py", "*_test.py"]
-
-# Python classes pattern
-python_classes = ["Test*"]
-
-# Python functions pattern
-python_functions = ["test_*"]
-
-# Minimum coverage percentage
-cov_fail_under = 80
-
-# Coverage report format
-cov_report = ["term-missing", "html"]
-
-# Markers to run
-markers = []
-
-# Plugins to disable
-disabled_plugins = []
-
-
-# =============================================================================
-# GIT SETTINGS
-# =============================================================================
-
-[git]
-# Commit message prefix for automated commits
-commit_prefix = "[btx-fix]"
-
-# Auto-commit fixes
-auto_commit = false
-
-# Sign commits with GPG
-sign_commits = false
-
-# Create branch for fixes
-create_branch = false
-
-# Branch name template
-branch_template = "fix/{issue_id}"
+# Maximum age of profiling data in hours before warning
+# Profile data older than this triggers a warning that the data may be stale
+# The cache subserver also validates that profiled functions still exist in the code
+max_profile_age_hours = 24.0
+
+# Priority thresholds for hotspot analysis
+# HIGH priority: call_count >= high_priority_calls AND cumtime >= high_priority_time AND indicators >= high_priority_indicators
+high_priority_calls = 500
+high_priority_time = 1.0
+high_priority_indicators = 2
+
+# MEDIUM priority: call_count >= medium_priority_calls OR cumtime >= medium_priority_time
+medium_priority_calls = 200
+medium_priority_time = 0.5
 
 
 # =============================================================================
@@ -827,7 +559,7 @@ verdict_warning = "⚠️ ACCEPTABLE - Minor optimization opportunities"
 verdict_needs_work = "🔧 SLOW - Performance issues require attention"
 verdict_reject = "❌ UNACCEPTABLE - Critical performance problems"
 
-# --- Deps Mindset ---
+
 [review.mindsets.deps]
 role = "paranoid dependency auditor"
 traits = ["vigilant", "risk-averse", "thorough"]
@@ -855,9 +587,6 @@ verdict_needs_work = "🔧 ACTION NEEDED - Security patches required"
 verdict_reject = "❌ VULNERABLE - Critical security issues found"
 
 
-# -----------------------------------------------------------------------------
-# Cache Optimization Mindset
-# -----------------------------------------------------------------------------
 [review.mindsets.cache]
 role = "cache optimization reviewer"
 traits = ["skeptical", "evidence-driven", "data-obsessed"]
@@ -891,20 +620,14 @@ verdict_reject = "❌ NO ANALYSIS - Missing profiling data or pure functions"
 # The MCP server can use an internal LLM client for classification, analysis,
 # and verification tasks. This is SEPARATE from the caller's context and does
 # not affect the user's token budget or conversation history.
-#
-# Architecture:
-#   Claude Desktop (caller) → MCP Server → Internal LLM Client (isolated)
-#                                    ↓
-#                              Structured results only
 
 [llm]
 # Enable internal LLM usage for analysis enhancement
 # When disabled, the server falls back to rule-based analysis
 enable_internal_llm = false
 
-# Anthropic API key (leave empty to read from environment)
-# Priority: config > BTX_FIX_MCP_ANTHROPIC_API_KEY > ANTHROPIC_API_KEY
-anthropic_api_key = ""
+# LLM provider: "anthropic", "openai", "ollama", "openai_compatible"
+provider = "anthropic"
 
 # Model for complex analysis (reasoning, suggestions, verification)
 model = "claude-3-5-sonnet-20241022"
@@ -947,27 +670,253 @@ analyze_patterns = false
 
 
 # =============================================================================
-# OUTPUT SETTINGS
+# FIX ANALYSIS SETTINGS
+# not used at the moment - fix server not yet implemented
 # =============================================================================
 
-[output]
-# Output format: "markdown", "json", "html"
-format = "markdown"
+[fix]
+# Base output directory for fix operations
+output_dir = "LLM-CONTEXT/btx_fix_mcp/fix"
 
-# Colorized terminal output
-color = true
+# Enable evidence-based fixing (measure -> fix -> verify)
+evidence_based = true
 
-# Progress indicators
-show_progress = true
+# Number of verification attempts before accepting fix
+verification_attempts = 3
 
-# Summary style: "brief", "detailed", "verbose"
-summary_style = "detailed"
+# Auto-revert on failed verification
+auto_revert = true
 
-# Maximum issues to display in summary (deprecated - use output.display.max_critical_display)
-max_issues_display = 50
 
-# JSON output indentation (spaces)
-json_indent = 2
+# -----------------------------------------------------------------------------
+# Fix Scope Settings
+# not used at the moment - fix server not yet implemented
+# -----------------------------------------------------------------------------
+[fix.scope]
+# Scope mode for fix operations: "single", "related", "module"
+mode = "single"
 
-# Chunk size for splitting large issue files
-chunk_size = 50
+# Include related test files
+include_tests = true
+
+# Maximum files to include in fix scope
+max_files = 10
+
+
+# -----------------------------------------------------------------------------
+# Test Runner Settings
+# not used at the moment - fix server not yet implemented
+# -----------------------------------------------------------------------------
+[fix.test]
+# Test framework: "pytest", "unittest", "nose"
+framework = "pytest"
+
+# Test command (if not using framework auto-detection)
+command = ""
+
+# Test timeout in seconds
+timeout = 300
+
+# Run tests in parallel
+parallel = true
+
+# Stop on first test failure
+fail_fast = false
+
+# Coverage threshold for pass (percentage, 0 = disabled)
+min_coverage = 0
+
+
+# -----------------------------------------------------------------------------
+# Linter Settings
+# not used at the moment - fix server not yet implemented
+# -----------------------------------------------------------------------------
+[fix.lint]
+# Linters to run: "ruff", "pylint", "flake8", "mypy"
+linters = ["ruff", "mypy"]
+
+# Auto-fix safe linting issues
+auto_fix = true
+
+# Fail on any linting error
+strict = false
+
+
+# =============================================================================
+# TOOL-SPECIFIC SETTINGS
+# not used at the moment - tools use their own config files or hardcoded defaults
+# These settings are reserved for future direct tool invocation
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# Bandit (Security Scanner)
+# not used at the moment - bandit invoked with hardcoded args in security.py
+# -----------------------------------------------------------------------------
+[tools.bandit]
+# Bandit severity levels: 1 (LOW), 2 (MEDIUM), 3 (HIGH)
+min_severity = 1
+
+# Bandit confidence levels: 1 (LOW), 2 (MEDIUM), 3 (HIGH)
+min_confidence = 1
+
+# Output format: "json", "txt", "html", "csv"
+format = "json"
+
+# Recursive scan
+recursive = true
+
+# Number of parallel processes
+processes = 4
+
+
+# -----------------------------------------------------------------------------
+# Radon (Complexity Analyzer)
+# Used by ComplexityAnalyzer for cyclomatic complexity analysis
+# -----------------------------------------------------------------------------
+[tools.radon]
+# Show complexity for all ranks (A through F)
+show_all = true
+
+# Include average complexity in output
+show_average = true
+
+# Sort results by: "SCORE" (complexity), "LINES" (line number), "ALPHA" (alphabetical)
+sort_by = "SCORE"
+
+
+# -----------------------------------------------------------------------------
+# Pylint Duplication Detection
+# Only used for duplicate-code detection (R0801), not full pylint analysis
+# -----------------------------------------------------------------------------
+[tools.pylint]
+# Ignore comments when computing similarities
+ignore_comments = true
+
+# Ignore docstrings when computing similarities
+ignore_docstrings = true
+
+# Ignore imports when computing similarities
+ignore_imports = true
+
+# Ignore function signatures when computing similarities
+ignore_signatures = true
+
+
+# -----------------------------------------------------------------------------
+# Ruff (Fast Linter)
+# Used by StaticAnalyzer for linting and style checks
+# -----------------------------------------------------------------------------
+[tools.ruff]
+# Line length
+line_length = 88
+
+# Target Python version
+target_version = "py313"
+
+# Rules to enable (use "ALL" for all rules)
+select = ["E", "F", "W", "I", "N", "UP", "B", "C4", "SIM"]
+
+# Rules to ignore
+ignore = ["E501"]
+
+# Auto-fix
+fix = true
+
+# Unsafe fixes allowed
+unsafe_fixes = false
+
+
+# -----------------------------------------------------------------------------
+# MyPy (Type Checker)
+# Used by TypeAnalyzer for type coverage analysis
+# -----------------------------------------------------------------------------
+[tools.mypy]
+# Python version
+python_version = "3.13"
+
+# Strict mode
+strict = false
+
+# Ignore missing imports
+ignore_missing_imports = true
+
+# Show error codes
+show_error_codes = true
+
+# Pretty output
+pretty = true
+
+
+# -----------------------------------------------------------------------------
+# Black (Formatter)
+# not used at the moment - black not invoked by any subserver
+# -----------------------------------------------------------------------------
+[tools.black]
+# Line length
+line_length = 88
+
+# Target Python versions
+target_version = ["py313"]
+
+# String normalization
+skip_string_normalization = false
+
+# Magic trailing comma
+skip_magic_trailing_comma = false
+
+
+# -----------------------------------------------------------------------------
+# Pytest (Test Runner)
+# Used by cache validation and runtime type checking
+# -----------------------------------------------------------------------------
+[tools.pytest]
+# Test paths
+testpaths = ["tests"]
+
+# Python files pattern
+python_files = ["test_*.py", "*_test.py"]
+
+# Python classes pattern
+python_classes = ["Test*"]
+
+# Python functions pattern
+python_functions = ["test_*"]
+
+# Minimum coverage percentage
+cov_fail_under = 80
+
+# Coverage report format
+cov_report = ["term-missing", "html"]
+
+# Markers to run
+markers = []
+
+# Plugins to disable
+disabled_plugins = []
+
+
+# =============================================================================
+# GIT SETTINGS
+# Used by GitOperations for automated commits and branch management
+# =============================================================================
+
+[git]
+# Commit message prefix for automated commits
+# Prepended to all commit messages created by btx-fix
+commit_prefix = "[btx-fix]"
+
+# Auto-commit fixes after successful verification
+# When enabled, fixes are automatically committed without user confirmation
+auto_commit = false
+
+# Sign commits with GPG (-S flag)
+# Requires GPG to be configured in git
+sign_commits = false
+
+# Create a new branch for fixes before making changes
+# Uses branch_template to generate branch name
+create_branch = false
+
+# Branch name template for fix branches
+# {issue_id} is replaced with the issue identifier
+branch_template = "fix/{issue_id}"

@@ -319,12 +319,12 @@ class DepsSubServer(BaseSubServer):
         if project_type == "python":
             try:
                 python_path = get_tool_path("python")
-                timeout = get_timeout("tool_analysis", 60, start_dir=str(self.repo_path))
+                pip_licenses_timeout = get_timeout("tool_analysis", 60, start_dir=str(self.repo_path))
                 result = subprocess.run(
                     [str(python_path), "-m", "pip_licenses", "--format=json"],
                     capture_output=True,
                     text=True,
-                    timeout=timeout,
+                    timeout=pip_licenses_timeout,
                 )
                 if result.stdout.strip():
                     licenses = json.loads(result.stdout)
@@ -341,12 +341,12 @@ class DepsSubServer(BaseSubServer):
 
         if project_type == "python":
             try:
-                timeout = get_timeout("tool_quick", 30, start_dir=str(self.repo_path))
+                pip_list_timeout = get_timeout("tool_quick", 30, start_dir=str(self.repo_path))
                 result = subprocess.run(
                     ["pip", "list", "--format=json"],
                     capture_output=True,
                     text=True,
-                    timeout=timeout,
+                    timeout=pip_list_timeout,
                 )
                 if result.stdout.strip():
                     packages = json.loads(result.stdout)

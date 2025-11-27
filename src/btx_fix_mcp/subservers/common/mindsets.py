@@ -235,9 +235,7 @@ def evaluate_results(
 
     critical_ratio, warning_ratio = _calculate_issue_ratios(critical_count, warning_count, total_items)
     crit_threshold, warn_threshold = _get_effective_thresholds(mindset, thresholds)
-    verdict, verdict_text = _determine_verdict(
-        critical_count, warning_count, critical_ratio, warning_ratio, crit_threshold, warn_threshold, mindset
-    )
+    verdict, verdict_text = _determine_verdict(critical_count, warning_count, critical_ratio, warning_ratio, crit_threshold, warn_threshold, mindset)
     findings = _generate_findings(critical_count, warning_count, critical_ratio, warning_ratio)
     recommendations = _generate_recommendations(verdict, mindset)
 

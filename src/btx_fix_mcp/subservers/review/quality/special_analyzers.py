@@ -6,7 +6,7 @@ from logging import Logger
 from pathlib import Path
 from typing import Any
 
-from btx_fix_mcp.config import get_timeout
+from btx_fix_mcp.config import get_timeout, get_tool_config
 
 
 class JavaScriptAnalyzer:
@@ -36,12 +36,12 @@ class JavaScriptAnalyzer:
             return results
 
         try:
-            timeout = get_timeout("tool_analysis", 60)
+            eslint_timeout = get_timeout("tool_analysis", 60)
             result = subprocess.run(
                 ["eslint", "--format=json"] + files,
                 capture_output=True,
                 text=True,
-                timeout=timeout,
+                timeout=eslint_timeout,
             )
             results["raw_output"] = result.stdout
 
@@ -100,12 +100,12 @@ class BeartypeAnalyzer:
 
         try:
             # Check if beartype is available
-            timeout = get_timeout("git_log", 10)
+            beartype_check_timeout = get_timeout("git_log", 10)
             beartype_check = subprocess.run(
                 ["python", "-c", "import beartype; print('available')"],
                 capture_output=True,
                 text=True,
-                timeout=timeout,
+                timeout=beartype_check_timeout,
             )
             if beartype_check.returncode != 0:
                 self.logger.info("Beartype not installed, skipping runtime type check")
@@ -115,13 +115,23 @@ class BeartypeAnalyzer:
 
             results["raw_output"] = "Beartype available\n"
 
+            # Get pytest config settings
+            pytest_config = get_tool_config("pytest")
+            testpaths = pytest_config.get("testpaths", ["tests"])
+            test_path = testpaths[0] if testpaths else "tests"
+
+            # Build pytest command
+            pytest_cmd = ["python", "-m", "pytest", test_path, "-x", "--tb=short", "-q"]
+            if pytest_config.get("fail_fast", False):
+                pass  # Already have -x
+
             # Run actual test suite
-            timeout = get_timeout("git_log", 10)
+            pytest_beartype_timeout = get_timeout("git_log", 10)
             test_result = subprocess.run(
-                ["python", "-m", "pytest", "tests/", "-x", "--tb=short", "-q"],
+                pytest_cmd,
                 capture_output=True,
                 text=True,
-                timeout=timeout,
+                timeout=pytest_beartype_timeout,
                 cwd=str(self.repo_path),
             )
             results["raw_output"] += test_result.stdout + test_result.stderr

@@ -2,7 +2,7 @@
 
 import sys
 from pathlib import Path
-from unittest.mock import patch
+from unittest.mock import MagicMock, patch
 
 import pytest
 
@@ -179,8 +179,8 @@ class TestEnsureToolsVenvMocked:
             module._venv_initialized = original_initialized
             module._venv_path = original_path
 
-    def test_ensure_tools_venv_skip_if_disk_initialized(self, tmp_path):
-        """Test skips creation when already on disk."""
+    def test_ensure_tools_venv_upgrades_existing(self, tmp_path):
+        """Test upgrades tools in existing venv."""
         import btx_fix_mcp.tools_venv as module
 
         original_initialized = module._venv_initialized
@@ -188,11 +188,22 @@ class TestEnsureToolsVenvMocked:
         try:
             module._venv_initialized = False
 
+            # Mock all subprocess calls and dependencies
             with patch("btx_fix_mcp.tools_venv.get_venv_path", return_value=tmp_path):
-                with patch("btx_fix_mcp.tools_venv.is_venv_initialized", return_value=True):
-                    result = module.ensure_tools_venv()
-                    assert result == tmp_path
-                    assert module._venv_initialized is True
+                with patch("btx_fix_mcp.tools_venv._find_python", return_value=sys.executable):
+                    with patch("btx_fix_mcp.tools_venv._install_uv_if_needed", return_value=Path("/usr/bin/uv")):
+                        with patch("subprocess.run") as mock_run:
+                            mock_run.return_value = MagicMock(returncode=0)
+                            # Create marker to simulate existing venv
+                            tmp_path.mkdir(exist_ok=True)
+
+                            result = module.ensure_tools_venv()
+
+                            assert result == tmp_path
+                            assert module._venv_initialized is True
+                            # Verify upgrade was called with --upgrade flag
+                            install_calls = [c for c in mock_run.call_args_list if "--upgrade" in str(c)]
+                            assert len(install_calls) > 0, "Should have called install with --upgrade"
         finally:
             module._venv_initialized = original_initialized
 

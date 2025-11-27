@@ -9,6 +9,7 @@ from btx_fix_mcp.subservers.review.quality.issues import (
     ThresholdIssue,
     _add_architecture_issues,
     _add_cognitive_issues,
+    _add_complexity_issues,
     _add_coverage_issues,
     _add_duplication_issues,
     _add_function_issues,
@@ -66,6 +67,42 @@ class TestIssueDataclasses:
         assert d["rule"] == "E501"
 
 
+class TestAddComplexityIssues:
+    """Tests for _add_complexity_issues."""
+
+    def test_add_high_complexity_warning(self):
+        """Test adding high complexity warning."""
+        issues = []
+        results = {"complexity": [{"file": "test.py", "name": "func", "complexity": 15, "line": 10}]}
+        _add_complexity_issues(issues, results, threshold=10, error_threshold=20)
+        assert len(issues) == 1
+        assert issues[0]["severity"] == "warning"
+
+    def test_add_high_complexity_error(self):
+        """Test adding high complexity error for very high complexity."""
+        issues = []
+        results = {"complexity": [{"file": "test.py", "name": "func", "complexity": 25, "line": 10}]}
+        _add_complexity_issues(issues, results, threshold=10, error_threshold=20)
+        assert len(issues) == 1
+        assert issues[0]["severity"] == "error"
+
+    def test_no_issue_below_threshold(self):
+        """Test no issue when below threshold."""
+        issues = []
+        results = {"complexity": [{"file": "test.py", "name": "func", "complexity": 5, "line": 10}]}
+        _add_complexity_issues(issues, results, threshold=10, error_threshold=20)
+        assert len(issues) == 0
+
+    def test_error_threshold_configurable(self):
+        """Test that error threshold is configurable."""
+        issues = []
+        # Complexity of 12 with error_threshold of 10 should be error
+        results = {"complexity": [{"file": "test.py", "name": "func", "complexity": 12, "line": 10}]}
+        _add_complexity_issues(issues, results, threshold=5, error_threshold=10)
+        assert len(issues) == 1
+        assert issues[0]["severity"] == "error"
+
+
 class TestAddMaintainabilityIssues:
     """Tests for _add_maintainability_issues."""
 
@@ -73,7 +110,7 @@ class TestAddMaintainabilityIssues:
         """Test adding low maintainability warning."""
         issues = []
         results = {"maintainability": [{"file": "test.py", "mi": 15}]}
-        _add_maintainability_issues(issues, results, threshold=20)
+        _add_maintainability_issues(issues, results, threshold=20, error_threshold=10)
         assert len(issues) == 1
         assert issues[0]["severity"] == "warning"
 
@@ -81,7 +118,7 @@ class TestAddMaintainabilityIssues:
         """Test adding low maintainability error for very low MI."""
         issues = []
         results = {"maintainability": [{"file": "test.py", "mi": 5}]}
-        _add_maintainability_issues(issues, results, threshold=20)
+        _add_maintainability_issues(issues, results, threshold=20, error_threshold=10)
         assert len(issues) == 1
         assert issues[0]["severity"] == "error"
 
@@ -89,8 +126,17 @@ class TestAddMaintainabilityIssues:
         """Test no issue when above threshold."""
         issues = []
         results = {"maintainability": [{"file": "test.py", "mi": 25}]}
-        _add_maintainability_issues(issues, results, threshold=20)
+        _add_maintainability_issues(issues, results, threshold=20, error_threshold=10)
         assert len(issues) == 0
+
+    def test_error_threshold_configurable(self):
+        """Test that error threshold is configurable."""
+        issues = []
+        # MI of 15 with error_threshold of 20 should be error
+        results = {"maintainability": [{"file": "test.py", "mi": 15}]}
+        _add_maintainability_issues(issues, results, threshold=25, error_threshold=20)
+        assert len(issues) == 1
+        assert issues[0]["severity"] == "error"
 
 
 class TestAddFunctionIssues:

@@ -15,7 +15,6 @@ from btx_fix_mcp.subservers.base import BaseSubServer, SubServerResult
 from btx_fix_mcp.subservers.common.chunked_writer import cleanup_chunked_issues, write_chunked_issues
 from btx_fix_mcp.subservers.common.logging import debug_log, get_mcp_logger, log_debug, setup_logger
 from btx_fix_mcp.subservers.review.cache.batch_screener import BatchScreener
-from btx_fix_mcp.subservers.review.cache.cache_models import CacheRecommendation
 from btx_fix_mcp.subservers.review.cache.hotspot_analyzer import HotspotAnalyzer
 from btx_fix_mcp.subservers.review.cache.individual_validator import IndividualValidator
 from btx_fix_mcp.subservers.review.cache.pure_function_detector import PureFunctionDetector
@@ -36,6 +35,7 @@ class CacheSubServer(BaseSubServer):
         min_cumtime: float | None = None,
         test_timeout: int | None = None,
         num_runs: int | None = None,
+        max_profile_age_hours: float | None = None,
         mcp_mode: bool = False,
     ):
         """Initialize cache sub-server.
@@ -51,6 +51,7 @@ class CacheSubServer(BaseSubServer):
             min_cumtime: Minimum cumtime for hotspot (default: 0.1)
             test_timeout: Test suite timeout in seconds (default: 300)
             num_runs: Number of runs to average (default: 3)
+            max_profile_age_hours: Max age for profile data in hours (default: 24)
             mcp_mode: Enable MCP logging mode
         """
         super().__init__(name="cache", input_dir=input_dir, output_dir=output_dir)
@@ -66,21 +67,40 @@ class CacheSubServer(BaseSubServer):
         # Apply config with constructor overrides
         self.cache_size = cache_size or cache_config.get("cache_size", 128)
         self.hit_rate_threshold = hit_rate_threshold or cache_config.get("hit_rate_threshold", 20.0)
+        self.remove_threshold = cache_config.get("remove_threshold", 10.0)
+        self.size_adjustment_threshold = cache_config.get("size_adjustment_threshold", 50.0)
+        self.min_suggested_maxsize = cache_config.get("min_suggested_maxsize", 16)
         self.speedup_threshold = speedup_threshold or cache_config.get("speedup_threshold", 5.0)
         self.min_calls = min_calls or cache_config.get("min_calls", 100)
         self.min_cumtime = min_cumtime or cache_config.get("min_cumtime", 0.1)
         self.test_timeout = test_timeout or cache_config.get("test_timeout", 300)
         self.num_runs = num_runs or cache_config.get("num_runs", 3)
+        self.max_profile_age_hours = max_profile_age_hours or cache_config.get("max_profile_age_hours", 24.0)
+
+        # Priority thresholds for hotspot analysis
+        self.high_priority_calls = cache_config.get("high_priority_calls", 500)
+        self.high_priority_time = cache_config.get("high_priority_time", 1.0)
+        self.high_priority_indicators = cache_config.get("high_priority_indicators", 2)
+        self.medium_priority_calls = cache_config.get("medium_priority_calls", 200)
+        self.medium_priority_time = cache_config.get("medium_priority_time", 0.5)
 
         # Initialize analyzers
         self.pure_detector = PureFunctionDetector()
         self.hotspot_analyzer = HotspotAnalyzer(
             min_calls=self.min_calls,
             min_cumtime=self.min_cumtime,
+            high_priority_calls=self.high_priority_calls,
+            high_priority_time=self.high_priority_time,
+            high_priority_indicators=self.high_priority_indicators,
+            medium_priority_calls=self.medium_priority_calls,
+            medium_priority_time=self.medium_priority_time,
         )
         self.batch_screener = BatchScreener(
             cache_size=self.cache_size,
             hit_rate_threshold=self.hit_rate_threshold,
+            remove_threshold=self.remove_threshold,
+            size_adjustment_threshold=self.size_adjustment_threshold,
+            min_suggested_maxsize=self.min_suggested_maxsize,
             test_timeout=self.test_timeout,
             logger=self._logger,
         )
@@ -97,6 +117,110 @@ class CacheSubServer(BaseSubServer):
             return get_mcp_logger(f"btx_fix_mcp.{name}")
         else:
             return setup_logger(name, log_file=None, level=20)
+
+    def _check_profile_freshness(self, prof_file: Path) -> tuple[bool, float, str]:
+        """Check if profiling data is fresh enough to use.
+
+        Args:
+            prof_file: Path to the .prof file
+
+        Returns:
+            Tuple of (is_fresh, age_hours, warning_message)
+            - is_fresh: True if file is within max_profile_age_hours
+            - age_hours: Age of file in hours
+            - warning_message: Warning if stale, empty string if fresh
+        """
+        import time
+
+        if not prof_file.exists():
+            return False, 0.0, ""
+
+        file_mtime = prof_file.stat().st_mtime
+        current_time = time.time()
+        age_seconds = current_time - file_mtime
+        age_hours = age_seconds / 3600
+
+        if age_hours > self.max_profile_age_hours:
+            warning = (
+                f"Profile data is {age_hours:.1f} hours old "
+                f"(threshold: {self.max_profile_age_hours} hours). "
+                f"Delete with: `python -m btx_fix_mcp review clean -s profile` "
+                f"then regenerate with: `python -m btx_fix_mcp review profile -- pytest tests/`"
+            )
+            return False, age_hours, warning
+
+        return True, age_hours, ""
+
+    def _validate_profile_against_code(
+        self,
+        prof_file: Path,
+        python_files: list[Path],
+    ) -> tuple[int, int, list[str]]:
+        """Validate that profiled functions exist in current codebase.
+
+        Compares functions in the profile data against actual functions in the code
+        to detect if the profile is outdated (profiled functions no longer exist).
+
+        Args:
+            prof_file: Path to the .prof file
+            python_files: List of Python files in the codebase
+
+        Returns:
+            Tuple of (matched_count, orphan_count, orphan_warnings)
+            - matched_count: Functions found in both profile and code
+            - orphan_count: Functions in profile but not in code
+            - orphan_warnings: Warning messages for orphaned functions
+        """
+        import ast
+        import pstats
+
+        if not prof_file.exists():
+            return 0, 0, []
+
+        # Load profile stats
+        try:
+            stats = pstats.Stats(str(prof_file))
+        except Exception:
+            return 0, 0, []
+
+        # Extract function names and files from profile
+        profiled_functions = set()
+        for (filename, _line, func_name), _ in stats.stats.items():
+            # Skip builtins and libraries
+            if "<" in filename or "site-packages" in filename:
+                continue
+            if "/lib/python" in filename or "/lib64/python" in filename:
+                continue
+            profiled_functions.add((Path(filename).name, func_name))
+
+        if not profiled_functions:
+            return 0, 0, []
+
+        # Extract function names from current code
+        current_functions = set()
+        for py_file in python_files:
+            try:
+                content = py_file.read_text()
+                tree = ast.parse(content)
+                for node in ast.walk(tree):
+                    if isinstance(node, ast.FunctionDef):
+                        current_functions.add((py_file.name, node.name))
+            except Exception:
+                continue
+
+        # Find matches and orphans
+        matched = profiled_functions & current_functions
+        orphans = profiled_functions - current_functions
+
+        # Generate warnings for orphaned functions (max 5)
+        orphan_warnings = []
+        for filename, func_name in list(orphans)[:5]:
+            orphan_warnings.append(f"Profiled function '{func_name}' in '{filename}' no longer exists in codebase")
+
+        if len(orphans) > 5:
+            orphan_warnings.append(f"... and {len(orphans) - 5} more orphaned functions")
+
+        return len(matched), len(orphans), orphan_warnings
 
     def validate_inputs(self) -> tuple[bool, list[str]]:
         """Validate inputs for cache analysis.
@@ -130,7 +254,7 @@ class CacheSubServer(BaseSubServer):
 
         try:
             # Stage 1: Identify pure functions and existing caches
-            pure_candidates, existing_caches = self._identify_pure_functions()
+            pure_candidates, existing_caches, python_files = self._identify_pure_functions()
             log_debug(self._logger, f"Found {len(pure_candidates)} pure function candidates")
             log_debug(self._logger, f"Found {len(existing_caches)} existing caches")
 
@@ -141,13 +265,14 @@ class CacheSubServer(BaseSubServer):
                 log_debug(self._logger, f"Evaluated {len(existing_evaluations)} existing caches")
 
             # Stage 2: Cross-reference with profiling data
-            cache_candidates = self._cross_reference_hotspots(pure_candidates)
+            cache_candidates, profile_warnings = self._cross_reference_hotspots(pure_candidates, python_files)
             log_debug(self._logger, f"Found {len(cache_candidates)} cache candidates (pure + hot)")
 
             if not cache_candidates and not existing_evaluations:
                 return self._create_empty_result(
                     "No cache candidates found (no pure functions that are also hotspots) and no existing caches to evaluate",
                     pure_candidates=pure_candidates,
+                    profile_warnings=profile_warnings,
                 )
 
             # Stage 3A: Batch screening (only for new candidates)
@@ -171,6 +296,7 @@ class CacheSubServer(BaseSubServer):
                 screening_results,
                 validation_results,
                 existing_evaluations,
+                profile_warnings=profile_warnings,
             )
 
         except Exception as e:
@@ -183,16 +309,16 @@ class CacheSubServer(BaseSubServer):
                 errors=[str(e)],
             )
 
-    def _identify_pure_functions(self) -> tuple[list, list]:
+    def _identify_pure_functions(self) -> tuple[list, list, list[Path]]:
         """Stage 1: AST-based pure function detection.
 
         Returns:
-            Tuple of (new_candidates, existing_caches)
+            Tuple of (new_candidates, existing_caches, python_files)
         """
         # Read files from scope
         files_list = self.input_dir / "files_to_review.txt"
         if not files_list.exists():
-            return ([], [])
+            return ([], [], [])
 
         python_files = []
         for line in files_list.read_text().splitlines():
@@ -211,17 +337,48 @@ class CacheSubServer(BaseSubServer):
             all_new_candidates.extend(new_candidates)
             all_existing_caches.extend(existing_caches)
 
-        return (all_new_candidates, all_existing_caches)
+        return (all_new_candidates, all_existing_caches, python_files)
 
-    def _cross_reference_hotspots(self, pure_candidates: list) -> list:
-        """Stage 2: Cross-reference with profiling data."""
-        # Look for profiling data from perf sub-server
+    def _cross_reference_hotspots(
+        self,
+        pure_candidates: list,
+        python_files: list[Path],
+    ) -> tuple[list, list[str]]:
+        """Stage 2: Cross-reference with profiling data.
+
+        Args:
+            pure_candidates: Pure function candidates from AST analysis
+            python_files: List of Python files in the codebase
+
+        Returns:
+            Tuple of (cache_candidates, warnings)
+            - cache_candidates: List of candidates that are pure AND hot
+            - warnings: List of warning messages (stale profile, orphaned functions)
+        """
         prof_file = self.input_dir.parent / "perf" / "test_profile.prof"
+        warnings = []
 
         if not prof_file.exists():
-            # No profiling data - return empty
             log_debug(self._logger, f"No profiling data found at {prof_file}")
-            return []
+            return [], []
+
+        # Check profile age freshness
+        is_fresh, age_hours, stale_warning = self._check_profile_freshness(prof_file)
+        if not is_fresh:
+            self._logger.warning(stale_warning)
+            warnings.append(stale_warning)
+
+        log_debug(self._logger, f"Profile data age: {age_hours:.1f} hours (fresh: {is_fresh})")
+
+        # Check profile data matches current code
+        matched, orphans, orphan_warnings = self._validate_profile_against_code(prof_file, python_files)
+        if orphans > 0:
+            orphan_summary = f"Profile contains {orphans} functions that no longer exist in codebase (matched: {matched}). Profile may be outdated."
+            self._logger.warning(orphan_summary)
+            warnings.append(orphan_summary)
+            warnings.extend(orphan_warnings)
+
+        log_debug(self._logger, f"Profile validation: {matched} matched, {orphans} orphaned")
 
         hotspots = self.hotspot_analyzer.analyze_profile(prof_file)
         log_debug(self._logger, f"Found {len(hotspots)} hotspots from profiling")
@@ -231,7 +388,7 @@ class CacheSubServer(BaseSubServer):
             hotspots,
         )
 
-        return cache_candidates
+        return cache_candidates, warnings
 
     def _batch_screen(self, candidates: list) -> list:
         """Stage 3A: Batch screening."""
@@ -261,7 +418,19 @@ class CacheSubServer(BaseSubServer):
         )
         return results
 
-    def _save_base_analysis(self, pure_count=0, candidates_count=0, screened_count=0, passed_count=0, validated_count=0, recs_count=0, existing_count=0, keep_count=0, remove_count=0, adjust_count=0) -> dict:
+    def _save_base_analysis(
+        self,
+        pure_count=0,
+        candidates_count=0,
+        screened_count=0,
+        passed_count=0,
+        validated_count=0,
+        recs_count=0,
+        existing_count=0,
+        keep_count=0,
+        remove_count=0,
+        adjust_count=0,
+    ) -> dict:
         """Save base analysis file and return artifacts dict."""
         artifacts = {}
 
@@ -290,14 +459,25 @@ class CacheSubServer(BaseSubServer):
 
         return artifacts
 
-    def _create_empty_result(self, reason: str, pure_candidates: list = None) -> SubServerResult:
+    def _create_empty_result(
+        self,
+        reason: str,
+        pure_candidates: list = None,
+        profile_warnings: list[str] | None = None,
+    ) -> SubServerResult:
         """Create result when no candidates found."""
         pure_candidates = pure_candidates or []
+        profile_warnings = profile_warnings or []
         pure_count = len([c for c in pure_candidates if c.is_pure])
 
         summary = f"# Cache Analysis\n\n{reason}"
         if pure_count > 0:
             summary += f"\n\n**Found {pure_count} pure functions**, but none were identified as hot spots by profiling."
+
+        if profile_warnings:
+            summary += "\n\n## Profile Warnings\n"
+            for warning in profile_warnings:
+                summary += f"\n> ⚠️ {warning}"
 
         # Save base analysis file
         artifacts = self._save_base_analysis(pure_count=pure_count)
@@ -344,6 +524,7 @@ class CacheSubServer(BaseSubServer):
         screening_results: list,
         validation_results: list,
         existing_evaluations: list,
+        profile_warnings: list[str] | None = None,
     ) -> SubServerResult:
         """Create final result with all data."""
         recommendations = [r for r in validation_results if r.recommendation == "APPLY"]
@@ -355,6 +536,7 @@ class CacheSubServer(BaseSubServer):
             screening_results,
             validation_results,
             existing_evaluations,
+            profile_warnings=profile_warnings or [],
         )
 
         # Save artifacts
@@ -387,64 +569,91 @@ class CacheSubServer(BaseSubServer):
             errors=[],
         )
 
-    def _generate_summary(self, pure, candidates, screening, validation, existing_evals) -> str:
+    def _generate_summary(
+        self,
+        pure,
+        candidates,
+        screening,
+        validation,
+        existing_evals,
+        profile_warnings: list[str] | None = None,
+    ) -> str:
         """Generate markdown summary."""
+        profile_warnings = profile_warnings or []
         recommendations = [r for r in validation if r.recommendation == "APPLY"]
 
         # Check if we used production data or static analysis
-        used_production_data = any(
-            e.hits > 0 or e.misses > 0 for e in existing_evals
-        )
+        used_production_data = any(e.hits > 0 or e.misses > 0 for e in existing_evals)
 
         lines = [
             "# Cache Analysis Report",
             "",
-            "## Analysis Method",
-            "",
         ]
 
-        if used_production_data:
-            lines.extend([
-                "✅ **Using Production Cache Data**",
-                "",
-                "Recommendations based on real cache statistics from your application.",
-                "",
-            ])
-        else:
-            lines.extend([
-                "⚠️  **Using Static Code Analysis**",
-                "",
-                "No production profiling data available. Recommendations based on static code analysis.",
-                "",
-                "### 💡 Get More Accurate Results with Profiling Data",
-                "",
-                "Profile your application with a single command:",
-                "",
-                "```bash",
-                "# Profile any command",
-                "python -m btx_fix_mcp review profile -- python my_app.py",
-                "python -m btx_fix_mcp review profile -- pytest tests/",
-                "python -m btx_fix_mcp review profile -- python -m my_module",
-                "",
-                "# Then analyze caches",
-                "python -m btx_fix_mcp review cache",
-                "```",
-                "",
-                "📚 **Full examples:** See btx_fix_mcp's `docs/HOW_TO_PROFILE.md`",
-                "",
-            ])
+        # Add profile warnings at top if present
+        if profile_warnings:
+            lines.append("## ⚠️ Profile Data Warnings")
+            lines.append("")
+            for warning in profile_warnings:
+                lines.append(f"> {warning}")
+                lines.append(">")
+            lines.append("")
 
-        lines.extend([
-            "## Overview",
-            "",
-            f"- Pure functions identified: {len([c for c in pure if c.is_pure])}",
-            f"- Cache candidates (pure + hot): {len(candidates)}",
-            f"- Batch screening passed: {len([r for r in screening if r.passed_screening])}/{len(screening) if screening else 0}",
-            f"- Individual validation: {len(validation)} tested",
-            f"- **New cache recommendations: {len(recommendations)}**",
-            f"- **Existing caches evaluated: {len(existing_evals)}**",
-            "",
-        ])
+        lines.extend(
+            [
+                "## Analysis Method",
+                "",
+            ]
+        )
+
+        if used_production_data:
+            lines.extend(
+                [
+                    "✅ **Using Production Cache Data**",
+                    "",
+                    "Recommendations based on real cache statistics from your application.",
+                    "",
+                ]
+            )
+        else:
+            lines.extend(
+                [
+                    "⚠️  **Using Static Code Analysis**",
+                    "",
+                    "No production profiling data available. Recommendations based on static code analysis.",
+                    "",
+                    "### 💡 Get More Accurate Results with Profiling Data",
+                    "",
+                    "Profile your application with a single command:",
+                    "",
+                    "```bash",
+                    "# Profile any command",
+                    "python -m btx_fix_mcp review profile -- python my_app.py",
+                    "python -m btx_fix_mcp review profile -- pytest tests/",
+                    "python -m btx_fix_mcp review profile -- python -m my_module",
+                    "",
+                    "# Then analyze caches",
+                    "python -m btx_fix_mcp review cache",
+                    "```",
+                    "",
+                    "📚 **Full examples:** See btx_fix_mcp's `docs/HOW_TO_PROFILE.md`",
+                    "",
+                ]
+            )
+
+        lines.extend(
+            [
+                "## Overview",
+                "",
+                f"- Pure functions identified: {len([c for c in pure if c.is_pure])}",
+                f"- Cache candidates (pure + hot): {len(candidates)}",
+                f"- Batch screening passed: {len([r for r in screening if r.passed_screening])}/{len(screening) if screening else 0}",
+                f"- Individual validation: {len(validation)} tested",
+                f"- **New cache recommendations: {len(recommendations)}**",
+                f"- **Existing caches evaluated: {len(existing_evals)}**",
+                "",
+            ]
+        )
 
         # Existing cache evaluations
         if existing_evals:

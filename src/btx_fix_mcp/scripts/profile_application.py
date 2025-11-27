@@ -7,26 +7,26 @@ data-driven optimization recommendations.
 
 Usage:
     # Basic usage - profile and analyze
-    python scripts/profile_application.py
+    python -m btx_fix_mcp.scripts.profile_application
 
     # Custom workload function
-    python scripts/profile_application.py --workload my_module:my_workload_func
+    python -m btx_fix_mcp.scripts.profile_application --workload my_module:my_workload_func
 
     # Save to custom location
-    python scripts/profile_application.py --output custom/profile.prof
+    python -m btx_fix_mcp.scripts.profile_application --output custom/profile.prof
 
     # Profile then immediately analyze
-    python scripts/profile_application.py --analyze
+    python -m btx_fix_mcp.scripts.profile_application --analyze
 
 Examples:
     # Profile a CLI application
-    python scripts/profile_application.py --workload my_app:main
+    python -m btx_fix_mcp.scripts.profile_application --workload my_app:main
 
     # Profile a test suite
-    python scripts/profile_application.py --workload tests.conftest:run_all_tests
+    python -m btx_fix_mcp.scripts.profile_application --workload tests.conftest:run_all_tests
 
     # Profile with custom output location
-    python scripts/profile_application.py \\
+    python -m btx_fix_mcp.scripts.profile_application \\
         --output my_profiles/prod_workload.prof \\
         --workload my_app:simulate_production
 """
@@ -38,6 +38,7 @@ import cProfile
 import importlib
 import pstats
 import sys
+from collections.abc import Callable
 from pathlib import Path
 
 
@@ -49,12 +50,14 @@ def default_workload():
     import pytest
 
     print("Running default workload (test suite)...")
-    pytest.main([
-        "tests/",
-        "-v",
-        "--tb=short",
-        "-q",
-    ])
+    pytest.main(
+        [
+            "tests/",
+            "-v",
+            "--tb=short",
+            "-q",
+        ]
+    )
 
 
 def load_workload_function(workload_spec: str):
@@ -71,37 +74,28 @@ def load_workload_function(workload_spec: str):
         >>> func()  # Runs my_app.main()
     """
     if ":" not in workload_spec:
-        raise ValueError(
-            f"Invalid workload spec '{workload_spec}'. "
-            f"Expected format: 'module.path:function_name'"
-        )
+        raise ValueError(f"Invalid workload spec '{workload_spec}'. Expected format: 'module.path:function_name'")
 
     module_path, func_name = workload_spec.rsplit(":", 1)
 
     try:
         module = importlib.import_module(module_path)
     except ImportError as e:
-        raise ImportError(
-            f"Failed to import module '{module_path}': {e}"
-        ) from e
+        raise ImportError(f"Failed to import module '{module_path}': {e}") from e
 
     try:
         func = getattr(module, func_name)
     except AttributeError as e:
-        raise AttributeError(
-            f"Module '{module_path}' has no function '{func_name}'"
-        ) from e
+        raise AttributeError(f"Module '{module_path}' has no function '{func_name}'") from e
 
     if not callable(func):
-        raise TypeError(
-            f"{module_path}:{func_name} is not callable"
-        )
+        raise TypeError(f"{module_path}:{func_name} is not callable")
 
     return func
 
 
 def profile_workload(
-    workload_func: callable,
+    workload_func: Callable[[], None],
     output_path: Path,
 ) -> pstats.Stats:
     """Profile a workload function and save results.
@@ -113,7 +107,7 @@ def profile_workload(
     Returns:
         pstats.Stats object with profiling results
     """
-    print(f"Starting profiling...")
+    print("Starting profiling...")
     print(f"Workload: {workload_func.__module__}.{workload_func.__name__}")
 
     profiler = cProfile.Profile()
@@ -184,6 +178,7 @@ def run_cache_analysis():
     except Exception as e:
         print(f"\n✗ Cache analysis failed: {e}", file=sys.stderr)
         import traceback
+
         traceback.print_exc()
 
 
@@ -198,10 +193,7 @@ def main():
     parser.add_argument(
         "--workload",
         type=str,
-        help=(
-            "Workload function to profile in format 'module.path:function_name'. "
-            "Default: runs test suite"
-        ),
+        help=("Workload function to profile in format 'module.path:function_name'. Default: runs test suite"),
     )
 
     parser.add_argument(
@@ -248,6 +240,7 @@ def main():
     except Exception as e:
         print(f"✗ Profiling failed: {e}", file=sys.stderr)
         import traceback
+
         traceback.print_exc()
         return 1
 

@@ -12,7 +12,9 @@ class QualityThresholds:
     """Threshold values for quality analysis."""
 
     complexity: int = 10
+    complexity_error: int = 20  # Complexity above this is error severity
     maintainability: int = 20
+    maintainability_error: int = 10  # MI below this is error severity
     max_function_length: int = 50
     max_nesting_depth: int = 3
     cognitive_complexity: int = 15
@@ -79,7 +81,9 @@ def load_quality_config(
     """
     thresholds = QualityThresholds(
         complexity=_get_threshold(complexity_threshold, config, "complexity_threshold", 10),
+        complexity_error=config.get("complexity_error_threshold", 20),
         maintainability=_get_threshold(maintainability_threshold, config, "maintainability_threshold", 20),
+        maintainability_error=config.get("maintainability_error_threshold", 10),
         max_function_length=_get_threshold(max_function_length, config, "max_function_length", 50),
         max_nesting_depth=_get_threshold(max_nesting_depth, config, "max_nesting_depth", 3),
         cognitive_complexity=_get_threshold(cognitive_complexity_threshold, config, "cognitive_complexity_threshold", 15),

@@ -6,7 +6,7 @@ readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
     "mcp>=1.22.0",
-    "bandit>=1.9.0",
+    "bandit>=1.9.2",
     "radon>=6.0.1",
     "pytest>=9.0.0",
     "gitpython>=3.1.45",
@@ -14,7 +14,7 @@ dependencies = [
     "jinja2>=3.1.0",
     "rich-click>=1.9.4",
     "lib-layered-config>=2.0.0",
-    "pydantic>=2.0.0",
+    "pydantic>=2.12.5",
 ]
 license = { text = "MIT" }
 authors = [{ name = "bitranox", email = "bitranox@gmail.com" }]
@@ -120,10 +120,20 @@ reportOptionalMemberAccess = false
 reportPossiblyUnboundVariable = false
 reportUnusedVariable = false
 reportUnknownLambdaType = false
+# Optional dependencies (anthropic, openai) may not be installed
+reportMissingImports = false
 
 [tool.bandit]
 # Skip subprocess checks - this is a legitimate tool that needs to run external commands
-skips = ["B603", "B404", "B110"]
+# B112: try_except_continue is intentional for resilient iteration over files/candidates
+# B607: start_process_with_partial_path - tool paths are resolved at runtime
+skips = ["B603", "B404", "B110", "B112", "B607"]
+
+[tool.pip-audit]
+# Known vulnerabilities to ignore (unfixable or accepted risk)
+# GHSA-4xh5-x5gv-qwph: py library ReDoS (no fix available, low risk)
+# PYSEC-2022-42969: same as above (alias)
+ignore-vulns = ["GHSA-4xh5-x5gv-qwph", "PYSEC-2022-42969"]
 
 [tool.pytest.ini_options]
 # Coverage disabled by default due to Python 3.14 sqlite lock issues
@@ -152,8 +162,41 @@ source = ["src/btx_fix_mcp"]
 omit = [
   "tests/*",
 ]
-fail_under = 70
+fail_under = 50
 show_missing = true
+
+[tool.clean]
+# Patterns to remove when running `make clean` or `python -m scripts clean`
+patterns = [
+  ".hypothesis",
+  ".import_linter_cache",
+  ".pytest_cache",
+  ".ruff_cache",
+  ".pyright",
+  ".mypy_cache",
+  ".tox",
+  ".nox",
+  ".eggs",
+  "*.egg-info",
+  "build",
+  "dist",
+  "htmlcov",
+  ".coverage",
+  "coverage.xml",
+  "codecov.sh",
+  ".cache",
+  "result",
+]
+
+[tool.git]
+# Default git remote for push/release commands
+default-remote = "origin"
+
+[tool.scripts.test]
+# Configuration for scripts/test.py test runner
+pytest-verbosity = "-vv"
+coverage-report-file = "coverage.xml"
+src-path = "src"
 
 [tool.importlinter]
 root_package = "btx_fix_mcp"

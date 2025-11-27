@@ -321,3 +321,83 @@ class TestReviewCommands:
 
             assert result.exit_code == 0
             mock_server.return_value.run_all.assert_called_once()
+
+    def test_review_clean_command_dry_run(self, cli_runner: CliRunner, tmp_path) -> None:
+        """Review clean command should show what would be deleted in dry run."""
+        # Create test directory structure
+        review_dir = tmp_path / "LLM-CONTEXT" / "btx_fix_mcp" / "review"
+        scope_dir = review_dir / "scope"
+        scope_dir.mkdir(parents=True)
+        (scope_dir / "files_to_review.txt").write_text("test.py\n")
+
+        result = cli_runner.invoke(
+            cli_mod.cli,
+            ["review", "--repo", str(tmp_path), "clean", "--dry-run"],
+        )
+
+        assert result.exit_code == 0
+        assert "Would delete" in result.output
+        # Directory should still exist after dry run
+        assert scope_dir.exists()
+
+    def test_review_clean_command_deletes_directory(self, cli_runner: CliRunner, tmp_path) -> None:
+        """Review clean command should delete the review directory."""
+        # Create test directory structure
+        review_dir = tmp_path / "LLM-CONTEXT" / "btx_fix_mcp" / "review"
+        scope_dir = review_dir / "scope"
+        scope_dir.mkdir(parents=True)
+        (scope_dir / "files_to_review.txt").write_text("test.py\n")
+
+        result = cli_runner.invoke(
+            cli_mod.cli,
+            ["review", "--repo", str(tmp_path), "clean"],
+        )
+
+        assert result.exit_code == 0
+        assert "Deleted" in result.output
+        # Directory should be deleted
+        assert not review_dir.exists()
+
+    def test_review_clean_command_specific_subserver(self, cli_runner: CliRunner, tmp_path) -> None:
+        """Review clean command should delete only specific subserver directory."""
+        # Create test directory structure
+        review_dir = tmp_path / "LLM-CONTEXT" / "btx_fix_mcp" / "review"
+        scope_dir = review_dir / "scope"
+        quality_dir = review_dir / "quality"
+        scope_dir.mkdir(parents=True)
+        quality_dir.mkdir(parents=True)
+        (scope_dir / "files_to_review.txt").write_text("test.py\n")
+        (quality_dir / "results.json").write_text("{}\n")
+
+        result = cli_runner.invoke(
+            cli_mod.cli,
+            ["review", "--repo", str(tmp_path), "clean", "-s", "scope"],
+        )
+
+        assert result.exit_code == 0
+        # Only scope should be deleted
+        assert not scope_dir.exists()
+        # Quality should still exist
+        assert quality_dir.exists()
+
+    def test_review_clean_command_profile_only(self, cli_runner: CliRunner, tmp_path) -> None:
+        """Review clean command with -s profile should only delete profile file."""
+        # Create test directory structure
+        review_dir = tmp_path / "LLM-CONTEXT" / "btx_fix_mcp" / "review"
+        perf_dir = review_dir / "perf"
+        perf_dir.mkdir(parents=True)
+        profile_file = perf_dir / "test_profile.prof"
+        profile_file.write_text("profile data")
+        other_file = perf_dir / "other.json"
+        other_file.write_text("{}")
+
+        result = cli_runner.invoke(
+            cli_mod.cli,
+            ["review", "--repo", str(tmp_path), "clean", "-s", "profile"],
+        )
+
+        assert result.exit_code == 0
+        # Profile should be deleted
+        assert not profile_file.exists()
+        # Other files should remain
+        assert other_file.exists()

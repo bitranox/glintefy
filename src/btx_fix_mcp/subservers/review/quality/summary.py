@@ -180,7 +180,7 @@ def _build_critical_issues_section(critical_issues: list[dict[str, Any]]) -> lis
     lines = ["## Critical Issues (Must Fix)", ""]
     for issue in critical_issues[:15]:
         file_info = f"`{issue.get('file', 'unknown')}`" if issue.get("file") else ""
-        lines.append(f"- 🔴 {file_info}: {issue['message']}")
+        lines.append(f"- [HIGH] {file_info}: {issue['message']}")
     if len(critical_issues) > 15:
         lines.append(f"- ... and {len(critical_issues) - 15} more critical issues")
     lines.append("")

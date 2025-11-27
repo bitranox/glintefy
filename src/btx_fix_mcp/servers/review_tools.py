@@ -192,7 +192,7 @@ def _perf_tool_definition(mindset: Any) -> dict[str, Any]:
                 },
                 "nested_loop_threshold": {
                     "type": "integer",
-                    "description": "Nesting depth to trigger warning (2=O(n²), 3=O(n³), default: 2)",
+                    "description": "Nesting depth to trigger warning (2=O(n^2), 3=O(n^3), default: 2)",
                 },
             },
         },

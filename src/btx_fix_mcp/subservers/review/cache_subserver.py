@@ -622,7 +622,7 @@ class CacheSubServer(BaseSubServer):
                     "",
                     "No production profiling data available. Recommendations based on static code analysis.",
                     "",
-                    "### 💡 Get More Accurate Results with Profiling Data",
+                    "### [TIP] Get More Accurate Results with Profiling Data",
                     "",
                     "Profile your application with a single command:",
                     "",
@@ -636,7 +636,7 @@ class CacheSubServer(BaseSubServer):
                     "python -m btx_fix_mcp review cache",
                     "```",
                     "",
-                    "📚 **Full examples:** See btx_fix_mcp's `docs/HOW_TO_PROFILE.md`",
+                    "[REF] **Full examples:** See btx_fix_mcp's `docs/HOW_TO_PROFILE.md`",
                     "",
                 ]
             )
@@ -740,8 +740,8 @@ class CacheSubServer(BaseSubServer):
                     "## No Recommendations",
                     "",
                     "No functions met both criteria:",
-                    f"- Cache hit rate ≥ {self.hit_rate_threshold}%",
-                    f"- Performance speedup ≥ {self.speedup_threshold}%",
+                    f"- Cache hit rate >= {self.hit_rate_threshold}%",
+                    f"- Performance speedup >= {self.speedup_threshold}%",
                     "",
                 ]
             )

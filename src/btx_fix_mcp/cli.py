@@ -8,12 +8,12 @@ maintaining clean separation of concerns.
 
 Contents
 --------
-* :data:`CLICK_CONTEXT_SETTINGS` – shared Click settings for consistent help.
-* :func:`cli` – root command group with global options.
-* :func:`cli_info` – print package metadata.
-* :func:`cli_hello` – demonstrate success path.
-* :func:`cli_fail` – demonstrate error handling.
-* :func:`main` – entry point for console scripts.
+* :data:`CLICK_CONTEXT_SETTINGS` - shared Click settings for consistent help.
+* :func:`cli` - root command group with global options.
+* :func:`cli_info` - print package metadata.
+* :func:`cli_hello` - demonstrate success path.
+* :func:`cli_fail` - demonstrate error handling.
+* :func:`main` - entry point for console scripts.
 
 System Role
 -----------

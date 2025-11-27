@@ -324,7 +324,7 @@ class ReviewMCPServer:
             input_dir: Input directory with files list (default: scope output)
             output_dir: Output directory (default: LLM-CONTEXT/btx_fix_mcp/review/perf)
             run_profiling: Whether to run test profiling
-            nested_loop_threshold: Nesting depth to trigger warning (2=O(n²), 3=O(n³))
+            nested_loop_threshold: Nesting depth to trigger warning (2=O(n^2), 3=O(n^3))
 
         Returns:
             Dictionary with status, summary, metrics, and artifact paths

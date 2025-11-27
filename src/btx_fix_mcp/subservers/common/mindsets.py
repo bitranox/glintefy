@@ -192,11 +192,11 @@ def _generate_findings(critical_count: int, warning_count: int, critical_ratio: 
     """Generate findings summary list."""
     findings = []
     if critical_count > 0:
-        findings.append(f"🔴 {critical_count} critical issues ({critical_ratio:.1f}%)")
+        findings.append(f"[HIGH] {critical_count} critical issues ({critical_ratio:.1f}%)")
     if warning_count > 0:
-        findings.append(f"🟠 {warning_count} warnings ({warning_ratio:.1f}%)")
+        findings.append(f"[MED] {warning_count} warnings ({warning_ratio:.1f}%)")
     if not findings:
-        findings.append("🟢 No significant issues found")
+        findings.append("[OK] No significant issues found")
     return findings
 
 

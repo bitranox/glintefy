@@ -73,7 +73,7 @@ class LLMProvider(ABC):
         Returns:
             Estimated token count
         """
-        # Rough approximation: 1 token ≈ 4 characters
+        # Rough approximation: 1 token ~ 4 characters
         return len(text) // 4
 
     def get_usage(self) -> dict[str, int]:

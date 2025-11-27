@@ -586,7 +586,7 @@ class DepsSubServer(BaseSubServer):
             limit = get_display_limit("max_vulnerabilities", 10, start_dir=str(self.repo_path))
             display_count = len(vulns) if limit is None else min(limit, len(vulns))
 
-            header = f"🔴 **{len(vulns)} vulnerabilities found**"
+            header = f"[HIGH] **{len(vulns)} vulnerabilities found**"
             if limit is not None and len(vulns) > limit:
                 header += f" (showing {display_count})"
             lines.append(header + "\n")

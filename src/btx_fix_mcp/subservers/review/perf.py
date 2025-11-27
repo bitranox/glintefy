@@ -428,8 +428,8 @@ class PerfSubServer(BaseSubServer):
         """Analyze algorithmic complexity patterns.
 
         Uses nested_loop_threshold to determine warning level:
-        - Threshold 2: Warns on 2+ levels of nesting (O(n²))
-        - Threshold 3: Warns on 3+ levels of nesting (O(n³))
+        - Threshold 2: Warns on 2+ levels of nesting (O(n^2))
+        - Threshold 3: Warns on 3+ levels of nesting (O(n^3))
         - etc.
         """
         issues: list[PerformanceIssue] = []

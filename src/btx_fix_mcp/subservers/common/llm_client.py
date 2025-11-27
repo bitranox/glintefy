@@ -6,7 +6,7 @@ the user's conversation with Claude Desktop.
 
 Architecture:
     Claude Desktop -> MCP Server -> Internal LLM Client (separate context)
-                          ↓
+                          ->
                     Structured results only
                     (no LLM responses exposed)
 

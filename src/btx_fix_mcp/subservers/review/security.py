@@ -554,9 +554,9 @@ class SecuritySubServer(BaseSubServer):
             "",
             "## Issues by Severity",
             "",
-            f"- 🔴 **High**: {len(categorized.get('HIGH', []))}",
-            f"- 🟠 **Medium**: {len(categorized.get('MEDIUM', []))}",
-            f"- 🟡 **Low**: {len(categorized.get('LOW', []))}",
+            f"- [HIGH] **High**: {len(categorized.get('HIGH', []))}",
+            f"- [MED] **Medium**: {len(categorized.get('MEDIUM', []))}",
+            f"- [LOW] **Low**: {len(categorized.get('LOW', []))}",
             "",
         ]
 
@@ -569,7 +569,7 @@ class SecuritySubServer(BaseSubServer):
         limit = get_display_limit("max_high_security", 10, start_dir=str(self.repo_path))
         display_count = len(high_issues) if limit is None else min(limit, len(high_issues))
 
-        header = "## 🔴 High Severity Issues" if limit is None else f"## 🔴 High Severity Issues (showing {display_count} of {len(high_issues)})"
+        header = "## [HIGH] High Severity Issues" if limit is None else f"## [HIGH] High Severity Issues (showing {display_count} of {len(high_issues)})"
         lines = [header, ""]
 
         for issue in high_issues[:limit]:
@@ -597,7 +597,7 @@ class SecuritySubServer(BaseSubServer):
         limit = get_display_limit("max_medium_security", 10, start_dir=str(self.repo_path))
         display_count = len(medium_issues) if limit is None else min(limit, len(medium_issues))
 
-        header = "## 🟠 Medium Severity Issues" if limit is None else f"## 🟠 Medium Severity Issues (showing {display_count} of {len(medium_issues)})"
+        header = "## [MED] Medium Severity Issues" if limit is None else f"## [MED] Medium Severity Issues (showing {display_count} of {len(medium_issues)})"
         lines = [header, ""]
 
         for issue in medium_issues[:limit]:

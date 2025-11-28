@@ -38,7 +38,7 @@ class ScopeSubServer(BaseSubServer):
         input_dir: Input directory for configuration
         output_dir: Output directory for results
         repo_path: Repository path (default: current directory)
-        mode: "git" for uncommitted changes, "full" for all files
+        mode: "git" for uncommitted changes (default), "full" for all files
 
     Example:
         >>> from pathlib import Path
@@ -68,7 +68,7 @@ class ScopeSubServer(BaseSubServer):
             input_dir: Input directory
             output_dir: Output directory
             repo_path: Repository path
-            mode: "git" or "full"
+            mode: "git" (default) or "full"
             mcp_mode: If True, log to stderr only (MCP protocol compatible).
                       If False, log to stdout and optional log file (standalone mode).
             exclude_patterns: Patterns to exclude (overrides config)
@@ -104,10 +104,20 @@ class ScopeSubServer(BaseSubServer):
         if not self.repo_path.exists():
             missing.append(f"Repository path does not exist: {self.repo_path}")
 
-        # In git mode, check if it's a git repository
+        # In git mode, check if it's a git repository - gracefully degrade to full mode
         if self.mode == "git":
             if not GitOperations.is_git_repo(self.repo_path):
-                missing.append(f"Not a git repository: {self.repo_path}")
+                self.logger.warning(
+                    f"Not a git repository: {self.repo_path}. "
+                    "Falling back to 'full' mode (scanning all files). "
+                    "Git mode requires a git repository to detect uncommitted changes."
+                )
+                self.mode = "full"
+                self._git_fallback = True
+            else:
+                self._git_fallback = False
+        else:
+            self._git_fallback = False
 
         # Validate mode
         if self.mode not in ("git", "full"):
@@ -262,7 +272,7 @@ class ScopeSubServer(BaseSubServer):
 
     def _format_overview_section(self, files: list[Path], branch: str) -> list[str]:
         """Format overview section of summary."""
-        return [
+        lines = [
             "# Scope Analysis Report",
             "",
             "## Overview",
@@ -271,8 +281,21 @@ class ScopeSubServer(BaseSubServer):
             f"**Repository**: {self.repo_path}",
             f"**Branch**: {branch}",
             f"**Total Files**: {len(files)}",
-            "",
         ]
+
+        # Add fallback notice if git mode was requested but unavailable
+        if getattr(self, "_git_fallback", False):
+            lines.extend(
+                [
+                    "",
+                    "> ⚠️ **Note**: Git mode was requested but this is not a git repository.",
+                    "> Automatically fell back to 'full' mode (scanning all files).",
+                    "> To analyze only uncommitted changes, initialize a git repository first.",
+                ]
+            )
+
+        lines.append("")
+        return lines
 
     def _format_category_breakdown(self, categorized: dict[str, list[Path]]) -> list[str]:
         """Format file breakdown by category."""

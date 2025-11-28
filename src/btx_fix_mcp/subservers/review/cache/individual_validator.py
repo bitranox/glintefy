@@ -174,7 +174,7 @@ class IndividualValidator:
     ) -> tuple[float | None, object | None]:
         """Measure test suite time WITH caching.
 
-        Uses file backup/restore within the git branch.
+        Uses in-memory file backup/restore for safe modification.
 
         Args:
             candidate: Candidate to test

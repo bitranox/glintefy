@@ -70,11 +70,13 @@ Analyzes cProfile data to find performance-critical functions.
 Tests cache candidates by temporarily applying `@lru_cache` decorators.
 
 **Process:**
-1. Creates temporary git branch for modifications
+1. Backs up original source files (in-memory)
 2. Applies cache decorators to all candidates
 3. Runs test suite to collect cache statistics
 4. Measures hit/miss rates
-5. Restores original code (deletes branch)
+5. Restores original code from backup
+
+> **Note:** No git dependency required. Uses in-memory backup for safe source modification.
 
 **Configuration:**
 - `cache_size`: LRU cache maxsize (default: 128)

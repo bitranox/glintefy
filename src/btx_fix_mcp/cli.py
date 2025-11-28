@@ -142,7 +142,7 @@ def review_group(ctx: click.Context, repo: Path | None) -> None:
     "-m",
     type=click.Choice(["git", "full"]),
     default="git",
-    help="Scan mode: 'git' for uncommitted changes, 'full' for all files",
+    help="Scan mode: 'git' for uncommitted changes (default), 'full' for all files",
 )
 @click.pass_context
 def review_scope(ctx: click.Context, mode: str) -> None:
@@ -419,7 +419,7 @@ def review_report(ctx: click.Context) -> None:
     "-m",
     type=click.Choice(["git", "full"]),
     default="git",
-    help="Scan mode for scope analysis",
+    help="Scan mode: 'git' for uncommitted changes (default), 'full' for all files",
 )
 @click.option(
     "--complexity",

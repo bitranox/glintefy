@@ -10,26 +10,26 @@ Why source modification instead of monkey-patching:
 - Source modifications persist across process boundary
 
 Safety mechanism:
-- Uses temporary git branch for all modifications
-- Isolated from main branch (no conflicts with concurrent edits)
-- Clean rollback via git branch deletion
-- No risk of losing concurrent changes
-
-IMPORTANT: Requires git repository and clean working tree.
+- Creates backup copy of each modified file
+- Restores original files on cleanup (even on crash)
+- Uses context manager for automatic cleanup
+- No git dependency required
 """
 
 import ast
+import atexit
 import re
-import secrets
-import subprocess
 from pathlib import Path
 
 
 class SourcePatcher:
     """Temporarily modify source code to add cache decorators.
 
-    Uses git branches for complete isolation from other operations.
+    Uses file backup/restore for safe modification without git dependency.
     """
+
+    # Class-level tracking for emergency cleanup
+    _active_patchers: list["SourcePatcher"] = []
 
     def __init__(self, repo_path: Path):
         """Initialize source patcher.
@@ -38,76 +38,41 @@ class SourcePatcher:
             repo_path: Repository root path
         """
         self.repo_path = repo_path
-        self.branch_name = None
-        self.original_branch = None
-        self.backups: dict[Path, Path] = {}  # For file-level backup/restore
+        self.backups: dict[Path, str] = {}  # file_path -> original_content
+        self._session_active = False
 
     def start(self) -> tuple[bool, str | None]:
-        """Start modification session (create git branch).
+        """Start modification session.
 
         Returns:
             (success, error_message)
         """
-        try:
-            # Check if repo is a git repository
-            result = subprocess.run(
-                ["git", "rev-parse", "--git-dir"],
-                cwd=self.repo_path,
-                capture_output=True,
-                text=True,
-            )
-            if result.returncode != 0:
-                return (False, "Not a git repository")
+        if self._session_active:
+            return (False, "Session already active")
 
-            # Get current branch
-            result = subprocess.run(
-                ["git", "rev-parse", "--abbrev-ref", "HEAD"],
-                cwd=self.repo_path,
-                capture_output=True,
-                text=True,
-                check=True,
-            )
-            self.original_branch = result.stdout.strip()
+        if not self.repo_path.exists():
+            return (False, f"Repository path does not exist: {self.repo_path}")
 
-            # Check for uncommitted changes
-            result = subprocess.run(
-                ["git", "status", "--porcelain"],
-                cwd=self.repo_path,
-                capture_output=True,
-                text=True,
-                check=True,
-            )
+        if not self.repo_path.is_dir():
+            return (False, f"Repository path is not a directory: {self.repo_path}")
 
-            if result.stdout.strip():
-                return (False, "Working tree not clean (uncommitted changes)")
+        self._session_active = True
+        self.backups = {}
 
-            # Create temporary branch with random suffix
-            branch_suffix = secrets.token_hex(4)
-            self.branch_name = f"cache-analysis-{branch_suffix}"
+        # Register for emergency cleanup
+        SourcePatcher._active_patchers.append(self)
 
-            result = subprocess.run(
-                ["git", "checkout", "-b", self.branch_name],
-                cwd=self.repo_path,
-                capture_output=True,
-                text=True,
-            )
-
-            if result.returncode != 0:
-                return (False, f"Failed to create branch: {result.stderr}")
-
-            return (True, None)
-
-        except subprocess.CalledProcessError as e:
-            self._cleanup_branch()
-            return (False, f"Git error: {e}")
-        except Exception as e:
-            self._cleanup_branch()
-            return (False, f"Failed to start: {e}")
+        return (True, None)
 
     def end(self) -> None:
-        """End modification session (delete git branch and restore original)."""
-        if self.branch_name and self.original_branch:
-            self._cleanup_branch()
+        """End modification session (restore all modified files)."""
+        if self._session_active:
+            self._restore_all_files()
+            self._session_active = False
+
+            # Unregister from emergency cleanup
+            if self in SourcePatcher._active_patchers:
+                SourcePatcher._active_patchers.remove(self)
 
     def apply_cache_decorator(
         self,
@@ -130,6 +95,10 @@ class SourcePatcher:
 
         try:
             source = file_path.read_text()
+
+            # Backup original content if not already backed up
+            if file_path not in self.backups:
+                self.backups[file_path] = source
 
             # Parse AST to verify function exists
             tree = ast.parse(source)
@@ -159,49 +128,21 @@ class SourcePatcher:
             # Write modified source
             file_path.write_text(modified_source)
 
-            # Commit change to branch
-            subprocess.run(
-                ["git", "add", str(file_path)],
-                cwd=self.repo_path,
-                capture_output=True,
-            )
-            subprocess.run(
-                ["git", "commit", "-m", f"Cache analysis: Add @lru_cache to {function_name}"],
-                cwd=self.repo_path,
-                capture_output=True,
-            )
-
             return True
 
         except Exception:
             return False
 
-    def _cleanup_branch(self) -> None:
-        """Cleanup temporary git branch and restore original."""
-        if not self.branch_name or not self.original_branch:
-            return
+    def _restore_all_files(self) -> None:
+        """Restore all modified files to their original content."""
+        for file_path, original_content in self.backups.items():
+            try:
+                file_path.write_text(original_content)
+            except Exception:
+                # Best effort restoration
+                pass
 
-        try:
-            # Checkout original branch (discards all changes)
-            subprocess.run(
-                ["git", "checkout", "-f", self.original_branch],
-                cwd=self.repo_path,
-                capture_output=True,
-            )
-
-            # Delete temporary branch
-            subprocess.run(
-                ["git", "branch", "-D", self.branch_name],
-                cwd=self.repo_path,
-                capture_output=True,
-            )
-
-        except Exception:
-            # Best effort cleanup
-            pass
-        finally:
-            self.branch_name = None
-            self.original_branch = None
+        self.backups.clear()
 
     def _ensure_lru_cache_import(self, source: str) -> str:
         """Ensure 'from functools import lru_cache' is in source.
@@ -314,11 +255,7 @@ class SourcePatcher:
             return True  # Already backed up
 
         try:
-            import shutil
-
-            backup_path = file_path.with_suffix(file_path.suffix + ".cache_backup")
-            shutil.copy2(file_path, backup_path)
-            self.backups[file_path] = backup_path
+            self.backups[file_path] = file_path.read_text()
             return True
         except Exception:
             return False
@@ -336,13 +273,32 @@ class SourcePatcher:
             return False
 
         try:
-            import shutil
-
-            backup_path = self.backups[file_path]
-            if backup_path.exists():
-                shutil.copy2(backup_path, file_path)
-                backup_path.unlink()
+            file_path.write_text(self.backups[file_path])
             del self.backups[file_path]
             return True
         except Exception:
             return False
+
+    def __enter__(self) -> "SourcePatcher":
+        """Context manager entry."""
+        success, error = self.start()
+        if not success:
+            raise RuntimeError(f"Failed to start SourcePatcher: {error}")
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb) -> None:
+        """Context manager exit - always restore files."""
+        self.end()
+
+
+# Emergency cleanup on interpreter exit
+def _emergency_cleanup():
+    """Restore all modified files if interpreter exits unexpectedly."""
+    for patcher in SourcePatcher._active_patchers[:]:
+        try:
+            patcher._restore_all_files()
+        except Exception:
+            pass
+
+
+atexit.register(_emergency_cleanup)

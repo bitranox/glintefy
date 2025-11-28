@@ -72,10 +72,10 @@ class TestScopeSubServer:
         assert server.name == "scope"
         assert server.output_dir == output_dir
         assert server.repo_path == tmp_path
-        assert server.mode == "git"
+        assert server.mode == "git"  # Default is "git"
 
     def test_initialization_custom_mode(self, tmp_path):
-        """Test initialization with custom mode."""
+        """Test initialization with full mode."""
         server = ScopeSubServer(output_dir=tmp_path / "output", repo_path=tmp_path, mode="full")
 
         assert server.mode == "full"
@@ -90,8 +90,8 @@ class TestScopeSubServer:
         assert valid is True
         assert missing == []
 
-    def test_validate_inputs_not_git_repo(self, tmp_path):
-        """Test validation fails for non-git directory in git mode."""
+    def test_validate_inputs_not_git_repo_falls_back(self, tmp_path):
+        """Test git mode gracefully falls back to full mode for non-git directory."""
         non_git_dir = tmp_path / "not_git"
         non_git_dir.mkdir()
 
@@ -100,8 +100,13 @@ class TestScopeSubServer:
 
         valid, missing = server.validate_inputs()
 
-        assert valid is False
-        assert any("Not a git repository" in m for m in missing)
+        # Should succeed (graceful fallback), not fail
+        assert valid is True
+        assert missing == []
+        # Mode should be changed to "full"
+        assert server.mode == "full"
+        # Fallback flag should be set
+        assert server._git_fallback is True
 
     def test_validate_inputs_invalid_mode(self, git_repo, tmp_path):
         """Test validation fails for invalid mode."""

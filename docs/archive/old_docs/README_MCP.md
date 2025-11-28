@@ -308,7 +308,7 @@ confidence_threshold = "low"     # low, medium, high
 ### Scope Analysis
 ```toml
 [review.scope]
-mode = "git"                     # git or full
+mode = "git"                     # git (default) or full
 exclude_patterns = [
     "vendor/",
     "node_modules/",

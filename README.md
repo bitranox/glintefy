@@ -53,10 +53,10 @@ cd btx_fix_mcp && make dev
 ### CLI Usage (Simple)
 
 ```bash
-# Review current git changes
+# Review uncommitted git changes (default)
 btx_fix_mcp review all
 
-# Review entire repository
+# Review all files
 btx_fix_mcp review all --mode full
 
 # Run specific analysis
@@ -153,7 +153,23 @@ Then in Claude Desktop:
 ## Requirements
 
 - Python 3.13+
-- Git (for scope analysis)
+- Git (optional)
+
+### Git Integration
+
+Git is **optional** but enables additional features:
+
+| Feature | Without Git | With Git |
+|---------|-------------|----------|
+| **Scope Mode** | `--mode full` scans all files | `--mode git` scans only uncommitted changes (default) |
+| **Code Churn** | Skipped | Analyzes frequently modified files |
+| **Branch Info** | Shows "N/A" | Displays current branch |
+
+When git is not available:
+- `--mode git` automatically falls back to `--mode full` with a warning
+- Code churn analysis is skipped silently
+- Cache analysis works without git (uses in-memory file backup)
+- All other analyses work normally
 
 ---
 

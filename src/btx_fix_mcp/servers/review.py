@@ -86,7 +86,7 @@ class ReviewMCPServer:
         """Run scope analysis to determine files to review.
 
         Args:
-            mode: "git" for uncommitted changes, "full" for all files
+            mode: "git" for uncommitted changes (default), "full" for all files
             output_dir: Output directory (default: LLM-CONTEXT/btx_fix_mcp/review/scope)
 
         Returns:
@@ -466,7 +466,7 @@ class ReviewMCPServer:
         if run in parallel.
 
         Args:
-            mode: Scope mode ("git" or "full")
+            mode: Scope mode ("git" for uncommitted changes, "full" for all files)
             complexity_threshold: Override for quality analysis
             severity_threshold: Override for security analysis
 

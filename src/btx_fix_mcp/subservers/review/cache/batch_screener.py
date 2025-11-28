@@ -74,12 +74,12 @@ class BatchScreener:
         if not candidates:
             return []
 
-        # Create patcher and start session (creates git branch)
+        # Create patcher and start session (backs up files for safe modification)
         self.patcher = SourcePatcher(repo_path=repo_path)
 
         success, _error = self.patcher.start()
         if not success:
-            # Failed to start (git not clean, not a repo, etc.)
+            # Failed to start (path doesn't exist, etc.)
             return []
 
         try:
@@ -89,7 +89,7 @@ class BatchScreener:
             if applied_count == 0:
                 return []
 
-            # Run test suite ONCE (subprocess sees modified source on branch)
+            # Run test suite ONCE (subprocess sees modified source files)
             test_passed = self._run_test_suite(repo_path)
 
             if not test_passed:
@@ -102,7 +102,7 @@ class BatchScreener:
             return results
 
         finally:
-            # Always restore original (deletes branch, checks out original)
+            # Always restore original files
             self.patcher.end()
 
     def _apply_caches(self, candidates: list[CacheCandidate]) -> int:

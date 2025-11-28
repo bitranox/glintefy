@@ -3,7 +3,21 @@
 All notable changes to this project will be documented in this file following
 the [Keep a Changelog](https://keepachangelog.com/) format.
 
-## [Unreleased]
+## [1.1.0] - 2025-11-28
+
+### Added
+- Graceful fallback: `--mode git` automatically falls back to `--mode full` with a warning when not in a git repository
+- Enhanced CLI documentation with Required/Default columns for all command options
+- Context manager support for `SourcePatcher` class
+
+### Changed
+- Cache subserver no longer requires git - uses in-memory file backup instead of git branches
+- `SourcePatcher` rewritten to use in-memory backup/restore for source modifications
+- Emergency cleanup via `atexit` handler ensures files are restored even on crashes
+
+### Fixed
+- `btx_fix_mcp review all` now works on non-git directories (falls back to full mode)
+- Code churn analysis gracefully skips when git is unavailable
 
 ## [1.0.0] - 2025-11-27
 

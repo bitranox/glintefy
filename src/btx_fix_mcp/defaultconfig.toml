@@ -127,7 +127,7 @@ stop_on_failure = false
 # Scope Sub-Server
 # -----------------------------------------------------------------------------
 [review.scope]
-# Scope detection mode: "git" (uncommitted changes) or "all" (full repo)
+# Scope detection mode: "git" (uncommitted changes, default) or "full" (all files)
 mode = "git"
 
 # Patterns to exclude from analysis

@@ -53,7 +53,7 @@ max_workers = 4                       # Parallel workers
 
 ```toml
 [review.scope]
-mode = "git"                          # "git" or "full"
+mode = "git"                          # "git" (default) or "full"
 exclude_patterns = [
     "**/vendor/*",
     "**/node_modules/*",

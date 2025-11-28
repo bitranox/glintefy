@@ -55,7 +55,7 @@ def _scope_tool_definition() -> dict[str, Any]:
                 "mode": {
                     "type": "string",
                     "enum": ["git", "full"],
-                    "description": "Scan mode: 'git' for uncommitted changes, 'full' for all files",
+                    "description": "Scan mode: 'git' for uncommitted changes (default), 'full' for all files",
                     "default": "git",
                 },
             },
@@ -253,7 +253,7 @@ Combines all review tools with their respective mindsets for comprehensive analy
                 "mode": {
                     "type": "string",
                     "enum": ["git", "full"],
-                    "description": "Scan mode",
+                    "description": "Scan mode: 'git' for uncommitted changes (default), 'full' for all files",
                     "default": "git",
                 },
                 "complexity_threshold": {

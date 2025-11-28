@@ -14,7 +14,7 @@ uv pip install btx_fix_mcp
 
 ## Basic Usage
 
-### Review Git Changes (Default)
+### Review Uncommitted Git Changes (Default)
 
 ```bash
 # Go to your project
@@ -26,7 +26,9 @@ python -m btx_fix_mcp review all
 
 Output is saved to `LLM-CONTEXT/btx_fix_mcp/review/`.
 
-### Review Entire Repository
+> **Note**: If your project is not a git repository, `--mode git` automatically falls back to `--mode full` with a warning.
+
+### Review All Files
 
 ```bash
 python -m btx_fix_mcp review all --mode full
@@ -114,9 +116,9 @@ python -m btx_fix_mcp review clean --dry-run
 
 | Command | Description |
 |---------|-------------|
-| `review all` | Run all analyses |
+| `review all` | Run all analyses (git mode, default) |
+| `review all --mode git` | Analyze git changes only (default) |
 | `review all --mode full` | Analyze entire repo |
-| `review all --mode git` | Analyze git changes only |
 | `review scope` | Discover files to review |
 | `review quality` | Code quality analysis |
 | `review security` | Security vulnerability scan |

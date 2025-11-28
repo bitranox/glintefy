@@ -44,7 +44,7 @@ class TestHandleFunctions:
         mock_server.run_scope.assert_called_once_with(mode="git")
 
     def test_handle_scope_custom_mode(self, mock_server):
-        """Test _handle_scope with custom mode."""
+        """Test _handle_scope with full mode."""
         _handle_scope(mock_server, {"mode": "full"})
         mock_server.run_scope.assert_called_once_with(mode="full")
 

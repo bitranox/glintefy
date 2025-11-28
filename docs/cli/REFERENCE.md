@@ -8,10 +8,11 @@ Complete reference for all btx_fix_mcp CLI commands.
 python -m btx_fix_mcp [OPTIONS] COMMAND
 ```
 
-| Option | Required | Default | Description |
-|--------|----------|---------|-------------|
-| `--help` | No | - | Show help message |
-| `--version` | No | - | Show version |
+| Option | Required | Default | Permitted Values | Description |
+|--------|----------|---------|------------------|-------------|
+| `--help`, `-h` | No | - | - | Show help message |
+| `--version` | No | - | - | Show version |
+| `--traceback/--no-traceback` | No | `--traceback` | - | Show full Python traceback on errors |
 
 ---
 
@@ -19,20 +20,29 @@ python -m btx_fix_mcp [OPTIONS] COMMAND
 
 All review commands support `--repo PATH` to specify the target repository.
 
+| Option | Required | Default | Permitted Values | Description |
+|--------|----------|---------|------------------|-------------|
+| `--repo`, `-r` | No | `.` (current directory) | Any valid directory path | Repository path to analyze |
+
+---
+
 ### `review all`
 
 Run all review analyses.
 
 ```bash
-python -m btx_fix_mcp review [--repo PATH] all [--mode MODE] [--complexity N] [--severity LEVEL]
+python -m btx_fix_mcp review [--repo PATH] all [OPTIONS]
 ```
 
-| Option | Required | Default | Description |
-|--------|----------|---------|-------------|
-| `--repo PATH` | No | `.` (current directory) | Repository path to analyze |
-| `--mode, -m MODE` | No | `git` | Scope mode: `git` (uncommitted changes) or `full` (all files) |
-| `--complexity N` | No | `10` | Maximum cyclomatic complexity threshold |
-| `--severity LEVEL` | No | `low` | Minimum security severity: `low`, `medium`, or `high` |
+| Option | Required | Default | Permitted Values | Description |
+|--------|----------|---------|------------------|-------------|
+| `--mode`, `-m` | No | `git` | `git`, `full` | Scope mode |
+| `--complexity` | No | `10` | Any positive integer | Maximum cyclomatic complexity threshold |
+| `--severity` | No | `low` | `low`, `medium`, `high` | Minimum security severity to report |
+
+**Mode values:**
+- `git` - Review only uncommitted changes (requires git repository, falls back to `full` if not available)
+- `full` - Review all files in the repository
 
 > **Note**: If `--mode git` is used but the directory is not a git repository, it automatically falls back to `full` mode with a warning.
 
@@ -58,12 +68,16 @@ python -m btx_fix_mcp review all --complexity 15 --severity high
 Discover files to analyze.
 
 ```bash
-python -m btx_fix_mcp review scope [--mode MODE]
+python -m btx_fix_mcp review scope [OPTIONS]
 ```
 
-| Option | Required | Default | Description |
-|--------|----------|---------|-------------|
-| `--mode, -m MODE` | No | `git` | `git` = uncommitted changes, `full` = all files |
+| Option | Required | Default | Permitted Values | Description |
+|--------|----------|---------|------------------|-------------|
+| `--mode`, `-m` | No | `git` | `git`, `full` | Scope mode |
+
+**Mode values:**
+- `git` - Scan only uncommitted changes (requires git repository, falls back to `full` if not available)
+- `full` - Scan all files in the repository
 
 > **Note**: If `--mode git` is used but the directory is not a git repository, it automatically falls back to `full` mode with a warning.
 
@@ -74,19 +88,23 @@ python -m btx_fix_mcp review scope [--mode MODE]
 Run code quality analysis.
 
 ```bash
-python -m btx_fix_mcp review quality [--complexity N] [--maintainability N]
+python -m btx_fix_mcp review quality [OPTIONS]
 ```
 
-| Option | Required | Default | Description |
-|--------|----------|---------|-------------|
-| `--complexity, -c N` | No | `10` | Maximum cyclomatic complexity threshold |
-| `--maintainability, -m N` | No | `20` | Minimum maintainability index threshold |
+| Option | Required | Default | Permitted Values | Description |
+|--------|----------|---------|------------------|-------------|
+| `--complexity`, `-c` | No | `10` | Any positive integer | Maximum cyclomatic complexity threshold |
+| `--maintainability`, `-m` | No | `20` | Any positive integer (0-100) | Minimum maintainability index threshold |
+
+**Threshold guidelines:**
+- **Complexity**: Lower is better. Values >10 indicate complex functions that should be refactored.
+- **Maintainability**: Higher is better. Values <20 indicate hard-to-maintain code.
 
 **Analyzes:**
-- Cyclomatic complexity (threshold: ≤10)
-- Function length (threshold: ≤50 lines)
-- Nesting depth (threshold: ≤3 levels)
-- Maintainability index (threshold: ≥20)
+- Cyclomatic complexity (threshold: <=10)
+- Function length (threshold: <=50 lines)
+- Nesting depth (threshold: <=3 levels)
+- Maintainability index (threshold: >=20)
 - Code duplication
 - Dead code
 - Type coverage
@@ -100,13 +118,23 @@ python -m btx_fix_mcp review quality [--complexity N] [--maintainability N]
 Run security vulnerability scan.
 
 ```bash
-python -m btx_fix_mcp review security [--severity LEVEL] [--confidence LEVEL]
+python -m btx_fix_mcp review security [OPTIONS]
 ```
 
-| Option | Required | Default | Description |
-|--------|----------|---------|-------------|
-| `--severity LEVEL` | No | `low` | Minimum severity: `low`, `medium`, `high` |
-| `--confidence LEVEL` | No | `low` | Minimum confidence: `low`, `medium`, `high` |
+| Option | Required | Default | Permitted Values | Description |
+|--------|----------|---------|------------------|-------------|
+| `--severity`, `-s` | No | `low` | `low`, `medium`, `high` | Minimum severity to report |
+| `--confidence`, `-c` | No | `low` | `low`, `medium`, `high` | Minimum confidence to report |
+
+**Severity levels:**
+- `low` - Report all issues including minor ones
+- `medium` - Report medium and high severity issues only
+- `high` - Report only high severity (critical) issues
+
+**Confidence levels:**
+- `low` - Report all findings including uncertain ones
+- `medium` - Report medium and high confidence findings only
+- `high` - Report only high confidence (definite) findings
 
 **Uses Bandit to detect:**
 - Hardcoded passwords
@@ -122,14 +150,30 @@ python -m btx_fix_mcp review security [--severity LEVEL] [--confidence LEVEL]
 Analyze dependencies.
 
 ```bash
-python -m btx_fix_mcp review deps [--no-vulnerabilities] [--no-licenses] [--no-outdated]
+python -m btx_fix_mcp review deps [OPTIONS]
 ```
 
-| Option | Required | Default | Description |
-|--------|----------|---------|-------------|
-| `--no-vulnerabilities` | No | `false` | Skip vulnerability scan |
-| `--no-licenses` | No | `false` | Skip license check |
-| `--no-outdated` | No | `false` | Skip outdated package check |
+| Option | Required | Default | Permitted Values | Description |
+|--------|----------|---------|------------------|-------------|
+| `--no-vulnerabilities` | No | `false` (enabled) | Flag (no value) | Skip vulnerability scanning |
+| `--no-licenses` | No | `false` (enabled) | Flag (no value) | Skip license compliance checking |
+| `--no-outdated` | No | `false` (enabled) | Flag (no value) | Skip outdated package detection |
+
+**Flag behavior:**
+- Flags are boolean switches. Include the flag to disable the check.
+- By default, all checks are enabled.
+
+**Example:**
+```bash
+# Run all dependency checks (default)
+python -m btx_fix_mcp review deps
+
+# Skip vulnerability scan
+python -m btx_fix_mcp review deps --no-vulnerabilities
+
+# Only check for outdated packages
+python -m btx_fix_mcp review deps --no-vulnerabilities --no-licenses
+```
 
 **Checks:**
 - Known vulnerabilities (CVEs)
@@ -143,16 +187,20 @@ python -m btx_fix_mcp review deps [--no-vulnerabilities] [--no-licenses] [--no-o
 Analyze documentation coverage.
 
 ```bash
-python -m btx_fix_mcp review docs [--min-coverage N] [--style STYLE]
+python -m btx_fix_mcp review docs [OPTIONS]
 ```
 
-| Option | Required | Default | Description |
-|--------|----------|---------|-------------|
-| `--min-coverage N` | No | `80` | Minimum docstring coverage percentage |
-| `--style STYLE` | No | `google` | Docstring style: `google`, `numpy`, `sphinx` |
+| Option | Required | Default | Permitted Values | Description |
+|--------|----------|---------|------------------|-------------|
+| `--min-coverage`, `-c` | No | `80` | Integer 0-100 | Minimum docstring coverage percentage |
+
+**Coverage guidelines:**
+- `80`+ - Good documentation coverage
+- `50-79` - Moderate coverage, consider improving
+- `<50` - Poor coverage, needs attention
 
 **Checks:**
-- Docstring coverage (threshold: ≥80%)
+- Docstring coverage (threshold: >=80%)
 - Missing parameter documentation
 - Missing return documentation
 
@@ -163,13 +211,16 @@ python -m btx_fix_mcp review docs [--min-coverage N] [--style STYLE]
 Run performance analysis.
 
 ```bash
-python -m btx_fix_mcp review perf [--no-profiling] [--nested-loop-threshold N]
+python -m btx_fix_mcp review perf [OPTIONS]
 ```
 
-| Option | Required | Default | Description |
-|--------|----------|---------|-------------|
-| `--no-profiling` | No | `false` | Skip profile data analysis |
-| `--nested-loop-threshold N` | No | `2` | Max nested loop depth before flagging |
+| Option | Required | Default | Permitted Values | Description |
+|--------|----------|---------|------------------|-------------|
+| `--no-profiling` | No | `false` (enabled) | Flag (no value) | Skip profile data analysis |
+
+**Flag behavior:**
+- Include `--no-profiling` to skip analysis of existing profile data.
+- By default, profiling analysis is enabled if profile data exists.
 
 **Analyzes:**
 - Function hotspots
@@ -183,14 +234,19 @@ python -m btx_fix_mcp review perf [--no-profiling] [--nested-loop-threshold N]
 Analyze cache optimization opportunities.
 
 ```bash
-python -m btx_fix_mcp review cache [--cache-size N] [--hit-rate-threshold N] [--speedup-threshold N]
+python -m btx_fix_mcp review cache [OPTIONS]
 ```
 
-| Option | Required | Default | Description |
-|--------|----------|---------|-------------|
-| `--cache-size N` | No | `128` | LRU cache maxsize for testing |
-| `--hit-rate-threshold N` | No | `20.0` | Minimum cache hit rate % to recommend |
-| `--speedup-threshold N` | No | `5.0` | Minimum speedup % to recommend |
+| Option | Required | Default | Permitted Values | Description |
+|--------|----------|---------|------------------|-------------|
+| `--cache-size` | No | `128` | Any positive integer | LRU cache maxsize for testing |
+| `--hit-rate` | No | `20.0` | Float 0.0-100.0 | Minimum cache hit rate % to recommend |
+| `--speedup` | No | `5.0` | Float >= 0.0 | Minimum speedup % to recommend |
+
+**Parameter guidelines:**
+- **cache-size**: Common values are powers of 2 (64, 128, 256, 512). Larger values use more memory.
+- **hit-rate**: Functions with hit rates below this threshold are not recommended for caching.
+- **speedup**: Functions with speedup below this threshold are not recommended for caching.
 
 **Identifies:**
 - Pure functions suitable for caching
@@ -209,9 +265,14 @@ Profile a command for cache analysis.
 python -m btx_fix_mcp review profile -- COMMAND [ARGS...]
 ```
 
-| Argument | Required | Description |
-|----------|----------|-------------|
-| `COMMAND` | **Yes** | Command to profile (everything after `--`) |
+| Argument | Required | Default | Permitted Values | Description |
+|----------|----------|---------|------------------|-------------|
+| `COMMAND` | **Yes** | - | Any shell command | Command to profile (everything after `--`) |
+
+**Command formats:**
+- `python script.py` - Profile a Python script
+- `pytest tests/` - Profile test execution
+- `python -m module` - Profile a Python module
 
 **Examples:**
 ```bash
@@ -223,6 +284,9 @@ python -m btx_fix_mcp review profile -- python my_script.py
 
 # Profile a module
 python -m btx_fix_mcp review profile -- python -m my_module
+
+# Profile with arguments
+python -m btx_fix_mcp review profile -- pytest tests/ -v --tb=short
 ```
 
 ---
@@ -244,13 +308,27 @@ No options. Requires previous analysis runs (scope, quality, etc.) to have been 
 Clean analysis output files.
 
 ```bash
-python -m btx_fix_mcp review clean [--subserver NAME] [--dry-run]
+python -m btx_fix_mcp review clean [OPTIONS]
 ```
 
-| Option | Required | Default | Description |
-|--------|----------|---------|-------------|
-| `-s, --subserver NAME` | No | `all` | Subserver to clean: `all`, `scope`, `quality`, `security`, `deps`, `docs`, `perf`, `cache`, `report`, `profile` |
-| `--dry-run` | No | `false` | Show what would be deleted without deleting |
+| Option | Required | Default | Permitted Values | Description |
+|--------|----------|---------|------------------|-------------|
+| `-s`, `--subserver` | No | `all` | `all`, `scope`, `quality`, `security`, `deps`, `docs`, `perf`, `cache`, `report`, `profile` | Subserver output to clean |
+| `--dry-run` | No | `false` | Flag (no value) | Show what would be deleted without deleting |
+
+**Subserver values:**
+| Value | Description |
+|-------|-------------|
+| `all` | Clean all review data (entire `LLM-CONTEXT/btx_fix_mcp/review/` directory) |
+| `scope` | Clean scope analysis output (`review/scope/`) |
+| `quality` | Clean quality analysis output (`review/quality/`) |
+| `security` | Clean security scan output (`review/security/`) |
+| `deps` | Clean dependency analysis output (`review/deps/`) |
+| `docs` | Clean documentation analysis output (`review/docs/`) |
+| `perf` | Clean performance analysis output (`review/perf/`) |
+| `cache` | Clean cache analysis output (`review/cache/`) |
+| `report` | Clean consolidated report output (`review/report/`) |
+| `profile` | Clean only the profile data file (`review/perf/test_profile.prof`) |
 
 **Examples:**
 ```bash
@@ -260,8 +338,14 @@ python -m btx_fix_mcp review clean
 # Clean only profile data
 python -m btx_fix_mcp review clean -s profile
 
-# Preview deletion
+# Clean only cache analysis
+python -m btx_fix_mcp review clean -s cache
+
+# Preview deletion (dry run)
 python -m btx_fix_mcp review clean --dry-run
+
+# Preview cleaning specific subserver
+python -m btx_fix_mcp review clean -s quality --dry-run
 ```
 
 ---
@@ -311,10 +395,10 @@ LLM-CONTEXT/btx_fix_mcp/review/
 
 ## Environment Variables
 
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `BTX_FIX_MCP_LOG_LEVEL` | `INFO` | Log level: `DEBUG`, `INFO`, `WARNING`, `ERROR` |
-| `BTX_FIX_MCP_OUTPUT_DIR` | `LLM-CONTEXT/btx_fix_mcp` | Override output directory |
+| Variable | Default | Permitted Values | Description |
+|----------|---------|------------------|-------------|
+| `BTX_FIX_MCP_LOG_LEVEL` | `INFO` | `DEBUG`, `INFO`, `WARNING`, `ERROR` | Log verbosity level |
+| `BTX_FIX_MCP_OUTPUT_DIR` | `LLM-CONTEXT/btx_fix_mcp` | Any valid directory path | Override output directory |
 
 ---
 

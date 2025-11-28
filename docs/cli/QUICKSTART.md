@@ -114,19 +114,28 @@ python -m btx_fix_mcp review clean --dry-run
 
 ## Quick Reference
 
-| Command | Options | Defaults |
-|---------|---------|----------|
-| `review all` | `--mode`, `--complexity`, `--severity` | mode=`git`, complexity=`10`, severity=`low` |
-| `review scope` | `--mode` | mode=`git` |
-| `review quality` | `--complexity`, `--maintainability` | complexity=`10`, maintainability=`20` |
-| `review security` | `--severity`, `--confidence` | severity=`low`, confidence=`low` |
-| `review deps` | `--no-vulnerabilities`, `--no-licenses`, `--no-outdated` | all checks enabled |
-| `review docs` | `--min-coverage`, `--style` | min-coverage=`80`, style=`google` |
-| `review perf` | `--no-profiling`, `--nested-loop-threshold` | profiling enabled, threshold=`2` |
-| `review cache` | `--cache-size`, `--hit-rate-threshold`, `--speedup-threshold` | size=`128`, hit-rate=`20.0`, speedup=`5.0` |
-| `review profile -- CMD` | (none) | CMD is **required** |
-| `review clean` | `-s/--subserver`, `--dry-run` | subserver=`all`, dry-run=`false` |
-| `review report` | (none) | - |
+| Command | Option | Default | Permitted Values |
+|---------|--------|---------|------------------|
+| `review all` | `--mode` | `git` | `git`, `full` |
+| | `--complexity` | `10` | Any positive integer |
+| | `--severity` | `low` | `low`, `medium`, `high` |
+| `review scope` | `--mode` | `git` | `git`, `full` |
+| `review quality` | `--complexity` | `10` | Any positive integer |
+| | `--maintainability` | `20` | Integer 0-100 |
+| `review security` | `--severity` | `low` | `low`, `medium`, `high` |
+| | `--confidence` | `low` | `low`, `medium`, `high` |
+| `review deps` | `--no-vulnerabilities` | disabled | Flag (include to skip) |
+| | `--no-licenses` | disabled | Flag (include to skip) |
+| | `--no-outdated` | disabled | Flag (include to skip) |
+| `review docs` | `--min-coverage` | `80` | Integer 0-100 |
+| `review perf` | `--no-profiling` | disabled | Flag (include to skip) |
+| `review cache` | `--cache-size` | `128` | Any positive integer |
+| | `--hit-rate` | `20.0` | Float 0.0-100.0 |
+| | `--speedup` | `5.0` | Float >= 0.0 |
+| `review profile` | `COMMAND` | **required** | Any shell command after `--` |
+| `review clean` | `--subserver` | `all` | `all`, `scope`, `quality`, `security`, `deps`, `docs`, `perf`, `cache`, `report`, `profile` |
+| | `--dry-run` | disabled | Flag (include to preview) |
+| `review report` | - | - | No options |
 
 > **All options are optional** unless marked as required. See [CLI Reference](REFERENCE.md) for detailed documentation.
 

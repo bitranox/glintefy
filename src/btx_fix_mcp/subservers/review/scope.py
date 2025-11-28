@@ -288,7 +288,7 @@ class ScopeSubServer(BaseSubServer):
             lines.extend(
                 [
                     "",
-                    "> ⚠️ **Note**: Git mode was requested but this is not a git repository.",
+                    "> **Note**: Git mode was requested but this is not a git repository.",
                     "> Automatically fell back to 'full' mode (scanning all files).",
                     "> To analyze only uncommitted changes, initialize a git repository first.",
                 ]

@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file following
 the [Keep a Changelog](https://keepachangelog.com/) format.
 
+## [1.1.1] - 2025-11-28
+
+### Changed
+- CLI QUICKSTART.md: Added quick reference table with all options and their default values
+
+### Fixed
+- Removed unused `shutil` import from `source_patcher.py`
+
 ## [1.1.0] - 2025-11-28
 
 ### Added

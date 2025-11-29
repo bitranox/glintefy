@@ -1,6 +1,6 @@
 [project]
 name = "btx_fix_mcp"
-version = "2.0.0"
+version = "2.0.1"
 description = "MCP servers for code review and automated fixing"
 readme = "README.md"
 requires-python = ">=3.13"

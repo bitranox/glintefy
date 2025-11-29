@@ -1,6 +1,6 @@
 """File I/O utilities for sub-servers."""
 
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 
 
 def read_file(path: Path) -> str:
@@ -145,15 +145,20 @@ def find_files(
         ".snyk",
     ]
 
+    # Normalize patterns to POSIX-style so matching is consistent across OSes
+    normalized_excludes = [p.replace("\\", "/") for p in exclude_patterns]
+
     files: list[Path] = []
     for file_path in root.rglob(pattern):
         if file_path.is_file():
             # Check exclusions using multiple methods for reliability
-            path_str = str(file_path)
+            path_posix = file_path.as_posix()
+            rel_posix = file_path.relative_to(root).as_posix()
             excluded = False
-            for excl in exclude_patterns:
+            for excl in normalized_excludes:
                 # Method 1: Path.match() for glob patterns
-                if file_path.match(excl):
+                posix_path = PurePosixPath(path_posix)
+                if posix_path.match(excl) or PurePosixPath(rel_posix).match(excl):
                     excluded = True
                     break
                 # Method 2: Check if path contains excluded directory
@@ -161,7 +166,7 @@ def find_files(
                 if "**" in excl:
                     parts = excl.replace("**", "").strip("/").split("/")
                     dir_name = next((p for p in parts if p and not p.startswith("*")), None)
-                    if dir_name and f"/{dir_name}/" in f"/{path_str}/":
+                    if dir_name and f"/{dir_name}/" in f"/{path_posix}/":
                         excluded = True
                         break
             if not excluded:

@@ -3,6 +3,11 @@
 All notable changes to this project will be documented in this file following
 the [Keep a Changelog](https://keepachangelog.com/) format.
 
+## [2.0.1] - 2025-11-29
+
+### Fixed
+- Normalized paths to POSIX form before applying scope exclusion patterns, so Windows runs now correctly skip `.git`, `node_modules`, `__pycache__`, and `*.pyc` files when discovering review scope.
+
 ## [2.0.0] - 2025-11-29
 
 ### Changed

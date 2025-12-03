@@ -1,0 +1,1895 @@
+# Glintefy - Default Configuration
+# ====================================
+#
+# This file provides default configuration values for all tools and sub-servers.
+# It is read by lib_layered_config and can be overridden by:
+#   1. User config file (~/.config/glintefy/config.toml on Linux)
+#   2. Project config file (.glintefy.toml or pyproject.toml [tool.glintefy])
+#   3. Environment variables (see format below)
+#   4. Command-line arguments (highest priority)
+#
+# Configuration Priority (lowest to highest):
+#   defaults < user config < project config < env vars < CLI args
+#
+# Environment Variable Format:
+#   GLINTEFY___<SECTION>__<KEY>=<VALUE>
+#
+#   - Triple underscore (___) separates prefix from section
+#   - Double underscore (__) separates nested sections and keys
+#   - All uppercase, replace dots with double underscores
+#
+#   Examples:
+#     GLINTEFY___GENERAL__LOG_LEVEL=DEBUG
+#     GLINTEFY___REVIEW__QUALITY__COMPLEXITY_THRESHOLD=15
+#     GLINTEFY___REVIEW__SECURITY__SEVERITY_THRESHOLD=high
+#     GLINTEFY___OUTPUT__DISPLAY__MAX_SAMPLE_FILES=20
+
+
+# =============================================================================
+# GENERAL SETTINGS
+# =============================================================================
+# Global settings that apply to all operations.
+
+[general]
+# Log verbosity level for console and file output.
+# Controls how much detail is shown during analysis.
+#
+# Values: "DEBUG" (10), "INFO" (20), "WARNING" (30), "ERROR" (40), "CRITICAL" (50)
+# Default: "INFO"
+# Env: GLINTEFY___GENERAL__LOG_LEVEL
+log_level = "INFO"
+
+# Enable verbose output mode.
+# When true, shows additional progress information and intermediate results.
+#
+# Values: true, false
+# Default: false
+# Env: GLINTEFY___GENERAL__VERBOSE
+verbose = false
+
+# Maximum number of parallel worker processes.
+# Used when running multiple sub-servers or analysis tools concurrently.
+# Set to 1 for sequential execution (useful for debugging).
+#
+# Values: Any positive integer (recommended: 1-8)
+# Default: 4
+# Env: GLINTEFY___GENERAL__MAX_WORKERS
+max_workers = 4
+
+
+# -----------------------------------------------------------------------------
+# Timeout Configuration (in seconds)
+# -----------------------------------------------------------------------------
+# Timeouts prevent operations from hanging indefinitely.
+# Increase these values for large repositories or slow systems.
+
+[general.timeouts]
+# Quick git commands: is_git_repo, get_branch, etc.
+# These should complete almost instantly.
+#
+# Values: Positive integer (seconds)
+# Default: 10
+# Env: GLINTEFY___GENERAL__TIMEOUTS__GIT_QUICK_OP
+git_quick_op = 10
+
+# Git status and diff operations.
+# May take longer for large repositories with many changes.
+#
+# Values: Positive integer (seconds)
+# Default: 20
+# Env: GLINTEFY___GENERAL__TIMEOUTS__GIT_STATUS
+git_status = 20
+
+# Git commit operations.
+# May run pre-commit hooks which can take time.
+#
+# Values: Positive integer (seconds)
+# Default: 60
+# Env: GLINTEFY___GENERAL__TIMEOUTS__GIT_COMMIT
+git_commit = 60
+
+# Git log and history operations.
+# Reading commit history for large repositories.
+#
+# Values: Positive integer (seconds)
+# Default: 20
+# Env: GLINTEFY___GENERAL__TIMEOUTS__GIT_LOG
+git_log = 20
+
+# Git diff operations.
+# Generating diffs for large changesets.
+#
+# Values: Positive integer (seconds)
+# Default: 60
+# Env: GLINTEFY___GENERAL__TIMEOUTS__GIT_DIFF
+git_diff = 60
+
+# Git blame operations.
+# Line-by-line authorship lookup.
+#
+# Values: Positive integer (seconds)
+# Default: 10
+# Env: GLINTEFY___GENERAL__TIMEOUTS__GIT_BLAME
+git_blame = 10
+
+# Quick analysis tools (< 1 minute typically).
+# Tools: radon complexity, simple file operations.
+#
+# Values: Positive integer (seconds)
+# Default: 60
+# Env: GLINTEFY___GENERAL__TIMEOUTS__TOOL_QUICK
+tool_quick = 60
+
+# Standard analysis tools (1-2 minutes typically).
+# Tools: ruff, interrogate, bandit.
+#
+# Values: Positive integer (seconds)
+# Default: 120
+# Env: GLINTEFY___GENERAL__TIMEOUTS__TOOL_ANALYSIS
+tool_analysis = 120
+
+# Long-running analysis tools (2-5 minutes typically).
+# Tools: mypy, pylint, pytest.
+#
+# Values: Positive integer (seconds)
+# Default: 240
+# Env: GLINTEFY___GENERAL__TIMEOUTS__TOOL_LONG
+tool_long = 240
+
+# Test profiling with pytest.
+# Full test suite execution with cProfile wrapper.
+#
+# Values: Positive integer (seconds)
+# Default: 600 (10 minutes)
+# Env: GLINTEFY___GENERAL__TIMEOUTS__PROFILE_TESTS
+profile_tests = 600
+
+# Beartype runtime type checking.
+# Full test suite execution with beartype validation.
+#
+# Values: Positive integer (seconds)
+# Default: 120 (2 minutes)
+# Env: GLINTEFY___GENERAL__TIMEOUTS__BEARTYPE_CHECK
+beartype_check = 120
+
+# Dependency vulnerability scanning.
+# pip-audit and safety checks against vulnerability databases.
+#
+# Values: Positive integer (seconds)
+# Default: 240
+# Env: GLINTEFY___GENERAL__TIMEOUTS__VULN_SCAN
+vuln_scan = 240
+
+
+# =============================================================================
+# OUTPUT SETTINGS
+# =============================================================================
+# Controls how results are formatted and displayed.
+
+[output]
+# Output format for reports.
+# Determines the file format of generated reports.
+#
+# Values: "markdown", "json", "html"
+# Default: "markdown"
+# Env: GLINTEFY___OUTPUT__FORMAT
+format = "markdown"
+
+# Enable colorized terminal output.
+# Uses ANSI color codes for rich console display.
+# Disable for CI/CD environments that don't support colors.
+#
+# Values: true, false
+# Default: true
+# Env: GLINTEFY___OUTPUT__COLOR
+color = true
+
+# Show progress indicators during analysis.
+# Displays spinners and progress bars for long operations.
+#
+# Values: true, false
+# Default: true
+# Env: GLINTEFY___OUTPUT__SHOW_PROGRESS
+show_progress = true
+
+# Summary detail level in reports.
+# Controls how much information is included in summaries.
+#
+# Values: "brief" (minimal), "detailed" (standard), "verbose" (all details)
+# Default: "detailed"
+# Env: GLINTEFY___OUTPUT__SUMMARY_STYLE
+summary_style = "detailed"
+
+# JSON output indentation (spaces).
+# Number of spaces for JSON pretty-printing.
+# Set to 0 for compact output.
+#
+# Values: 0-8
+# Default: 2
+# Env: GLINTEFY___OUTPUT__JSON_INDENT
+json_indent = 2
+
+# Chunk size for splitting large issue files.
+# When issue count exceeds this, files are split into chunks.
+# Helps prevent overwhelming output for large codebases.
+#
+# Values: Positive integer
+# Default: 50
+# Env: GLINTEFY___OUTPUT__CHUNK_SIZE
+chunk_size = 50
+
+
+# -----------------------------------------------------------------------------
+# Display Limits for Reports
+# -----------------------------------------------------------------------------
+# Controls how many items appear in markdown summary reports.
+# Set to 0 for unlimited (show all items).
+# Full data is always available in JSON artifacts regardless of limits.
+
+[output.display]
+# Maximum sample files shown in scope report.
+# Limits the file list preview in scope analysis summary.
+#
+# Values: 0 (unlimited) or positive integer
+# Default: 10
+# Env: GLINTEFY___OUTPUT__DISPLAY__MAX_SAMPLE_FILES
+max_sample_files = 10
+
+# Maximum high severity security issues to display.
+# Limits critical security findings in summary.
+#
+# Values: 0 (unlimited) or positive integer
+# Default: 10
+# Env: GLINTEFY___OUTPUT__DISPLAY__MAX_HIGH_SECURITY
+max_high_security = 10
+
+# Maximum medium severity security issues to display.
+#
+# Values: 0 (unlimited) or positive integer
+# Default: 10
+# Env: GLINTEFY___OUTPUT__DISPLAY__MAX_MEDIUM_SECURITY
+max_medium_security = 10
+
+# Maximum vulnerability issues to display in deps report.
+#
+# Values: 0 (unlimited) or positive integer
+# Default: 10
+# Env: GLINTEFY___OUTPUT__DISPLAY__MAX_VULNERABILITIES
+max_vulnerabilities = 10
+
+# Maximum outdated packages to display.
+#
+# Values: 0 (unlimited) or positive integer
+# Default: 10
+# Env: GLINTEFY___OUTPUT__DISPLAY__MAX_OUTDATED_PACKAGES
+max_outdated_packages = 10
+
+# Maximum license violations to display.
+#
+# Values: 0 (unlimited) or positive integer
+# Default: 5
+# Env: GLINTEFY___OUTPUT__DISPLAY__MAX_LICENSE_ISSUES
+max_license_issues = 5
+
+# Maximum missing docstring examples to display.
+#
+# Values: 0 (unlimited) or positive integer
+# Default: 15
+# Env: GLINTEFY___OUTPUT__DISPLAY__MAX_MISSING_DOCSTRINGS
+max_missing_docstrings = 15
+
+# Maximum performance hotspots to display.
+#
+# Values: 0 (unlimited) or positive integer
+# Default: 10
+# Env: GLINTEFY___OUTPUT__DISPLAY__MAX_HOTSPOTS
+max_hotspots = 10
+
+# Maximum performance anti-patterns to display.
+#
+# Values: 0 (unlimited) or positive integer
+# Default: 10
+# Env: GLINTEFY___OUTPUT__DISPLAY__MAX_PATTERN_ISSUES
+max_pattern_issues = 10
+
+# Maximum critical issues in final report summary.
+#
+# Values: 0 (unlimited) or positive integer
+# Default: 20
+# Env: GLINTEFY___OUTPUT__DISPLAY__MAX_CRITICAL_DISPLAY
+max_critical_display = 20
+
+# Maximum metrics shown per sub-server in report.
+#
+# Values: 0 (unlimited) or positive integer
+# Default: 5
+# Env: GLINTEFY___OUTPUT__DISPLAY__MAX_METRICS_DISPLAY
+max_metrics_display = 5
+
+
+# =============================================================================
+# REVIEW ANALYSIS SETTINGS
+# =============================================================================
+# Configuration for the review orchestrator and sub-servers.
+
+[review]
+# Base output directory for review analysis results.
+# All sub-server outputs are created under this directory.
+# Path is relative to the repository root.
+#
+# Values: Any valid directory path
+# Default: "LLM-CONTEXT/glintefy/review"
+# Env: GLINTEFY___REVIEW__OUTPUT_DIR
+output_dir = "LLM-CONTEXT/glintefy/review"
+
+# Sub-servers to run during full review (in order).
+# Controls which analyses are performed by `review all`.
+# Order determines execution sequence.
+#
+# Available: scope, quality, security, deps, docs, perf, cache
+# Default: ["scope", "quality", "security", "deps", "docs", "perf"]
+# Env: GLINTEFY___REVIEW__SUBSERVERS (comma-separated)
+subservers = ["scope", "quality", "security", "deps", "docs", "perf"]
+
+# Stop on first sub-server failure.
+# When true, aborts review if any sub-server fails.
+# When false, continues with remaining sub-servers.
+#
+# Values: true, false
+# Default: false
+# Env: GLINTEFY___REVIEW__STOP_ON_FAILURE
+stop_on_failure = false
+
+
+# -----------------------------------------------------------------------------
+# Scope Sub-Server
+# -----------------------------------------------------------------------------
+# Determines which files to include in the review.
+
+[review.scope]
+# Scope detection mode.
+# - "git": Review only uncommitted changes (requires git repository)
+# - "full": Review all files in the repository
+#
+# Note: If "git" is selected but directory is not a git repo,
+# automatically falls back to "full" mode with a warning.
+#
+# Values: "git", "full"
+# Default: "git"
+# Env: GLINTEFY___REVIEW__SCOPE__MODE
+mode = "git"
+
+# Patterns to exclude from analysis.
+# Files matching any pattern are skipped.
+#
+# Pattern Syntax (uses pathlib.match()):
+#   *   - Matches one path component (e.g., "*.py" matches "file.py")
+#   **  - Matches zero or more path components (e.g., "**/test/*")
+#   ?   - Matches one character
+#
+# Env: GLINTEFY___REVIEW__SCOPE__EXCLUDE_PATTERNS (comma-separated)
+exclude_patterns = [
+    # Virtual environments
+    "**/.venv/**/*",
+    ".venv/**/*",
+    "**/venv/**/*",
+    "venv/**/*",
+    "**/.env/**/*",
+    "**/env/**/*",
+    "**/.virtualenv/**/*",
+    "**/virtualenv/**/*",
+
+    # Dependency directories
+    "**/vendor/**/*",
+    "**/node_modules/**/*",
+    "**/__pycache__/**/*",
+    "__pycache__/**/*",
+    "**/.tox/**/*",
+    ".tox/**/*",
+    "**/.nox/**/*",
+    ".nox/**/*",
+    "**/.pytest_cache/**/*",
+    ".pytest_cache/**/*",
+    "**/.mypy_cache/**/*",
+    ".mypy_cache/**/*",
+    "**/.ruff_cache/**/*",
+    ".ruff_cache/**/*",
+
+    # Build artifacts
+    "**/dist/**/*",
+    "dist/**/*",
+    "**/build/**/*",
+    "build/**/*",
+    "**/*.egg-info/**/*",
+    "*.egg-info/**/*",
+
+    # Version control
+    "**/.git/**/*",
+    ".git/**/*",
+
+    # Compiled/generated files
+    "*.pyc",
+    "*.pyo",
+    "*.lock",
+    "*.min.js",
+    "*.min.css",
+
+    # Project-specific
+    "**/LLM-CONTEXT/**/*",
+    "LLM-CONTEXT/**/*",
+    "**/scripts/**/*",
+    "scripts/**/*",
+
+    # IDE and editor configs
+    "**/.claude/**/*",
+    ".claude/**/*",
+    "**/.devcontainer/**/*",
+    ".devcontainer/**/*",
+    "**/.idea/**/*",
+    ".idea/**/*",
+    "**/.vscode/**/*",
+    ".vscode/**/*",
+
+    # CI/CD and tooling configs
+    "**/.github/**/*",
+    ".github/**/*",
+    "**/.qlty/**/*",
+    ".qlty/**/*",
+
+    # Config files at root
+    "*.example",
+    "codecov.yml",
+    ".snyk",
+]
+
+# Patterns to include in analysis.
+# Only files matching at least one pattern are analyzed.
+# Default "**/*" includes all files (then exclusions apply).
+#
+# Env: GLINTEFY___REVIEW__SCOPE__INCLUDE_PATTERNS (comma-separated)
+include_patterns = ["**/*"]
+
+
+# -----------------------------------------------------------------------------
+# Quality Sub-Server
+# -----------------------------------------------------------------------------
+# Analyzes code quality metrics: complexity, maintainability, style.
+
+[review.quality]
+# Maximum cyclomatic complexity before flagging as issue.
+# Cyclomatic complexity measures the number of independent paths through code.
+#
+# Grades: A=1-5 (low risk), B=6-10 (moderate), C=11-20 (complex), D=21+ (high risk)
+# Recommendation: Keep functions at A or B grade (<=10)
+#
+# Values: Positive integer
+# Default: 10
+# Env: GLINTEFY___REVIEW__QUALITY__COMPLEXITY_THRESHOLD
+complexity_threshold = 10
+
+# Complexity above this is reported as "error" severity, below as "warning".
+# Allows distinguishing severely complex code from moderately complex.
+#
+# Values: Positive integer (should be > complexity_threshold)
+# Default: 20
+# Env: GLINTEFY___REVIEW__QUALITY__COMPLEXITY_ERROR_THRESHOLD
+complexity_error_threshold = 20
+
+# Minimum maintainability index before flagging as issue.
+# Maintainability Index combines Halstead volume, cyclomatic complexity, and LOC.
+#
+# Grades: A=20+ (good), B=10-19 (moderate), C=0-9 (poor)
+# Recommendation: Keep modules at A grade (>=20)
+#
+# Values: 0-100
+# Default: 20
+# Env: GLINTEFY___REVIEW__QUALITY__MAINTAINABILITY_THRESHOLD
+maintainability_threshold = 20
+
+# Maintainability below this is "error" severity, above is "warning".
+#
+# Values: 0-100 (should be < maintainability_threshold)
+# Default: 10
+# Env: GLINTEFY___REVIEW__QUALITY__MAINTAINABILITY_ERROR_THRESHOLD
+maintainability_error_threshold = 10
+
+# Maximum cognitive complexity threshold.
+# Cognitive complexity measures how difficult code is to understand.
+# Unlike cyclomatic complexity, it penalizes nested structures more.
+#
+# Values: Positive integer
+# Default: 15
+# Env: GLINTEFY___REVIEW__QUALITY__COGNITIVE_COMPLEXITY_THRESHOLD
+cognitive_complexity_threshold = 15
+
+# Maximum function length in lines before flagging.
+# Long functions are harder to understand, test, and maintain.
+#
+# Values: Positive integer
+# Default: 50
+# Env: GLINTEFY___REVIEW__QUALITY__MAX_FUNCTION_LENGTH
+max_function_length = 50
+
+# Maximum nesting depth before flagging.
+# Deep nesting (if/for/while/try) makes code hard to follow.
+#
+# Values: Positive integer
+# Default: 3
+# Env: GLINTEFY___REVIEW__QUALITY__MAX_NESTING_DEPTH
+max_nesting_depth = 3
+
+# --- Feature Flags ---
+# Enable/disable specific quality analysis features.
+
+# Enable code duplication detection using pylint.
+# Finds copy-pasted code blocks that should be refactored.
+#
+# Values: true, false
+# Default: true
+# Env: GLINTEFY___REVIEW__QUALITY__ENABLE_DUPLICATION_DETECTION
+enable_duplication_detection = true
+
+# Minimum consecutive duplicate lines to report.
+# Lower values catch more duplicates but may flag trivial patterns.
+#
+# Values: Positive integer
+# Default: 5
+# Env: GLINTEFY___REVIEW__QUALITY__MIN_DUPLICATE_LINES
+min_duplicate_lines = 5
+
+# Enable static analysis using Ruff.
+# Fast Python linter for style, errors, and best practices.
+#
+# Values: true, false
+# Default: true
+# Env: GLINTEFY___REVIEW__QUALITY__ENABLE_STATIC_ANALYSIS
+enable_static_analysis = true
+
+# Enable test suite analysis.
+# Analyzes test files for quality and coverage patterns.
+#
+# Values: true, false
+# Default: true
+# Env: GLINTEFY___REVIEW__QUALITY__ENABLE_TEST_ANALYSIS
+enable_test_analysis = true
+
+# Count assertions in test functions.
+# Helps identify tests that might not be testing anything.
+#
+# Values: true, false
+# Default: true
+# Env: GLINTEFY___REVIEW__QUALITY__COUNT_TEST_ASSERTIONS
+count_test_assertions = true
+
+# Enable architecture analysis.
+# Detects god objects, high coupling, and design issues.
+#
+# Values: true, false
+# Default: true
+# Env: GLINTEFY___REVIEW__QUALITY__ENABLE_ARCHITECTURE_ANALYSIS
+enable_architecture_analysis = true
+
+# Detect god objects (classes with too many responsibilities).
+# God objects violate Single Responsibility Principle.
+#
+# Values: true, false
+# Default: true
+# Env: GLINTEFY___REVIEW__QUALITY__DETECT_GOD_OBJECTS
+detect_god_objects = true
+
+# Maximum methods per class before flagging as god object.
+#
+# Values: Positive integer
+# Default: 20
+# Env: GLINTEFY___REVIEW__QUALITY__GOD_OBJECT_METHODS_THRESHOLD
+god_object_methods_threshold = 20
+
+# Maximum lines per class before flagging as god object.
+#
+# Values: Positive integer
+# Default: 500
+# Env: GLINTEFY___REVIEW__QUALITY__GOD_OBJECT_LINES_THRESHOLD
+god_object_lines_threshold = 500
+
+# Detect high coupling between modules.
+# High coupling makes code harder to change and test.
+#
+# Values: true, false
+# Default: true
+# Env: GLINTEFY___REVIEW__QUALITY__DETECT_HIGH_COUPLING
+detect_high_coupling = true
+
+# Maximum imports per module before flagging high coupling.
+#
+# Values: Positive integer
+# Default: 15
+# Env: GLINTEFY___REVIEW__QUALITY__COUPLING_THRESHOLD
+coupling_threshold = 15
+
+# Enable import cycle detection.
+# Circular imports cause runtime errors and indicate poor architecture.
+#
+# Values: true, false
+# Default: true
+# Env: GLINTEFY___REVIEW__QUALITY__ENABLE_IMPORT_CYCLE_DETECTION
+enable_import_cycle_detection = true
+
+# Enable runtime check optimization detection.
+# Finds isinstance/type checks that could be cached at module load.
+#
+# Values: true, false
+# Default: true
+# Env: GLINTEFY___REVIEW__QUALITY__ENABLE_RUNTIME_CHECK_DETECTION
+enable_runtime_check_detection = true
+
+# Enable type coverage analysis using mypy.
+# Measures how much of the code has type annotations.
+#
+# Values: true, false
+# Default: true
+# Env: GLINTEFY___REVIEW__QUALITY__ENABLE_TYPE_COVERAGE
+enable_type_coverage = true
+
+# Minimum type coverage percentage.
+# Percentage of code that should have type annotations.
+#
+# Values: 0-100
+# Default: 80
+# Env: GLINTEFY___REVIEW__QUALITY__MIN_TYPE_COVERAGE
+min_type_coverage = 80
+
+# Enable dead code detection using vulture.
+# Finds unused functions, variables, and imports.
+#
+# Values: true, false
+# Default: true
+# Env: GLINTEFY___REVIEW__QUALITY__ENABLE_DEAD_CODE_DETECTION
+enable_dead_code_detection = true
+
+# Minimum confidence for dead code detection (0-100).
+# Higher values reduce false positives but may miss some dead code.
+#
+# Values: 0-100
+# Default: 80
+# Env: GLINTEFY___REVIEW__QUALITY__DEAD_CODE_CONFIDENCE
+dead_code_confidence = 80
+
+# Enable docstring coverage analysis using interrogate.
+# Checks that public APIs have documentation.
+#
+# Values: true, false
+# Default: true
+# Env: GLINTEFY___REVIEW__QUALITY__ENABLE_DOCSTRING_COVERAGE
+enable_docstring_coverage = true
+
+# Minimum docstring coverage percentage.
+#
+# Values: 0-100
+# Default: 80
+# Env: GLINTEFY___REVIEW__QUALITY__MIN_DOCSTRING_COVERAGE
+min_docstring_coverage = 80
+
+# Enable Halstead metrics calculation.
+# Halstead metrics measure code vocabulary and volume.
+#
+# Values: true, false
+# Default: true
+# Env: GLINTEFY___REVIEW__QUALITY__ENABLE_HALSTEAD_METRICS
+enable_halstead_metrics = true
+
+# Enable raw metrics (LOC/SLOC/comments).
+# Basic line counts via radon raw.
+#
+# Values: true, false
+# Default: true
+# Env: GLINTEFY___REVIEW__QUALITY__ENABLE_RAW_METRICS
+enable_raw_metrics = true
+
+# Enable cognitive complexity analysis.
+# Cognitive complexity is a more intuitive measure than cyclomatic.
+#
+# Values: true, false
+# Default: true
+# Env: GLINTEFY___REVIEW__QUALITY__ENABLE_COGNITIVE_COMPLEXITY
+enable_cognitive_complexity = true
+
+# Enable JavaScript/TypeScript analysis using ESLint.
+# Only runs if JS/TS files are found in scope.
+#
+# Values: true, false
+# Default: true
+# Env: GLINTEFY___REVIEW__QUALITY__ENABLE_JS_ANALYSIS
+enable_js_analysis = true
+
+# Enable code churn analysis from git history.
+# Identifies frequently changed files that may need refactoring.
+# Requires git repository; skipped gracefully if unavailable.
+#
+# Values: true, false
+# Default: true
+# Env: GLINTEFY___REVIEW__QUALITY__ENABLE_CODE_CHURN
+enable_code_churn = true
+
+# Number of days to look back for churn analysis.
+#
+# Values: Positive integer
+# Default: 90
+# Env: GLINTEFY___REVIEW__QUALITY__CHURN_PERIOD_DAYS
+churn_period_days = 90
+
+# High churn threshold (commits in churn_period_days).
+# Files with more commits than this are flagged.
+#
+# Values: Positive integer
+# Default: 20
+# Env: GLINTEFY___REVIEW__QUALITY__CHURN_THRESHOLD
+churn_threshold = 20
+
+# Enable beartype runtime type checking detection.
+# Finds code that could benefit from runtime type validation.
+#
+# Values: true, false
+# Default: true
+# Env: GLINTEFY___REVIEW__QUALITY__ENABLE_BEARTYPE
+enable_beartype = true
+
+
+# -----------------------------------------------------------------------------
+# Radon Integration (for quality analysis)
+# Controls radon complexity analyzer behavior.
+# -----------------------------------------------------------------------------
+[review.quality.radon]
+# Enable radon complexity analysis.
+#
+# Values: true, false
+# Default: true
+# Env: GLINTEFY___REVIEW__QUALITY__RADON__ENABLED
+enabled = true
+
+# Minimum complexity rank to show in output.
+# A is lowest complexity, F is highest.
+#
+# Values: "A", "B", "C", "D", "E", "F"
+# Default: "A" (show all)
+# Env: GLINTEFY___REVIEW__QUALITY__RADON__SHOW_COMPLEXITY
+show_complexity = "A"
+
+# Include closures (nested functions) in complexity calculation.
+#
+# Values: true, false
+# Default: true
+# Env: GLINTEFY___REVIEW__QUALITY__RADON__INCLUDE_CLOSURES
+include_closures = true
+
+# Output format from radon.
+#
+# Values: "json", "text"
+# Default: "json"
+# Env: GLINTEFY___REVIEW__QUALITY__RADON__OUTPUT_FORMAT
+output_format = "json"
+
+
+# -----------------------------------------------------------------------------
+# Security Sub-Server
+# -----------------------------------------------------------------------------
+# Scans code for security vulnerabilities using Bandit.
+
+[review.security]
+# Minimum severity level to report.
+# Filters issues below this severity.
+#
+# Values: "low", "medium", "high"
+# Default: "low" (report all)
+# Env: GLINTEFY___REVIEW__SECURITY__SEVERITY_THRESHOLD
+severity_threshold = "low"
+
+# Minimum confidence level to report.
+# Filters issues with lower confidence.
+#
+# Values: "low", "medium", "high"
+# Default: "low" (report all)
+# Env: GLINTEFY___REVIEW__SECURITY__CONFIDENCE_THRESHOLD
+confidence_threshold = "low"
+
+# Path to custom Bandit configuration file.
+# Leave empty to use default Bandit settings.
+#
+# Values: File path or empty string
+# Default: "" (use defaults)
+# Env: GLINTEFY___REVIEW__SECURITY__BANDIT_CONFIG
+bandit_config = ""
+
+# Bandit test IDs to skip.
+# Use to suppress known false positives.
+# Example: ["B101"] skips assert usage warnings.
+#
+# Values: List of Bandit test IDs (e.g., "B101", "B102")
+# Default: []
+# Env: GLINTEFY___REVIEW__SECURITY__SKIP_TESTS (comma-separated)
+skip_tests = []
+
+# Additional paths to exclude from security scan.
+# Beyond the scope exclude_patterns.
+#
+# Values: List of paths
+# Default: []
+# Env: GLINTEFY___REVIEW__SECURITY__EXCLUDE_PATHS (comma-separated)
+exclude_paths = []
+
+# Number of high severity issues to trigger CRITICAL status.
+# Affects the overall verdict.
+#
+# Values: Non-negative integer (0 = any high issue is critical)
+# Default: 1
+# Env: GLINTEFY___REVIEW__SECURITY__CRITICAL_THRESHOLD
+critical_threshold = 1
+
+# Number of medium severity issues to trigger WARNING status.
+#
+# Values: Non-negative integer
+# Default: 5
+# Env: GLINTEFY___REVIEW__SECURITY__WARNING_THRESHOLD
+warning_threshold = 5
+
+
+# -----------------------------------------------------------------------------
+# Dependencies Sub-Server
+# -----------------------------------------------------------------------------
+# Analyzes project dependencies for security and compliance.
+
+[review.deps]
+# Enable vulnerability scanning.
+# Uses pip-audit to check for known CVEs.
+#
+# Values: true, false
+# Default: true
+# Env: GLINTEFY___REVIEW__DEPS__SCAN_VULNERABILITIES
+scan_vulnerabilities = true
+
+# Enable license compliance checking.
+# Verifies dependencies use allowed licenses.
+#
+# Values: true, false
+# Default: true
+# Env: GLINTEFY___REVIEW__DEPS__CHECK_LICENSES
+check_licenses = true
+
+# Allowed license identifiers (SPDX format).
+# Dependencies with these licenses are permitted.
+#
+# Values: List of SPDX license identifiers
+# Env: GLINTEFY___REVIEW__DEPS__ALLOWED_LICENSES (comma-separated)
+allowed_licenses = [
+    "MIT",
+    "Apache-2.0",
+    "BSD-2-Clause",
+    "BSD-3-Clause",
+    "ISC",
+    "MPL-2.0",
+    "LGPL-2.1",
+    "LGPL-3.0",
+]
+
+# Disallowed license identifiers (SPDX format).
+# Dependencies with these licenses are flagged as violations.
+#
+# Values: List of SPDX license identifiers
+# Env: GLINTEFY___REVIEW__DEPS__DISALLOWED_LICENSES (comma-separated)
+disallowed_licenses = ["GPL-3.0", "AGPL-3.0"]
+
+# Check for outdated packages.
+# Compares installed versions against latest available.
+#
+# Values: true, false
+# Default: true
+# Env: GLINTEFY___REVIEW__DEPS__CHECK_OUTDATED
+check_outdated = true
+
+# Maximum allowed age for dependencies (days).
+# Dependencies not updated in this period are flagged.
+# Set to 0 to disable age checking.
+#
+# Values: Non-negative integer (0 = no limit)
+# Default: 365
+# Env: GLINTEFY___REVIEW__DEPS__MAX_AGE_DAYS
+max_age_days = 365
+
+
+# -----------------------------------------------------------------------------
+# Documentation Sub-Server
+# -----------------------------------------------------------------------------
+# Analyzes documentation coverage and quality.
+
+[review.docs]
+# Check for missing docstrings.
+# Uses interrogate to find undocumented code.
+#
+# Values: true, false
+# Default: true
+# Env: GLINTEFY___REVIEW__DOCS__CHECK_DOCSTRINGS
+check_docstrings = true
+
+# Expected docstring style format.
+# Used for style consistency checking.
+#
+# Values: "google", "numpy", "sphinx"
+# Default: "google"
+# Env: GLINTEFY___REVIEW__DOCS__DOCSTRING_STYLE
+docstring_style = "google"
+
+# Minimum docstring coverage percentage.
+# Percentage of public APIs that must have docstrings.
+#
+# Values: 0-100
+# Default: 80
+# Env: GLINTEFY___REVIEW__DOCS__MIN_COVERAGE
+min_coverage = 80
+
+# Require README file in repository.
+# Checks for README.md or README.rst at repository root.
+#
+# Values: true, false
+# Default: true
+# Env: GLINTEFY___REVIEW__DOCS__REQUIRE_README
+require_readme = true
+
+# Require CHANGELOG file in repository.
+#
+# Values: true, false
+# Default: false
+# Env: GLINTEFY___REVIEW__DOCS__REQUIRE_CHANGELOG
+require_changelog = false
+
+# Required sections in README file.
+# README must contain these section headings.
+#
+# Values: List of section names
+# Env: GLINTEFY___REVIEW__DOCS__REQUIRED_README_SECTIONS (comma-separated)
+required_readme_sections = ["Installation", "Usage"]
+
+
+# -----------------------------------------------------------------------------
+# Performance Sub-Server
+# -----------------------------------------------------------------------------
+# Analyzes code for performance issues and patterns.
+
+[review.perf]
+# Enable runtime performance estimation.
+# Estimates function execution time from complexity.
+#
+# Values: true, false
+# Default: true
+# Env: GLINTEFY___REVIEW__PERF__ESTIMATE_RUNTIME
+estimate_runtime = true
+
+# Enable memory usage estimation.
+# Estimates memory consumption from data structures.
+#
+# Values: true, false
+# Default: true
+# Env: GLINTEFY___REVIEW__PERF__ESTIMATE_MEMORY
+estimate_memory = true
+
+# Flag functions with estimated runtime above this (milliseconds).
+#
+# Values: Positive number
+# Default: 100
+# Env: GLINTEFY___REVIEW__PERF__RUNTIME_THRESHOLD_MS
+runtime_threshold_ms = 100
+
+# Flag modules with estimated memory above this (megabytes).
+#
+# Values: Positive number
+# Default: 50
+# Env: GLINTEFY___REVIEW__PERF__MEMORY_THRESHOLD_MB
+memory_threshold_mb = 50
+
+# Enable algorithm complexity detection.
+# Detects O(n^2), O(n!), and other algorithmic concerns.
+#
+# Values: true, false
+# Default: true
+# Env: GLINTEFY___REVIEW__PERF__DETECT_COMPLEXITY
+detect_complexity = true
+
+# Flag nested loops deeper than this threshold.
+# 2 = O(n^2), 3 = O(n^3), etc.
+#
+# Values: Positive integer
+# Default: 2
+# Env: GLINTEFY___REVIEW__PERF__NESTED_LOOP_THRESHOLD
+nested_loop_threshold = 2
+
+
+# -----------------------------------------------------------------------------
+# Cache Analysis Sub-Server
+# -----------------------------------------------------------------------------
+# Identifies caching opportunities using evidence-based analysis.
+# Requires profiling data from `review profile` for best results.
+
+[review.cache]
+# LRU cache size for testing candidate functions.
+# Used when validating cache effectiveness.
+#
+# Values: Positive integer (powers of 2 recommended: 64, 128, 256, 512)
+# Default: 128
+# Env: GLINTEFY___REVIEW__CACHE__CACHE_SIZE
+cache_size = 128
+
+# Minimum cache hit rate percentage for batch screening.
+# Functions must achieve this hit rate to be considered cacheable.
+#
+# Values: 0.0-100.0
+# Default: 20.0
+# Env: GLINTEFY___REVIEW__CACHE__HIT_RATE_THRESHOLD
+hit_rate_threshold = 20.0
+
+# Hit rate below this recommends cache removal.
+# For existing caches that aren't being effective.
+#
+# Values: 0.0-100.0
+# Default: 10.0
+# Env: GLINTEFY___REVIEW__CACHE__REMOVE_THRESHOLD
+remove_threshold = 10.0
+
+# Cache usage below this % of maxsize triggers size adjustment.
+# Recommends reducing cache size if underutilized.
+#
+# Values: 0.0-100.0
+# Default: 50.0
+# Env: GLINTEFY___REVIEW__CACHE__SIZE_ADJUSTMENT_THRESHOLD
+size_adjustment_threshold = 50.0
+
+# Minimum suggested maxsize when reducing cache size.
+# Won't recommend caches smaller than this.
+#
+# Values: Positive integer
+# Default: 16
+# Env: GLINTEFY___REVIEW__CACHE__MIN_SUGGESTED_MAXSIZE
+min_suggested_maxsize = 16
+
+# Minimum speedup percentage for individual validation.
+# Functions must show this performance improvement to be recommended.
+#
+# Values: 0.0-100.0
+# Default: 5.0
+# Env: GLINTEFY___REVIEW__CACHE__SPEEDUP_THRESHOLD
+speedup_threshold = 5.0
+
+# Minimum function call count to be considered a hotspot.
+# Functions called fewer times aren't worth caching.
+#
+# Values: Positive integer
+# Default: 100
+# Env: GLINTEFY___REVIEW__CACHE__MIN_CALLS
+min_calls = 100
+
+# Minimum cumulative time (seconds) to be considered a hotspot.
+# Functions taking less total time aren't worth optimizing.
+#
+# Values: Positive number
+# Default: 0.1
+# Env: GLINTEFY___REVIEW__CACHE__MIN_CUMTIME
+min_cumtime = 0.1
+
+# Test suite timeout in seconds.
+# Maximum time for running tests during cache validation.
+#
+# Values: Positive integer
+# Default: 300 (5 minutes)
+# Env: GLINTEFY___REVIEW__CACHE__TEST_TIMEOUT
+test_timeout = 300
+
+# Number of test runs to average for individual validation.
+# More runs give more stable timing measurements.
+#
+# Values: Positive integer (1-10 recommended)
+# Default: 3
+# Env: GLINTEFY___REVIEW__CACHE__NUM_RUNS
+num_runs = 3
+
+# Maximum age of profiling data in hours before warning.
+# Warns that profile data may be stale and should be regenerated.
+#
+# Values: Positive number
+# Default: 24.0
+# Env: GLINTEFY___REVIEW__CACHE__MAX_PROFILE_AGE_HOURS
+max_profile_age_hours = 24.0
+
+# Priority thresholds for hotspot analysis.
+# HIGH priority requires: calls >= high_priority_calls AND
+#                         cumtime >= high_priority_time AND
+#                         indicators >= high_priority_indicators
+#
+# Values: Positive integer
+# Default: 500
+# Env: GLINTEFY___REVIEW__CACHE__HIGH_PRIORITY_CALLS
+high_priority_calls = 500
+
+# Minimum cumulative time for HIGH priority.
+#
+# Values: Positive number
+# Default: 1.0
+# Env: GLINTEFY___REVIEW__CACHE__HIGH_PRIORITY_TIME
+high_priority_time = 1.0
+
+# Minimum indicators count for HIGH priority.
+# Indicators: pure function, hashable args, etc.
+#
+# Values: Positive integer
+# Default: 2
+# Env: GLINTEFY___REVIEW__CACHE__HIGH_PRIORITY_INDICATORS
+high_priority_indicators = 2
+
+# MEDIUM priority requires: calls >= medium_priority_calls OR
+#                           cumtime >= medium_priority_time
+#
+# Values: Positive integer
+# Default: 200
+# Env: GLINTEFY___REVIEW__CACHE__MEDIUM_PRIORITY_CALLS
+medium_priority_calls = 200
+
+# Minimum cumulative time for MEDIUM priority.
+#
+# Values: Positive number
+# Default: 0.5
+# Env: GLINTEFY___REVIEW__CACHE__MEDIUM_PRIORITY_TIME
+medium_priority_time = 0.5
+
+
+# =============================================================================
+# REVIEWER MINDSETS
+# =============================================================================
+# Mindsets define the persona and approach for each reviewer type.
+# These are used in tool descriptions, reports, and result evaluation.
+# Mindsets guide the LLM (when integrated) to behave consistently.
+
+[review.mindsets.quality]
+# Role description for quality reviewer.
+role = "meticulous quality reviewer"
+# Personality traits for the reviewer.
+traits = ["pedantic", "precise", "relentlessly thorough"]
+
+[review.mindsets.quality.approach]
+every_function = "Check length (<50 lines), complexity (<10), coherence"
+verify_claims = "Measure actual complexity with tools, don't assume"
+no_trust = "Run analysis tools, don't guess"
+standards = "No functions >50 lines, no complexity >10, no exceptions"
+coherence = "Every function should be clear and inevitable"
+performance = "Detect expensive runtime checks that could be cached"
+
+[review.mindsets.quality.questions]
+items = [
+    "Is this function actually >50 lines? Let me measure.",
+    "Is this complexity really >10? Let me run radon.",
+    "Is this code duplicated elsewhere? Let me search.",
+    "Could this runtime check be done once at module load?",
+    "Is this nesting too deep? Let me count levels.",
+]
+
+[review.mindsets.quality.judgment]
+# Verdict thresholds (percentage of issues vs files)
+critical_threshold = 10   # >10% critical issues = REJECT
+warning_threshold = 25    # >25% warnings = NEEDS_WORK
+# Verdict messages
+verdict_pass = "[PASS] APPROVED - Code meets quality standards"
+verdict_warning = "[WARN] APPROVED WITH COMMENTS - Minor issues found"
+verdict_needs_work = "[WORK] NEEDS WORK - Significant issues require attention"
+verdict_reject = "[FAIL] REJECTED - Critical issues must be fixed"
+
+
+[review.mindsets.security]
+role = "paranoid security auditor"
+traits = ["suspicious", "thorough", "zero-trust"]
+
+[review.mindsets.security.approach]
+every_input = "Treat all input as malicious until validated"
+verify_claims = "Test security assumptions with actual attack vectors"
+no_trust = "Assume breaches happen, verify defense in depth"
+standards = "No hardcoded secrets, no SQL injection, no command injection"
+defense = "Multiple layers of security, not single points of failure"
+
+[review.mindsets.security.questions]
+items = [
+    "Can this input be manipulated? Let me test injection.",
+    "Is this secret hardcoded? Let me scan for patterns.",
+    "What happens if auth fails? Let me trace the flow.",
+    "Is this data sanitized? Let me check validation.",
+]
+
+[review.mindsets.security.judgment]
+critical_threshold = 1    # Any HIGH severity = REJECT
+warning_threshold = 5     # >5 MEDIUM = NEEDS_WORK
+verdict_pass = "[PASS] SECURE - No significant vulnerabilities detected"
+verdict_warning = "[WARN] ACCEPTABLE - Low-risk issues found"
+verdict_needs_work = "[WORK] VULNERABLE - Security issues require attention"
+verdict_reject = "[FAIL] INSECURE - Critical vulnerabilities must be fixed immediately"
+
+
+[review.mindsets.docs]
+role = "meticulous documentation reviewer"
+traits = ["pedantic", "completeness-focused", "clarity-obsessed"]
+
+[review.mindsets.docs.approach]
+every_api = "Check every public function, class, method for docs"
+verify_claims = "Documentation must match actual code behavior"
+no_trust = "Re-check every docstring against implementation"
+standards = "WHY-WHAT-HOW structure, all parameters documented"
+completeness = "Every parameter, return value, exception documented"
+
+[review.mindsets.docs.questions]
+items = [
+    "Is this docstring describing actual behavior or just a TODO?",
+    "Does this documentation match what the code actually does?",
+    "Are all parameters and return values documented?",
+    "Is the WHY clear, not just the WHAT?",
+]
+
+[review.mindsets.docs.judgment]
+critical_threshold = 20   # >20% undocumented public APIs = REJECT
+warning_threshold = 40    # >40% incomplete docs = NEEDS_WORK
+verdict_pass = "[PASS] WELL DOCUMENTED - Documentation is complete and accurate"
+verdict_warning = "[WARN] ACCEPTABLE - Minor documentation gaps"
+verdict_needs_work = "[WORK] INCOMPLETE - Significant documentation needed"
+verdict_reject = "[FAIL] UNDOCUMENTED - Critical documentation missing"
+
+
+[review.mindsets.perf]
+role = "meticulous performance reviewer"
+traits = ["measurement-driven", "skeptical", "evidence-based"]
+
+[review.mindsets.perf.approach]
+every_claim = "Verify every performance assertion with profiling"
+verify_claims = "Profile with actual test suite, never synthetic benchmarks"
+no_trust = "Don't believe claims without benchmarks"
+standards = "Improvements must be >5% to justify complexity"
+evidence = "Show profiling data, cache hit rates, before/after metrics"
+
+[review.mindsets.perf.questions]
+items = [
+    "Is this actually faster? Let me profile it.",
+    "What's the cache hit rate with REAL data? Let me measure.",
+    "Is this optimization worth the complexity? Show me the numbers.",
+    "Where's the actual bottleneck? Let me profile with the test suite.",
+]
+
+[review.mindsets.perf.judgment]
+critical_threshold = 5    # >5% severe bottlenecks = REJECT
+warning_threshold = 15    # >15% potential issues = NEEDS_WORK
+verdict_pass = "[PASS] PERFORMANT - No significant performance issues"
+verdict_warning = "[WARN] ACCEPTABLE - Minor optimization opportunities"
+verdict_needs_work = "[WORK] SLOW - Performance issues require attention"
+verdict_reject = "[FAIL] UNACCEPTABLE - Critical performance problems"
+
+
+[review.mindsets.deps]
+role = "paranoid dependency auditor"
+traits = ["vigilant", "risk-averse", "thorough"]
+
+[review.mindsets.deps.approach]
+security_first = "Scan all dependencies for known vulnerabilities (CVEs)"
+freshness = "Check for outdated packages that may have security patches"
+license_compliance = "Verify all licenses are compatible with project"
+supply_chain = "Assess dependency tree depth and trusted sources"
+
+[review.mindsets.deps.questions]
+items = [
+    "Are there any known CVEs in these dependencies? Let me check pip-audit.",
+    "How outdated are these packages? What security patches are we missing?",
+    "Are all licenses compatible? Any GPL contamination risks?",
+    "How deep is the dependency tree? Are we pulling in untrusted sources?",
+]
+
+[review.mindsets.deps.judgment]
+critical_threshold = 1    # >0 critical vulnerabilities = REJECT
+warning_threshold = 20    # >20% outdated = NEEDS_WORK
+verdict_pass = "[PASS] SECURE - Dependencies are secure and up-to-date"
+verdict_warning = "[WARN] UPDATE RECOMMENDED - Minor updates available"
+verdict_needs_work = "[WORK] ACTION NEEDED - Security patches required"
+verdict_reject = "[FAIL] VULNERABLE - Critical security issues found"
+
+
+[review.mindsets.cache]
+role = "cache optimization reviewer"
+traits = ["skeptical", "evidence-driven", "data-obsessed"]
+
+[review.mindsets.cache.approach]
+real_test_data = "Profile with REAL test suite, never synthetic benchmarks"
+evidence_required = "Show cache hit rate, speedup metrics for every recommendation"
+no_trust = "Don't believe claims without profiling data"
+minimum_threshold = "Hit rate >20%, speedup >5% to justify complexity"
+
+[review.mindsets.cache.questions]
+items = [
+    "Is this actually faster? Let me profile it.",
+    "What's the cache hit rate with REAL data? Let me measure.",
+    "Is this optimization worth the complexity? Show me the numbers.",
+    "Where's the actual bottleneck? Let me profile with the test suite.",
+]
+
+[review.mindsets.cache.judgment]
+critical_threshold = 0    # No critical issues concept for cache analysis
+warning_threshold = 0     # No warnings concept for cache analysis
+verdict_pass = "[PASS] RECOMMENDATIONS AVAILABLE - Evidence-based caching opportunities found"
+verdict_warning = "[WARN] LIMITED OPPORTUNITIES - Some candidates found but marginal benefits"
+verdict_needs_work = "[WORK] NO RECOMMENDATIONS - No functions met both hit rate and speedup thresholds"
+verdict_reject = "[FAIL] NO ANALYSIS - Missing profiling data or pure functions"
+
+
+# =============================================================================
+# INTERNAL LLM CONFIGURATION
+# =============================================================================
+# The MCP server can use an internal LLM client for classification, analysis,
+# and verification tasks. This is SEPARATE from the caller's context and does
+# not affect the user's token budget or conversation history.
+#
+# NOTE: Internal LLM features are experimental and disabled by default.
+
+[llm]
+# Enable internal LLM usage for analysis enhancement.
+# When disabled, the server falls back to rule-based analysis.
+#
+# Values: true, false
+# Default: false
+# Env: GLINTEFY___LLM__ENABLE_INTERNAL_LLM
+enable_internal_llm = false
+
+# LLM provider to use for internal analysis.
+#
+# Values: "anthropic", "openai", "ollama", "openai_compatible"
+# Default: "anthropic"
+# Env: GLINTEFY___LLM__PROVIDER
+provider = "anthropic"
+
+# Model for complex analysis (reasoning, suggestions, verification).
+#
+# Values: Model identifier string
+# Default: "claude-3-5-sonnet-20241022"
+# Env: GLINTEFY___LLM__MODEL
+model = "claude-3-5-sonnet-20241022"
+
+# Fast model for simple classification tasks.
+#
+# Values: Model identifier string
+# Default: "claude-3-5-haiku-20241022"
+# Env: GLINTEFY___LLM__FAST_MODEL
+fast_model = "claude-3-5-haiku-20241022"
+
+# Maximum tokens for simple severity/category classification.
+#
+# Values: Positive integer
+# Default: 10
+# Env: GLINTEFY___LLM__MAX_TOKENS_CLASSIFICATION
+max_tokens_classification = 10
+
+# Maximum tokens for fix strategy suggestions.
+#
+# Values: Positive integer
+# Default: 500
+# Env: GLINTEFY___LLM__MAX_TOKENS_SUGGESTION
+max_tokens_suggestion = 500
+
+# Maximum tokens for fix verification.
+#
+# Values: Positive integer
+# Default: 300
+# Env: GLINTEFY___LLM__MAX_TOKENS_VERIFICATION
+max_tokens_verification = 300
+
+# Rate limiting (calls per minute) to avoid hitting API limits.
+#
+# Values: Positive integer
+# Default: 60
+# Env: GLINTEFY___LLM__RATE_LIMIT
+rate_limit = 60
+
+# Enable prompt caching to save tokens on repeated analysis.
+#
+# Values: true, false
+# Default: true
+# Env: GLINTEFY___LLM__ENABLE_PROMPT_CACHING
+enable_prompt_caching = true
+
+# Feature flags - enable specific LLM use cases.
+[llm.features]
+# Classify issue severity (low/medium/high/critical) with LLM.
+# Falls back to rule-based if disabled or on error.
+#
+# Values: true, false
+# Default: false
+# Env: GLINTEFY___LLM__FEATURES__CLASSIFY_SEVERITY
+classify_severity = false
+
+# Suggest fix strategies for code issues (more expensive).
+# Provides structured fix recommendations with steps.
+#
+# Values: true, false
+# Default: false
+# Env: GLINTEFY___LLM__FEATURES__SUGGEST_FIXES
+suggest_fixes = false
+
+# Verify that fixes actually resolve reported issues (future feature).
+# Cross-checks fix results against issue descriptions.
+#
+# Values: true, false
+# Default: false
+# Env: GLINTEFY___LLM__FEATURES__VERIFY_FIXES
+verify_fixes = false
+
+# Generate commit messages for automated fixes.
+# Creates conventional commit messages from change summaries.
+#
+# Values: true, false
+# Default: false
+# Env: GLINTEFY___LLM__FEATURES__GENERATE_COMMIT_MESSAGES
+generate_commit_messages = false
+
+# Analyze code patterns for deeper insights (experimental).
+# Identifies anti-patterns and suggests improvements.
+#
+# Values: true, false
+# Default: false
+# Env: GLINTEFY___LLM__FEATURES__ANALYZE_PATTERNS
+analyze_patterns = false
+
+
+# =============================================================================
+# FIX ANALYSIS SETTINGS
+# =============================================================================
+# Configuration for automated code fixing (future feature).
+# NOTE: Fix server not yet implemented - settings reserved for future use.
+
+[fix]
+# Base output directory for fix operations.
+#
+# Values: Directory path
+# Default: "LLM-CONTEXT/glintefy/fix"
+# Env: GLINTEFY___FIX__OUTPUT_DIR
+output_dir = "LLM-CONTEXT/glintefy/fix"
+
+# Enable evidence-based fixing (measure -> fix -> verify).
+#
+# Values: true, false
+# Default: true
+# Env: GLINTEFY___FIX__EVIDENCE_BASED
+evidence_based = true
+
+# Number of verification attempts before accepting fix.
+#
+# Values: Positive integer
+# Default: 3
+# Env: GLINTEFY___FIX__VERIFICATION_ATTEMPTS
+verification_attempts = 3
+
+# Auto-revert on failed verification.
+#
+# Values: true, false
+# Default: true
+# Env: GLINTEFY___FIX__AUTO_REVERT
+auto_revert = true
+
+
+# -----------------------------------------------------------------------------
+# Fix Scope Settings (future feature)
+# -----------------------------------------------------------------------------
+[fix.scope]
+# Scope mode for fix operations.
+#
+# Values: "single" (one file), "related" (with dependencies), "module" (entire module)
+# Default: "single"
+# Env: GLINTEFY___FIX__SCOPE__MODE
+mode = "single"
+
+# Include related test files in fix scope.
+#
+# Values: true, false
+# Default: true
+# Env: GLINTEFY___FIX__SCOPE__INCLUDE_TESTS
+include_tests = true
+
+# Maximum files to include in fix scope.
+#
+# Values: Positive integer
+# Default: 10
+# Env: GLINTEFY___FIX__SCOPE__MAX_FILES
+max_files = 10
+
+
+# -----------------------------------------------------------------------------
+# Test Runner Settings (future feature)
+# -----------------------------------------------------------------------------
+[fix.test]
+# Test framework to use.
+#
+# Values: "pytest", "unittest", "nose"
+# Default: "pytest"
+# Env: GLINTEFY___FIX__TEST__FRAMEWORK
+framework = "pytest"
+
+# Custom test command (overrides framework auto-detection).
+#
+# Values: Command string or empty
+# Default: ""
+# Env: GLINTEFY___FIX__TEST__COMMAND
+command = ""
+
+# Test timeout in seconds.
+#
+# Values: Positive integer
+# Default: 300
+# Env: GLINTEFY___FIX__TEST__TIMEOUT
+timeout = 300
+
+# Run tests in parallel.
+#
+# Values: true, false
+# Default: true
+# Env: GLINTEFY___FIX__TEST__PARALLEL
+parallel = true
+
+# Stop on first test failure.
+#
+# Values: true, false
+# Default: false
+# Env: GLINTEFY___FIX__TEST__FAIL_FAST
+fail_fast = false
+
+# Coverage threshold for pass (percentage, 0 = disabled).
+#
+# Values: 0-100
+# Default: 0 (disabled)
+# Env: GLINTEFY___FIX__TEST__MIN_COVERAGE
+min_coverage = 0
+
+
+# -----------------------------------------------------------------------------
+# Linter Settings (future feature)
+# -----------------------------------------------------------------------------
+[fix.lint]
+# Linters to run for fix verification.
+#
+# Values: List of linter names ("ruff", "pylint", "flake8", "mypy")
+# Default: ["ruff", "mypy"]
+# Env: GLINTEFY___FIX__LINT__LINTERS (comma-separated)
+linters = ["ruff", "mypy"]
+
+# Auto-fix safe linting issues.
+#
+# Values: true, false
+# Default: true
+# Env: GLINTEFY___FIX__LINT__AUTO_FIX
+auto_fix = true
+
+# Fail on any linting error.
+#
+# Values: true, false
+# Default: false
+# Env: GLINTEFY___FIX__LINT__STRICT
+strict = false
+
+
+# =============================================================================
+# TOOL-SPECIFIC SETTINGS
+# =============================================================================
+# Direct configuration for analysis tools.
+# NOTE: Most tools use their own config files (pyproject.toml, etc.)
+# These settings are for future direct tool invocation.
+
+# -----------------------------------------------------------------------------
+# Bandit (Security Scanner)
+# -----------------------------------------------------------------------------
+[tools.bandit]
+# Minimum severity level (1=LOW, 2=MEDIUM, 3=HIGH).
+#
+# Values: 1, 2, 3
+# Default: 1
+# Env: GLINTEFY___TOOLS__BANDIT__MIN_SEVERITY
+min_severity = 1
+
+# Minimum confidence level (1=LOW, 2=MEDIUM, 3=HIGH).
+#
+# Values: 1, 2, 3
+# Default: 1
+# Env: GLINTEFY___TOOLS__BANDIT__MIN_CONFIDENCE
+min_confidence = 1
+
+# Output format.
+#
+# Values: "json", "txt", "html", "csv"
+# Default: "json"
+# Env: GLINTEFY___TOOLS__BANDIT__FORMAT
+format = "json"
+
+# Recursive scan.
+#
+# Values: true, false
+# Default: true
+# Env: GLINTEFY___TOOLS__BANDIT__RECURSIVE
+recursive = true
+
+# Number of parallel processes.
+#
+# Values: Positive integer
+# Default: 4
+# Env: GLINTEFY___TOOLS__BANDIT__PROCESSES
+processes = 4
+
+
+# -----------------------------------------------------------------------------
+# Radon (Complexity Analyzer)
+# -----------------------------------------------------------------------------
+[tools.radon]
+# Show complexity for all ranks (A through F).
+#
+# Values: true, false
+# Default: true
+# Env: GLINTEFY___TOOLS__RADON__SHOW_ALL
+show_all = true
+
+# Include average complexity in output.
+#
+# Values: true, false
+# Default: true
+# Env: GLINTEFY___TOOLS__RADON__SHOW_AVERAGE
+show_average = true
+
+# Sort results by.
+#
+# Values: "SCORE" (complexity), "LINES" (line number), "ALPHA" (alphabetical)
+# Default: "SCORE"
+# Env: GLINTEFY___TOOLS__RADON__SORT_BY
+sort_by = "SCORE"
+
+
+# -----------------------------------------------------------------------------
+# Pylint (Duplication Detection)
+# Only used for duplicate-code detection (R0801), not full pylint analysis.
+# -----------------------------------------------------------------------------
+[tools.pylint]
+# Ignore comments when computing similarities.
+#
+# Values: true, false
+# Default: true
+# Env: GLINTEFY___TOOLS__PYLINT__IGNORE_COMMENTS
+ignore_comments = true
+
+# Ignore docstrings when computing similarities.
+#
+# Values: true, false
+# Default: true
+# Env: GLINTEFY___TOOLS__PYLINT__IGNORE_DOCSTRINGS
+ignore_docstrings = true
+
+# Ignore imports when computing similarities.
+#
+# Values: true, false
+# Default: true
+# Env: GLINTEFY___TOOLS__PYLINT__IGNORE_IMPORTS
+ignore_imports = true
+
+# Ignore function signatures when computing similarities.
+#
+# Values: true, false
+# Default: true
+# Env: GLINTEFY___TOOLS__PYLINT__IGNORE_SIGNATURES
+ignore_signatures = true
+
+
+# -----------------------------------------------------------------------------
+# Ruff (Fast Linter)
+# -----------------------------------------------------------------------------
+[tools.ruff]
+# Line length limit.
+#
+# Values: Positive integer
+# Default: 88
+# Env: GLINTEFY___TOOLS__RUFF__LINE_LENGTH
+line_length = 88
+
+# Target Python version.
+#
+# Values: "py39", "py310", "py311", "py312", "py313", "py314"
+# Default: "py313"
+# Env: GLINTEFY___TOOLS__RUFF__TARGET_VERSION
+target_version = "py313"
+
+# Rules to enable.
+# See: https://docs.astral.sh/ruff/rules/
+#
+# Values: List of rule codes or "ALL"
+# Env: GLINTEFY___TOOLS__RUFF__SELECT (comma-separated)
+select = ["E", "F", "W", "I", "N", "UP", "B", "C4", "SIM"]
+
+# Rules to ignore.
+#
+# Values: List of rule codes
+# Env: GLINTEFY___TOOLS__RUFF__IGNORE (comma-separated)
+ignore = ["E501"]
+
+# Auto-fix fixable issues.
+#
+# Values: true, false
+# Default: true
+# Env: GLINTEFY___TOOLS__RUFF__FIX
+fix = true
+
+# Allow unsafe fixes.
+#
+# Values: true, false
+# Default: false
+# Env: GLINTEFY___TOOLS__RUFF__UNSAFE_FIXES
+unsafe_fixes = false
+
+
+# -----------------------------------------------------------------------------
+# MyPy (Type Checker)
+# -----------------------------------------------------------------------------
+[tools.mypy]
+# Python version for type checking.
+#
+# Values: "3.9", "3.10", "3.11", "3.12", "3.13", "3.14"
+# Default: "3.13"
+# Env: GLINTEFY___TOOLS__MYPY__PYTHON_VERSION
+python_version = "3.13"
+
+# Enable strict mode.
+#
+# Values: true, false
+# Default: false
+# Env: GLINTEFY___TOOLS__MYPY__STRICT
+strict = false
+
+# Ignore missing imports (untyped packages).
+#
+# Values: true, false
+# Default: true
+# Env: GLINTEFY___TOOLS__MYPY__IGNORE_MISSING_IMPORTS
+ignore_missing_imports = true
+
+# Show error codes in output.
+#
+# Values: true, false
+# Default: true
+# Env: GLINTEFY___TOOLS__MYPY__SHOW_ERROR_CODES
+show_error_codes = true
+
+# Pretty output formatting.
+#
+# Values: true, false
+# Default: true
+# Env: GLINTEFY___TOOLS__MYPY__PRETTY
+pretty = true
+
+
+# -----------------------------------------------------------------------------
+# Black (Formatter)
+# NOTE: Black not currently invoked by any subserver.
+# -----------------------------------------------------------------------------
+[tools.black]
+# Line length limit.
+#
+# Values: Positive integer
+# Default: 88
+# Env: GLINTEFY___TOOLS__BLACK__LINE_LENGTH
+line_length = 88
+
+# Target Python versions.
+#
+# Values: List of version strings
+# Env: GLINTEFY___TOOLS__BLACK__TARGET_VERSION (comma-separated)
+target_version = ["py313"]
+
+# Skip string normalization (single to double quotes).
+#
+# Values: true, false
+# Default: false
+# Env: GLINTEFY___TOOLS__BLACK__SKIP_STRING_NORMALIZATION
+skip_string_normalization = false
+
+# Skip magic trailing comma (forces one-item-per-line).
+#
+# Values: true, false
+# Default: false
+# Env: GLINTEFY___TOOLS__BLACK__SKIP_MAGIC_TRAILING_COMMA
+skip_magic_trailing_comma = false
+
+
+# -----------------------------------------------------------------------------
+# Pytest (Test Runner)
+# -----------------------------------------------------------------------------
+[tools.pytest]
+# Test paths to search.
+#
+# Values: List of directory paths
+# Env: GLINTEFY___TOOLS__PYTEST__TESTPATHS (comma-separated)
+testpaths = ["tests"]
+
+# Python test file patterns.
+#
+# Values: List of glob patterns
+# Env: GLINTEFY___TOOLS__PYTEST__PYTHON_FILES (comma-separated)
+python_files = ["test_*.py", "*_test.py"]
+
+# Python test class patterns.
+#
+# Values: List of glob patterns
+# Env: GLINTEFY___TOOLS__PYTEST__PYTHON_CLASSES (comma-separated)
+python_classes = ["Test*"]
+
+# Python test function patterns.
+#
+# Values: List of glob patterns
+# Env: GLINTEFY___TOOLS__PYTEST__PYTHON_FUNCTIONS (comma-separated)
+python_functions = ["test_*"]
+
+# Minimum coverage percentage to pass.
+#
+# Values: 0-100
+# Default: 80
+# Env: GLINTEFY___TOOLS__PYTEST__COV_FAIL_UNDER
+cov_fail_under = 80
+
+# Coverage report formats.
+#
+# Values: List of formats ("term", "term-missing", "html", "xml", "json")
+# Env: GLINTEFY___TOOLS__PYTEST__COV_REPORT (comma-separated)
+cov_report = ["term-missing", "html"]
+
+# Markers to run (empty = all).
+#
+# Values: List of marker names
+# Env: GLINTEFY___TOOLS__PYTEST__MARKERS (comma-separated)
+markers = []
+
+# Plugins to disable.
+#
+# Values: List of plugin names
+# Env: GLINTEFY___TOOLS__PYTEST__DISABLED_PLUGINS (comma-separated)
+disabled_plugins = []
+
+
+# =============================================================================
+# GIT SETTINGS
+# =============================================================================
+# Configuration for git operations during automated fixes.
+
+[git]
+# Commit message prefix for automated commits.
+# Prepended to all commit messages created by glintefy.
+#
+# Values: Any string
+# Default: "[glintefy]"
+# Env: GLINTEFY___GIT__COMMIT_PREFIX
+commit_prefix = "[glintefy]"
+
+# Auto-commit fixes after successful verification.
+# When enabled, fixes are automatically committed without user confirmation.
+#
+# Values: true, false
+# Default: false
+# Env: GLINTEFY___GIT__AUTO_COMMIT
+auto_commit = false
+
+# Sign commits with GPG (-S flag).
+# Requires GPG to be configured in git.
+#
+# Values: true, false
+# Default: false
+# Env: GLINTEFY___GIT__SIGN_COMMITS
+sign_commits = false
+
+# Create a new branch for fixes before making changes.
+# Uses branch_template to generate branch name.
+#
+# Values: true, false
+# Default: false
+# Env: GLINTEFY___GIT__CREATE_BRANCH
+create_branch = false
+
+# Branch name template for fix branches.
+# {issue_id} is replaced with the issue identifier.
+#
+# Values: Template string with {issue_id} placeholder
+# Default: "fix/{issue_id}"
+# Env: GLINTEFY___GIT__BRANCH_TEMPLATE
+branch_template = "fix/{issue_id}"

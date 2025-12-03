@@ -12,7 +12,7 @@ from typing import Any
 
 import pytest
 
-from btx_fix_mcp.config import (
+from glintefy.config import (
     _DEFAULT_CONFIG_FILE,
     get_config,
     get_subserver_config,
@@ -266,7 +266,8 @@ class TestConfigKeyNamingConventions:
                 # Filter out non-key values (must be valid Python identifier-like)
                 if key and not key.startswith("#") and key.replace("_", "").isalnum():
                     # Skip single letter keys (likely from comments like "A = 1-5")
-                    if len(key) > 1:
+                    # Skip env var examples (uppercase with triple underscore like GLINTEFY___)
+                    if len(key) > 1 and "___" not in key:
                         keys.append(key)
         return keys
 
@@ -382,7 +383,7 @@ class TestQualityConfigIntegration:
 
     def test_quality_subserver_reads_complexity_threshold(self, tmp_path):
         """Test QualitySubServer correctly reads complexity_threshold."""
-        from btx_fix_mcp.subservers.review.quality import QualitySubServer
+        from glintefy.subservers.review.quality import QualitySubServer
 
         input_dir = tmp_path / "input"
         input_dir.mkdir()
@@ -400,7 +401,7 @@ class TestQualityConfigIntegration:
 
     def test_quality_subserver_constructor_overrides_config(self, tmp_path):
         """Test that constructor parameters override config file values."""
-        from btx_fix_mcp.subservers.review.quality import QualitySubServer
+        from glintefy.subservers.review.quality import QualitySubServer
 
         input_dir = tmp_path / "input"
         input_dir.mkdir()
@@ -418,7 +419,7 @@ class TestQualityConfigIntegration:
 
     def test_quality_subserver_reads_all_feature_flags(self, tmp_path):
         """Test QualitySubServer reads all feature flags from config."""
-        from btx_fix_mcp.subservers.review.quality import QualitySubServer
+        from glintefy.subservers.review.quality import QualitySubServer
 
         input_dir = tmp_path / "input"
         input_dir.mkdir()
@@ -457,7 +458,7 @@ class TestQualityConfigIntegration:
 
     def test_quality_subserver_reads_all_thresholds(self, tmp_path):
         """Test QualitySubServer reads all threshold values from config."""
-        from btx_fix_mcp.subservers.review.quality import QualitySubServer
+        from glintefy.subservers.review.quality import QualitySubServer
 
         input_dir = tmp_path / "input"
         input_dir.mkdir()
@@ -498,7 +499,7 @@ class TestSecurityConfigIntegration:
 
     def test_security_subserver_reads_severity_threshold(self, tmp_path):
         """Test SecuritySubServer correctly reads severity_threshold."""
-        from btx_fix_mcp.subservers.review.security import SecuritySubServer
+        from glintefy.subservers.review.security import SecuritySubServer
 
         input_dir = tmp_path / "input"
         input_dir.mkdir()
@@ -519,7 +520,7 @@ class TestScopeConfigIntegration:
 
     def test_scope_subserver_reads_mode(self, tmp_path):
         """Test ScopeSubServer correctly reads mode from config."""
-        from btx_fix_mcp.subservers.review.scope import ScopeSubServer
+        from glintefy.subservers.review.scope import ScopeSubServer
 
         output_dir = tmp_path / "output"
 
@@ -534,7 +535,7 @@ class TestScopeConfigIntegration:
 
     def test_scope_subserver_has_required_attributes(self, tmp_path):
         """Test ScopeSubServer has required attributes from config."""
-        from btx_fix_mcp.subservers.review.scope import ScopeSubServer
+        from glintefy.subservers.review.scope import ScopeSubServer
 
         output_dir = tmp_path / "output"
 

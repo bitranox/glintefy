@@ -10,11 +10,11 @@ Complete
 **Pull Requests:** Pending current refactor
 **Related Files:**
 
-* src/btx_fix_mcp/behaviors.py
-* src/btx_fix_mcp/cli.py
-* src/btx_fix_mcp/__main__.py
-* src/btx_fix_mcp/__init__.py
-* src/btx_fix_mcp/__init__conf__.py
+* src/glintefy/behaviors.py
+* src/glintefy/cli.py
+* src/glintefy/__main__.py
+* src/glintefy/__init__.py
+* src/glintefy/__init__conf__.py
 * tests/test_cli.py
 * tests/test_module_entry.py
 * tests/test_behaviors.py
@@ -74,35 +74,35 @@ stand-in domain.
   documentation.
 * **Input:** Optional text stream (defaults to ``sys.stdout``).
 * **Output:** Writes ``"Hello World\n"`` to the stream and flushes if possible.
-* **Location:** src/btx_fix_mcp/behaviors.py
+* **Location:** src/glintefy/behaviors.py
 
 ### behaviors.raise_intentional_failure
 
 * **Purpose:** Provide a deterministic failure hook for error-handling tests.
 * **Input:** None.
 * **Output:** Raises ``RuntimeError('I should fail')``.
-* **Location:** src/btx_fix_mcp/behaviors.py
+* **Location:** src/glintefy/behaviors.py
 
 ### behaviors.noop_main
 
 * **Purpose:** Placeholder entry for transports expecting a ``main`` callable.
 * **Input:** None.
 * **Output:** Returns ``None``.
-* **Location:** src/btx_fix_mcp/behaviors.py
+* **Location:** src/glintefy/behaviors.py
 
 ### cli.apply_traceback_preferences
 
 * **Purpose:** Synchronise traceback configuration between the CLI and ``python -m`` paths.
 * **Input:** Boolean flag enabling rich tracebacks.
 * **Output:** Installs rich traceback handler with show_locals=True.
-* **Location:** src/btx_fix_mcp/cli.py
+* **Location:** src/glintefy/cli.py
 
 ### cli.main
 
 * **Purpose:** Execute the click command group with shared exit handling.
 * **Input:** Optional argv, restore flag, summary and verbose limits.
 * **Output:** Integer exit code (0 on success, mapped error codes otherwise).
-* **Location:** src/btx_fix_mcp/cli.py
+* **Location:** src/glintefy/cli.py
 
 ### cli.cli_info / cli.cli_hello / cli.cli_fail
 
@@ -110,7 +110,7 @@ stand-in domain.
   intentional failures for testing error handling.
 * **Input:** None (commands receive Click context automatically).
 * **Output:** None (execute their respective behaviors).
-* **Location:** src/btx_fix_mcp/cli.py
+* **Location:** src/glintefy/cli.py
 
 ### cli.main
 
@@ -118,11 +118,11 @@ stand-in domain.
   exit codes and exception propagation.
 * **Input:** Optional argv and standalone_mode flag.
 * **Output:** Integer exit code (0 for success, non-zero for errors).
-* **Location:** src/btx_fix_mcp/cli.py
+* **Location:** src/glintefy/cli.py
 
 ### __main__
 
-* **Purpose:** Provide ``python -m btx_fix_mcp`` entry point by
+* **Purpose:** Provide ``python -m glintefy`` entry point by
   delegating directly to ``cli.main()``.
 * **Input:** None (reads from sys.argv).
 * **Output:** System exit with code from ``cli.main()``.
@@ -132,7 +132,7 @@ stand-in domain.
 * **Purpose:** Render the statically-defined project metadata for the CLI ``info`` command.
 * **Input:** None.
 * **Output:** Writes the hard-coded metadata block to ``stdout``.
-* **Location:** src/btx_fix_mcp/__init__conf__.py
+* **Location:** src/glintefy/__init__conf__.py
 
 ### Package Exports
 
@@ -170,11 +170,11 @@ stand-in domain.
 
 **Manual Testing Steps:**
 
-1. ``btx_fix_mcp`` → prints CLI help (no default action).
-2. ``btx_fix_mcp hello`` → prints greeting.
-3. ``btx_fix_mcp fail`` → prints truncated traceback.
-4. ``btx_fix_mcp --traceback fail`` → prints full rich traceback.
-5. ``python -m btx_fix_mcp --traceback fail`` → matches console output.
+1. ``glintefy`` → prints CLI help (no default action).
+2. ``glintefy hello`` → prints greeting.
+3. ``glintefy fail`` → prints truncated traceback.
+4. ``glintefy --traceback fail`` → prints full rich traceback.
+5. ``python -m glintefy --traceback fail`` → matches console output.
 
 **Automated Tests:**
 

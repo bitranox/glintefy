@@ -2,8 +2,8 @@
 
 import pytest
 
-from btx_fix_mcp.subservers.common.issues import DocstringCoverageMetrics, TypeCoverageMetrics
-from btx_fix_mcp.subservers.review.quality.analyzer_results import (
+from glintefy.subservers.common.issues import DocstringCoverageMetrics, TypeCoverageMetrics
+from glintefy.subservers.review.quality.analyzer_results import (
     ArchitectureMetrics,
     CognitiveComplexityItem,
     CyclomaticComplexityItem,
@@ -20,8 +20,8 @@ from btx_fix_mcp.subservers.review.quality.analyzer_results import (
     SuiteIssueItem,
     SuiteResults,
 )
-from btx_fix_mcp.subservers.review.quality.config import QualityConfig
-from btx_fix_mcp.subservers.review.quality.issues import (
+from glintefy.subservers.review.quality.config import QualityConfig
+from glintefy.subservers.review.quality.issues import (
     Issue,
     RuleIssue,
     ThresholdIssue,

@@ -12,7 +12,7 @@ Yes! You can use `claude-cli` (or any CLI tool) as an LLM provider by running it
 ## Architecture
 
 ```
-MCP Server (btx-review)
+MCP Server (glintefy-review)
     ↓
 InternalLLMClient
     ↓
@@ -127,7 +127,7 @@ claude-cli --prompt "Hello" --model claude-3-5-haiku-20241022
 
 Config:
 ```toml
-# ~/.config/btx-fix-mcp/config.toml
+# ~/.config/glintefy/config.toml
 [llm]
 enable_internal_llm = true
 provider = "subprocess"
@@ -321,7 +321,7 @@ provider = "ollama"
 
 ```python
 # Test subprocess provider
-from btx_fix_mcp.subservers.common.llm_providers import SubprocessProvider
+from glintefy.subservers.common.llm_providers import SubprocessProvider
 
 # Create provider
 provider = SubprocessProvider(

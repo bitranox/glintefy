@@ -50,7 +50,7 @@
 
 ### Tools Venv Features
 
-- **Location**: `~/.cache/btx-fix-mcp/tools-venv/`
+- **Location**: `~/.cache/glintefy/tools-venv/`
 - **Package Manager**: uv (fast installation)
 - **Thread-safe**: Lock-based initialization
 - **Idempotent**: Fast path if already initialized
@@ -60,7 +60,7 @@
 
 Three-layer configuration with precedence:
 1. Constructor parameters (highest)
-2. Config file (`~/.config/btx-fix-mcp/config.toml`)
+2. Config file (`~/.config/glintefy/config.toml`)
 3. `defaultconfig.toml` (bundled defaults)
 
 ---
@@ -68,7 +68,7 @@ Three-layer configuration with precedence:
 ## Project Structure
 
 ```
-src/btx_fix_mcp/
+src/glintefy/
 ├── __init__.py
 ├── config.py                # Configuration loader
 ├── defaultconfig.toml       # Default configuration (700+ lines)

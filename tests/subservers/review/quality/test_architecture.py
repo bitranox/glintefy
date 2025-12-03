@@ -4,8 +4,8 @@ import logging
 
 import pytest
 
-from btx_fix_mcp.subservers.review.quality.analyzer_results import ArchitectureResults
-from btx_fix_mcp.subservers.review.quality.architecture import ArchitectureAnalyzer
+from glintefy.subservers.review.quality.analyzer_results import ArchitectureResults
+from glintefy.subservers.review.quality.architecture import ArchitectureAnalyzer
 
 
 @pytest.fixture
@@ -407,7 +407,7 @@ class TestArchitectureIntegration:
 
     def test_full_analysis_workflow(self, tmp_path, arch_logger):
         """Test complete architecture analysis workflow."""
-        from btx_fix_mcp.subservers.review.quality.analyzer_results import ArchitectureResults
+        from glintefy.subservers.review.quality.analyzer_results import ArchitectureResults
 
         # Create code files
         module_a = tmp_path / "module_a.py"

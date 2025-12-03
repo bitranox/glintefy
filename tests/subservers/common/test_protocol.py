@@ -1,7 +1,7 @@
 """Tests for integration protocol validation."""
 
 import pytest
-from btx_fix_mcp.subservers.common.protocol import IntegrationProtocol
+from glintefy.subservers.common.protocol import IntegrationProtocol
 
 
 class TestValidateOutputs:

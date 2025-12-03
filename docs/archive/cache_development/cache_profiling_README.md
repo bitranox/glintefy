@@ -60,7 +60,7 @@ This directory contains comprehensive documentation on how to profile your appli
 
 ```bash
 # Just run cache analysis
-python -m btx_fix_mcp review cache
+python -m glintefy review cache
 ```
 
 **Pros:**
@@ -84,7 +84,7 @@ python -m btx_fix_mcp review cache
 python scripts/profile_application.py
 
 # 2. Run cache analysis
-python -m btx_fix_mcp review cache
+python -m glintefy review cache
 ```
 
 **Pros:**
@@ -131,19 +131,19 @@ Output:
 Running workload...
 ✓ Workload complete
 
-✓ Profiling data saved to: LLM-CONTEXT/btx_fix_mcp/review/perf/test_profile.prof
+✓ Profiling data saved to: LLM-CONTEXT/glintefy/review/perf/test_profile.prof
 ```
 
 ### Step 3: Analyze Caches
 
 ```bash
-python -m btx_fix_mcp review cache
+python -m glintefy review cache
 ```
 
 ### Step 4: Review Results
 
 ```bash
-cat LLM-CONTEXT/btx_fix_mcp/review/cache/existing_cache_evaluations.json
+cat LLM-CONTEXT/glintefy/review/cache/existing_cache_evaluations.json
 ```
 
 Example output:
@@ -168,7 +168,7 @@ Example output:
 **Solution:** Run static analysis first:
 
 ```bash
-python -m btx_fix_mcp review cache
+python -m glintefy review cache
 ```
 
 Look at pure function candidates. Then profile to validate.
@@ -182,7 +182,7 @@ Look at pure function candidates. Then profile to validate.
 python scripts/profile_application.py --workload my_app:main
 
 # Analyze
-python -m btx_fix_mcp review cache
+python -m glintefy review cache
 ```
 
 Check `existing_cache_evaluations.json` for hit rates.
@@ -210,13 +210,13 @@ Then analyze with profiling data.
 - name: Profile and analyze caches
   run: |
     python scripts/profile_application.py
-    python -m btx_fix_mcp review cache
+    python -m glintefy review cache
 
 - name: Check for inefficient caches
   run: |
     python -c "
     import json
-    with open('LLM-CONTEXT/btx_fix_mcp/review/cache/existing_cache_evaluations.json') as f:
+    with open('LLM-CONTEXT/glintefy/review/cache/existing_cache_evaluations.json') as f:
         evals = json.load(f)
         low_hit = [e for e in evals if e['hit_rate_percent'] < 10]
         if low_hit:
@@ -230,8 +230,8 @@ Then analyze with profiling data.
 | Command | Description |
 |---------|-------------|
 | `python scripts/profile_application.py` | Profile test suite |
-| `python -m btx_fix_mcp review cache` | Run cache analysis |
-| `python scripts/profile_application.py && python -m btx_fix_mcp review cache` | Both in sequence |
+| `python -m glintefy review cache` | Run cache analysis |
+| `python scripts/profile_application.py && python -m glintefy review cache` | Both in sequence |
 
 ## File Locations
 
@@ -246,7 +246,7 @@ project_root/
 ├── scripts/
 │   └── profile_application.py              ← Profiling script
 └── LLM-CONTEXT/
-    └── btx_fix_mcp/
+    └── glintefy/
         └── review/
             ├── perf/
             │   └── test_profile.prof       ← Profiling data (INPUT)
@@ -261,7 +261,7 @@ project_root/
 2. **Learn More:** Read [Full Guide](cache_profiling_guide.md)
 3. **Get Profiling:** Copy [Template](examples/profile_my_app_template.py)
 4. **Profile:** Run `python profile_my_app.py`
-5. **Analyze:** Run `python -m btx_fix_mcp review cache`
+5. **Analyze:** Run `python -m glintefy review cache`
 6. **Act:** Follow recommendations in results
 
 ## Getting Help
@@ -282,7 +282,7 @@ project_root/
 ### Tools
 
 - **Profiling script:** `python scripts/profile_application.py --help`
-- **Cache analysis:** `python -m btx_fix_mcp review cache --help`
+- **Cache analysis:** `python -m glintefy review cache --help`
 
 ## Summary
 
@@ -294,7 +294,7 @@ project_root/
 
 **Or use static analysis** (no profiling):
 ```bash
-python -m btx_fix_mcp review cache
+python -m glintefy review cache
 ```
 
 Start with static analysis for quick wins, then add profiling for precision.

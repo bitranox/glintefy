@@ -4,8 +4,8 @@ import logging
 
 import pytest
 
-from btx_fix_mcp.subservers.review.quality.analyzer_results import SuiteResults
-from btx_fix_mcp.subservers.review.quality.tests import TestSuiteAnalyzer
+from glintefy.subservers.review.quality.analyzer_results import SuiteResults
+from glintefy.subservers.review.quality.tests import TestSuiteAnalyzer
 
 
 @pytest.fixture

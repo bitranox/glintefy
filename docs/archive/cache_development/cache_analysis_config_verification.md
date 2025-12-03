@@ -9,7 +9,7 @@
 
 ### ✅ All Settings in `defaultconfig.toml`
 
-All cache analysis settings are documented in `src/btx_fix_mcp/defaultconfig.toml` under `[review.cache]`:
+All cache analysis settings are documented in `src/glintefy/defaultconfig.toml` under `[review.cache]`:
 
 | Setting | Default | Type | Purpose |
 |---------|---------|------|---------|
@@ -82,7 +82,7 @@ def __init__(
 ### Test 1: All Config Keys Present
 
 ```bash
-$ grep -A 20 "\[review.cache\]" src/btx_fix_mcp/defaultconfig.toml
+$ grep -A 20 "\[review.cache\]" src/glintefy/defaultconfig.toml
 [review.cache]
 # LRU cache size for testing
 cache_size = 128
@@ -147,7 +147,7 @@ num_runs=self.num_runs,                  # ✅ Used
 ### Test 4: Syntax Validation
 
 ```bash
-$ python3.13 -m py_compile src/btx_fix_mcp/subservers/review/cache.py
+$ python3.13 -m py_compile src/glintefy/subservers/review/cache.py
 ✓ cache.py syntax OK after adding test_timeout and num_runs
 ```
 
@@ -203,7 +203,7 @@ test_timeout = 600            # Slower test suite
 ### Example 2: Via Constructor
 
 ```python
-from btx_fix_mcp.subservers.review.cache import CacheSubServer
+from glintefy.subservers.review.cache import CacheSubServer
 
 server = CacheSubServer(
     input_dir=Path("LLM-CONTEXT/review/scope"),

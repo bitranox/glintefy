@@ -2,7 +2,7 @@
 
 > The CLI stack uses `rich-click`, which bundles `rich` styling on top of click-style ergonomics.
 
-This guide collects every supported method to install `btx_fix_mcp`, including
+This guide collects every supported method to install `glintefy`, including
 isolated environments and system package managers. Pick the option that matches your workflow.
 
 
@@ -90,9 +90,9 @@ source .venv/bin/activate
 .venv\Scripts\Activate.ps1
 
 # install via uv from PyPI
-uv pip install btx_fix_mcp
+uv pip install glintefy
 # optional install from GitHub
-uv pip install "git+https://github.com/bitranox/btx_fix_mcp"
+uv pip install "git+https://github.com/bitranox/glintefy"
 # upgrade
 uv tool upgrade --all
 ```
@@ -104,9 +104,9 @@ Multiple projects with different tool versions stay isolated so each can use "it
 
 ```bash
 # run from PyPI
-uvx btx_fix_mcp
+uvx glintefy
 # run from GitHub
-uvx --from git+https://github.com/bitranox/btx_fix_mcp.git btx_fix_mcp
+uvx --from git+https://github.com/bitranox/glintefy.git glintefy
 
 ```
 
@@ -119,9 +119,9 @@ uvx --from git+https://github.com/bitranox/btx_fix_mcp.git btx_fix_mcp
 python -m venv .venv
 source .venv/bin/activate  # Windows: .venv\Scripts\activate
 # install from PyPI
-pip install btx_fix_mcp 
+pip install glintefy 
 # optional install from GitHub
-pip install "git+https://github.com/bitranox/btx_fix_mcp"
+pip install "git+https://github.com/bitranox/glintefy"
 # optional development install from local
 pip install -e .[dev]
 # optional install from local runtime only:
@@ -132,9 +132,9 @@ pip install .
 
 ```bash
 # install from PyPI
-pip install --user btx_fix_mcp 
+pip install --user glintefy 
 # optional install from GitHub
-pip install --user "git+https://github.com/bitranox/btx_fix_mcp"
+pip install --user "git+https://github.com/bitranox/glintefy"
 # optional install from local
 pip install --user .
 ```
@@ -150,12 +150,12 @@ python -m pip install pipx
 # optional install pipx via apt
 sudo apt install python-pipx
 # install via pipx from PyPI
-pipx install btx_fix_mcp
+pipx install glintefy
 # optional install via pipx from GitHub
-pipx install "git+https://github.com/bitranox/btx_fix_mcp"
+pipx install "git+https://github.com/bitranox/glintefy"
 # optional install from local
 pipx install .
-pipx upgrade btx_fix_mcp
+pipx upgrade glintefy
 # From Git tag/commit:
 ```
 
@@ -163,31 +163,31 @@ pipx upgrade btx_fix_mcp
 
 ```bash
 python -m build
-pip install dist/btx_fix_mcp-*.whl
-pip install dist/btx_fix_mcp-*.tar.gz   # sdist
+pip install dist/glintefy-*.whl
+pip install dist/glintefy-*.tar.gz   # sdist
 ```
 
 ## 7. Poetry or PDM Managed Environments
 
 ```bash
 # Poetry
-poetry add btx_fix_mcp     # as dependency
+poetry add glintefy     # as dependency
 poetry install                          # for local dev
 
 # PDM
-pdm add btx_fix_mcp
+pdm add glintefy
 pdm install
 ```
 
 ## 8. Install Directly from Git
 
 ```bash
-pip install "git+https://github.com/bitranox/btx_fix_mcp#egg=btx_fix_mcp"
+pip install "git+https://github.com/bitranox/glintefy#egg=glintefy"
 ```
 
 ## 9. System Package Managers (Optional Distribution Channels)
 
 - Deb/RPM: Package with `fpm` for OS-native delivery
 
-All methods register both the `btx_fix_mcp` and
+All methods register both the `glintefy` and
 `bitranox-template-py-cli` commands on your PATH.

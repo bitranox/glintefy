@@ -2,7 +2,7 @@
 
 **Date:** 2025-11-23
 **Status:** Planning Phase
-**Target:** Add cache optimization analysis to btx_fix_mcp review system
+**Target:** Add cache optimization analysis to glintefy review system
 
 ---
 
@@ -22,7 +22,7 @@ Implement a cache analysis sub-server that identifies caching opportunities usin
 
 **Files to create:**
 ```
-src/btx_fix_mcp/subservers/review/cache/
+src/glintefy/subservers/review/cache/
 ├── __init__.py
 ├── cache_analyzer.py          # Main CacheSubServer class
 ├── pure_function_detector.py  # Stage 1: AST-based purity detection
@@ -65,7 +65,7 @@ class CacheCandidate:
     file_path: Path
     function_name: str
     line_number: int
-    module_path: str              # For import (e.g., "btx_fix_mcp.config")
+    module_path: str              # For import (e.g., "glintefy.config")
     call_count: int
     cumulative_time: float
     expense_indicators: list[str]
@@ -114,7 +114,7 @@ class CacheRecommendation:
 
 #### Task 2.1: Implement AST-Based Purity Analyzer
 
-**File:** `src/btx_fix_mcp/subservers/review/cache/pure_function_detector.py`
+**File:** `src/glintefy/subservers/review/cache/pure_function_detector.py`
 
 ```python
 """AST-based pure function detection.
@@ -127,7 +127,7 @@ import ast
 from pathlib import Path
 from typing import List
 
-from btx_fix_mcp.subservers.review.cache.cache_models import PureFunctionCandidate
+from glintefy.subservers.review.cache.cache_models import PureFunctionCandidate
 
 
 class PureFunctionDetector:
@@ -343,7 +343,7 @@ def matrix_multiply(a, b):
 
 #### Task 3.1: Implement Profiling Data Cross-Reference
 
-**File:** `src/btx_fix_mcp/subservers/review/cache/hotspot_analyzer.py`
+**File:** `src/glintefy/subservers/review/cache/hotspot_analyzer.py`
 
 ```python
 """Hotspot analysis from profiling data.
@@ -355,7 +355,7 @@ import pstats
 from pathlib import Path
 from typing import List
 
-from btx_fix_mcp.subservers.review.cache.cache_models import (
+from glintefy.subservers.review.cache.cache_models import (
     CacheCandidate,
     Hotspot,
     PureFunctionCandidate,
@@ -498,13 +498,13 @@ class HotspotAnalyzer:
     def _infer_module_path(self, file_path: Path) -> str:
         """Infer Python module path from file path.
 
-        Example: src/btx_fix_mcp/config.py → btx_fix_mcp.config
+        Example: src/glintefy/config.py → glintefy.config
         """
         # Try to find src/ or package root
         parts = file_path.parts
 
         # Look for common root directories
-        root_markers = ['src', 'lib', 'btx_fix_mcp']
+        root_markers = ['src', 'lib', 'glintefy']
 
         for i, part in enumerate(parts):
             if part in root_markers:
@@ -545,7 +545,7 @@ class HotspotAnalyzer:
 
 #### Task 4.1: Implement Batch Cache Testing
 
-**File:** `src/btx_fix_mcp/subservers/review/cache/batch_screener.py`
+**File:** `src/glintefy/subservers/review/cache/batch_screener.py`
 
 ```python
 """Batch cache screening.
@@ -561,7 +561,7 @@ from functools import lru_cache
 from pathlib import Path
 from typing import List
 
-from btx_fix_mcp.subservers.review.cache.cache_models import (
+from glintefy.subservers.review.cache.cache_models import (
     BatchScreeningResult,
     CacheCandidate,
 )
@@ -701,7 +701,7 @@ class BatchScreener:
 
 #### Task 5.1: Implement Individual Cache Testing
 
-**File:** `src/btx_fix_mcp/subservers/review/cache/individual_validator.py`
+**File:** `src/glintefy/subservers/review/cache/individual_validator.py`
 
 ```python
 """Individual cache validation.
@@ -718,7 +718,7 @@ from functools import lru_cache
 from pathlib import Path
 from typing import List
 
-from btx_fix_mcp.subservers.review.cache.cache_models import (
+from glintefy.subservers.review.cache.cache_models import (
     BatchScreeningResult,
     IndividualValidationResult,
 )
@@ -934,7 +934,7 @@ class IndividualValidator:
 
 #### Task 6.1: Implement CacheSubServer
 
-**File:** `src/btx_fix_mcp/subservers/review/cache.py`
+**File:** `src/glintefy/subservers/review/cache.py`
 
 ```python
 """Cache Analysis Sub-Server.
@@ -948,13 +948,13 @@ Identifies caching opportunities using hybrid approach:
 
 from pathlib import Path
 
-from btx_fix_mcp.config import get_config
-from btx_fix_mcp.subservers.common.base import BaseSubServer, SubServerResult
-from btx_fix_mcp.subservers.common.logging import get_mcp_logger, log_debug
-from btx_fix_mcp.subservers.review.cache.batch_screener import BatchScreener
-from btx_fix_mcp.subservers.review.cache.hotspot_analyzer import HotspotAnalyzer
-from btx_fix_mcp.subservers.review.cache.individual_validator import IndividualValidator
-from btx_fix_mcp.subservers.review.cache.pure_function_detector import PureFunctionDetector
+from glintefy.config import get_config
+from glintefy.subservers.common.base import BaseSubServer, SubServerResult
+from glintefy.subservers.common.logging import get_mcp_logger, log_debug
+from glintefy.subservers.review.cache.batch_screener import BatchScreener
+from glintefy.subservers.review.cache.hotspot_analyzer import HotspotAnalyzer
+from glintefy.subservers.review.cache.individual_validator import IndividualValidator
+from glintefy.subservers.review.cache.pure_function_detector import PureFunctionDetector
 
 
 class CacheSubServer(BaseSubServer):
@@ -1261,11 +1261,11 @@ class CacheSubServer(BaseSubServer):
 
 #### Task 7.1: Add to ReviewMCPServer
 
-**File:** `src/btx_fix_mcp/servers/review.py` (modify)
+**File:** `src/glintefy/servers/review.py` (modify)
 
 ```python
 # Add import
-from btx_fix_mcp.subservers.review.cache import CacheSubServer
+from glintefy.subservers.review.cache import CacheSubServer
 
 # Add method to ReviewMCPServer class
 @debug_log(logger)
@@ -1281,7 +1281,7 @@ def run_cache(
 
     Args:
         input_dir: Input directory with scope + perf results
-        output_dir: Output directory (default: LLM-CONTEXT/btx_fix_mcp/review/cache)
+        output_dir: Output directory (default: LLM-CONTEXT/glintefy/review/cache)
         cache_size: Override cache size
         hit_rate_threshold: Override hit rate threshold
         speedup_threshold: Override speedup threshold
@@ -1326,7 +1326,7 @@ def run_cache(
 
 #### Task 7.2: Add Cache Tool Definition
 
-**File:** `src/btx_fix_mcp/servers/review_tools.py` (modify)
+**File:** `src/glintefy/servers/review_tools.py` (modify)
 
 Add cache tool definition to the tool list.
 
@@ -1336,7 +1336,7 @@ Add cache tool definition to the tool list.
 
 #### Task 8.1: Add to defaultconfig.toml
 
-**File:** `src/btx_fix_mcp/defaultconfig.toml` (modify)
+**File:** `src/glintefy/defaultconfig.toml` (modify)
 
 ```toml
 [review.cache]

@@ -102,7 +102,7 @@ Validates candidates that passed batch screening with precise timing.
 
 ```python
 from pathlib import Path
-from btx_fix_mcp.subservers.review.cache_subserver import CacheSubServer
+from glintefy.subservers.review.cache_subserver import CacheSubServer
 
 server = CacheSubServer(
     input_dir=Path("LLM-CONTEXT/review/scope"),
@@ -132,11 +132,11 @@ server = CacheSubServer(
 
 ```bash
 # Run cache analysis
-python -m btx_fix_mcp review cache
+python -m glintefy review cache
 
 # Profile your application first, then analyze
-python -m btx_fix_mcp review profile -- python my_app.py
-python -m btx_fix_mcp review cache
+python -m glintefy review profile -- python my_app.py
+python -m glintefy review cache
 ```
 
 ## Getting Runtime Cache Statistics
@@ -158,21 +158,21 @@ The simplest way to profile your application:
 
 ```bash
 # Profile any Python command
-python -m btx_fix_mcp review profile -- python my_app.py
+python -m glintefy review profile -- python my_app.py
 
 # Profile your test suite
-python -m btx_fix_mcp review profile -- pytest tests/
+python -m glintefy review profile -- pytest tests/
 
 # Profile a module
-python -m btx_fix_mcp review profile -- python -m my_module
+python -m glintefy review profile -- python -m my_module
 
 # After profiling, run cache analysis
-python -m btx_fix_mcp review cache
+python -m glintefy review cache
 ```
 
 The `review profile` command automatically:
 - Wraps your command with cProfile
-- Saves the profile to `LLM-CONTEXT/btx_fix_mcp/review/perf/test_profile.prof`
+- Saves the profile to `LLM-CONTEXT/glintefy/review/perf/test_profile.prof`
 - Works with any Python script, module, or pytest
 
 ### Manual Profiling (Alternative)
@@ -197,7 +197,7 @@ if __name__ == "__main__":
 
     profiler.disable()
 
-    output_dir = Path("LLM-CONTEXT/btx_fix_mcp/review/perf")
+    output_dir = Path("LLM-CONTEXT/glintefy/review/perf")
     output_dir.mkdir(parents=True, exist_ok=True)
     profiler.dump_stats(output_dir / "test_profile.prof")
 ```
@@ -208,10 +208,10 @@ Use your test suite as a proxy for real usage:
 
 ```bash
 # Easy way (recommended)
-python -m btx_fix_mcp review profile -- pytest tests/ -v
+python -m glintefy review profile -- pytest tests/ -v
 
 # Or manually
-python -m cProfile -o LLM-CONTEXT/btx_fix_mcp/review/perf/test_profile.prof -m pytest tests/ -v
+python -m cProfile -o LLM-CONTEXT/glintefy/review/perf/test_profile.prof -m pytest tests/ -v
 ```
 
 > **⚠️ Limitation**: Test suite profiling may give inaccurate cache statistics because:
@@ -227,7 +227,7 @@ Profile your actual application with realistic data:
 
 ```bash
 # Profile a web application request handler
-python -m btx_fix_mcp review profile -- python -c "
+python -m glintefy review profile -- python -c "
 from my_app import app
 from werkzeug.test import Client
 
@@ -240,13 +240,13 @@ for i in range(100):
 "
 
 # Profile a data processing script
-python -m btx_fix_mcp review profile -- python scripts/process_data.py --input data/sample.csv
+python -m glintefy review profile -- python scripts/process_data.py --input data/sample.csv
 
 # Profile a CLI tool with typical arguments
-python -m btx_fix_mcp review profile -- python -m my_cli analyze --verbose reports/*.json
+python -m glintefy review profile -- python -m my_cli analyze --verbose reports/*.json
 
 # Profile with cProfile directly for more control
-python -m cProfile -o LLM-CONTEXT/btx_fix_mcp/review/perf/test_profile.prof -c "
+python -m cProfile -o LLM-CONTEXT/glintefy/review/perf/test_profile.prof -c "
 import my_module
 # Run realistic workload
 for data in my_module.load_production_samples(1000):
@@ -309,11 +309,11 @@ print(json.dumps(stats, indent=2))
 Once profiling data exists, run cache analysis:
 
 ```bash
-python -m btx_fix_mcp review cache
+python -m glintefy review cache
 ```
 
 The cache subserver automatically detects and uses:
-- `LLM-CONTEXT/btx_fix_mcp/review/perf/test_profile.prof`
+- `LLM-CONTEXT/glintefy/review/perf/test_profile.prof`
 
 ## Understanding Results
 
@@ -373,7 +373,7 @@ Profile data older than `max_profile_age_hours` (default: 24 hours) triggers a w
 
 ```
 ⚠️ Profile data is 48.3 hours old (threshold: 24 hours).
-Consider regenerating with: python -m btx_fix_mcp review profile -- pytest tests/
+Consider regenerating with: python -m glintefy review profile -- pytest tests/
 ```
 
 ### Code-Based Validation
@@ -394,8 +394,8 @@ This detects when:
 
 ```bash
 # Regenerate profile after code changes
-python -m btx_fix_mcp review profile -- pytest tests/
-python -m btx_fix_mcp review cache
+python -m glintefy review profile -- pytest tests/
+python -m glintefy review cache
 
 # Or set up a pre-commit hook to auto-profile
 ```
@@ -419,9 +419,9 @@ max_profile_age_hours = 24.0  # Maximum profile age before warning
 ### Environment Variables
 
 ```bash
-export BTX_FIX_MCP_REVIEW_CACHE_CACHE_SIZE=256
-export BTX_FIX_MCP_REVIEW_CACHE_HIT_RATE_THRESHOLD=30.0
-export BTX_FIX_MCP_REVIEW_CACHE_MAX_PROFILE_AGE_HOURS=48.0
+export GLINTEFY_REVIEW_CACHE_CACHE_SIZE=256
+export GLINTEFY_REVIEW_CACHE_HIT_RATE_THRESHOLD=30.0
+export GLINTEFY_REVIEW_CACHE_MAX_PROFILE_AGE_HOURS=48.0
 ```
 
 ## Output Files
@@ -519,10 +519,10 @@ This is normal for first run. Cache analysis uses static analysis as fallback. T
 
 ```bash
 # Easy way
-python -m btx_fix_mcp review profile -- pytest tests/
+python -m glintefy review profile -- pytest tests/
 
 # Verify file exists
-ls LLM-CONTEXT/btx_fix_mcp/review/perf/test_profile.prof
+ls LLM-CONTEXT/glintefy/review/perf/test_profile.prof
 ```
 
 ### "Profile data is X hours old"
@@ -531,15 +531,15 @@ Delete the old profile and regenerate:
 
 ```bash
 # Delete old profile
-python -m btx_fix_mcp review clean -s profile
+python -m glintefy review clean -s profile
 
 # Regenerate
-python -m btx_fix_mcp review profile -- pytest tests/
+python -m glintefy review profile -- pytest tests/
 ```
 
 To increase the threshold:
 ```bash
-export BTX_FIX_MCP_REVIEW_CACHE_MAX_PROFILE_AGE_HOURS=72.0
+export GLINTEFY_REVIEW_CACHE_MAX_PROFILE_AGE_HOURS=72.0
 ```
 
 ### "Profile contains X functions that no longer exist"
@@ -547,9 +547,9 @@ export BTX_FIX_MCP_REVIEW_CACHE_MAX_PROFILE_AGE_HOURS=72.0
 The profile was generated before recent code changes. Clean and regenerate:
 
 ```bash
-python -m btx_fix_mcp review clean -s profile
-python -m btx_fix_mcp review profile -- pytest tests/
-python -m btx_fix_mcp review cache
+python -m glintefy review clean -s profile
+python -m glintefy review profile -- pytest tests/
+python -m glintefy review cache
 ```
 
 ### Cleaning Up Analysis Data
@@ -558,15 +558,15 @@ Remove old analysis results to start fresh:
 
 ```bash
 # Clean all review data
-python -m btx_fix_mcp review clean
+python -m glintefy review clean
 
 # Clean specific subserver output
-python -m btx_fix_mcp review clean -s cache     # Cache analysis only
-python -m btx_fix_mcp review clean -s profile   # Profile data only
-python -m btx_fix_mcp review clean -s quality   # Quality analysis only
+python -m glintefy review clean -s cache     # Cache analysis only
+python -m glintefy review clean -s profile   # Profile data only
+python -m glintefy review clean -s quality   # Quality analysis only
 
 # Preview what would be deleted
-python -m btx_fix_mcp review clean --dry-run
+python -m glintefy review clean --dry-run
 ```
 
 ### "Cache statistics show 0 hits/misses"

@@ -1,4 +1,4 @@
-# btx-fix & btx-review: MCP Servers for Code Quality
+# glintefy & glintefy-review: MCP Servers for Code Quality
 
 > **Status**: Phase 1 Complete - Core Infrastructure & Review Sub-servers
 > **Version**: 0.1.0
@@ -8,8 +8,8 @@
 
 Two MCP (Model Context Protocol) servers that provide comprehensive code review and automated fixing capabilities:
 
-1. **btx-review** - Analyzes code for quality, security, performance, and documentation issues
-2. **btx-fix** - Actually fixes issues with evidence-based verification (planned)
+1. **glintefy-review** - Analyzes code for quality, security, performance, and documentation issues
+2. **glintefy** - Actually fixes issues with evidence-based verification (planned)
 
 ## Current Implementation Status
 
@@ -82,7 +82,7 @@ See [Cache Subserver Documentation](docs/CACHE_SUBSERVER.md) for details.
 ```bash
 # Clone repository
 git clone <repo-url>
-cd btx_fix_mcp
+cd glintefy
 
 # Install with dev dependencies
 make dev
@@ -95,9 +95,9 @@ make test
 
 ```python
 from pathlib import Path
-from btx_fix_mcp.subservers.review.scope import ScopeSubServer
-from btx_fix_mcp.subservers.review.quality import QualitySubServer
-from btx_fix_mcp.subservers.review.security import SecuritySubServer
+from glintefy.subservers.review.scope import ScopeSubServer
+from glintefy.subservers.review.quality import QualitySubServer
+from glintefy.subservers.review.security import SecuritySubServer
 
 # Step 1: Run scope analysis
 scope = ScopeSubServer(
@@ -133,8 +133,8 @@ print(f"Security issues: {security_result.metrics['issues_found']}")
 Configuration is loaded from multiple sources (lowest to highest priority):
 
 1. `defaultconfig.toml` (bundled with package)
-2. `~/.config/btx-fix-mcp/config.toml` (user config)
-3. Environment variables (`BTX_FIX_MCP_*`)
+2. `~/.config/glintefy/config.toml` (user config)
+3. Environment variables (`GLINTEFY_*`)
 4. Constructor parameters
 
 Example configuration override:
@@ -149,19 +149,19 @@ quality = QualitySubServer(
 )
 ```
 
-See `src/btx_fix_mcp/defaultconfig.toml` for all available options.
+See `src/glintefy/defaultconfig.toml` for all available options.
 
 ## Tools Virtual Environment
 
 Analysis tools (ruff, mypy, pylint, vulture, etc.) are installed in an isolated virtual environment:
 
-- **Location**: `~/.cache/btx-fix-mcp/tools-venv/`
+- **Location**: `~/.cache/glintefy/tools-venv/`
 - **Initialization**: Automatic on first use (idempotent)
 - **Package Manager**: Uses `uv` for fast installation
 - **Thread-safe**: Safe for concurrent access
 
 ```python
-from btx_fix_mcp.tools_venv import ensure_tools_venv, get_tool_path
+from glintefy.tools_venv import ensure_tools_venv, get_tool_path
 
 # Ensure venv is ready (called automatically by sub-servers)
 ensure_tools_venv()
@@ -173,8 +173,8 @@ ruff_path = get_tool_path("ruff")
 ## Architecture
 
 ```
-btx_fix_mcp/
-├── src/btx_fix_mcp/
+glintefy/
+├── src/glintefy/
 │   ├── __init__.py              # Package init
 │   ├── config.py                # Configuration loader
 │   ├── defaultconfig.toml       # Default configuration
@@ -353,5 +353,5 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
 ## Support
 
-- **Issues**: [GitHub Issues](https://github.com/bitranox/btx_fix_mcp/issues)
+- **Issues**: [GitHub Issues](https://github.com/bitranox/glintefy/issues)
 - **Documentation**: [docs/](docs/)

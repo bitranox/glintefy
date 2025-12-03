@@ -3,6 +3,21 @@
 All notable changes to this project will be documented in this file following
 the [Keep a Changelog](https://keepachangelog.com/) format.
 
+## [3.0.0] - 2025-12-03
+
+### Changed
+- **BREAKING**: Renamed project from `btx_fix_mcp` to `glintefy`
+  - Package name: `btx_fix_mcp` → `glintefy`
+  - CLI command: `btx_fix_mcp` → `glintefy`
+  - Import: `from btx_fix_mcp` → `from glintefy`
+  - Config file: `.btx-review.yaml` → `.glintefy.yaml`
+  - Environment variables: `BTX_FIX_MCP___*` → `GLINTEFY___*`
+  - Cache directory: `~/.cache/btx-fix-mcp/` → `~/.cache/glintefy/`
+  - Config directory: `~/.config/btx-fix-mcp/` → `~/.config/glintefy/`
+
+### Fixed
+- Updated `mcp` dependency to `>=1.23.0` to fix CVE-2025-66416
+
 ## [2.0.1] - 2025-11-29
 
 ### Fixed
@@ -63,7 +78,7 @@ the [Keep a Changelog](https://keepachangelog.com/) format.
 ### Fixed
 - Removed unused `shutil` import from `source_patcher.py`
 - Removed emoji from scope.py git fallback notice (Windows `charmap` codec compatibility)
-- Fixed environment variable format documentation (BTX_FIX_MCP___SECTION__KEY, not BTX_FIX_MCP_KEY)
+- Fixed environment variable format documentation (GLINTEFY___SECTION__KEY, not GLINTEFY_KEY)
 - Added missing `venv/` to default exclude patterns (was only excluding `.venv/`)
 - Added common cache/build directories to exclude: `.tox/`, `.nox/`, `.pytest_cache/`, `.mypy_cache/`, `.ruff_cache/`, `*.egg-info/`
 - Cache batch_screener now excludes virtual environments and cache directories when scanning for function calls
@@ -82,7 +97,7 @@ the [Keep a Changelog](https://keepachangelog.com/) format.
 - Emergency cleanup via `atexit` handler ensures files are restored even on crashes
 
 ### Fixed
-- `btx_fix_mcp review all` now works on non-git directories (falls back to full mode)
+- `glintefy review all` now works on non-git directories (falls back to full mode)
 - Code churn analysis gracefully skips when git is unavailable
 
 ## [1.0.0] - 2025-11-27
@@ -101,8 +116,8 @@ the [Keep a Changelog](https://keepachangelog.com/) format.
 - Modernized type hints to use Python 3.13+ syntax (`X | None` instead of `Optional[X]`)
 - CI/CD now tests on Python 3.13, 3.14, and latest (3.x)
 - Refactored `scripts/*.py` to reduce cyclomatic complexity (all functions now A/B grade)
-- Moved `profile_application.py` to `src/btx_fix_mcp/scripts/` for proper packaging
-- README badges now point to correct repository (btx_fix_mcp)
+- Moved `profile_application.py` to `src/glintefy/scripts/` for proper packaging
+- README badges now point to correct repository (glintefy)
 
 ### Removed
 - Dropped support for Python 3.9, 3.10, 3.11, and 3.12
@@ -116,4 +131,4 @@ the [Keep a Changelog](https://keepachangelog.com/) format.
 - Windows `Path.home()` test failure when environment variables are cleared
 
 ## [0.1.0] - 2025-11-04
-- Bootstrap `btx_fix_mcp`
+- Bootstrap `glintefy`

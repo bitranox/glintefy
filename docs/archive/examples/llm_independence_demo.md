@@ -13,7 +13,7 @@ This demonstrates that the MCP server's internal LLM is completely independent f
 │                                                                   │
 │  Alice's conversation with Claude:                               │
 │    Alice: "Review my code quality"                              │
-│    Claude: "I'll use the btx-review MCP server..."             │
+│    Claude: "I'll use the glintefy-review MCP server..."             │
 │    [Calls MCP server tool: review_quality]                      │
 │                                                                   │
 └──────────────────────┬───────────────────────────────────────────┘
@@ -22,9 +22,9 @@ This demonstrates that the MCP server's internal LLM is completely independent f
                        │ (NO API key, NO settings passed)
                        ▼
 ┌──────────────────────────────────────────────────────────────────┐
-│ btx-review MCP Server (Running on Alice's machine)              │
+│ glintefy-review MCP Server (Running on Alice's machine)              │
 │                                                                   │
-│  ~/.config/btx-fix-mcp/config.toml:                             │
+│  ~/.config/glintefy/config.toml:                             │
 │    [llm]                                                         │
 │    anthropic_api_key = "sk-ant-api-03-server-key-yyy"          │
 │                                                                   │
@@ -81,11 +81,11 @@ This demonstrates that the MCP server's internal LLM is completely independent f
 ```
 User Bob:
   - API Key: sk-ant-api-03-bob-personal-key
-  - Calls btx-review MCP server
+  - Calls glintefy-review MCP server
 
 User Carol:
   - API Key: sk-ant-api-03-carol-personal-key
-  - Calls SAME btx-review MCP server
+  - Calls SAME glintefy-review MCP server
 
 MCP Server:
   - API Key: sk-ant-api-03-company-server-key
@@ -113,7 +113,7 @@ MCP Server:
 ### Company Server
 
 ```bash
-# /opt/btx-review-server/.config/btx-fix-mcp/config.toml
+# /opt/glintefy-review-server/.config/glintefy/config.toml
 [llm]
 enable_internal_llm = true
 anthropic_api_key = "sk-ant-api-03-company-production-key"
@@ -134,11 +134,11 @@ suggest_fixes = false  # Too expensive for all requests
 // Alice's ~/.config/claude-desktop/config.json
 {
   "mcpServers": {
-    "btx-review": {
+    "glintefy-review": {
       "command": "ssh",
       "args": [
         "company-server.local",
-        "python", "-m", "btx_fix_mcp", "serve"
+        "python", "-m", "glintefy", "serve"
       ]
     }
   }
@@ -154,11 +154,11 @@ suggest_fixes = false  # Too expensive for all requests
 ```python
 # This is what happens inside the MCP server
 
-from btx_fix_mcp.subservers.common.llm_client import InternalLLMClient
+from glintefy.subservers.common.llm_client import InternalLLMClient
 
 # Server's LLM client (uses server's API key)
 internal_llm = InternalLLMClient()
-# Reads: BTX_FIX_MCP_ANTHROPIC_API_KEY=sk-ant-api-03-server-key
+# Reads: GLINTEFY_ANTHROPIC_API_KEY=sk-ant-api-03-server-key
 
 # When Alice calls review_quality:
 def handle_review_quality(arguments):
@@ -212,7 +212,7 @@ Usage:
 - Cost: $12.50 (input) + $12.00 (output) = $24.50
 
 MCP Tool Calls:
-- btx-review tool calls: 0 tokens (just JSON results, no LLM usage)
+- glintefy-review tool calls: 0 tokens (just JSON results, no LLM usage)
 - Cost: $0.00
 
 Total: $24.50
@@ -224,7 +224,7 @@ Total: $24.50
 Statement Period: January 2025
 API Key: sk-ant-api-03-company-server-key
 
-Usage by btx-review MCP server:
+Usage by glintefy-review MCP server:
 - Internal severity classifications: 500K input, 5K output
   - Model: claude-3-5-haiku-20241022
   - Cost: $0.13 (input) + $0.01 (output) = $0.14

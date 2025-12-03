@@ -156,15 +156,15 @@ def _capture_sync(record: list[ProjectMetadata]) -> Callable[[ProjectMetadata], 
 @pytest.mark.os_agnostic
 def test_get_project_metadata_fields():
     meta = _utils.get_project_metadata()
-    assert meta.name == "btx_fix_mcp"
-    assert meta.slug == "btx-fix-mcp"
-    assert meta.import_package == "btx_fix_mcp"
-    assert meta.coverage_source == "src/btx_fix_mcp"
-    assert meta.github_tarball_url("1.2.3").endswith("/bitranox/btx_fix_mcp/archive/refs/tags/v1.2.3.tar.gz")
+    assert meta.name == "glintefy"
+    assert meta.slug == "glintefy"
+    assert meta.import_package == "glintefy"
+    assert meta.coverage_source == "src/glintefy"
+    assert meta.github_tarball_url("1.2.3").endswith("/bitranox/glintefy/archive/refs/tags/v1.2.3.tar.gz")
     assert meta.version
     assert meta.summary
     assert meta.author_name
-    assert meta.metadata_module.as_posix().endswith("src/btx_fix_mcp/__init__conf__.py")
+    assert meta.metadata_module.as_posix().endswith("src/glintefy/__init__conf__.py")
 
 
 @pytest.mark.os_agnostic

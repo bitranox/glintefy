@@ -29,7 +29,7 @@ def example_basic_result():
         # Step-by-step guidance
         "next_steps": ["Review critical issues in main.py and utils.py", "Run automated fixes for safe changes", "Re-run quality check after fixes"],
         # Exact commands to run
-        "suggested_commands": ["btx_fix_mcp fix --severity high --interactive", "btx_fix_mcp fix --add-types --auto", "btx_fix_mcp review quality --recheck"],
+        "suggested_commands": ["glintefy fix --severity high --interactive", "glintefy fix --add-types --auto", "glintefy review quality --recheck"],
         "metrics": {"total_issues": 15, "critical": 3, "high": 5, "medium": 7},
     }
 
@@ -56,21 +56,21 @@ def example_with_workflow():
                     "title": "Fix Security Issues",
                     "description": "Address 2 SQL injection vulnerabilities",
                     "priority": "CRITICAL",
-                    "command": "btx_fix_mcp fix --security --verify",
+                    "command": "glintefy fix --security --verify",
                     "expected_outcome": "All security issues resolved",
                 },
                 {
                     "number": 3,
                     "title": "Refactor Complex Functions",
                     "description": "Reduce complexity in 3 functions",
-                    "command": "btx_fix_mcp fix --complexity --interactive",
+                    "command": "glintefy fix --complexity --interactive",
                     "review_required": True,
                 },
                 {
                     "number": 4,
                     "title": "Verify Changes",
                     "description": "Run tests and re-check quality",
-                    "command": "pytest && btx_fix_mcp review quality",
+                    "command": "pytest && glintefy review quality",
                     "success_criteria": "All tests pass, <5 issues remain",
                 },
             ],
@@ -160,7 +160,7 @@ def process_item(item):
                 "fixes_count": 8,
                 "time": "5 minutes",
                 "risk": "low",
-                "command": "btx_fix_mcp fix --auto --safe",
+                "command": "glintefy fix --auto --safe",
             },
             {
                 "approach": "interactive",
@@ -168,7 +168,7 @@ def process_item(item):
                 "fixes_count": 15,
                 "time": "20 minutes",
                 "risk": "none",
-                "command": "btx_fix_mcp fix --interactive",
+                "command": "glintefy fix --interactive",
             },
             {
                 "approach": "manual",
@@ -194,7 +194,7 @@ def example_conversation_flow():
         "summary": "Found 15 issues: 3 critical, 5 high, 7 medium",
         "recommendations": ["Fix high complexity in process() first", "Add type hints to public API", "Extract duplicate validation logic"],
         "next_steps": ["Review critical issues in main.py", "Run automated fixes", "Re-check quality"],
-        "suggested_commands": ["btx_fix_mcp fix --severity high --interactive", "btx_fix_mcp fix --add-types"],
+        "suggested_commands": ["glintefy fix --severity high --interactive", "glintefy fix --add-types"],
     }
 
     # Step 3: Claude interprets and presents to user
@@ -239,7 +239,7 @@ def example_full_interaction():
                     "line": 42,
                     "issue": "High complexity (18)",
                     "fix": "Extract 3 helper methods",
-                    "command": "btx_fix_mcp fix main.py:42 --refactor",
+                    "command": "glintefy fix main.py:42 --refactor",
                 }
             ],
             "recommendations": [
@@ -249,9 +249,9 @@ def example_full_interaction():
             ],
             "workflow": {
                 "1": "Backup: git commit -am 'pre-fix'",
-                "2": "Fix critical: btx_fix_mcp fix --critical",
+                "2": "Fix critical: glintefy fix --critical",
                 "3": "Verify: pytest",
-                "4": "Re-check: btx_fix_mcp review",
+                "4": "Re-check: glintefy review",
             },
         },
         "claude_presents": """
@@ -274,10 +274,10 @@ I found 15 code quality issues. Here's my analysis:
 git commit -am 'pre-fix snapshot'
 
 # 2. Fix critical
-btx_fix_mcp fix --critical --interactive
+glintefy fix --critical --interactive
 
 # 3. Verify
-pytest && btx_fix_mcp review quality
+pytest && glintefy review quality
 ```
 
 **Estimated time**: 30 minutes
@@ -326,7 +326,7 @@ git add main.py
 git commit -m "refactor: reduce process() complexity to 6"
 
 # Re-check quality
-btx_fix_mcp review quality
+glintefy review quality
 ```
 
 The code is now much cleaner! Want me to explain any of the changes?

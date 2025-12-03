@@ -1,0 +1,43 @@
+# Glintefy Configuration Example
+# Copy this file to .glintefy.yaml in your repository root
+
+# Scope sub-server configuration
+scope:
+  # Mode: "git" (uncommitted changes) or "full" (all files)
+  mode: git
+
+  # Patterns to exclude (glob patterns)
+  exclude_patterns:
+    - "vendor/"
+    - "node_modules/"
+    - "dist/"
+    - "build/"
+    - "*.min.js"
+    - "*.min.css"
+    - "*.generated.*"
+    - ".venv/"
+    - "__pycache__/"
+
+  # Patterns to include (glob patterns) - default is ["**/*"]
+  include_patterns:
+    - "**/*.py"
+    - "**/*.js"
+    - "**/*.ts"
+    - "**/*.jsx"
+    - "**/*.tsx"
+    - "**/*.md"
+    - "**/*.yaml"
+    - "**/*.yml"
+
+# Quality sub-server configuration (future)
+quality:
+  tools:
+    - ruff
+    - black
+    - mypy
+
+# Security sub-server configuration (future)
+security:
+  tools:
+    - bandit
+  severity_threshold: medium

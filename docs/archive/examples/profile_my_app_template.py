@@ -8,7 +8,7 @@ Usage:
     1. Copy this template: cp docs/examples/profile_my_app_template.py profile_my_app.py
     2. Edit `run_my_workload()` to run your application
     3. Run: python profile_my_app.py
-    4. Analyze: python -m btx_fix_mcp review cache
+    4. Analyze: python -m glintefy review cache
 """
 
 from __future__ import annotations
@@ -82,7 +82,7 @@ def main():
         profiler.disable()
 
     # Save profiling data to expected location
-    output_dir = Path("LLM-CONTEXT/btx_fix_mcp/review/perf")
+    output_dir = Path("LLM-CONTEXT/glintefy/review/perf")
     output_dir.mkdir(parents=True, exist_ok=True)
 
     output_path = output_dir / "test_profile.prof"
@@ -90,8 +90,8 @@ def main():
 
     print(f"\n✓ Profiling data saved to: {output_path}")
     print("\nNext steps:")
-    print("  1. Run cache analysis: python -m btx_fix_mcp review cache")
-    print("  2. Review results: cat LLM-CONTEXT/btx_fix_mcp/review/cache/existing_cache_evaluations.json")
+    print("  1. Run cache analysis: python -m glintefy review cache")
+    print("  2. Review results: cat LLM-CONTEXT/glintefy/review/cache/existing_cache_evaluations.json")
 
 
 if __name__ == "__main__":

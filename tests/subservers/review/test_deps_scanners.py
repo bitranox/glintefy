@@ -7,7 +7,7 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from btx_fix_mcp.subservers.review.deps_scanners import (
+from glintefy.subservers.review.deps_scanners import (
     check_outdated_packages,
     classify_vuln_severity,
     run_npm_audit,
@@ -28,7 +28,7 @@ class TestScanVulnerabilities:
 
     def test_scan_python_project(self, tmp_path, logger):
         """Test scanning Python project."""
-        with patch("btx_fix_mcp.subservers.review.deps_scanners.run_pip_audit") as mock_pip:
+        with patch("glintefy.subservers.review.deps_scanners.run_pip_audit") as mock_pip:
             mock_pip.return_value = [{"package": "requests", "vulnerability_id": "CVE-123"}]
 
             result = scan_vulnerabilities("python", tmp_path, logger)
@@ -38,8 +38,8 @@ class TestScanVulnerabilities:
 
     def test_scan_python_fallback_to_safety(self, tmp_path, logger):
         """Test fallback to safety when pip-audit returns empty."""
-        with patch("btx_fix_mcp.subservers.review.deps_scanners.run_pip_audit") as mock_pip:
-            with patch("btx_fix_mcp.subservers.review.deps_scanners.run_safety") as mock_safety:
+        with patch("glintefy.subservers.review.deps_scanners.run_pip_audit") as mock_pip:
+            with patch("glintefy.subservers.review.deps_scanners.run_safety") as mock_safety:
                 mock_pip.return_value = []
                 mock_safety.return_value = [{"package": "urllib3", "vulnerability_id": "CVE-456"}]
 
@@ -51,7 +51,7 @@ class TestScanVulnerabilities:
 
     def test_scan_nodejs_project(self, tmp_path, logger):
         """Test scanning Node.js project."""
-        with patch("btx_fix_mcp.subservers.review.deps_scanners.run_npm_audit") as mock_npm:
+        with patch("glintefy.subservers.review.deps_scanners.run_npm_audit") as mock_npm:
             mock_npm.return_value = [{"package": "lodash", "vulnerability_id": "npm:123"}]
 
             result = scan_vulnerabilities("nodejs", tmp_path, logger)

@@ -49,18 +49,18 @@ The simplest way to profile is using the built-in CLI:
 
 ```bash
 # Profile any Python command
-python -m btx_fix_mcp review profile -- python my_app.py
+python -m glintefy review profile -- python my_app.py
 
 # Profile your test suite
-python -m btx_fix_mcp review profile -- pytest tests/
+python -m glintefy review profile -- pytest tests/
 
 # Profile a module
-python -m btx_fix_mcp review profile -- python -m my_module
+python -m glintefy review profile -- python -m my_module
 ```
 
 The `review profile` command automatically:
 - Wraps your command with cProfile
-- Saves the profile to `LLM-CONTEXT/btx_fix_mcp/review/perf/test_profile.prof`
+- Saves the profile to `LLM-CONTEXT/glintefy/review/perf/test_profile.prof`
 - Works with any Python script, module, or pytest
 
 ### Step 2: Run Cache Analysis
@@ -68,13 +68,13 @@ The `review profile` command automatically:
 With profiling data available, cache analysis automatically detects and uses it:
 
 ```bash
-python -m btx_fix_mcp review cache
+python -m glintefy review cache
 ```
 
 Or via the MCP server:
 
 ```python
-from btx_fix_mcp.servers.review import ReviewMCPServer
+from glintefy.servers.review import ReviewMCPServer
 
 server = ReviewMCPServer(repo_path=".")
 result = server.run_cache()
@@ -87,16 +87,16 @@ Before re-profiling, you can clean old data:
 
 ```bash
 # Delete old profile only
-python -m btx_fix_mcp review clean -s profile
+python -m glintefy review clean -s profile
 
 # Delete all cache analysis data
-python -m btx_fix_mcp review clean -s cache
+python -m glintefy review clean -s cache
 
 # Delete all review data
-python -m btx_fix_mcp review clean
+python -m glintefy review clean
 
 # Preview what would be deleted
-python -m btx_fix_mcp review clean --dry-run
+python -m glintefy review clean --dry-run
 ```
 
 ## Detailed Workflows
@@ -129,7 +129,7 @@ if __name__ == "__main__":
         profiler.disable()
 
         # Save profiling data
-        output_dir = Path("LLM-CONTEXT/btx_fix_mcp/review/perf")
+        output_dir = Path("LLM-CONTEXT/glintefy/review/perf")
         output_dir.mkdir(parents=True, exist_ok=True)
         profiler.dump_stats(output_dir / "test_profile.prof")
 
@@ -139,7 +139,7 @@ if __name__ == "__main__":
 Run it:
 ```bash
 python profile_my_app.py
-python -m btx_fix_mcp review cache
+python -m glintefy review cache
 ```
 
 ### Workflow 2: Profile Web Application
@@ -171,7 +171,7 @@ if __name__ == "__main__":
 
     profiler.disable()
 
-    output_dir = Path("LLM-CONTEXT/btx_fix_mcp/review/perf")
+    output_dir = Path("LLM-CONTEXT/glintefy/review/perf")
     output_dir.mkdir(parents=True, exist_ok=True)
     profiler.dump_stats(output_dir / "test_profile.prof")
 
@@ -202,7 +202,7 @@ if __name__ == "__main__":
 
     profiler.disable()
 
-    output_dir = Path("LLM-CONTEXT/btx_fix_mcp/review/perf")
+    output_dir = Path("LLM-CONTEXT/glintefy/review/perf")
     output_dir.mkdir(parents=True, exist_ok=True)
     profiler.dump_stats(output_dir / "test_profile.prof")
 
@@ -215,7 +215,7 @@ You can use your test suite as a quick proxy, but be aware of limitations:
 
 ```bash
 # Easy way
-python -m btx_fix_mcp review profile -- pytest tests/ -v
+python -m glintefy review profile -- pytest tests/ -v
 ```
 
 Or manually:
@@ -239,7 +239,7 @@ if __name__ == "__main__":
 
     profiler.disable()
 
-    output_dir = Path("LLM-CONTEXT/btx_fix_mcp/review/perf")
+    output_dir = Path("LLM-CONTEXT/glintefy/review/perf")
     output_dir.mkdir(parents=True, exist_ok=True)
     profiler.dump_stats(output_dir / "test_profile.prof")
 
@@ -300,17 +300,17 @@ Without profiling data, you'll see:
 The cache analysis expects profiling data at:
 
 ```
-<repo_root>/LLM-CONTEXT/btx_fix_mcp/review/perf/test_profile.prof
+<repo_root>/LLM-CONTEXT/glintefy/review/perf/test_profile.prof
 ```
 
 You can also specify a custom location when creating the cache sub-server:
 
 ```python
-from btx_fix_mcp.subservers.review.cache_subserver import CacheSubServer
+from glintefy.subservers.review.cache_subserver import CacheSubServer
 from pathlib import Path
 
 server = CacheSubServer(
-    output_dir=Path("LLM-CONTEXT/btx_fix_mcp/review/cache"),
+    output_dir=Path("LLM-CONTEXT/glintefy/review/cache"),
     profile_path=Path("custom/path/to/profile.prof"),  # Custom location
 )
 
@@ -352,7 +352,7 @@ for name, scenario_func in scenarios:
 
     profiler.disable()
 
-    output_dir = Path("LLM-CONTEXT/btx_fix_mcp/review/perf")
+    output_dir = Path("LLM-CONTEXT/glintefy/review/perf")
     output_dir.mkdir(parents=True, exist_ok=True)
 
     # Save with scenario name
@@ -377,7 +377,7 @@ Update profiling data periodically as your application evolves:
 ```bash
 # Add to your CI/CD pipeline or development workflow
 python scripts/profile_application.py  # Run profiling
-python -m btx_fix_mcp review cache  # Analyze with fresh data
+python -m glintefy review cache  # Analyze with fresh data
 ```
 
 ### 4. Cache Hit Rate Debugging
@@ -410,8 +410,8 @@ print(f"Cache size: {info.currsize}/{info.maxsize}")
 
 This is normal! It means the cache analysis will use static code analysis instead. To use profiling data:
 
-1. Verify file exists: `ls -la LLM-CONTEXT/btx_fix_mcp/review/perf/test_profile.prof`
-2. Check file is valid: `python -c "import pstats; pstats.Stats('LLM-CONTEXT/btx_fix_mcp/review/perf/test_profile.prof').print_stats()"`
+1. Verify file exists: `ls -la LLM-CONTEXT/glintefy/review/perf/test_profile.prof`
+2. Check file is valid: `python -c "import pstats; pstats.Stats('LLM-CONTEXT/glintefy/review/perf/test_profile.prof').print_stats()"`
 3. Re-run profiling if file is missing or corrupt
 
 ### "Cache statistics show 0 hits/misses"
@@ -490,7 +490,7 @@ if __name__ == "__main__":
     profiler.disable()
 
     # Save profiling data
-    output_dir = Path("LLM-CONTEXT/btx_fix_mcp/review/perf")
+    output_dir = Path("LLM-CONTEXT/glintefy/review/perf")
     output_dir.mkdir(parents=True, exist_ok=True)
     profiler.dump_stats(output_dir / "test_profile.prof")
 
@@ -501,10 +501,10 @@ EOF
 python profile_app.py
 
 # 3. Run cache analysis with profiling data
-python -m btx_fix_mcp review cache
+python -m glintefy review cache
 
 # 4. Review results
-cat LLM-CONTEXT/btx_fix_mcp/review/cache/existing_cache_evaluations.json
+cat LLM-CONTEXT/glintefy/review/cache/existing_cache_evaluations.json
 ```
 
 ## Collecting Runtime Cache Statistics
@@ -628,7 +628,7 @@ if __name__ == "__main__":
     profiler.disable()
 
     # Save cProfile data
-    output_dir = Path("LLM-CONTEXT/btx_fix_mcp/review/perf")
+    output_dir = Path("LLM-CONTEXT/glintefy/review/perf")
     output_dir.mkdir(parents=True, exist_ok=True)
     profiler.dump_stats(output_dir / "test_profile.prof")
 

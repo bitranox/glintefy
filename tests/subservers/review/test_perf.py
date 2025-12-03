@@ -2,7 +2,7 @@
 
 import pytest
 
-from btx_fix_mcp.subservers.review.perf import PerfSubServer
+from glintefy.subservers.review.perf import PerfSubServer
 
 
 class TestPerfSubServer:

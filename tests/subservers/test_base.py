@@ -2,7 +2,7 @@
 
 import pytest
 from pathlib import Path
-from btx_fix_mcp.subservers.base import BaseSubServer, SubServerResult
+from glintefy.subservers.base import BaseSubServer, SubServerResult
 
 
 class TestSubServerResult:

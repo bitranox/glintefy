@@ -7,7 +7,7 @@ from io import StringIO
 
 import pytest
 
-from btx_fix_mcp import behaviors
+from glintefy import behaviors
 
 
 @pytest.mark.os_agnostic

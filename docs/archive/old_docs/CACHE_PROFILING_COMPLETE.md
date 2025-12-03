@@ -8,11 +8,11 @@
 cd /your/project
 
 # Option 1: Static analysis (fast, estimates)
-python -m btx_fix_mcp review cache
+python -m glintefy review cache
 
 # Option 2: With profiling (accurate, real data)
-python -m btx_fix_mcp review profile -- python my_app.py
-python -m btx_fix_mcp review cache
+python -m glintefy review profile -- python my_app.py
+python -m glintefy review cache
 ```
 
 That's it!
@@ -35,12 +35,12 @@ Profile your application with a single command:
 
 
  # Profile any command
- python -m btx_fix_mcp review profile -- python my_app.py
- python -m btx_fix_mcp review profile -- pytest tests/
- python -m btx_fix_mcp review profile -- python -m my_module
+ python -m glintefy review profile -- python my_app.py
+ python -m glintefy review profile -- pytest tests/
+ python -m glintefy review profile -- python -m my_module
 
  # Then analyze caches
- python -m btx_fix_mcp review cache
+ python -m glintefy review cache
 ```
 
 **Results:**
@@ -71,32 +71,32 @@ Recommendations based on real cache statistics from your application.
 
 ```bash
 cd /your/project
-python -m btx_fix_mcp review profile -- python main.py
-python -m btx_fix_mcp review cache
+python -m glintefy review profile -- python main.py
+python -m glintefy review cache
 ```
 
 ### Example 2: Profile Tests
 
 ```bash
 cd /your/project
-python -m btx_fix_mcp review profile -- pytest tests/
-python -m btx_fix_mcp review cache
+python -m glintefy review profile -- pytest tests/
+python -m glintefy review cache
 ```
 
 ### Example 3: Profile with Arguments
 
 ```bash
 cd /your/project
-python -m btx_fix_mcp review profile -- python app.py --input data.csv --workers 4
-python -m btx_fix_mcp review cache
+python -m glintefy review profile -- python app.py --input data.csv --workers 4
+python -m glintefy review cache
 ```
 
 ### Example 4: Profile a Module
 
 ```bash
 cd /your/project
-python -m btx_fix_mcp review profile -- python -m my_package.cli
-python -m btx_fix_mcp review cache
+python -m glintefy review profile -- python -m my_package.cli
+python -m glintefy review cache
 ```
 
 ---
@@ -157,13 +157,13 @@ Metrics:
    - Clearly labels analysis method in results
 
 3. **Profile Command** (cli.py:293-343)
-   - `python -m btx_fix_mcp review profile -- <command>`
+   - `python -m glintefy review profile -- <command>`
    - Wraps command execution with cProfile
    - Saves to expected location automatically
    - Shows next steps
 
 4. **Auto-Detection** (cache_subserver.py:216-234)
-   - Looks for profile at `LLM-CONTEXT/btx_fix_mcp/review/perf/test_profile.prof`
+   - Looks for profile at `LLM-CONTEXT/glintefy/review/perf/test_profile.prof`
    - Uses profiling data if available
    - Falls back to static analysis otherwise
 
@@ -177,23 +177,23 @@ Metrics:
 - `docs/CACHE_PROFILING_COMPLETE.md` - This file
 
 **Modified Files:**
-- `src/btx_fix_mcp/cli.py` - Added `review profile` command
-- `src/btx_fix_mcp/subservers/review/cache_subserver.py` - Updated instructions
-- `src/btx_fix_mcp/subservers/review/cache/batch_screener.py` - Static analysis
-- `src/btx_fix_mcp/subservers/review/cache/pure_function_detector.py` - Removed private method filter
+- `src/glintefy/cli.py` - Added `review profile` command
+- `src/glintefy/subservers/review/cache_subserver.py` - Updated instructions
+- `src/glintefy/subservers/review/cache/batch_screener.py` - Static analysis
+- `src/glintefy/subservers/review/cache/pure_function_detector.py` - Removed private method filter
 
 ### Technical Architecture
 
 ```
 User Command
     │
-    ├─> python -m btx_fix_mcp review profile -- <cmd>
+    ├─> python -m glintefy review profile -- <cmd>
     │   │
     │   ├─> Wraps command with cProfile
     │   ├─> Runs command
     │   └─> Saves profile.prof
     │
-    └─> python -m btx_fix_mcp review cache
+    └─> python -m glintefy review cache
         │
         ├─> Load existing caches
         │
@@ -249,30 +249,30 @@ User Command
 **Answer:** Run static analysis to see if function is called multiple times
 
 ```bash
-python -m btx_fix_mcp review cache
+python -m glintefy review cache
 ```
 
 ### Use Case 2: "Are my caches working?"
 **Answer:** Profile your app to see real hit rates
 
 ```bash
-python -m btx_fix_mcp review profile -- python my_app.py
-python -m btx_fix_mcp review cache
+python -m glintefy review profile -- python my_app.py
+python -m glintefy review cache
 ```
 
 ### Use Case 3: "Quick code review"
 **Answer:** Static analysis is instant
 
 ```bash
-python -m btx_fix_mcp review cache
+python -m glintefy review cache
 ```
 
 ### Use Case 4: "Production optimization"
 **Answer:** Profile realistic workload
 
 ```bash
-python -m btx_fix_mcp review profile -- pytest tests/ --workers 4
-python -m btx_fix_mcp review cache
+python -m glintefy review profile -- pytest tests/ --workers 4
+python -m glintefy review cache
 ```
 
 ---
@@ -280,8 +280,8 @@ python -m btx_fix_mcp review cache
 ## Next Steps
 
 1. **Read** `docs/HOW_TO_PROFILE.md` for examples
-2. **Try** static analysis: `python -m btx_fix_mcp review cache`
-3. **Profile** your app: `python -m btx_fix_mcp review profile -- <command>`
+2. **Try** static analysis: `python -m glintefy review cache`
+3. **Profile** your app: `python -m glintefy review profile -- <command>`
 4. **Apply** recommendations from results
 
 ---

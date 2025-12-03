@@ -7,7 +7,7 @@ import json
 
 import pytest
 
-from btx_fix_mcp.subservers.review.scope import ScopeSubServer
+from glintefy.subservers.review.scope import ScopeSubServer
 
 
 class TestScopeIntegration:

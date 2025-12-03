@@ -7,7 +7,7 @@
 **A: Yes, but it's simple:**
 
 1. Get a **separate** API key (different from your Claude Desktop key)
-2. Put it in environment variable: `BTX_FIX_MCP_ANTHROPIC_API_KEY`
+2. Put it in environment variable: `GLINTEFY_ANTHROPIC_API_KEY`
 3. Enable features in config
 4. Done!
 
@@ -19,7 +19,7 @@
 
 1. Go to https://console.anthropic.com/settings/keys
 2. Create a new API key
-3. Name it "btx-review-server" (to distinguish from your personal key)
+3. Name it "glintefy-review-server" (to distinguish from your personal key)
 4. Copy the key: `sk-ant-api-03-...`
 
 **Important:** Use a **different** key than your Claude Desktop key!
@@ -28,13 +28,13 @@
 
 ```bash
 # Add to ~/.bashrc or ~/.zshrc
-echo 'export BTX_FIX_MCP_ANTHROPIC_API_KEY="sk-ant-api-03-YOUR-SERVER-KEY"' >> ~/.bashrc
+echo 'export GLINTEFY_ANTHROPIC_API_KEY="sk-ant-api-03-YOUR-SERVER-KEY"' >> ~/.bashrc
 
 # Reload
 source ~/.bashrc
 
 # Verify
-echo $BTX_FIX_MCP_ANTHROPIC_API_KEY
+echo $GLINTEFY_ANTHROPIC_API_KEY
 # Should print: sk-ant-api-03-YOUR-SERVER-KEY
 ```
 
@@ -42,10 +42,10 @@ echo $BTX_FIX_MCP_ANTHROPIC_API_KEY
 
 ```bash
 # Create config directory
-mkdir -p ~/.config/btx-fix-mcp
+mkdir -p ~/.config/glintefy
 
 # Create config
-cat > ~/.config/btx-fix-mcp/config.toml << 'EOF'
+cat > ~/.config/glintefy/config.toml << 'EOF'
 [llm]
 enable_internal_llm = true
 
@@ -60,7 +60,7 @@ EOF
 ```bash
 # Test internal LLM works
 python << 'EOF'
-from btx_fix_mcp.subservers.common.llm_client import InternalLLMClient
+from glintefy.subservers.common.llm_client import InternalLLMClient
 
 client = InternalLLMClient()
 
@@ -92,8 +92,8 @@ Expected output:
 └─────────────────────────────────────────┘
               ↕ MCP Protocol
 ┌─────────────────────────────────────────┐
-│ btx-review MCP Server                   │
-│ API Key: BTX_FIX_MCP_ANTHROPIC_API_KEY  │
+│ glintefy-review MCP Server                   │
+│ API Key: GLINTEFY_ANTHROPIC_API_KEY  │
 │ API Key: sk-ant-api-03-YOUR-SERVER-KEY  │
 │ (new separate key you just created)    │
 └─────────────────────────────────────────┘
@@ -103,8 +103,8 @@ Expected output:
 
 | Setting | Source | Value |
 |---------|--------|-------|
-| **Server API Key** | Environment: `BTX_FIX_MCP_ANTHROPIC_API_KEY` | `sk-ant-api-03-...` |
-| **Enable LLM** | Config: `~/.config/btx-fix-mcp/config.toml` | `enable_internal_llm = true` |
+| **Server API Key** | Environment: `GLINTEFY_ANTHROPIC_API_KEY` | `sk-ant-api-03-...` |
+| **Enable LLM** | Config: `~/.config/glintefy/config.toml` | `enable_internal_llm = true` |
 | **Features** | Config: `[llm.features]` | `classify_severity = true` |
 
 **Your Claude Desktop settings:** Unchanged (uses different key)
@@ -124,7 +124,7 @@ Very cheap! The static analysis (ruff, mypy, radon) is still free.
 
 ```bash
 # Disable internal LLM (fall back to rule-based)
-cat > ~/.config/btx-fix-mcp/config.toml << 'EOF'
+cat > ~/.config/glintefy/config.toml << 'EOF'
 [llm]
 enable_internal_llm = false
 EOF
@@ -132,7 +132,7 @@ EOF
 
 Or just unset the environment variable:
 ```bash
-unset BTX_FIX_MCP_ANTHROPIC_API_KEY
+unset GLINTEFY_ANTHROPIC_API_KEY
 ```
 
 The server will still work - just without LLM enhancements (uses rule-based fallbacks).
@@ -143,7 +143,7 @@ Want different settings for different projects?
 
 ```bash
 # In your project directory
-cat > .btx-fix-mcp.toml << 'EOF'
+cat > .glintefy.toml << 'EOF'
 [llm.features]
 classify_severity = true
 suggest_fixes = true  # Enable expensive feature for this project
@@ -159,17 +159,17 @@ EOF
 
 ```bash
 # Check environment variable
-echo $BTX_FIX_MCP_ANTHROPIC_API_KEY
+echo $GLINTEFY_ANTHROPIC_API_KEY
 
 # If empty, set it:
-export BTX_FIX_MCP_ANTHROPIC_API_KEY="sk-ant-api-03-YOUR-KEY"
+export GLINTEFY_ANTHROPIC_API_KEY="sk-ant-api-03-YOUR-KEY"
 ```
 
 ### Features not enabled
 
 ```bash
 # Check config
-cat ~/.config/btx-fix-mcp/config.toml
+cat ~/.config/glintefy/config.toml
 
 # Should show:
 # [llm]
@@ -186,11 +186,11 @@ Add to Claude Desktop config:
 ```json
 {
   "mcpServers": {
-    "btx-review": {
+    "glintefy-review": {
       "command": "python",
-      "args": ["-m", "btx_fix_mcp", "serve"],
+      "args": ["-m", "glintefy", "serve"],
       "env": {
-        "BTX_FIX_MCP_ANTHROPIC_API_KEY": "sk-ant-api-03-YOUR-KEY"
+        "GLINTEFY_ANTHROPIC_API_KEY": "sk-ant-api-03-YOUR-KEY"
       }
     }
   }
@@ -201,7 +201,7 @@ Add to Claude Desktop config:
 
 ✅ **Separate API key** - Use different key for server than Claude Desktop
 
-✅ **Environment variable** - `BTX_FIX_MCP_ANTHROPIC_API_KEY`
+✅ **Environment variable** - `GLINTEFY_ANTHROPIC_API_KEY`
 
 ✅ **Enable in config** - `enable_internal_llm = true`
 

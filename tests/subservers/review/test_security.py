@@ -2,7 +2,7 @@
 
 import pytest
 
-from btx_fix_mcp.subservers.review.security import BanditIssue, SecuritySubServer
+from glintefy.subservers.review.security import BanditIssue, SecuritySubServer
 
 
 class TestSecuritySubServer:
@@ -349,13 +349,13 @@ class TestSecurityConfigLoading:
         assert server.config is not None
 
     def test_load_config_from_default_location(self, tmp_path):
-        """Test loading config from default .btx-review.yaml."""
+        """Test loading config from default .glintefy.yaml."""
         import yaml
 
         repo_dir = tmp_path / "repo"
         repo_dir.mkdir()
 
-        config_file = repo_dir / ".btx-review.yaml"
+        config_file = repo_dir / ".glintefy.yaml"
         config_file.write_text(
             yaml.dump(
                 {

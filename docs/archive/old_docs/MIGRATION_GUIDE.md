@@ -52,18 +52,18 @@ User → Claude Code → MCP Tool Call → Python Server
 
 | Old Command | New MCP Tool | Server |
 |-------------|-------------|--------|
-| `/bx_review_anal!` | `review_codebase` | btx-review |
-| Manual: "review changes in last 8 hours" | `review_changes` with `scope: "8h"` | btx-review |
-| Manual: "review src/auth.py" | `review_files` with `files: ["src/auth.py"]` | btx-review |
+| `/bx_review_anal!` | `review_codebase` | glintefy-review |
+| Manual: "review changes in last 8 hours" | `review_changes` with `scope: "8h"` | glintefy-review |
+| Manual: "review src/auth.py" | `review_files` with `files: ["src/auth.py"]` | glintefy-review |
 
 ### Fix Commands
 
 | Old Command | New MCP Tool | Server |
 |-------------|-------------|--------|
-| `/bx_fix_anal!` | `fix_issues` with `scope: "all"` | btx-fix |
-| Manual: "fix only critical issues" | `fix_critical` | btx-fix |
-| Manual: "fix quality issues" | `fix_quality` | btx-fix |
-| Manual: "fix documentation" | `fix_docs` | btx-fix |
+| `/bx_fix_anal!` | `fix_issues` with `scope: "all"` | glintefy |
+| Manual: "fix only critical issues" | `fix_critical` | glintefy |
+| Manual: "fix quality issues" | `fix_quality` | glintefy |
+| Manual: "fix documentation" | `fix_docs` | glintefy |
 
 ### Sub-Agent Commands
 
@@ -71,12 +71,12 @@ Sub-agents are now invoked automatically by orchestrators, not manually by users
 
 | Old Command | New Sub-server | Orchestrator |
 |-------------|----------------|--------------|
-| `/bx_review_anal_sub_scope` | `scope` | btx-review |
-| `/bx_review_anal_sub_deps` | `deps` | btx-review |
-| `/bx_review_anal_sub_quality` | `quality` | btx-review |
-| `/bx_review_anal_sub_security` | `security` | btx-review |
-| `/bx_fix_anal_sub_plan` | `plan` | btx-fix |
-| `/bx_fix_anal_sub_critical` | `critical` | btx-fix |
+| `/bx_review_anal_sub_scope` | `scope` | glintefy-review |
+| `/bx_review_anal_sub_deps` | `deps` | glintefy-review |
+| `/bx_review_anal_sub_quality` | `quality` | glintefy-review |
+| `/bx_review_anal_sub_security` | `security` | glintefy-review |
+| `/bx_fix_anal_sub_plan` | `plan` | glintefy |
+| `/bx_fix_anal_sub_critical` | `critical` | glintefy |
 
 ---
 
@@ -280,7 +280,7 @@ echo "SUCCESS" > status.txt
 
 #### MCP Version
 ```python
-# File: src/btx_fix_mcp/servers/review.py
+# File: src/glintefy/servers/review.py
 @self.server.call_tool()
 async def review_codebase(priority: str, parallel: bool):
     """Review entire codebase."""
@@ -360,7 +360,7 @@ echo "SUCCESS" > scope/status.txt
 #### Ported Python (scope sub-server)
 
 ```python
-# File: src/btx_fix_mcp/subservers/review/scope.py
+# File: src/glintefy/subservers/review/scope.py
 
 from pathlib import Path
 from ..base import BaseSubServer, SubServerResult
@@ -483,7 +483,7 @@ class ScopeSubServer(BaseSubServer):
 
 import pytest
 from pathlib import Path
-from btx_fix_mcp.subservers.review.scope import ScopeSubServer
+from glintefy.subservers.review.scope import ScopeSubServer
 
 
 def test_scope_non_git_repo(tmp_path):
@@ -532,8 +532,8 @@ If issues occur during migration, you can easily rollback:
 ```json
 {
   "mcpServers": {
-    "btx-review": { /* MCP server */ },
-    "btx-fix": { /* MCP server */ }
+    "glintefy-review": { /* MCP server */ },
+    "glintefy": { /* MCP server */ }
   },
   "commands": {
     "/bx_review_anal!": { /* Bash command */ },
@@ -548,8 +548,8 @@ Use MCP for new work, bash for critical operations.
 ```json
 {
   "mcpServers": {
-    // "btx-review": { /* Disabled */ },
-    // "btx-fix": { /* Disabled */ }
+    // "glintefy-review": { /* Disabled */ },
+    // "glintefy": { /* Disabled */ }
   }
 }
 ```
@@ -560,7 +560,7 @@ Revert to bash commands only.
 ```toml
 # Pin to working version
 dependencies = [
-    "btx_fix_mcp==1.0.0",  # Known good version
+    "glintefy==1.0.0",  # Known good version
 ]
 ```
 

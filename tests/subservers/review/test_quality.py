@@ -6,7 +6,7 @@ from unittest.mock import patch
 
 import pytest
 
-from btx_fix_mcp.subservers.review.quality import QualitySubServer
+from glintefy.subservers.review.quality import QualitySubServer
 
 
 class TestQualitySubServer:
@@ -436,7 +436,7 @@ def foo():
         js_files = []
 
         # Patch ThreadPoolExecutor to verify it's used
-        with patch("btx_fix_mcp.subservers.review.quality.orchestrator.ThreadPoolExecutor", wraps=ThreadPoolExecutor) as mock_executor:
+        with patch("glintefy.subservers.review.quality.orchestrator.ThreadPoolExecutor", wraps=ThreadPoolExecutor) as mock_executor:
             server.orchestrator.run_all(python_files, js_files)
             # Verify ThreadPoolExecutor was called
             assert mock_executor.called

@@ -1,15 +1,15 @@
 # CLI Quickstart
 
-Get started with btx_fix_mcp command-line interface in 5 minutes.
+Get started with glintefy command-line interface in 5 minutes.
 
 ## Installation
 
 ```bash
 # Quick install
-pip install btx_fix_mcp
+pip install glintefy
 
 # Or with uv (faster)
-uv pip install btx_fix_mcp
+uv pip install glintefy
 ```
 
 ## Configuration (Optional)
@@ -18,13 +18,13 @@ Deploy a configuration file to customize settings:
 
 ```bash
 # Deploy config to application directory (recommended)
-python -m btx_fix_mcp config-deploy --target app
+python -m glintefy config-deploy --target app
 
 # View current effective configuration
-python -m btx_fix_mcp config-show
+python -m glintefy config-show
 
 # Show config file locations
-python -m btx_fix_mcp config-path
+python -m glintefy config-path
 ```
 
 The deployed config file includes all settings with detailed documentation.
@@ -39,14 +39,14 @@ See [Configuration Reference](../reference/CONFIGURATION.md) for details.
 cd /path/to/your/project
 
 # Review uncommitted changes
-python -m btx_fix_mcp review all
+python -m glintefy review all
 ```
 
-Output is saved to `LLM-CONTEXT/btx_fix_mcp/review/`.
+Output is saved to `LLM-CONTEXT/glintefy/review/`.
 
 **Typical project structure:**
 ```
-your-project/           <-- Run btx_fix_mcp from here
+your-project/           <-- Run glintefy from here
 ├── pyproject.toml
 ├── src/
 │   └── your_package/
@@ -59,20 +59,20 @@ your-project/           <-- Run btx_fix_mcp from here
 ### Review All Files
 
 ```bash
-python -m btx_fix_mcp review all --mode full
+python -m glintefy review all --mode full
 ```
 
 ### Run Specific Analyses
 
 ```bash
 # Quality analysis only
-python -m btx_fix_mcp review quality
+python -m glintefy review quality
 
 # Security scan only
-python -m btx_fix_mcp review security
+python -m glintefy review security
 
 # Cache optimization analysis
-python -m btx_fix_mcp review cache
+python -m glintefy review cache
 ```
 
 ## Output Location
@@ -82,7 +82,7 @@ All results are saved to:
 ```
 your-project/
 └── LLM-CONTEXT/
-    └── btx_fix_mcp/
+    └── glintefy/
         └── review/
             ├── scope/          # Files analyzed
             ├── quality/        # Quality metrics
@@ -100,7 +100,7 @@ your-project/
 
 ```bash
 # In your CI pipeline
-python -m btx_fix_mcp review all --mode full
+python -m glintefy review all --mode full
 
 # Check exit code for failures
 if [ $? -ne 0 ]; then
@@ -113,31 +113,31 @@ fi
 
 ```bash
 # Review only staged changes
-python -m btx_fix_mcp review all --mode git
+python -m glintefy review all --mode git
 ```
 
 ### Cache Optimization
 
 ```bash
 # Profile your tests first
-python -m btx_fix_mcp review profile -- pytest tests/
+python -m glintefy review profile -- pytest tests/
 
 # Then analyze cache opportunities
-python -m btx_fix_mcp review cache
+python -m glintefy review cache
 ```
 
 ### Clean Up Old Results
 
 ```bash
 # Delete all review data
-python -m btx_fix_mcp review clean
+python -m glintefy review clean
 
 # Delete specific analysis
-python -m btx_fix_mcp review clean -s quality
-python -m btx_fix_mcp review clean -s profile
+python -m glintefy review clean -s quality
+python -m glintefy review clean -s profile
 
 # Preview what would be deleted
-python -m btx_fix_mcp review clean --dry-run
+python -m glintefy review clean --dry-run
 ```
 
 ## Quick Reference

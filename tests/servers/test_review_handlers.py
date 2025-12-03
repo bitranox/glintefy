@@ -4,7 +4,7 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from btx_fix_mcp.servers.review_handlers import (
+from glintefy.servers.review_handlers import (
     TOOL_HANDLERS,
     _handle_all,
     _handle_cache,

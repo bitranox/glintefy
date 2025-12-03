@@ -6,8 +6,8 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from btx_fix_mcp.subservers.review.quality.analyzer_results import MetricsResults
-from btx_fix_mcp.subservers.review.quality.metrics import MetricsAnalyzer
+from glintefy.subservers.review.quality.analyzer_results import MetricsResults
+from glintefy.subservers.review.quality.metrics import MetricsAnalyzer
 
 
 @pytest.fixture

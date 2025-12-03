@@ -1,17 +1,17 @@
 # MCP Tools Reference
 
-Complete reference for btx_fix_mcp MCP server tools.
+Complete reference for glintefy MCP server tools.
 
 ## Server Overview
 
-The btx-review MCP server provides code analysis tools via the Model Context Protocol.
+The glintefy-review MCP server provides code analysis tools via the Model Context Protocol.
 
 ```json
 {
   "mcpServers": {
-    "btx-review": {
+    "glintefy-review": {
       "command": "python",
-      "args": ["-m", "btx_fix_mcp.servers.review"],
+      "args": ["-m", "glintefy.servers.review"],
       "cwd": "/path/to/project"
     }
   }
@@ -196,7 +196,7 @@ Run performance analysis.
 
 Analyze cache optimization opportunities using hybrid evidence-based approach.
 
-**Prerequisite:** For best results, run profiling first using CLI: `python -m btx_fix_mcp review profile -- pytest tests/`
+**Prerequisite:** For best results, run profiling first using CLI: `python -m glintefy review profile -- pytest tests/`
 
 **Parameters:**
 
@@ -273,12 +273,12 @@ Use review_security with severity_threshold="high", confidence_threshold="medium
 Use review_cache with cache_size=256, hit_rate_threshold=30.0
 ```
 
-Or set via environment (format: `BTX_FIX_MCP___<SECTION>__<KEY>=<VALUE>`):
+Or set via environment (format: `GLINTEFY___<SECTION>__<KEY>=<VALUE>`):
 ```bash
 # Triple underscore after prefix, double underscore between sections
-export BTX_FIX_MCP___REVIEW__QUALITY__COMPLEXITY_THRESHOLD=15
-export BTX_FIX_MCP___REVIEW__SECURITY__SEVERITY_THRESHOLD=high
-export BTX_FIX_MCP___GENERAL__LOG_LEVEL=DEBUG
+export GLINTEFY___REVIEW__QUALITY__COMPLEXITY_THRESHOLD=15
+export GLINTEFY___REVIEW__SECURITY__SEVERITY_THRESHOLD=high
+export GLINTEFY___GENERAL__LOG_LEVEL=DEBUG
 ```
 
 ---
@@ -287,7 +287,7 @@ export BTX_FIX_MCP___GENERAL__LOG_LEVEL=DEBUG
 
 Results are saved to:
 ```
-{cwd}/LLM-CONTEXT/btx_fix_mcp/review/
+{cwd}/LLM-CONTEXT/glintefy/review/
 ├── scope/       # File discovery
 ├── quality/     # Quality metrics
 ├── security/    # Security issues

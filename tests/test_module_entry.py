@@ -8,16 +8,16 @@ import sys
 
 import pytest
 
-from btx_fix_mcp import cli as cli_mod
+from glintefy import cli as cli_mod
 
 
 @pytest.mark.os_agnostic
 def test_when_module_entry_returns_zero_the_story_matches_cli(monkeypatch: pytest.MonkeyPatch) -> None:
     """Module entry should successfully execute hello command."""
-    monkeypatch.setattr(sys, "argv", ["btx_fix_mcp", "hello"], raising=False)
+    monkeypatch.setattr(sys, "argv", ["glintefy", "hello"], raising=False)
 
     with pytest.raises(SystemExit) as exc:
-        runpy.run_module("btx_fix_mcp.__main__", run_name="__main__")
+        runpy.run_module("glintefy.__main__", run_name="__main__")
 
     assert exc.value.code == 0
 
@@ -28,10 +28,10 @@ def test_when_module_entry_raises_the_exit_helpers_format_the_song(
     capsys: pytest.CaptureFixture[str],
 ) -> None:
     """Module entry should handle exceptions and return non-zero exit code."""
-    monkeypatch.setattr(sys, "argv", ["btx_fix_mcp", "fail"], raising=False)
+    monkeypatch.setattr(sys, "argv", ["glintefy", "fail"], raising=False)
 
     with pytest.raises(SystemExit) as exc:
-        runpy.run_module("btx_fix_mcp.__main__", run_name="__main__")
+        runpy.run_module("glintefy.__main__", run_name="__main__")
 
     assert exc.value.code != 0
     assert exc.value.code is not None
@@ -44,10 +44,10 @@ def test_when_traceback_flag_is_used_via_module_entry_the_full_poem_is_printed(
     strip_ansi: Callable[[str], str],
 ) -> None:
     """Module entry with --traceback should show full traceback."""
-    monkeypatch.setattr(sys, "argv", ["btx_fix_mcp", "--traceback", "fail"])
+    monkeypatch.setattr(sys, "argv", ["glintefy", "--traceback", "fail"])
 
     with pytest.raises(SystemExit) as exc:
-        runpy.run_module("btx_fix_mcp.__main__", run_name="__main__")
+        runpy.run_module("glintefy.__main__", run_name="__main__")
 
     captured = capsys.readouterr()
     plain_out = strip_ansi(captured.out)

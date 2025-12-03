@@ -4,8 +4,8 @@ from pathlib import Path
 
 import pytest
 
-from btx_fix_mcp.config import get_config
-from btx_fix_mcp.servers.review import ReviewMCPServer
+from glintefy.config import get_config
+from glintefy.servers.review import ReviewMCPServer
 
 
 class TestReviewMCPServer:
@@ -43,7 +43,7 @@ def test_hello():
 
         # Get expected output dir from config
         config = get_config(start_dir=str(tmp_path))
-        expected_output_dir = config.get("review", {}).get("output_dir", "LLM-CONTEXT/btx_fix_mcp/review")
+        expected_output_dir = config.get("review", {}).get("output_dir", "LLM-CONTEXT/glintefy/review")
 
         assert server.repo_path == tmp_path
         assert server._output_base == tmp_path / Path(expected_output_dir)
@@ -174,13 +174,13 @@ def hello():
         # Reset any existing handlers to ensure fresh capture
         import logging
 
-        logger = logging.getLogger("btx_fix_mcp.servers.review")
+        logger = logging.getLogger("glintefy.servers.review")
         logger.handlers.clear()
 
         # Reimport to get fresh logger
-        from btx_fix_mcp.subservers.common.logging import get_mcp_logger
+        from glintefy.subservers.common.logging import get_mcp_logger
 
-        fresh_logger = get_mcp_logger("btx_fix_mcp.test_logs")
+        fresh_logger = get_mcp_logger("glintefy.test_logs")
 
         # Log directly to verify stderr capture works
         fresh_logger.info("Test message for capture")

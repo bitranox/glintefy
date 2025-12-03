@@ -1,10 +1,10 @@
-# MCP Server Architecture for btx-fix and btx-review
+# MCP Server Architecture for glintefy and glintefy-review
 
 ## Executive Summary
 
 This document outlines the architectural design for converting the existing Claude command system into MCP (Model Context Protocol) servers. The system will consist of:
 
-1. **2 Orchestration Servers**: `btx-fix` and `btx-review`
+1. **2 Orchestration Servers**: `glintefy` and `glintefy-review`
 2. **Multiple Sub-servers**: Specialized agents for specific tasks
 3. **MCP Tools**: Expose functionality through MCP tool interface
 4. **MCP Resources**: Provide access to analysis results and artifacts
@@ -20,7 +20,7 @@ This document outlines the architectural design for converting the existing Clau
             │ MCP Protocol                        │ MCP Protocol
             │                                     │
 ┌───────────▼──────────────┐          ┌──────────▼──────────────┐
-│  btx-review Server        │          │  btx-fix Server         │
+│  glintefy-review Server        │          │  glintefy Server         │
 │  (Orchestrator)           │          │  (Orchestrator)         │
 │  ┌─────────────────────┐ │          │  ┌───────────────────┐ │
 │  │ Tools:              │ │          │  │ Tools:            │ │
@@ -60,7 +60,7 @@ This document outlines the architectural design for converting the existing Clau
 
 ### 1. Orchestration Servers
 
-#### btx-review Server (Review Orchestrator)
+#### glintefy-review Server (Review Orchestrator)
 
 **Purpose**: Orchestrates comprehensive code review
 
@@ -122,7 +122,7 @@ This document outlines the architectural design for converting the existing Clau
 - `report` - Report compilation
 - `log-analyzer` - Error analysis
 
-#### btx-fix Server (Fix Orchestrator)
+#### glintefy Server (Fix Orchestrator)
 
 **Purpose**: Actually fixes code issues with evidence-based verification
 
@@ -380,7 +380,7 @@ LLM-CONTEXT/
 - [ ] Implement integration protocol validation
 
 ### Phase 2: Review Server (Week 3-4)
-- [ ] Implement btx-review orchestrator
+- [ ] Implement glintefy-review orchestrator
 - [ ] Port scope sub-server
 - [ ] Port deps sub-server
 - [ ] Port quality sub-server
@@ -389,7 +389,7 @@ LLM-CONTEXT/
 - [ ] Test end-to-end review workflow
 
 ### Phase 3: Fix Server (Week 5-6)
-- [ ] Implement btx-fix orchestrator
+- [ ] Implement glintefy orchestrator
 - [ ] Port plan sub-server
 - [ ] Port critical sub-server (with evidence-based fixing)
 - [ ] Port quality fix sub-server
@@ -432,16 +432,16 @@ MCP servers will be configured via Claude Code's MCP configuration:
 ```json
 {
   "mcpServers": {
-    "btx-review": {
+    "glintefy-review": {
       "command": "python",
-      "args": ["-m", "btx_fix_mcp.servers.review"],
+      "args": ["-m", "glintefy.servers.review"],
       "env": {
         "PYTHON_VERSION": "3.13"
       }
     },
-    "btx-fix": {
+    "glintefy": {
       "command": "python",
-      "args": ["-m", "btx_fix_mcp.servers.fix"],
+      "args": ["-m", "glintefy.servers.fix"],
       "env": {
         "PYTHON_VERSION": "3.13"
       }

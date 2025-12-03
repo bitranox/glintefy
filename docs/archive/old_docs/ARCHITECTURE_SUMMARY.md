@@ -1,4 +1,4 @@
-# Architecture Summary: btx-fix and btx-review MCP Servers
+# Architecture Summary: glintefy and glintefy-review MCP Servers
 
 ## Quick Overview
 
@@ -6,7 +6,7 @@ Transform the existing bash-based Claude command system into two MCP servers wit
 
 ## Server Structure
 
-### **btx-review** (Orchestrator)
+### **glintefy-review** (Orchestrator)
 Coordinates comprehensive code review through specialized sub-servers.
 
 **Tools**:
@@ -27,7 +27,7 @@ Coordinates comprehensive code review through specialized sub-servers.
 10. `report` - Compile final report
 11. `log-analyzer` - Analyze logs for errors
 
-### **btx-fix** (Orchestrator)
+### **glintefy** (Orchestrator)
 Actually fixes code issues with evidence-based verification.
 
 **Tools**:
@@ -128,7 +128,7 @@ LLM-CONTEXT/
 ### 1. Review Code
 ```python
 # MCP Client (Claude Code)
-result = call_tool("btx-review", "review_codebase", {
+result = call_tool("glintefy-review", "review_codebase", {
     "priority": "all",
     "parallel": True
 })
@@ -149,7 +149,7 @@ result = call_tool("btx-review", "review_codebase", {
 ### 2. Fix Issues
 ```python
 # MCP Client (Claude Code)
-result = call_tool("btx-fix", "fix_critical", {
+result = call_tool("glintefy", "fix_critical", {
     "verify": True,        # Run 3x test verification
     "auto_commit": True    # Auto-commit successful fixes
 })
@@ -181,12 +181,12 @@ Every sub-server MUST:
    - Directory utilities
 
 2. **Review Server** (Week 3-4)
-   - btx-review orchestrator
+   - glintefy-review orchestrator
    - Core sub-servers (scope, quality, security)
    - Parallel execution
 
 3. **Fix Server** (Week 5-6)
-   - btx-fix orchestrator
+   - glintefy orchestrator
    - Critical fix sub-server (evidence-based)
    - Quality fix sub-server
    - Git commit/revert logic
@@ -239,13 +239,13 @@ Every sub-server MUST:
 ```json
 {
   "mcpServers": {
-    "btx-review": {
+    "glintefy-review": {
       "command": "python",
-      "args": ["-m", "btx_fix_mcp.servers.review"]
+      "args": ["-m", "glintefy.servers.review"]
     },
-    "btx-fix": {
+    "glintefy": {
       "command": "python",
-      "args": ["-m", "btx_fix_mcp.servers.fix"]
+      "args": ["-m", "glintefy.servers.fix"]
     }
   }
 }

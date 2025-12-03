@@ -2,7 +2,7 @@
 
 import pytest
 
-from btx_fix_mcp.subservers.common.mindsets import (
+from glintefy.subservers.common.mindsets import (
     QUALITY_MINDSET,
     SECURITY_MINDSET,
     AnalysisVerdict,

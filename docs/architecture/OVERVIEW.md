@@ -1,6 +1,6 @@
 # Architecture Overview
 
-System design and architecture of btx_fix_mcp.
+System design and architecture of glintefy.
 
 ## High-Level Architecture
 
@@ -9,7 +9,7 @@ System design and architecture of btx_fix_mcp.
 │                     User Interface                          │
 ├─────────────────────────────┬───────────────────────────────┤
 │          CLI                │          MCP Server           │
-│   (python -m btx_fix_mcp)   │   (btx_fix_mcp.servers)       │
+│   (python -m glintefy)   │   (glintefy.servers)       │
 └─────────────────────────────┴───────────────────────────────┘
                               │
                               ▼
@@ -29,14 +29,14 @@ System design and architecture of btx_fix_mcp.
 ┌─────────────────────────────────────────────────────────────┐
 │                    Analysis Tools                           │
 │      (radon, ruff, mypy, vulture, bandit, ...)             │
-│           Isolated in ~/.cache/btx-fix-mcp/tools-venv/     │
+│           Isolated in ~/.cache/glintefy/tools-venv/     │
 └─────────────────────────────────────────────────────────────┘
 ```
 
 ## Package Structure
 
 ```
-src/btx_fix_mcp/
+src/glintefy/
 ├── __init__.py                  # Package init
 ├── cli.py                       # CLI entry point
 ├── config.py                    # Configuration loading
@@ -152,7 +152,7 @@ class ReviewMCPServer:
 ### Output Directory
 
 ```
-LLM-CONTEXT/btx_fix_mcp/review/
+LLM-CONTEXT/glintefy/review/
 ├── scope/
 │   ├── files_to_review.txt
 │   ├── status.txt
@@ -185,7 +185,7 @@ LLM-CONTEXT/btx_fix_mcp/review/
 Analysis tools are installed in an isolated environment:
 
 ```
-~/.cache/btx-fix-mcp/tools-venv/
+~/.cache/glintefy/tools-venv/
 ├── bin/
 │   ├── python
 │   ├── ruff
@@ -208,10 +208,10 @@ Analysis tools are installed in an isolated environment:
 defaultconfig.toml (bundled)
          │
          ▼
-~/.config/btx-fix-mcp/config.toml (user)
+~/.config/glintefy/config.toml (user)
          │
          ▼
-Environment variables (BTX_FIX_MCP_*)
+Environment variables (GLINTEFY_*)
          │
          ▼
 Constructor parameters (Python API)

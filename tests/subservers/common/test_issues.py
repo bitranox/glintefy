@@ -1,6 +1,6 @@
 """Tests for common issue dataclasses."""
 
-from btx_fix_mcp.subservers.common.issues import (
+from glintefy.subservers.common.issues import (
     BaseIssue,
     DependencyTree,
     DepsMetrics,

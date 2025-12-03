@@ -6,9 +6,9 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from btx_fix_mcp.subservers.common.issues import DocstringCoverageMetrics, TypeCoverageMetrics
-from btx_fix_mcp.subservers.review.quality.analyzer_results import TypeResults
-from btx_fix_mcp.subservers.review.quality.types import TypeAnalyzer
+from glintefy.subservers.common.issues import DocstringCoverageMetrics, TypeCoverageMetrics
+from glintefy.subservers.review.quality.analyzer_results import TypeResults
+from glintefy.subservers.review.quality.types import TypeAnalyzer
 
 
 @pytest.fixture

@@ -1,23 +1,23 @@
-# btx_fix_mcp
+# glintefy
 
 <!-- Badges -->
-[![CI](https://github.com/bitranox/btx_fix_mcp/actions/workflows/ci.yml/badge.svg)](https://github.com/bitranox/btx_fix_mcp/actions/workflows/ci.yml)
-[![CodeQL](https://github.com/bitranox/btx_fix_mcp/actions/workflows/codeql.yml/badge.svg)](https://github.com/bitranox/btx_fix_mcp/actions/workflows/codeql.yml)
+[![CI](https://github.com/bitranox/glintefy/actions/workflows/ci.yml/badge.svg)](https://github.com/bitranox/glintefy/actions/workflows/ci.yml)
+[![CodeQL](https://github.com/bitranox/glintefy/actions/workflows/codeql.yml/badge.svg)](https://github.com/bitranox/glintefy/actions/workflows/codeql.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Open in Codespaces](https://img.shields.io/badge/Codespaces-Open-blue?logo=github&logoColor=white&style=flat-square)](https://codespaces.new/bitranox/btx_fix_mcp?quickstart=1)
-[![PyPI](https://img.shields.io/pypi/v/btx_fix_mcp.svg)](https://pypi.org/project/btx_fix_mcp/)
-[![PyPI - Downloads](https://img.shields.io/pypi/dm/btx_fix_mcp.svg)](https://pypi.org/project/btx_fix_mcp/)
+[![Open in Codespaces](https://img.shields.io/badge/Codespaces-Open-blue?logo=github&logoColor=white&style=flat-square)](https://codespaces.new/bitranox/glintefy?quickstart=1)
+[![PyPI](https://img.shields.io/pypi/v/glintefy.svg)](https://pypi.org/project/glintefy/)
+[![PyPI - Downloads](https://img.shields.io/pypi/dm/glintefy.svg)](https://pypi.org/project/glintefy/)
 [![Code Style: Ruff](https://img.shields.io/badge/Code%20Style-Ruff-46A3FF?logo=ruff&labelColor=000)](https://docs.astral.sh/ruff/)
-[![codecov](https://codecov.io/gh/bitranox/btx_fix_mcp/graph/badge.svg?token=UFBaUDIgRk)](https://codecov.io/gh/bitranox/btx_fix_mcp)
-[![Maintainability](https://qlty.sh/badges/041ba2c1-37d6-40bb-85a0-ec5a8a0aca0c/maintainability.svg)](https://qlty.sh/gh/bitranox/projects/btx_fix_mcp)
-[![Known Vulnerabilities](https://snyk.io/test/github/bitranox/btx_fix_mcp/badge.svg)](https://snyk.io/test/github/bitranox/btx_fix_mcp)
+[![codecov](https://codecov.io/gh/bitranox/glintefy/graph/badge.svg?token=UFBaUDIgRk)](https://codecov.io/gh/bitranox/glintefy)
+[![Maintainability](https://qlty.sh/badges/041ba2c1-37d6-40bb-85a0-ec5a8a0aca0c/maintainability.svg)](https://qlty.sh/gh/bitranox/projects/glintefy)
+[![Known Vulnerabilities](https://snyk.io/test/github/bitranox/glintefy/badge.svg)](https://snyk.io/test/github/bitranox/glintefy)
 [![security: bandit](https://img.shields.io/badge/security-bandit-yellow.svg)](https://github.com/PyCQA/bandit)
 
 **Code review and automated fixing tools - available as CLI and MCP server.**
 
-## What is btx_fix_mcp?
+## What is glintefy?
 
-btx_fix_mcp provides comprehensive code analysis:
+glintefy provides comprehensive code analysis:
 
 - **18+ Quality Analyses**: Complexity, maintainability, duplication, type coverage, dead code
 - **Security Scanning**: Bandit integration for vulnerability detection
@@ -40,41 +40,41 @@ btx_fix_mcp provides comprehensive code analysis:
 ```bash
 # Recommended: uv
 pip install uv
-uv pip install btx_fix_mcp
+uv pip install glintefy
 
 # Alternative: pip
-pip install btx_fix_mcp
+pip install glintefy
 
 # Development
-git clone https://github.com/bitranox/btx_fix_mcp
-cd btx_fix_mcp && make dev
+git clone https://github.com/bitranox/glintefy
+cd glintefy && make dev
 ```
 
 ### CLI Usage (Simple)
 
 ```bash
 # Deploy configuration (recommended first step) - this creates a config file with the settings for all tests to adjust
-btx_fix_mcp config-deploy --target app
+glintefy config-deploy --target app
 
 # Review uncommitted git changes (default)
-btx_fix_mcp review all
+glintefy review all
 
 # Review all files
-btx_fix_mcp review all --mode full
+glintefy review all --mode full
 
 # Run specific analysis
-btx_fix_mcp review quality
-btx_fix_mcp review security
+glintefy review quality
+glintefy review security
 
 # Cache optimization with profiling (recommended)
-btx_fix_mcp review profile -- python -m your_app    # Profile your app
-btx_fix_mcp review profile -- pytest tests/         # Or profile tests
-btx_fix_mcp review cache                            # Then analyze
+glintefy review profile -- python -m your_app    # Profile your app
+glintefy review profile -- pytest tests/         # Or profile tests
+glintefy review cache                            # Then analyze
 
 # Clean up analysis data
-btx_fix_mcp review clean                            # Delete all
-btx_fix_mcp review clean -s profile                 # Delete profile only
-btx_fix_mcp review clean --dry-run                  # Preview deletion
+glintefy review clean                            # Delete all
+glintefy review clean -s profile                 # Delete profile only
+glintefy review clean --dry-run                  # Preview deletion
 ```
 
 ### MCP Server Usage (Simple)
@@ -84,9 +84,9 @@ Add to Claude Desktop config (`~/.config/claude/claude_desktop_config.json`):
 ```json
 {
   "mcpServers": {
-    "btx-review": {
+    "glintefy-review": {
       "command": "python",
-      "args": ["-m", "btx_fix_mcp.servers.review"]
+      "args": ["-m", "glintefy.servers.review"]
     }
   }
 }
@@ -184,7 +184,7 @@ When git is not available:
 
 ## Links
 
-- [PyPI](https://pypi.org/project/btx_fix_mcp/)
-- [GitHub](https://github.com/bitranox/btx_fix_mcp)
-- [Issues](https://github.com/bitranox/btx_fix_mcp/issues)
+- [PyPI](https://pypi.org/project/glintefy/)
+- [GitHub](https://github.com/bitranox/glintefy)
+- [Issues](https://github.com/bitranox/glintefy/issues)
 - [Changelog](CHANGELOG.md)

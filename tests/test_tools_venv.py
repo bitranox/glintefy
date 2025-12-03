@@ -6,7 +6,7 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from btx_fix_mcp.tools_venv import (
+from glintefy.tools_venv import (
     DEFAULT_TOOLS,
     _find_python,
     _get_tools_from_pyproject,
@@ -33,20 +33,20 @@ class TestCacheDir:
         env_without_xdg = {k: v for k, v in __import__("os").environ.items() if k != "XDG_CACHE_HOME"}
         with patch.dict("os.environ", env_without_xdg, clear=True):
             cache_dir = get_cache_dir()
-            assert cache_dir.name == "btx-fix-mcp"
+            assert cache_dir.name == "glintefy"
             assert ".cache" in str(cache_dir)
 
     def test_get_cache_dir_xdg(self, tmp_path):
         """Test XDG_CACHE_HOME is respected."""
         with patch.dict("os.environ", {"XDG_CACHE_HOME": str(tmp_path)}):
             cache_dir = get_cache_dir()
-            assert cache_dir == tmp_path / "btx-fix-mcp"
+            assert cache_dir == tmp_path / "glintefy"
 
     def test_get_venv_path(self):
         """Test venv path is under cache dir."""
         venv_path = get_venv_path()
         assert venv_path.name == "tools-venv"
-        assert "btx-fix-mcp" in str(venv_path)
+        assert "glintefy" in str(venv_path)
 
 
 class TestToolPath:
@@ -84,14 +84,14 @@ class TestVenvInitialization:
 
     def test_is_venv_initialized_no_venv(self, tmp_path):
         """Test returns False when venv doesn't exist."""
-        with patch("btx_fix_mcp.tools_venv.get_venv_path", return_value=tmp_path / "nonexistent"):
+        with patch("glintefy.tools_venv.get_venv_path", return_value=tmp_path / "nonexistent"):
             assert is_venv_initialized() is False
 
     def test_is_venv_initialized_empty_venv(self, tmp_path):
         """Test returns False when venv exists but is empty."""
         venv_path = tmp_path / "tools-venv"
         venv_path.mkdir()
-        with patch("btx_fix_mcp.tools_venv.get_venv_path", return_value=venv_path):
+        with patch("glintefy.tools_venv.get_venv_path", return_value=venv_path):
             assert is_venv_initialized() is False
 
     def test_is_venv_initialized_no_marker(self, tmp_path):
@@ -104,7 +104,7 @@ class TestVenvInitialization:
         for tool in ["ruff", "mypy", "pylint"]:
             (bin_dir / tool).touch()
 
-        with patch("btx_fix_mcp.tools_venv.get_venv_path", return_value=venv_path):
+        with patch("glintefy.tools_venv.get_venv_path", return_value=venv_path):
             with patch.object(sys, "platform", "linux"):
                 assert is_venv_initialized() is False
 
@@ -118,9 +118,9 @@ class TestVenvInitialization:
         for tool in ["ruff", "mypy", "pylint"]:
             (bin_dir / tool).touch()
         # Create marker file
-        (venv_path / ".btx-tools-version").write_text("1.0")
+        (venv_path / ".glintefy-tools-version").write_text("1.0")
 
-        with patch("btx_fix_mcp.tools_venv.get_venv_path", return_value=venv_path):
+        with patch("glintefy.tools_venv.get_venv_path", return_value=venv_path):
             with patch.object(sys, "platform", "linux"):
                 assert is_venv_initialized() is True
 
@@ -130,7 +130,7 @@ class TestToolsFromPyproject:
 
     def test_get_tools_from_pyproject_fallback(self, tmp_path):
         """Test fallback to DEFAULT_TOOLS when pyproject.toml not found."""
-        with patch("btx_fix_mcp.tools_venv.Path") as mock_path:
+        with patch("glintefy.tools_venv.Path") as mock_path:
             mock_path.return_value.parent.parent.parent.__truediv__.return_value.exists.return_value = False
             tools = _get_tools_from_pyproject()
             # Should return default tools
@@ -165,7 +165,7 @@ class TestEnsureToolsVenvMocked:
 
     def test_ensure_tools_venv_fast_path(self, tmp_path):
         """Test fast path when already initialized."""
-        import btx_fix_mcp.tools_venv as module
+        import glintefy.tools_venv as module
 
         # Set up mock state
         original_initialized = module._venv_initialized
@@ -175,7 +175,7 @@ class TestEnsureToolsVenvMocked:
             module._venv_initialized = True
             module._venv_path = tmp_path
 
-            with patch("btx_fix_mcp.tools_venv.get_venv_path", return_value=tmp_path):
+            with patch("glintefy.tools_venv.get_venv_path", return_value=tmp_path):
                 result = module.ensure_tools_venv()
                 assert result == tmp_path
         finally:
@@ -184,7 +184,7 @@ class TestEnsureToolsVenvMocked:
 
     def test_ensure_tools_venv_upgrades_existing(self, tmp_path):
         """Test upgrades tools in existing venv."""
-        import btx_fix_mcp.tools_venv as module
+        import glintefy.tools_venv as module
 
         original_initialized = module._venv_initialized
 
@@ -192,9 +192,9 @@ class TestEnsureToolsVenvMocked:
             module._venv_initialized = False
 
             # Mock all subprocess calls and dependencies
-            with patch("btx_fix_mcp.tools_venv.get_venv_path", return_value=tmp_path):
-                with patch("btx_fix_mcp.tools_venv._find_python", return_value=sys.executable):
-                    with patch("btx_fix_mcp.tools_venv._install_uv_if_needed", return_value=Path("/usr/bin/uv")):
+            with patch("glintefy.tools_venv.get_venv_path", return_value=tmp_path):
+                with patch("glintefy.tools_venv._find_python", return_value=sys.executable):
+                    with patch("glintefy.tools_venv._install_uv_if_needed", return_value=Path("/usr/bin/uv")):
                         with patch("subprocess.run") as mock_run:
                             mock_run.return_value = MagicMock(returncode=0)
                             # Create marker to simulate existing venv
@@ -216,10 +216,10 @@ class TestRunTool:
 
     def test_run_tool_not_found(self, tmp_path):
         """Test FileNotFoundError when tool doesn't exist."""
-        from btx_fix_mcp.tools_venv import run_tool
+        from glintefy.tools_venv import run_tool
 
-        with patch("btx_fix_mcp.tools_venv.ensure_tools_venv"):
-            with patch("btx_fix_mcp.tools_venv.get_tool_path", return_value=tmp_path / "nonexistent"):
+        with patch("glintefy.tools_venv.ensure_tools_venv"):
+            with patch("glintefy.tools_venv.get_tool_path", return_value=tmp_path / "nonexistent"):
                 with pytest.raises(FileNotFoundError, match="not found in tools venv"):
                     run_tool("nonexistent", ["--version"])
 
@@ -229,24 +229,24 @@ class TestCleanupToolsVenv:
 
     def test_cleanup_tools_venv(self, tmp_path):
         """Test cleanup removes venv directory."""
-        from btx_fix_mcp.tools_venv import cleanup_tools_venv
+        from glintefy.tools_venv import cleanup_tools_venv
 
-        import btx_fix_mcp.tools_venv as module
+        import glintefy.tools_venv as module
 
         venv_path = tmp_path / "tools-venv"
         venv_path.mkdir()
         (venv_path / "somefile").touch()
 
-        with patch("btx_fix_mcp.tools_venv.get_venv_path", return_value=venv_path):
+        with patch("glintefy.tools_venv.get_venv_path", return_value=venv_path):
             cleanup_tools_venv()
             assert not venv_path.exists()
             assert module._venv_initialized is False
 
     def test_cleanup_nonexistent_venv(self, tmp_path):
         """Test cleanup handles nonexistent venv gracefully."""
-        from btx_fix_mcp.tools_venv import cleanup_tools_venv
+        from glintefy.tools_venv import cleanup_tools_venv
 
-        with patch("btx_fix_mcp.tools_venv.get_venv_path", return_value=tmp_path / "nonexistent"):
+        with patch("glintefy.tools_venv.get_venv_path", return_value=tmp_path / "nonexistent"):
             # Should not raise
             cleanup_tools_venv()
 
@@ -264,7 +264,7 @@ class TestGetToolsFromPyprojectAdvanced:
 
     def test_get_tools_exception_handling(self):
         """Test exception handling returns DEFAULT_TOOLS."""
-        with patch("btx_fix_mcp.tools_venv.Path", side_effect=Exception("test error")):
+        with patch("glintefy.tools_venv.Path", side_effect=Exception("test error")):
             tools = _get_tools_from_pyproject()
             assert tools == DEFAULT_TOOLS
 
@@ -274,7 +274,7 @@ class TestInstallUvIfNeeded:
 
     def test_install_uv_system_found(self, tmp_path):
         """Test uv found in system PATH."""
-        from btx_fix_mcp.tools_venv import _install_uv_if_needed
+        from glintefy.tools_venv import _install_uv_if_needed
 
         uv_path = tmp_path / "uv"
         uv_path.touch()
@@ -285,7 +285,7 @@ class TestInstallUvIfNeeded:
 
     def test_install_uv_in_venv(self, tmp_path):
         """Test uv found in tools venv."""
-        from btx_fix_mcp.tools_venv import _install_uv_if_needed
+        from glintefy.tools_venv import _install_uv_if_needed
 
         venv_path = tmp_path / "tools-venv"
         bin_dir = venv_path / "bin"
@@ -294,13 +294,13 @@ class TestInstallUvIfNeeded:
         uv_path.touch()
 
         with patch("shutil.which", return_value=None):
-            with patch("btx_fix_mcp.tools_venv.get_tool_path", return_value=uv_path):
+            with patch("glintefy.tools_venv.get_tool_path", return_value=uv_path):
                 result = _install_uv_if_needed()
                 assert result == uv_path
 
     def test_install_uv_via_pip_in_venv(self, tmp_path):
         """Test installing uv via pip in existing venv."""
-        from btx_fix_mcp.tools_venv import _install_uv_if_needed
+        from glintefy.tools_venv import _install_uv_if_needed
 
         venv_path = tmp_path / "tools-venv"
         bin_dir = venv_path / "bin"
@@ -310,8 +310,8 @@ class TestInstallUvIfNeeded:
         uv_path = bin_dir / "uv"
 
         with patch("shutil.which", return_value=None):
-            with patch("btx_fix_mcp.tools_venv.get_venv_path", return_value=venv_path):
-                with patch("btx_fix_mcp.tools_venv.get_tool_path", return_value=uv_path):
+            with patch("glintefy.tools_venv.get_venv_path", return_value=venv_path):
+                with patch("glintefy.tools_venv.get_tool_path", return_value=uv_path):
                     with patch.object(sys, "platform", "linux"):
                         with patch("subprocess.run") as mock_run:
                             mock_run.return_value.returncode = 0
@@ -326,7 +326,7 @@ class TestRunToolSuccess:
 
     def test_run_tool_success(self, tmp_path):
         """Test run_tool with existing tool."""
-        from btx_fix_mcp.tools_venv import run_tool
+        from glintefy.tools_venv import run_tool
         import subprocess
 
         tool_path = tmp_path / "mytool"
@@ -335,8 +335,8 @@ class TestRunToolSuccess:
 
         mock_result = subprocess.CompletedProcess(args=[], returncode=0, stdout="output", stderr="")
 
-        with patch("btx_fix_mcp.tools_venv.ensure_tools_venv"):
-            with patch("btx_fix_mcp.tools_venv.get_tool_path", return_value=tool_path):
+        with patch("glintefy.tools_venv.ensure_tools_venv"):
+            with patch("glintefy.tools_venv.get_tool_path", return_value=tool_path):
                 with patch("subprocess.run", return_value=mock_result) as mock_run:
                     result = run_tool("mytool", ["--version"], capture_output=True)
                     assert result.returncode == 0
@@ -348,53 +348,53 @@ class TestGetToolVersion:
 
     def test_get_tool_version_success(self):
         """Test getting tool version successfully."""
-        from btx_fix_mcp.tools_venv import get_tool_version
+        from glintefy.tools_venv import get_tool_version
         import subprocess
 
         mock_result = subprocess.CompletedProcess(args=[], returncode=0, stdout="ruff 0.14.0", stderr="")
 
-        with patch("btx_fix_mcp.tools_venv.run_tool", return_value=mock_result):
+        with patch("glintefy.tools_venv.run_tool", return_value=mock_result):
             version = get_tool_version("ruff")
             assert version == "0.14.0"
 
     def test_get_tool_version_just_number(self):
         """Test getting version when output is just the number."""
-        from btx_fix_mcp.tools_venv import get_tool_version
+        from glintefy.tools_venv import get_tool_version
         import subprocess
 
         mock_result = subprocess.CompletedProcess(args=[], returncode=0, stdout="1.2.3", stderr="")
 
-        with patch("btx_fix_mcp.tools_venv.run_tool", return_value=mock_result):
+        with patch("glintefy.tools_venv.run_tool", return_value=mock_result):
             version = get_tool_version("mytool")
             assert version == "1.2.3"
 
     def test_get_tool_version_failure(self):
         """Test version extraction when tool fails."""
-        from btx_fix_mcp.tools_venv import get_tool_version
+        from glintefy.tools_venv import get_tool_version
         import subprocess
 
         mock_result = subprocess.CompletedProcess(args=[], returncode=1, stdout="", stderr="error")
 
-        with patch("btx_fix_mcp.tools_venv.run_tool", return_value=mock_result):
+        with patch("glintefy.tools_venv.run_tool", return_value=mock_result):
             version = get_tool_version("mytool")
             assert version is None
 
     def test_get_tool_version_exception(self):
         """Test version extraction when exception occurs."""
-        from btx_fix_mcp.tools_venv import get_tool_version
+        from glintefy.tools_venv import get_tool_version
 
-        with patch("btx_fix_mcp.tools_venv.run_tool", side_effect=Exception("error")):
+        with patch("glintefy.tools_venv.run_tool", side_effect=Exception("error")):
             version = get_tool_version("mytool")
             assert version is None
 
     def test_get_tool_version_no_digit_start(self):
         """Test version extraction when no part starts with digit."""
-        from btx_fix_mcp.tools_venv import get_tool_version
+        from glintefy.tools_venv import get_tool_version
         import subprocess
 
         mock_result = subprocess.CompletedProcess(args=[], returncode=0, stdout="version unknown", stderr="")
 
-        with patch("btx_fix_mcp.tools_venv.run_tool", return_value=mock_result):
+        with patch("glintefy.tools_venv.run_tool", return_value=mock_result):
             version = get_tool_version("mytool")
             assert version == "version unknown"
 

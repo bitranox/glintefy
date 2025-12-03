@@ -5,7 +5,7 @@ from pathlib import Path
 
 import pytest
 
-from btx_fix_mcp.subservers.review.report import ReportSubServer
+from glintefy.subservers.review.report import ReportSubServer
 
 
 class TestReportSubServer:

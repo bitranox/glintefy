@@ -4,8 +4,8 @@ import logging
 
 import pytest
 
-from btx_fix_mcp.subservers.review.quality.analyzer_results import ComplexityResults
-from btx_fix_mcp.subservers.review.quality.complexity import ComplexityAnalyzer
+from glintefy.subservers.review.quality.analyzer_results import ComplexityResults
+from glintefy.subservers.review.quality.complexity import ComplexityAnalyzer
 
 
 @pytest.fixture

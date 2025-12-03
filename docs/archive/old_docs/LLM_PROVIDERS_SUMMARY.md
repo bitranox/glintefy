@@ -74,7 +74,7 @@ fast_model = "gpt-4o-mini"
 
 **Setup**:
 ```bash
-export BTX_FIX_MCP_OPENAI_API_KEY="sk-proj-YOUR-KEY"
+export GLINTEFY_OPENAI_API_KEY="sk-proj-YOUR-KEY"
 ```
 
 ---
@@ -91,7 +91,7 @@ fast_model = "claude-3-5-haiku-20241022"
 
 **Setup**:
 ```bash
-export BTX_FIX_MCP_ANTHROPIC_API_KEY="sk-ant-YOUR-KEY"
+export GLINTEFY_ANTHROPIC_API_KEY="sk-ant-YOUR-KEY"
 ```
 
 ---
@@ -168,7 +168,7 @@ export ANTHROPIC_API_KEY="sk-ant-YOUR-KEY"
 ### Template 1: Zero-Cost Local Setup
 
 ```toml
-# ~/.config/btx-fix-mcp/config.toml
+# ~/.config/glintefy/config.toml
 [llm]
 enable_internal_llm = true
 provider = "ollama"
@@ -289,7 +289,7 @@ Scale Internally:  vLLM (self-hosted)
 
 1. **Choose a provider** based on your needs
 2. **Install dependencies** (SDK or CLI tools)
-3. **Configure** in `~/.config/btx-fix-mcp/config.toml`
+3. **Configure** in `~/.config/glintefy/config.toml`
 4. **Set API key** (if using cloud provider)
 5. **Test** with a simple classification
 6. **Iterate** - switch providers anytime

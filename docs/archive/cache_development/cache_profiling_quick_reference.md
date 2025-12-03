@@ -31,7 +31,7 @@ cp docs/examples/profile_my_app_template.py profile_my_app.py
 python profile_my_app.py
 
 # 4. Run analysis
-python -m btx_fix_mcp review cache
+python -m glintefy review cache
 ```
 
 ### Option 3: Profile Custom Module
@@ -48,7 +48,7 @@ python scripts/profile_application.py \
 ```
 your_project/
 ├── LLM-CONTEXT/
-│   └── btx_fix_mcp/
+│   └── glintefy/
 │       └── review/
 │           ├── perf/
 │           │   └── test_profile.prof  ← Profiling data goes here
@@ -115,7 +115,7 @@ for i in range(100):
 profiler.disable()
 
 # Save
-output_dir = Path("LLM-CONTEXT/btx_fix_mcp/review/perf")
+output_dir = Path("LLM-CONTEXT/glintefy/review/perf")
 output_dir.mkdir(parents=True, exist_ok=True)
 profiler.dump_stats(output_dir / "test_profile.prof")
 ```
@@ -138,7 +138,7 @@ process_batch(files)
 profiler.disable()
 
 # Save
-output_dir = Path("LLM-CONTEXT/btx_fix_mcp/review/perf")
+output_dir = Path("LLM-CONTEXT/glintefy/review/perf")
 output_dir.mkdir(parents=True, exist_ok=True)
 profiler.dump_stats(output_dir / "test_profile.prof")
 ```
@@ -201,13 +201,13 @@ for i in range(1000):
   run: python scripts/profile_application.py
 
 - name: Analyze caches
-  run: python -m btx_fix_mcp review cache
+  run: python -m glintefy review cache
 
 - name: Upload results
   uses: actions/upload-artifact@v3
   with:
     name: cache-analysis
-    path: LLM-CONTEXT/btx_fix_mcp/review/cache/
+    path: LLM-CONTEXT/glintefy/review/cache/
 ```
 
 ## Next Steps
@@ -215,7 +215,7 @@ for i in range(1000):
 📚 **Full Documentation:** [docs/cache_profiling_guide.md](cache_profiling_guide.md)
 
 🔍 **After Analysis:** Review recommendations in:
-- `LLM-CONTEXT/btx_fix_mcp/review/cache/existing_cache_evaluations.json`
+- `LLM-CONTEXT/glintefy/review/cache/existing_cache_evaluations.json`
 
 🎯 **Take Action:**
 - **REMOVE**: Delete `@lru_cache` decorators with low hit rates

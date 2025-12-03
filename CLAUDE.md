@@ -1,4 +1,4 @@
-# Claude Code Guidelines for btx_fix_mcp
+# Claude Code Guidelines for glintefy
 
 ## Session Initialization
 
@@ -33,7 +33,7 @@ When working with Python code:
 ## Project Structure
 
 ```
-btx_fix_mcp/
+glintefy/
 ├── .github/
 │   └── workflows/              # GitHub Actions CI/CD workflows
 ├── .devcontainer/              # Dev container configuration
@@ -50,7 +50,7 @@ btx_fix_mcp/
 │   ├── menu.py                # Interactive TUI menu
 │   └── _utils.py              # Shared utilities
 ├── src/
-│   └── btx_fix_mcp/  # Main Python package
+│   └── glintefy/  # Main Python package
 │       ├── __init__.py        # Package initialization
 │       ├── __init__conf__.py  # Configuration loader
 │       ├── __main__.py        # CLI entry point
@@ -74,7 +74,7 @@ btx_fix_mcp/
 
 - **Single Source of Truth**: Package version is in `pyproject.toml` (`[project].version`)
 - **Version Bumps**: update `pyproject.toml` , `CHANGELOG.md` and update the constants in `src/../__init__conf__.py` according to `pyproject.toml`  
-    - Automation rewrites `src/btx_fix_mcp/__init__conf__.py` from `pyproject.toml`, so runtime code imports generated constants instead of querying `importlib.metadata`.
+    - Automation rewrites `src/glintefy/__init__conf__.py` from `pyproject.toml`, so runtime code imports generated constants instead of querying `importlib.metadata`.
     - After updating project metadata (version, summary, URLs, authors) run `make test` (or `python -m scripts.test`) to regenerate the metadata module before committing.
 - **Release Tags**: Format is `vX.Y.Z` (push tags for CI to build and publish)
 
@@ -179,7 +179,7 @@ git checkout snapshot/before-[description]
 
 When adding or modifying configuration settings:
 
-1. **Document in defaultconfig.toml**: All configuration keys used by sub-servers MUST be documented in `src/btx_fix_mcp/defaultconfig.toml`, even if commented out
+1. **Document in defaultconfig.toml**: All configuration keys used by sub-servers MUST be documented in `src/glintefy/defaultconfig.toml`, even if commented out
 2. **Match key names**: Config keys in code must exactly match keys in defaultconfig.toml
 3. **Test config loading**: Add tests in `tests/test_config.py` to verify:
    - New config keys are documented in defaultconfig.toml
@@ -227,10 +227,10 @@ All MCP server components MUST implement detailed debug and error logging for tr
 
 ### Logging Utilities
 
-Use the logging utilities from `src/btx_fix_mcp/subservers/common/logging.py`:
+Use the logging utilities from `src/glintefy/subservers/common/logging.py`:
 
 ```python
-from btx_fix_mcp.subservers.common.logging import (
+from glintefy.subservers.common.logging import (
     get_mcp_logger,        # Get logger that outputs to stderr only
     log_debug,             # Debug message with context dict
     log_error_detailed,    # Error with traceback and context
@@ -267,7 +267,7 @@ server = ScopeSubServer(output_dir=output_dir, mcp_mode=True)
 ### Example: Sub-Server with Logging
 
 ```python
-from btx_fix_mcp.subservers.common.logging import (
+from glintefy.subservers.common.logging import (
     get_mcp_logger, log_error_detailed, debug_log
 )
 
@@ -275,7 +275,7 @@ class MySubServer(BaseSubServer):
     def __init__(self, ..., mcp_mode: bool = False):
         super().__init__(...)
         if mcp_mode:
-            self._logger = get_mcp_logger(f"btx_fix_mcp.{self.name}")
+            self._logger = get_mcp_logger(f"glintefy.{self.name}")
         else:
             self._logger = setup_logger(self.name, log_file=None, level=20)
 
@@ -297,7 +297,7 @@ class MySubServer(BaseSubServer):
 The `ReviewMCPServer` wraps sub-servers for MCP protocol:
 
 ```python
-from btx_fix_mcp.servers.review import ReviewMCPServer
+from glintefy.servers.review import ReviewMCPServer
 
 # Create MCP server
 server = ReviewMCPServer(repo_path=Path("."))
@@ -391,8 +391,8 @@ When working on this project:
 - always update the mindset for new mcp subservers or analyzers
 - No more sqlite errors. When you need coverage, run explicitly:
 
-  pytest --cov=src/btx_fix_mcp --cov-report=term-missing
-- on user command "full review" run python -m btx_fix_mcp review all --mode full  , and analyze the code_review_report in LLM-CONTEXT/btx_fix_mcp/review/report/all_issues.json after finishing the command
+  pytest --cov=src/glintefy --cov-report=term-missing
+- on user command "full review" run python -m glintefy review all --mode full  , and analyze the code_review_report in LLM-CONTEXT/glintefy/review/report/all_issues.json after finishing the command
 - ignore the slow tests - those are slow dependecy tests
 - remove legacy code or backwards compatibility code in the whole codebase. we are in development, we dont care about backward compatibility
 - only document current behaviour, no development fragments - dont document old, before etc ... only current state !

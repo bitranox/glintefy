@@ -1,8 +1,8 @@
-# Implementation Plan: btx-fix and btx-review MCP Servers
+# Implementation Plan: glintefy and glintefy-review MCP Servers
 
 ## Overview
 
-This plan outlines the step-by-step implementation of the MCP server architecture for btx-fix and btx-review, transforming the existing bash command system into a maintainable, testable Python-based MCP server ecosystem.
+This plan outlines the step-by-step implementation of the MCP server architecture for glintefy and glintefy-review, transforming the existing bash command system into a maintainable, testable Python-based MCP server ecosystem.
 
 **Total Timeline**: 10 weeks (50 working days)
 **Team Size**: 1-2 developers
@@ -17,12 +17,12 @@ This plan outlines the step-by-step implementation of the MCP server architectur
 #### Day 1-2: Project Structure
 - [ ] Set up Python package structure
   ```
-  src/btx_fix_mcp/
+  src/glintefy/
   ├── __init__.py
   ├── servers/
   │   ├── __init__.py
-  │   ├── review.py          # btx-review orchestrator
-  │   ├── fix.py             # btx-fix orchestrator
+  │   ├── review.py          # glintefy-review orchestrator
+  │   ├── fix.py             # glintefy orchestrator
   │   └── base.py            # Base orchestrator class
   ├── subservers/
   │   ├── __init__.py
@@ -67,7 +67,7 @@ This plan outlines the step-by-step implementation of the MCP server architectur
 
 - [ ] Implement `BaseOrchestrator` class
   ```python
-  # src/btx_fix_mcp/servers/base.py
+  # src/glintefy/servers/base.py
   class BaseOrchestrator:
       """Base class for MCP orchestrator servers."""
 
@@ -91,7 +91,7 @@ This plan outlines the step-by-step implementation of the MCP server architectur
 
 - [ ] Implement `BaseSubServer` class
   ```python
-  # src/btx_fix_mcp/subservers/base.py
+  # src/glintefy/subservers/base.py
   class BaseSubServer:
       """Base class for sub-servers."""
 
@@ -124,13 +124,13 @@ This plan outlines the step-by-step implementation of the MCP server architectur
 
 #### Day 5: File I/O & Utilities
 
-- [ ] Implement file utilities (`src/btx_fix_mcp/subservers/common/files.py`)
+- [ ] Implement file utilities (`src/glintefy/subservers/common/files.py`)
   - Directory creation/validation
   - File reading/writing with error handling
   - Glob pattern matching
   - File filtering (exclude build artifacts, etc.)
 
-- [ ] Implement logging utilities (`src/btx_fix_mcp/subservers/common/logging.py`)
+- [ ] Implement logging utilities (`src/glintefy/subservers/common/logging.py`)
   - Structured logging
   - Log file management
   - Timestamp formatting
@@ -146,7 +146,7 @@ This plan outlines the step-by-step implementation of the MCP server architectur
 
 #### Day 6-7: Integration Protocol Implementation
 
-- [ ] Implement protocol validation (`src/btx_fix_mcp/subservers/common/protocol.py`)
+- [ ] Implement protocol validation (`src/glintefy/subservers/common/protocol.py`)
   ```python
   class IntegrationProtocol:
       """Validates subagent integration protocol compliance."""
@@ -177,7 +177,7 @@ This plan outlines the step-by-step implementation of the MCP server architectur
 
 #### Day 8-9: Git Operations
 
-- [ ] Implement git utilities (`src/btx_fix_mcp/subservers/common/git.py`)
+- [ ] Implement git utilities (`src/glintefy/subservers/common/git.py`)
   ```python
   class GitOperations:
       """Git operations for fix workflow."""
@@ -234,7 +234,7 @@ This plan outlines the step-by-step implementation of the MCP server architectur
 
 - [ ] Port `bx_review_anal_sub_scope.md` to Python
   ```python
-  # src/btx_fix_mcp/subservers/review/scope.py
+  # src/glintefy/subservers/review/scope.py
   class ScopeSubServer(BaseSubServer):
       def execute(self) -> dict:
           # 1. Detect git repo
@@ -258,7 +258,7 @@ This plan outlines the step-by-step implementation of the MCP server architectur
 
 - [ ] Port `bx_review_anal_sub_deps.md` to Python
   ```python
-  # src/btx_fix_mcp/subservers/review/deps.py
+  # src/glintefy/subservers/review/deps.py
   class DepsSubServer(BaseSubServer):
       def execute(self) -> dict:
           # 1. Detect project type (Python, Node, Ruby, etc.)
@@ -282,7 +282,7 @@ This plan outlines the step-by-step implementation of the MCP server architectur
 
 - [ ] Port `bx_review_anal_sub_quality.md` to Python
   ```python
-  # src/btx_fix_mcp/subservers/review/quality.py
+  # src/glintefy/subservers/review/quality.py
   class QualitySubServer(BaseSubServer):
       def execute(self) -> dict:
           # 1. Run radon complexity analysis
@@ -308,7 +308,7 @@ This plan outlines the step-by-step implementation of the MCP server architectur
 
 - [ ] Port `bx_review_anal_sub_security.md` to Python
   ```python
-  # src/btx_fix_mcp/subservers/review/security.py
+  # src/glintefy/subservers/review/security.py
   class SecuritySubServer(BaseSubServer):
       def execute(self) -> dict:
           # 1. Run bandit for Python
@@ -329,11 +329,11 @@ This plan outlines the step-by-step implementation of the MCP server architectur
 - ✓ Secret detection working
 - ✓ Tests passing
 
-#### Day 18-19: btx-review Orchestrator
+#### Day 18-19: glintefy-review Orchestrator
 
-- [ ] Implement btx-review orchestrator
+- [ ] Implement glintefy-review orchestrator
   ```python
-  # src/btx_fix_mcp/servers/review.py
+  # src/glintefy/servers/review.py
   class ReviewOrchestrator(BaseOrchestrator):
       def register_tools(self):
           @self.server.call_tool()
@@ -360,7 +360,7 @@ This plan outlines the step-by-step implementation of the MCP server architectur
 - [ ] Test end-to-end review workflow
 
 **Deliverables**:
-- ✓ btx-review orchestrator functional
+- ✓ glintefy-review orchestrator functional
 - ✓ Parallel execution working
 - ✓ End-to-end tests passing
 
@@ -374,7 +374,7 @@ This plan outlines the step-by-step implementation of the MCP server architectur
 
 **Deliverables**:
 - ✓ Phase 2 complete
-- ✓ btx-review server production-ready
+- ✓ glintefy-review server production-ready
 - ✓ All tests passing
 - ✓ Documentation complete
 
@@ -388,7 +388,7 @@ This plan outlines the step-by-step implementation of the MCP server architectur
 
 - [ ] Port `bx_fix_anal_sub_plan.md` to Python
   ```python
-  # src/btx_fix_mcp/subservers/fix/plan.py
+  # src/glintefy/subservers/fix/plan.py
   class PlanSubServer(BaseSubServer):
       def execute(self) -> dict:
           # 1. Read review report
@@ -423,7 +423,7 @@ This plan outlines the step-by-step implementation of the MCP server architectur
 
 - [ ] Port `bx_fix_anal_sub_critical.md` to Python
   ```python
-  # src/btx_fix_mcp/subservers/fix/critical.py
+  # src/glintefy/subservers/fix/critical.py
   class CriticalSubServer(BaseSubServer):
       def execute(self) -> dict:
           # 1. Load critical issues from plan
@@ -472,7 +472,7 @@ This plan outlines the step-by-step implementation of the MCP server architectur
 
 - [ ] Port `bx_fix_anal_sub_quality.md` to Python
   ```python
-  # src/btx_fix_mcp/subservers/fix/quality.py
+  # src/glintefy/subservers/fix/quality.py
   class QualitySubServer(BaseSubServer):
       def execute(self) -> dict:
           # 1. Load quality issues from plan
@@ -512,7 +512,7 @@ This plan outlines the step-by-step implementation of the MCP server architectur
 
 - [ ] Port `bx_fix_anal_sub_verify.md` to Python
   ```python
-  # src/btx_fix_mcp/subservers/fix/verify.py
+  # src/glintefy/subservers/fix/verify.py
   class VerifySubServer(BaseSubServer):
       def execute(self) -> dict:
           # 1. Run full test suite 3x
@@ -539,11 +539,11 @@ This plan outlines the step-by-step implementation of the MCP server architectur
 - ✓ Flaky test detection working
 - ✓ Tests passing
 
-#### Day 30: btx-fix Orchestrator & Testing
+#### Day 30: glintefy Orchestrator & Testing
 
-- [ ] Implement btx-fix orchestrator
+- [ ] Implement glintefy orchestrator
   ```python
-  # src/btx_fix_mcp/servers/fix.py
+  # src/glintefy/servers/fix.py
   class FixOrchestrator(BaseOrchestrator):
       def register_tools(self):
           @self.server.call_tool()
@@ -576,7 +576,7 @@ This plan outlines the step-by-step implementation of the MCP server architectur
 
 **Deliverables**:
 - ✓ Phase 3 complete
-- ✓ btx-fix server production-ready
+- ✓ glintefy server production-ready
 - ✓ Evidence-based fixing working
 - ✓ All tests passing
 
@@ -749,8 +749,8 @@ This plan outlines the step-by-step implementation of the MCP server architectur
 ## Success Criteria
 
 ### Must Have (v1.0)
-- ✓ btx-review server fully functional
-- ✓ btx-fix server fully functional
+- ✓ glintefy-review server fully functional
+- ✓ glintefy server fully functional
 - ✓ All core sub-servers working
 - ✓ Evidence-based fixing protocol working
 - ✓ Git commit/revert working
@@ -845,17 +845,17 @@ This plan outlines the step-by-step implementation of the MCP server architectur
 ```bash
 # Development setup
 git clone <repo>
-cd btx_fix_mcp
+cd glintefy
 make dev
 
 # Run tests
 make test
 
 # Run specific sub-server
-python -m btx_fix_mcp.subservers.review.scope
+python -m glintefy.subservers.review.scope
 
 # Run orchestrator
-python -m btx_fix_mcp.servers.review
+python -m glintefy.servers.review
 
 # Build package
 make build
@@ -869,17 +869,17 @@ pip install -e .
 ```json
 {
   "mcpServers": {
-    "btx-review": {
+    "glintefy-review": {
       "command": "python",
-      "args": ["-m", "btx_fix_mcp.servers.review"],
+      "args": ["-m", "glintefy.servers.review"],
       "env": {
         "LOG_LEVEL": "INFO",
         "PYTHON_VERSION": "3.13"
       }
     },
-    "btx-fix": {
+    "glintefy": {
       "command": "python",
-      "args": ["-m", "btx_fix_mcp.servers.fix"],
+      "args": ["-m", "glintefy.servers.fix"],
       "env": {
         "LOG_LEVEL": "INFO",
         "PYTHON_VERSION": "3.13",

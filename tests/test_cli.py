@@ -7,8 +7,8 @@ from collections.abc import Callable
 import pytest
 from click.testing import CliRunner, Result
 
-from btx_fix_mcp import cli as cli_mod
-from btx_fix_mcp import __init__conf__
+from glintefy import cli as cli_mod
+from glintefy import __init__conf__
 
 
 @pytest.mark.os_agnostic
@@ -182,7 +182,7 @@ class TestReviewCommands:
 
         mock_result = {"status": "SUCCESS", "summary": "# Scope Analysis\n\nTest summary."}
 
-        with patch("btx_fix_mcp.servers.review.ReviewMCPServer") as mock_server:
+        with patch("glintefy.servers.review.ReviewMCPServer") as mock_server:
             mock_server.return_value.run_scope.return_value = mock_result
 
             result = cli_runner.invoke(
@@ -199,7 +199,7 @@ class TestReviewCommands:
 
         mock_result = {"status": "SUCCESS", "summary": "# Quality Analysis\n\nTest summary."}
 
-        with patch("btx_fix_mcp.servers.review.ReviewMCPServer") as mock_server:
+        with patch("glintefy.servers.review.ReviewMCPServer") as mock_server:
             mock_server.return_value.run_quality.return_value = mock_result
 
             result = cli_runner.invoke(
@@ -219,7 +219,7 @@ class TestReviewCommands:
 
         mock_result = {"status": "SUCCESS", "summary": "# Security Analysis\n\nTest summary."}
 
-        with patch("btx_fix_mcp.servers.review.ReviewMCPServer") as mock_server:
+        with patch("glintefy.servers.review.ReviewMCPServer") as mock_server:
             mock_server.return_value.run_security.return_value = mock_result
 
             result = cli_runner.invoke(
@@ -239,7 +239,7 @@ class TestReviewCommands:
 
         mock_result = {"status": "SUCCESS", "summary": "# Deps Analysis\n\nTest summary."}
 
-        with patch("btx_fix_mcp.servers.review.ReviewMCPServer") as mock_server:
+        with patch("glintefy.servers.review.ReviewMCPServer") as mock_server:
             mock_server.return_value.run_deps.return_value = mock_result
 
             result = cli_runner.invoke(
@@ -260,7 +260,7 @@ class TestReviewCommands:
 
         mock_result = {"status": "SUCCESS", "summary": "# Docs Analysis\n\nTest summary."}
 
-        with patch("btx_fix_mcp.servers.review.ReviewMCPServer") as mock_server:
+        with patch("glintefy.servers.review.ReviewMCPServer") as mock_server:
             mock_server.return_value.run_docs.return_value = mock_result
 
             result = cli_runner.invoke(
@@ -277,7 +277,7 @@ class TestReviewCommands:
 
         mock_result = {"status": "SUCCESS", "summary": "# Perf Analysis\n\nTest summary."}
 
-        with patch("btx_fix_mcp.servers.review.ReviewMCPServer") as mock_server:
+        with patch("glintefy.servers.review.ReviewMCPServer") as mock_server:
             mock_server.return_value.run_perf.return_value = mock_result
 
             result = cli_runner.invoke(
@@ -294,7 +294,7 @@ class TestReviewCommands:
 
         mock_result = {"status": "SUCCESS", "summary": "# Report\n\nConsolidated report."}
 
-        with patch("btx_fix_mcp.servers.review.ReviewMCPServer") as mock_server:
+        with patch("glintefy.servers.review.ReviewMCPServer") as mock_server:
             mock_server.return_value.run_report.return_value = mock_result
 
             result = cli_runner.invoke(
@@ -311,7 +311,7 @@ class TestReviewCommands:
 
         mock_result = {"status": "SUCCESS", "summary": "# Full Analysis\n\nAll analyses complete."}
 
-        with patch("btx_fix_mcp.servers.review.ReviewMCPServer") as mock_server:
+        with patch("glintefy.servers.review.ReviewMCPServer") as mock_server:
             mock_server.return_value.run_all.return_value = mock_result
 
             result = cli_runner.invoke(
@@ -325,7 +325,7 @@ class TestReviewCommands:
     def test_review_clean_command_dry_run(self, cli_runner: CliRunner, tmp_path) -> None:
         """Review clean command should show what would be deleted in dry run."""
         # Create test directory structure
-        review_dir = tmp_path / "LLM-CONTEXT" / "btx_fix_mcp" / "review"
+        review_dir = tmp_path / "LLM-CONTEXT" / "glintefy" / "review"
         scope_dir = review_dir / "scope"
         scope_dir.mkdir(parents=True)
         (scope_dir / "files_to_review.txt").write_text("test.py\n")
@@ -343,7 +343,7 @@ class TestReviewCommands:
     def test_review_clean_command_deletes_directory(self, cli_runner: CliRunner, tmp_path) -> None:
         """Review clean command should delete the review directory."""
         # Create test directory structure
-        review_dir = tmp_path / "LLM-CONTEXT" / "btx_fix_mcp" / "review"
+        review_dir = tmp_path / "LLM-CONTEXT" / "glintefy" / "review"
         scope_dir = review_dir / "scope"
         scope_dir.mkdir(parents=True)
         (scope_dir / "files_to_review.txt").write_text("test.py\n")
@@ -361,7 +361,7 @@ class TestReviewCommands:
     def test_review_clean_command_specific_subserver(self, cli_runner: CliRunner, tmp_path) -> None:
         """Review clean command should delete only specific subserver directory."""
         # Create test directory structure
-        review_dir = tmp_path / "LLM-CONTEXT" / "btx_fix_mcp" / "review"
+        review_dir = tmp_path / "LLM-CONTEXT" / "glintefy" / "review"
         scope_dir = review_dir / "scope"
         quality_dir = review_dir / "quality"
         scope_dir.mkdir(parents=True)
@@ -383,7 +383,7 @@ class TestReviewCommands:
     def test_review_clean_command_profile_only(self, cli_runner: CliRunner, tmp_path) -> None:
         """Review clean command with -s profile should only delete profile file."""
         # Create test directory structure
-        review_dir = tmp_path / "LLM-CONTEXT" / "btx_fix_mcp" / "review"
+        review_dir = tmp_path / "LLM-CONTEXT" / "glintefy" / "review"
         perf_dir = review_dir / "perf"
         perf_dir.mkdir(parents=True)
         profile_file = perf_dir / "test_profile.prof"

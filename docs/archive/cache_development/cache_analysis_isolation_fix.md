@@ -48,7 +48,7 @@ Main Process (Cache Analyzer)
 
 ### 1. Create Subprocess Test Runner
 
-**New File:** `src/btx_fix_mcp/subservers/review/cache/subprocess_runner.py`
+**New File:** `src/glintefy/subservers/review/cache/subprocess_runner.py`
 
 ```python
 """Subprocess-based test execution for isolation.
@@ -167,7 +167,7 @@ from pathlib import Path
 # Add project to path
 sys.path.insert(0, str(Path.cwd()))
 
-from btx_fix_mcp.subservers.review.cache.subprocess_runner import {target_func}
+from glintefy.subservers.review.cache.subprocess_runner import {target_func}
 
 # Parse arguments
 args = {repr(args)}
@@ -208,7 +208,7 @@ print(json.dumps(result))
 
 ### 2. Update BatchScreener to Use Subprocess
 
-**File:** `src/btx_fix_mcp/subservers/review/cache/batch_screener.py`
+**File:** `src/glintefy/subservers/review/cache/batch_screener.py`
 
 ```python
 # OLD CODE (PROBLEMATIC)
@@ -224,7 +224,7 @@ def _apply_caches(self, candidates):
 # NEW CODE (ISOLATED)
 def screen_candidates(self, candidates, repo_path):
     """Screen all candidates in isolated subprocess."""
-    from btx_fix_mcp.subservers.review.cache.subprocess_runner import run_in_subprocess
+    from glintefy.subservers.review.cache.subprocess_runner import run_in_subprocess
 
     # Build batch screening script
     script_args = {
@@ -251,7 +251,7 @@ def screen_candidates(self, candidates, repo_path):
 
 ### 3. Update IndividualValidator to Use Subprocess
 
-**File:** `src/btx_fix_mcp/subservers/review/cache/individual_validator.py`
+**File:** `src/glintefy/subservers/review/cache/individual_validator.py`
 
 ```python
 # OLD CODE (PROBLEMATIC)
@@ -269,7 +269,7 @@ def _measure_with_cache(self, candidate, repo_path):
 # NEW CODE (ISOLATED)
 def _measure_with_cache(self, candidate, repo_path):
     """Run tests WITH cache in isolated subprocess."""
-    from btx_fix_mcp.subservers.review.cache.subprocess_runner import run_in_subprocess
+    from glintefy.subservers.review.cache.subprocess_runner import run_in_subprocess
 
     args = {
         "module_path": candidate.module_path,

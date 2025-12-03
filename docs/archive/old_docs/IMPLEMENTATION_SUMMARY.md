@@ -9,7 +9,7 @@ All planning and design documents have been created and are ready for implementa
 ### 1. Architecture Documentation
 - **`docs/MCP_ARCHITECTURE.md`** (500+ lines)
   - Complete technical architecture
-  - MCP server designs (btx-review, btx-fix)
+  - MCP server designs (glintefy-review, glintefy)
   - 20+ sub-server specifications
   - MCP protocol examples
   - Directory structure
@@ -61,13 +61,13 @@ All planning and design documents have been created and are ready for implementa
 
 ### Two MCP Orchestration Servers
 
-#### btx-review (Code Review Orchestrator)
+#### glintefy-review (Code Review Orchestrator)
 - **3 MCP Tools**: `review_codebase`, `review_changes`, `review_files`
 - **11 Sub-servers**: scope, deps, quality, security, performance, cache, docs, cicd, refactor-tests, report, log-analyzer
 - **Parallel Execution**: Run analyses concurrently for speed
 - **Priority System**: Focus on critical issues first (>500 files)
 
-#### btx-fix (Automated Fixing Orchestrator)
+#### glintefy (Automated Fixing Orchestrator)
 - **4 MCP Tools**: `fix_issues`, `fix_critical`, `fix_quality`, `fix_docs`
 - **9 Sub-servers**: plan, critical, quality, refactor-tests, cache, docs, verify, report, log-analyzer
 - **Evidence-Based**: All fixes verified with 3x test runs
@@ -89,7 +89,7 @@ FOR EACH FIX:
 ### Directory Structure
 
 ```
-src/btx_fix_mcp/
+src/glintefy/
 ├── servers/           # Orchestrators (review, fix)
 ├── subservers/        # 20+ specialized sub-servers
 │   ├── review/        # Review sub-servers

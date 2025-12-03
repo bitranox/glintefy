@@ -2,7 +2,7 @@
 
 import pytest
 from pathlib import Path
-from btx_fix_mcp.subservers.common.files import (
+from glintefy.subservers.common.files import (
     read_file,
     write_file,
     ensure_dir,

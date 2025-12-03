@@ -5,7 +5,7 @@ import time
 
 import pytest
 
-from btx_fix_mcp.subservers.common.logging import (
+from glintefy.subservers.common.logging import (
     LogContext,
     create_execution_log,
     debug_log,
@@ -379,7 +379,7 @@ class TestGetMcpLogger:
     def test_get_mcp_logger_default_name(self):
         """Test default logger name."""
         logger = get_mcp_logger()
-        assert logger.name == "btx_fix_mcp"
+        assert logger.name == "glintefy"
 
     def test_get_mcp_logger_debug_level(self):
         """Test that logger is set to DEBUG level."""

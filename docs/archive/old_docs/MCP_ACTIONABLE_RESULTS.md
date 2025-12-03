@@ -41,14 +41,14 @@ The MCP server returns **data**, Claude Desktop provides the **conversational wr
 
     # Actionable next steps
     "next_steps": [
-        "Run: btx_fix_mcp fix --auto",
+        "Run: glintefy fix --auto",
         "Review test coverage"
     ],
 
     # Commands user can run
     "suggested_commands": [
-        "btx_fix_mcp fix --file foo.py",
-        "btx_fix_mcp review quality --recheck"
+        "glintefy fix --file foo.py",
+        "glintefy review quality --recheck"
     ],
 
     # Metrics
@@ -78,7 +78,7 @@ def run_quality(...) -> dict:
             "Review functions with complexity >15"
         )
         commands.append(
-            "btx_fix_mcp fix --severity critical --auto"
+            "glintefy fix --severity critical --auto"
         )
 
     if missing_types:
@@ -86,7 +86,7 @@ def run_quality(...) -> dict:
             "Add type hints to improve maintainability"
         )
         commands.append(
-            "btx_fix_mcp fix --add-types"
+            "glintefy fix --add-types"
         )
 
     if high_duplication:
@@ -139,8 +139,8 @@ Claude Desktop:
   💻 Commands:
   Run these to fix automatically:
   ```bash
-  btx_fix_mcp fix --severity critical --auto
-  btx_fix_mcp fix --add-types
+  glintefy fix --severity critical --auto
+  glintefy fix --add-types
   ```
 
   Would you like me to help fix these issues?
@@ -166,7 +166,7 @@ def build_recommendations(issues: list[dict]) -> dict:
             "priority": "CRITICAL",
             "action": "Fix security vulnerabilities immediately",
             "rationale": f"{len(security_issues)} security issues detected",
-            "command": "btx_fix_mcp fix --security --verify"
+            "command": "glintefy fix --security --verify"
         })
 
     # Priority 2: Complexity
@@ -176,7 +176,7 @@ def build_recommendations(issues: list[dict]) -> dict:
             "action": "Refactor high-complexity functions",
             "rationale": "Code maintainability at risk",
             "files": [i['file'] for i in complexity_issues],
-            "command": "btx_fix_mcp fix --complexity --interactive"
+            "command": "glintefy fix --complexity --interactive"
         })
 
     # Priority 3: Types
@@ -186,7 +186,7 @@ def build_recommendations(issues: list[dict]) -> dict:
             "action": "Add type hints",
             "rationale": "Improves IDE support and catches errors early",
             "benefit": "Prevents runtime type errors",
-            "command": "btx_fix_mcp fix --add-types --safe"
+            "command": "glintefy fix --add-types --safe"
         })
 
     # Build execution plan
@@ -238,7 +238,7 @@ def create_fix_workflow(issues: list[dict]) -> dict:
             "actions": [
                 f"Review {i['file']}:{i['line']}" for i in critical[:3]
             ],
-            "command": "btx_fix_mcp fix --severity critical --interactive",
+            "command": "glintefy fix --severity critical --interactive",
             "duration": "15-20 minutes"
         })
 
@@ -252,7 +252,7 @@ def create_fix_workflow(issues: list[dict]) -> dict:
             "Format code",
             "Fix linting issues"
         ],
-        "command": "btx_fix_mcp fix --auto --safe",
+        "command": "glintefy fix --auto --safe",
         "duration": "5 minutes"
     })
 
@@ -263,7 +263,7 @@ def create_fix_workflow(issues: list[dict]) -> dict:
         "actions": [
             "Run tests: pytest",
             "Check types: mypy src/",
-            "Re-review: btx_fix_mcp review quality"
+            "Re-review: glintefy review quality"
         ],
         "duration": "5 minutes"
     })
@@ -434,14 +434,14 @@ Next: Review the changes and commit if satisfied."
         "description": "Safe automated fixes",
         "time": "5 minutes",
         "risk": "low",
-        "command": "btx_fix_mcp fix --auto"
+        "command": "glintefy fix --auto"
     },
     {
         "approach": "interactive",
         "description": "Review each fix",
         "time": "20 minutes",
         "risk": "none",
-        "command": "btx_fix_mcp fix --interactive"
+        "command": "glintefy fix --interactive"
     },
     {
         "approach": "manual",
@@ -466,13 +466,13 @@ Next: Review the changes and commit if satisfied."
     {
         "step": 2,
         "action": "Run automated fixes",
-        "command": "btx_fix_mcp fix --auto --safe",
+        "command": "glintefy fix --auto --safe",
         "optional_flags": ["--dry-run", "--interactive"]
     },
     {
         "step": 3,
         "action": "Verify fixes",
-        "command": "pytest && btx_fix_mcp review quality",
+        "command": "pytest && glintefy review quality",
         "expected": "All tests pass, <5 issues remaining"
     }
 ]

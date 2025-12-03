@@ -8,12 +8,12 @@ Just use the built-in `profile` command:
 cd /your/project
 
 # Profile any command
-python -m btx_fix_mcp review profile -- python my_app.py
-python -m btx_fix_mcp review profile -- pytest tests/
-python -m btx_fix_mcp review profile -- python -m my_module --args
+python -m glintefy review profile -- python my_app.py
+python -m glintefy review profile -- pytest tests/
+python -m glintefy review profile -- python -m my_module --args
 
 # Then analyze
-python -m btx_fix_mcp review cache
+python -m glintefy review cache
 ```
 
 That's it! No scripts to write, no code to copy.
@@ -58,8 +58,8 @@ if __name__ == "__main__":
     # Stop and save
     profiler.disable()
 
-    # Save to the location btx_fix_mcp expects
-    output_dir = Path("LLM-CONTEXT/btx_fix_mcp/review/perf")
+    # Save to the location glintefy expects
+    output_dir = Path("LLM-CONTEXT/glintefy/review/perf")
     output_dir.mkdir(parents=True, exist_ok=True)
     profiler.dump_stats(output_dir / "test_profile.prof")
 
@@ -77,10 +77,10 @@ python profile.py
 
 ```bash
 cd /your/project
-python -m btx_fix_mcp review cache
+python -m glintefy review cache
 ```
 
-That's it! btx_fix_mcp will automatically detect and use your profiling data.
+That's it! glintefy will automatically detect and use your profiling data.
 
 ---
 
@@ -92,7 +92,7 @@ your-project/
 ├── your_app/
 │   └── ...
 └── LLM-CONTEXT/
-    └── btx_fix_mcp/
+    └── glintefy/
         └── review/
             ├── perf/
             │   └── test_profile.prof    ← Profile saved here
@@ -122,7 +122,7 @@ if __name__ == "__main__":
     main()
 
     profiler.disable()
-    output_dir = Path("LLM-CONTEXT/btx_fix_mcp/review/perf")
+    output_dir = Path("LLM-CONTEXT/glintefy/review/perf")
     output_dir.mkdir(parents=True, exist_ok=True)
     profiler.dump_stats(output_dir / "test_profile.prof")
     print("✓ Profile saved")
@@ -149,7 +149,7 @@ if __name__ == "__main__":
             client.get(f"/api/search?q=query{i}")
 
     profiler.disable()
-    output_dir = Path("LLM-CONTEXT/btx_fix_mcp/review/perf")
+    output_dir = Path("LLM-CONTEXT/glintefy/review/perf")
     output_dir.mkdir(parents=True, exist_ok=True)
     profiler.dump_stats(output_dir / "test_profile.prof")
     print("✓ Profile saved")
@@ -172,7 +172,7 @@ if __name__ == "__main__":
     process_files(files)
 
     profiler.disable()
-    output_dir = Path("LLM-CONTEXT/btx_fix_mcp/review/perf")
+    output_dir = Path("LLM-CONTEXT/glintefy/review/perf")
     output_dir.mkdir(parents=True, exist_ok=True)
     profiler.dump_stats(output_dir / "test_profile.prof")
     print("✓ Profile saved")
@@ -194,7 +194,7 @@ if __name__ == "__main__":
     pytest.main(["tests/", "-v", "--tb=short"])
 
     profiler.disable()
-    output_dir = Path("LLM-CONTEXT/btx_fix_mcp/review/perf")
+    output_dir = Path("LLM-CONTEXT/glintefy/review/perf")
     output_dir.mkdir(parents=True, exist_ok=True)
     profiler.dump_stats(output_dir / "test_profile.prof")
     print("✓ Profile saved")
@@ -208,7 +208,7 @@ if __name__ == "__main__":
 
 ```bash
 cd /your/project
-python -m btx_fix_mcp review cache
+python -m glintefy review cache
 ```
 
 **Output:**
@@ -232,7 +232,7 @@ No production profiling data available.
 ```bash
 cd /your/project
 python profile.py
-python -m btx_fix_mcp review cache
+python -m glintefy review cache
 ```
 
 **Output:**
@@ -291,7 +291,7 @@ Recommendations based on real cache statistics.
                   │
                   ▼
 ┌─────────────────────────────────────┐
-│ 4. Run: python -m btx_fix_mcp       │
+│ 4. Run: python -m glintefy       │
 │         review cache                │
 │    → Reads profile automatically    │
 └─────────────────┬───────────────────┘
@@ -299,7 +299,7 @@ Recommendations based on real cache statistics.
                   ▼
 ┌─────────────────────────────────────┐
 │ 5. View results in:                 │
-│    LLM-CONTEXT/btx_fix_mcp/         │
+│    LLM-CONTEXT/glintefy/         │
 │    review/cache/*.json              │
 └─────────────────────────────────────┘
 ```
@@ -310,10 +310,10 @@ Recommendations based on real cache statistics.
 
 ### "No profiling data found"
 
-✅ **Expected!** btx_fix_mcp will use static analysis.
+✅ **Expected!** glintefy will use static analysis.
 
 To add profiling data:
-1. Check file exists: `ls LLM-CONTEXT/btx_fix_mcp/review/perf/test_profile.prof`
+1. Check file exists: `ls LLM-CONTEXT/glintefy/review/perf/test_profile.prof`
 2. If missing, run `python profile.py`
 3. Re-run cache analysis
 
@@ -340,7 +340,7 @@ If it's a problem:
 1. **Create** `profile.py` in your project (copy template above)
 2. **Edit** `run_your_app()` to run your application
 3. **Run** `python profile.py`
-4. **Analyze** `python -m btx_fix_mcp review cache`
-5. **Review** results in `LLM-CONTEXT/btx_fix_mcp/review/cache/`
+4. **Analyze** `python -m glintefy review cache`
+5. **Review** results in `LLM-CONTEXT/glintefy/review/cache/`
 
 That's it! No complex setup, no external tools - just standard Python profiling.

@@ -14,7 +14,7 @@
             │ (JSON-RPC)                          │ (JSON-RPC)
             │                                     │
 ┌───────────▼──────────────┐          ┌──────────▼──────────────┐
-│  btx-review Server        │          │  btx-fix Server         │
+│  glintefy-review Server        │          │  glintefy Server         │
 │  Port: Unix Socket        │          │  Port: Unix Socket      │
 │  ┌─────────────────────┐ │          │  ┌───────────────────┐ │
 │  │ MCP Tools:          │ │          │  │ MCP Tools:        │ │
@@ -59,7 +59,7 @@
      │    args: {priority: "all", parallel: true}
      ▼
 ┌──────────────────┐
-│  btx-review      │
+│  glintefy-review      │
 │  Orchestrator    │
 └────┬─────────────┘
      │
@@ -128,7 +128,7 @@
      │    args: {verify: true, auto_commit: true}
      ▼
 ┌──────────────────┐
-│  btx-fix         │
+│  glintefy         │
 │  Orchestrator    │
 └────┬─────────────┘
      │
@@ -239,7 +239,7 @@ Project Root
 │
 ├── LLM-CONTEXT/                  ← Workspace (created by orchestrators)
 │   │
-│   ├── review-anal/              ← btx-review workspace
+│   ├── review-anal/              ← glintefy-review workspace
 │   │   ├── python_path.txt       ← Python interpreter path
 │   │   ├── files_to_review.txt   ← Master file list
 │   │   │
@@ -266,7 +266,7 @@ Project Root
 │   │   └── logs/                 ← All logs
 │   │       └── review.log
 │   │
-│   └── fix-anal/                 ← btx-fix workspace
+│   └── fix-anal/                 ← glintefy workspace
 │       ├── python_path.txt
 │       ├── metrics/              ← Baseline metrics (BEFORE)
 │       │
@@ -303,7 +303,7 @@ Project Root
 │       └── logs/
 │           └── fix.log
 │
-└── src/btx_fix_mcp/              ← Source code
+└── src/glintefy/              ← Source code
     ├── servers/                   ← Orchestrators
     │   ├── base.py
     │   ├── review.py

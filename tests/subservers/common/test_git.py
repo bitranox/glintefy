@@ -2,7 +2,7 @@
 
 import pytest
 import subprocess
-from btx_fix_mcp.subservers.common.git import GitOperations, GitOperationError
+from glintefy.subservers.common.git import GitOperations, GitOperationError
 
 
 class TestGitOperations:

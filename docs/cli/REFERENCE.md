@@ -1,11 +1,11 @@
 # CLI Reference
 
-Complete reference for all btx_fix_mcp CLI commands.
+Complete reference for all glintefy CLI commands.
 
 ## Global Options
 
 ```bash
-python -m btx_fix_mcp [OPTIONS] COMMAND
+python -m glintefy [OPTIONS] COMMAND
 ```
 
 | Option | Required | Default          | Permitted Values | Description |
@@ -25,7 +25,7 @@ Configuration management commands for deploying, viewing, and managing configura
 Deploy default configuration to system or user directories.
 
 ```bash
-python -m btx_fix_mcp config-deploy [OPTIONS]
+python -m glintefy config-deploy [OPTIONS]
 ```
 
 | Option | Required | Default | Permitted Values | Description |
@@ -41,26 +41,26 @@ python -m btx_fix_mcp config-deploy [OPTIONS]
 | `user` | User-specific config (~/.config on Linux) |
 
 **Platform-specific paths:**
-- **Linux (app)**: `/etc/xdg/btx_fix_mcp/config.toml`
-- **Linux (user)**: `~/.config/btx_fix_mcp/config.toml`
-- **macOS (app)**: `/Library/Application Support/bitranox/Btx Fix Mcp/config.toml`
-- **macOS (user)**: `~/Library/Application Support/bitranox/Btx Fix Mcp/config.toml`
-- **Windows (app)**: `C:\ProgramData\bitranox\Btx Fix Mcp\config.toml`
-- **Windows (user)**: `%APPDATA%\bitranox\Btx Fix Mcp\config.toml`
+- **Linux (app)**: `/etc/xdg/glintefy/config.toml`
+- **Linux (user)**: `~/.config/glintefy/config.toml`
+- **macOS (app)**: `/Library/Application Support/bitranox/Glintefy/config.toml`
+- **macOS (user)**: `~/Library/Application Support/bitranox/Glintefy/config.toml`
+- **Windows (app)**: `C:\ProgramData\bitranox\Glintefy\config.toml`
+- **Windows (user)**: `%APPDATA%\bitranox\Glintefy\config.toml`
 
 **Examples:**
 ```bash
 # Deploy to application directory (recommended)
-python -m btx_fix_mcp config-deploy --target app
+python -m glintefy config-deploy --target app
 
 # Deploy to user config directory
-python -m btx_fix_mcp config-deploy --target user
+python -m glintefy config-deploy --target user
 
 # Deploy to multiple targets
-python -m btx_fix_mcp config-deploy --target app --target user
+python -m glintefy config-deploy --target app --target user
 
 # Force overwrite existing config
-python -m btx_fix_mcp config-deploy --target user --force
+python -m glintefy config-deploy --target user --force
 ```
 
 ---
@@ -70,7 +70,7 @@ python -m btx_fix_mcp config-deploy --target user --force
 Show current effective configuration (merged from all sources).
 
 ```bash
-python -m btx_fix_mcp config-show [OPTIONS]
+python -m glintefy config-show [OPTIONS]
 ```
 
 | Option | Required | Default | Permitted Values | Description |
@@ -81,16 +81,16 @@ python -m btx_fix_mcp config-show [OPTIONS]
 **Examples:**
 ```bash
 # Show all configuration
-python -m btx_fix_mcp config-show
+python -m glintefy config-show
 
 # Show quality settings only
-python -m btx_fix_mcp config-show -s review.quality
+python -m glintefy config-show -s review.quality
 
 # Show security settings as JSON
-python -m btx_fix_mcp config-show -s review.security --json
+python -m glintefy config-show -s review.security --json
 
 # Show timeout settings
-python -m btx_fix_mcp config-show -s general.timeouts
+python -m glintefy config-show -s general.timeouts
 ```
 
 ---
@@ -100,7 +100,7 @@ python -m btx_fix_mcp config-show -s general.timeouts
 Show all configuration file locations and their status.
 
 ```bash
-python -m btx_fix_mcp config-path
+python -m glintefy config-path
 ```
 
 No options. Displays:
@@ -126,7 +126,7 @@ All review commands support `--repo PATH` to specify the target repository.
 Run all review analyses.
 
 ```bash
-python -m btx_fix_mcp review [--repo PATH] all [OPTIONS]
+python -m glintefy review [--repo PATH] all [OPTIONS]
 ```
 
 | Option | Required | Default | Permitted Values | Description |
@@ -144,16 +144,16 @@ python -m btx_fix_mcp review [--repo PATH] all [OPTIONS]
 **Example:**
 ```bash
 # Review uncommitted git changes (default)
-python -m btx_fix_mcp review all
+python -m glintefy review all
 
 # Review all files
-python -m btx_fix_mcp review all --mode full
+python -m glintefy review all --mode full
 
 # Review at specific path
-python -m btx_fix_mcp review --repo /path/to/project all
+python -m glintefy review --repo /path/to/project all
 
 # Review with custom thresholds
-python -m btx_fix_mcp review all --complexity 15 --severity high
+python -m glintefy review all --complexity 15 --severity high
 ```
 
 ---
@@ -163,7 +163,7 @@ python -m btx_fix_mcp review all --complexity 15 --severity high
 Discover files to analyze.
 
 ```bash
-python -m btx_fix_mcp review scope [OPTIONS]
+python -m glintefy review scope [OPTIONS]
 ```
 
 | Option | Required | Default | Permitted Values | Description |
@@ -183,7 +183,7 @@ python -m btx_fix_mcp review scope [OPTIONS]
 Run code quality analysis.
 
 ```bash
-python -m btx_fix_mcp review quality [OPTIONS]
+python -m glintefy review quality [OPTIONS]
 ```
 
 | Option | Required | Default | Permitted Values | Description |
@@ -213,7 +213,7 @@ python -m btx_fix_mcp review quality [OPTIONS]
 Run security vulnerability scan.
 
 ```bash
-python -m btx_fix_mcp review security [OPTIONS]
+python -m glintefy review security [OPTIONS]
 ```
 
 | Option | Required | Default | Permitted Values | Description |
@@ -245,7 +245,7 @@ python -m btx_fix_mcp review security [OPTIONS]
 Analyze dependencies.
 
 ```bash
-python -m btx_fix_mcp review deps [OPTIONS]
+python -m glintefy review deps [OPTIONS]
 ```
 
 | Option | Required | Default | Permitted Values | Description |
@@ -261,13 +261,13 @@ python -m btx_fix_mcp review deps [OPTIONS]
 **Example:**
 ```bash
 # Run all dependency checks (default)
-python -m btx_fix_mcp review deps
+python -m glintefy review deps
 
 # Skip vulnerability scan
-python -m btx_fix_mcp review deps --no-vulnerabilities
+python -m glintefy review deps --no-vulnerabilities
 
 # Only check for outdated packages
-python -m btx_fix_mcp review deps --no-vulnerabilities --no-licenses
+python -m glintefy review deps --no-vulnerabilities --no-licenses
 ```
 
 **Checks:**
@@ -282,7 +282,7 @@ python -m btx_fix_mcp review deps --no-vulnerabilities --no-licenses
 Analyze documentation coverage.
 
 ```bash
-python -m btx_fix_mcp review docs [OPTIONS]
+python -m glintefy review docs [OPTIONS]
 ```
 
 | Option | Required | Default | Permitted Values | Description |
@@ -306,7 +306,7 @@ python -m btx_fix_mcp review docs [OPTIONS]
 Run performance analysis.
 
 ```bash
-python -m btx_fix_mcp review perf [OPTIONS]
+python -m glintefy review perf [OPTIONS]
 ```
 
 | Option | Required | Default | Permitted Values | Description |
@@ -329,7 +329,7 @@ python -m btx_fix_mcp review perf [OPTIONS]
 Analyze cache optimization opportunities.
 
 ```bash
-python -m btx_fix_mcp review cache [OPTIONS]
+python -m glintefy review cache [OPTIONS]
 ```
 
 | Option | Required | Default | Permitted Values | Description |
@@ -357,7 +357,7 @@ python -m btx_fix_mcp review cache [OPTIONS]
 Profile a command for cache analysis.
 
 ```bash
-python -m btx_fix_mcp review profile -- COMMAND [ARGS...]
+python -m glintefy review profile -- COMMAND [ARGS...]
 ```
 
 | Argument | Required | Default | Permitted Values | Description |
@@ -372,16 +372,16 @@ python -m btx_fix_mcp review profile -- COMMAND [ARGS...]
 **Examples:**
 ```bash
 # Profile test suite
-python -m btx_fix_mcp review profile -- pytest tests/
+python -m glintefy review profile -- pytest tests/
 
 # Profile a script
-python -m btx_fix_mcp review profile -- python my_script.py
+python -m glintefy review profile -- python my_script.py
 
 # Profile a module
-python -m btx_fix_mcp review profile -- python -m my_module
+python -m glintefy review profile -- python -m my_module
 
 # Profile with arguments
-python -m btx_fix_mcp review profile -- pytest tests/ -v --tb=short
+python -m glintefy review profile -- pytest tests/ -v --tb=short
 ```
 
 ---
@@ -391,7 +391,7 @@ python -m btx_fix_mcp review profile -- pytest tests/ -v --tb=short
 Generate consolidated report from existing analysis results.
 
 ```bash
-python -m btx_fix_mcp review report
+python -m glintefy review report
 ```
 
 No options. Requires previous analysis runs (scope, quality, etc.) to have been executed.
@@ -403,7 +403,7 @@ No options. Requires previous analysis runs (scope, quality, etc.) to have been 
 Clean analysis output files.
 
 ```bash
-python -m btx_fix_mcp review clean [OPTIONS]
+python -m glintefy review clean [OPTIONS]
 ```
 
 | Option | Required | Default | Permitted Values | Description |
@@ -414,7 +414,7 @@ python -m btx_fix_mcp review clean [OPTIONS]
 **Subserver values:**
 | Value | Description |
 |-------|-------------|
-| `all` | Clean all review data (entire `LLM-CONTEXT/btx_fix_mcp/review/` directory) |
+| `all` | Clean all review data (entire `LLM-CONTEXT/glintefy/review/` directory) |
 | `scope` | Clean scope analysis output (`review/scope/`) |
 | `quality` | Clean quality analysis output (`review/quality/`) |
 | `security` | Clean security scan output (`review/security/`) |
@@ -428,29 +428,29 @@ python -m btx_fix_mcp review clean [OPTIONS]
 **Examples:**
 ```bash
 # Clean all review data
-python -m btx_fix_mcp review clean
+python -m glintefy review clean
 
 # Clean only profile data
-python -m btx_fix_mcp review clean -s profile
+python -m glintefy review clean -s profile
 
 # Clean only cache analysis
-python -m btx_fix_mcp review clean -s cache
+python -m glintefy review clean -s cache
 
 # Preview deletion (dry run)
-python -m btx_fix_mcp review clean --dry-run
+python -m glintefy review clean --dry-run
 
 # Preview cleaning specific subserver
-python -m btx_fix_mcp review clean -s quality --dry-run
+python -m glintefy review clean -s quality --dry-run
 ```
 
 ---
 
 ## Output Structure
 
-All commands write to `LLM-CONTEXT/btx_fix_mcp/review/`:
+All commands write to `LLM-CONTEXT/glintefy/review/`:
 
 ```
-LLM-CONTEXT/btx_fix_mcp/review/
+LLM-CONTEXT/glintefy/review/
 ├── scope/
 │   ├── files_to_review.txt    # List of files
 │   └── scope_summary.md       # Summary
@@ -490,7 +490,7 @@ LLM-CONTEXT/btx_fix_mcp/review/
 
 ## Environment Variables
 
-Environment variables use the format: `BTX_FIX_MCP___<SECTION>__<KEY>=<VALUE>`
+Environment variables use the format: `GLINTEFY___<SECTION>__<KEY>=<VALUE>`
 
 - Triple underscore (`___`) separates the prefix from the section
 - Double underscore (`__`) separates section from key
@@ -498,23 +498,23 @@ Environment variables use the format: `BTX_FIX_MCP___<SECTION>__<KEY>=<VALUE>`
 
 | Variable | Default | Permitted Values | Description |
 |----------|---------|------------------|-------------|
-| `BTX_FIX_MCP___GENERAL__LOG_LEVEL` | `INFO` | `DEBUG`, `INFO`, `WARNING`, `ERROR` | Log verbosity level |
-| `BTX_FIX_MCP___GENERAL__VERBOSE` | `false` | `true`, `false` | Enable verbose output |
-| `BTX_FIX_MCP___GENERAL__MAX_WORKERS` | `4` | Any positive integer | Maximum parallel workers |
-| `BTX_FIX_MCP___REVIEW__OUTPUT_DIR` | `LLM-CONTEXT/btx_fix_mcp/review` | Any valid directory path | Override review output directory |
-| `BTX_FIX_MCP___REVIEW__QUALITY__COMPLEXITY_THRESHOLD` | `10` | Any positive integer | Default complexity threshold |
-| `BTX_FIX_MCP___REVIEW__SECURITY__SEVERITY_THRESHOLD` | `low` | `low`, `medium`, `high` | Default security severity |
+| `GLINTEFY___GENERAL__LOG_LEVEL` | `INFO` | `DEBUG`, `INFO`, `WARNING`, `ERROR` | Log verbosity level |
+| `GLINTEFY___GENERAL__VERBOSE` | `false` | `true`, `false` | Enable verbose output |
+| `GLINTEFY___GENERAL__MAX_WORKERS` | `4` | Any positive integer | Maximum parallel workers |
+| `GLINTEFY___REVIEW__OUTPUT_DIR` | `LLM-CONTEXT/glintefy/review` | Any valid directory path | Override review output directory |
+| `GLINTEFY___REVIEW__QUALITY__COMPLEXITY_THRESHOLD` | `10` | Any positive integer | Default complexity threshold |
+| `GLINTEFY___REVIEW__SECURITY__SEVERITY_THRESHOLD` | `low` | `low`, `medium`, `high` | Default security severity |
 
 **Examples:**
 ```bash
 # Set log level to DEBUG
-export BTX_FIX_MCP___GENERAL__LOG_LEVEL=DEBUG
+export GLINTEFY___GENERAL__LOG_LEVEL=DEBUG
 
 # Set custom complexity threshold
-export BTX_FIX_MCP___REVIEW__QUALITY__COMPLEXITY_THRESHOLD=15
+export GLINTEFY___REVIEW__QUALITY__COMPLEXITY_THRESHOLD=15
 
 # Set security severity threshold
-export BTX_FIX_MCP___REVIEW__SECURITY__SEVERITY_THRESHOLD=high
+export GLINTEFY___REVIEW__SECURITY__SEVERITY_THRESHOLD=high
 ```
 
 ---

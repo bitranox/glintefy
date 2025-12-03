@@ -41,7 +41,7 @@ subprocess.run(["pytest"])              # Subprocess sees modification!
 
 ### 1. SourcePatcher - File Modification Utility
 
-**Location:** `src/btx_fix_mcp/subservers/review/cache/source_patcher.py`
+**Location:** `src/glintefy/subservers/review/cache/source_patcher.py`
 
 **Responsibilities:**
 - Backup source files (`.cache_backup`)

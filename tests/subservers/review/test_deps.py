@@ -2,8 +2,8 @@
 
 import pytest
 
-from btx_fix_mcp.subservers.review.deps import DepsSubServer
-from btx_fix_mcp.subservers.review.deps_scanners import OutdatedPackage, Vulnerability
+from glintefy.subservers.review.deps import DepsSubServer
+from glintefy.subservers.review.deps_scanners import OutdatedPackage, Vulnerability
 
 
 class TestDepsSubServer:

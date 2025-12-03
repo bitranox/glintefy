@@ -2,7 +2,7 @@
 
 import pytest
 
-from btx_fix_mcp.subservers.review.docs import DocsSubServer
+from glintefy.subservers.review.docs import DocsSubServer
 
 
 class TestDocsSubServer:

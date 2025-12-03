@@ -16,29 +16,29 @@
 
 ```bash
 # 1. Create directory structure
-mkdir -p src/btx_fix_mcp/{servers,subservers/{review,fix,common},tools}
+mkdir -p src/glintefy/{servers,subservers/{review,fix,common},tools}
 mkdir -p tests/{servers,subservers,integration}
 mkdir -p docs/{api,guides,examples}
 
 # 2. Create __init__.py files
-touch src/btx_fix_mcp/__init__.py
-touch src/btx_fix_mcp/servers/__init__.py
-touch src/btx_fix_mcp/subservers/__init__.py
-touch src/btx_fix_mcp/subservers/common/__init__.py
-touch src/btx_fix_mcp/subservers/review/__init__.py
-touch src/btx_fix_mcp/subservers/fix/__init__.py
-touch src/btx_fix_mcp/tools/__init__.py
+touch src/glintefy/__init__.py
+touch src/glintefy/servers/__init__.py
+touch src/glintefy/subservers/__init__.py
+touch src/glintefy/subservers/common/__init__.py
+touch src/glintefy/subservers/review/__init__.py
+touch src/glintefy/subservers/fix/__init__.py
+touch src/glintefy/tools/__init__.py
 touch tests/__init__.py
 
 # 3. Create base files
-touch src/btx_fix_mcp/servers/base.py
-touch src/btx_fix_mcp/servers/review.py
-touch src/btx_fix_mcp/servers/fix.py
-touch src/btx_fix_mcp/subservers/base.py
-touch src/btx_fix_mcp/subservers/common/files.py
-touch src/btx_fix_mcp/subservers/common/git.py
-touch src/btx_fix_mcp/subservers/common/logging.py
-touch src/btx_fix_mcp/subservers/common/protocol.py
+touch src/glintefy/servers/base.py
+touch src/glintefy/servers/review.py
+touch src/glintefy/servers/fix.py
+touch src/glintefy/subservers/base.py
+touch src/glintefy/subservers/common/files.py
+touch src/glintefy/subservers/common/git.py
+touch src/glintefy/subservers/common/logging.py
+touch src/glintefy/subservers/common/protocol.py
 ```
 
 **Tasks**:
@@ -55,7 +55,7 @@ touch src/btx_fix_mcp/subservers/common/protocol.py
 **Edit pyproject.toml**:
 ```toml
 [project]
-name = "btx_fix_mcp"
+name = "glintefy"
 version = "0.1.0"
 description = "MCP servers for code review and fixing"
 requires-python = ">=3.13"
@@ -84,7 +84,7 @@ testpaths = ["tests"]
 python_files = ["test_*.py"]
 python_classes = ["Test*"]
 python_functions = ["test_*"]
-addopts = "-v --cov=src/btx_fix_mcp --cov-report=term-missing"
+addopts = "-v --cov=src/glintefy --cov-report=term-missing"
 
 [tool.black]
 line-length = 100
@@ -102,7 +102,7 @@ target-version = "py313"
 
 ### Day 3: Base Orchestrator Class
 
-**File**: `src/btx_fix_mcp/servers/base.py`
+**File**: `src/glintefy/servers/base.py`
 
 ```python
 """Base orchestrator class for MCP servers."""
@@ -123,7 +123,7 @@ class BaseOrchestrator(ABC):
         """Initialize orchestrator.
 
         Args:
-            name: Server name (e.g., 'btx-review')
+            name: Server name (e.g., 'glintefy-review')
             version: Server version (e.g., '1.0.0')
             workspace: Workspace directory (default: LLM-CONTEXT/)
         """
@@ -182,7 +182,7 @@ class BaseOrchestrator(ABC):
 
 ### Day 4: Base Sub-Server Class
 
-**File**: `src/btx_fix_mcp/subservers/base.py`
+**File**: `src/glintefy/subservers/base.py`
 
 ```python
 """Base sub-server class."""
@@ -332,7 +332,7 @@ class BaseSubServer(ABC):
 
 ### Day 5: File & Logging Utilities
 
-**File**: `src/btx_fix_mcp/subservers/common/files.py`
+**File**: `src/glintefy/subservers/common/files.py`
 
 ```python
 """File I/O utilities."""
@@ -492,7 +492,7 @@ mypy src/
 pytest tests/servers/test_base.py -v
 
 # Check coverage
-pytest --cov=src/btx_fix_mcp --cov-report=html
+pytest --cov=src/glintefy --cov-report=html
 ```
 
 ---

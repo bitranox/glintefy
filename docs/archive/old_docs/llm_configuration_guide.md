@@ -5,7 +5,7 @@
 **Key Principle**: The MCP server has its **own separate configuration** completely independent from Claude Desktop or any MCP client.
 
 ```
-User's Claude Desktop          MCP Server (btx-review)
+User's Claude Desktop          MCP Server (glintefy-review)
 ├─ User's API key              ├─ Server's API key (DIFFERENT!)
 ├─ User's settings             ├─ Server's settings
 └─ User's conversation         └─ Server's internal LLM calls
@@ -22,7 +22,7 @@ The internal LLM client looks for API keys in this order (first found wins):
    client = InternalLLMClient(api_key="sk-ant-...")
    ```
 
-2. **Config file** (`~/.config/btx-fix-mcp/config.toml`)
+2. **Config file** (`~/.config/glintefy/config.toml`)
    ```toml
    [llm]
    anthropic_api_key = "sk-ant-api-03-server-key-xxx"
@@ -30,7 +30,7 @@ The internal LLM client looks for API keys in this order (first found wins):
 
 3. **Environment variable** (preferred for security)
    ```bash
-   export BTX_FIX_MCP_ANTHROPIC_API_KEY="sk-ant-api-03-server-key-xxx"
+   export GLINTEFY_ANTHROPIC_API_KEY="sk-ant-api-03-server-key-xxx"
    ```
 
 4. **Fallback environment variable**
@@ -48,11 +48,11 @@ If none found → Error on first LLM call (falls back to rule-based analysis)
 
 ```bash
 # Add to ~/.bashrc or ~/.zshrc
-export BTX_FIX_MCP_ANTHROPIC_API_KEY="sk-ant-api-03-YourServerKey"
+export GLINTEFY_ANTHROPIC_API_KEY="sk-ant-api-03-YourServerKey"
 
 # Or for session only
-export BTX_FIX_MCP_ANTHROPIC_API_KEY="sk-ant-api-03-YourServerKey"
-python -m btx_fix_mcp review all --mode full
+export GLINTEFY_ANTHROPIC_API_KEY="sk-ant-api-03-YourServerKey"
+python -m glintefy review all --mode full
 ```
 
 **Pros**:
@@ -70,10 +70,10 @@ python -m btx_fix_mcp review all --mode full
 
 ```bash
 # Create config directory
-mkdir -p ~/.config/btx-fix-mcp
+mkdir -p ~/.config/glintefy
 
 # Create config file
-cat > ~/.config/btx-fix-mcp/config.toml << 'EOF'
+cat > ~/.config/glintefy/config.toml << 'EOF'
 [llm]
 # Enable internal LLM features
 enable_internal_llm = true
@@ -91,7 +91,7 @@ generate_commit_messages = true
 EOF
 
 # Protect config file (contains API key!)
-chmod 600 ~/.config/btx-fix-mcp/config.toml
+chmod 600 ~/.config/glintefy/config.toml
 ```
 
 **Pros**:
@@ -110,7 +110,7 @@ chmod 600 ~/.config/btx-fix-mcp/config.toml
 
 ```bash
 # In your project directory
-cat > .btx-fix-mcp.toml << 'EOF'
+cat > .glintefy.toml << 'EOF'
 [llm]
 # Enable features but don't put API key here!
 enable_internal_llm = true
@@ -118,11 +118,11 @@ enable_internal_llm = true
 [llm.features]
 classify_severity = true
 
-# API key will come from env or ~/.config/btx-fix-mcp/config.toml
+# API key will come from env or ~/.config/glintefy/config.toml
 EOF
 
 # Add to .gitignore to be safe
-echo ".btx-fix-mcp.toml" >> .gitignore
+echo ".glintefy.toml" >> .gitignore
 ```
 
 **Pros**:
@@ -144,15 +144,15 @@ echo ".btx-fix-mcp.toml" >> .gitignore
 # 2. Add to shell config
 cat >> ~/.bashrc << 'EOF'
 # MCP Server API key (separate from Claude Desktop)
-export BTX_FIX_MCP_ANTHROPIC_API_KEY="sk-ant-api-03-dev-machine-key"
+export GLINTEFY_ANTHROPIC_API_KEY="sk-ant-api-03-dev-machine-key"
 EOF
 
 # 3. Reload shell or source config
 source ~/.bashrc
 
 # 4. Enable features in config (optional)
-mkdir -p ~/.config/btx-fix-mcp
-cat > ~/.config/btx-fix-mcp/config.toml << 'EOF'
+mkdir -p ~/.config/glintefy
+cat > ~/.config/glintefy/config.toml << 'EOF'
 [llm]
 enable_internal_llm = true
 
@@ -162,18 +162,18 @@ generate_commit_messages = true
 EOF
 
 # 5. Test it works
-python -m btx_fix_mcp review quality --complexity 10
+python -m glintefy review quality --complexity 10
 ```
 
 ### Example 2: Production Server (Config File)
 
 ```bash
 # 1. Create secure config directory
-mkdir -p ~/.config/btx-fix-mcp
-chmod 700 ~/.config/btx-fix-mcp
+mkdir -p ~/.config/glintefy
+chmod 700 ~/.config/glintefy
 
 # 2. Create config with restricted permissions
-cat > ~/.config/btx-fix-mcp/config.toml << 'EOF'
+cat > ~/.config/glintefy/config.toml << 'EOF'
 [llm]
 enable_internal_llm = true
 anthropic_api_key = "sk-ant-api-03-production-server-key"
@@ -192,10 +192,10 @@ generate_commit_messages = true
 EOF
 
 # 3. Secure the file
-chmod 600 ~/.config/btx-fix-mcp/config.toml
+chmod 600 ~/.config/glintefy/config.toml
 
 # 4. Verify permissions
-ls -la ~/.config/btx-fix-mcp/
+ls -la ~/.config/glintefy/
 # Should show: -rw------- (only owner can read/write)
 ```
 
@@ -213,15 +213,15 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Install btx-fix-mcp
-        run: pip install btx-fix-mcp
+      - name: Install glintefy
+        run: pip install glintefy
 
       - name: Run code review
         env:
-          # GitHub Secret: BTX_FIX_MCP_API_KEY
-          BTX_FIX_MCP_ANTHROPIC_API_KEY: ${{ secrets.BTX_FIX_MCP_API_KEY }}
+          # GitHub Secret: GLINTEFY_API_KEY
+          GLINTEFY_ANTHROPIC_API_KEY: ${{ secrets.GLINTEFY_API_KEY }}
         run: |
-          python -m btx_fix_mcp review all --mode git
+          python -m glintefy review all --mode git
 ```
 
 ## MCP Server Integration
@@ -235,12 +235,12 @@ When running as MCP server (connected to Claude Desktop):
 // %APPDATA%/Claude/config.json (Windows)
 {
   "mcpServers": {
-    "btx-review": {
+    "glintefy-review": {
       "command": "python",
-      "args": ["-m", "btx_fix_mcp", "serve"],
+      "args": ["-m", "glintefy", "serve"],
       "env": {
         // Option 1: Pass API key via environment
-        "BTX_FIX_MCP_ANTHROPIC_API_KEY": "sk-ant-api-03-server-key"
+        "GLINTEFY_ANTHROPIC_API_KEY": "sk-ant-api-03-server-key"
       }
     }
   }
@@ -252,11 +252,11 @@ When running as MCP server (connected to Claude Desktop):
 ```json
 {
   "mcpServers": {
-    "btx-review": {
+    "glintefy-review": {
       "command": "python",
-      "args": ["-m", "btx_fix_mcp", "serve"]
-      // No env - uses BTX_FIX_MCP_ANTHROPIC_API_KEY from environment
-      // or anthropic_api_key from ~/.config/btx-fix-mcp/config.toml
+      "args": ["-m", "glintefy", "serve"]
+      // No env - uses GLINTEFY_ANTHROPIC_API_KEY from environment
+      // or anthropic_api_key from ~/.config/glintefy/config.toml
     }
   }
 }
@@ -269,7 +269,7 @@ When running as MCP server (connected to Claude Desktop):
 ```bash
 # Test API key is found (doesn't make any calls)
 python << 'EOF'
-from btx_fix_mcp.subservers.common.llm_client import InternalLLMClient
+from glintefy.subservers.common.llm_client import InternalLLMClient
 
 client = InternalLLMClient()
 if client.api_key:
@@ -286,8 +286,8 @@ EOF
 ```bash
 # Make actual API call (uses tokens!)
 python << 'EOF'
-from btx_fix_mcp.subservers.common.llm_client import InternalLLMClient
-from btx_fix_mcp.config import get_config
+from glintefy.subservers.common.llm_client import InternalLLMClient
+from glintefy.config import get_config
 
 # Check if enabled
 config = get_config()
@@ -317,8 +317,8 @@ EOF
 # Add to .gitignore
 cat >> .gitignore << 'EOF'
 # MCP Server config (may contain API keys)
-.btx-fix-mcp.toml
-.btx-fix-mcp.yaml
+.glintefy.toml
+.glintefy.yaml
 config.toml
 EOF
 ```
@@ -338,11 +338,11 @@ Reasons:
 ```bash
 # 1. Generate new key in Anthropic Console
 # 2. Update environment variable
-export BTX_FIX_MCP_ANTHROPIC_API_KEY="sk-ant-api-03-new-key"
+export GLINTEFY_ANTHROPIC_API_KEY="sk-ant-api-03-new-key"
 
 # 3. Or update config file
 sed -i 's/anthropic_api_key = "sk-ant-api-03-old-key"/anthropic_api_key = "sk-ant-api-03-new-key"/' \
-  ~/.config/btx-fix-mcp/config.toml
+  ~/.config/glintefy/config.toml
 
 # 4. Restart MCP server (if running)
 ```
@@ -351,13 +351,13 @@ sed -i 's/anthropic_api_key = "sk-ant-api-03-old-key"/anthropic_api_key = "sk-an
 
 ```bash
 # Config directory: only owner can access
-chmod 700 ~/.config/btx-fix-mcp
+chmod 700 ~/.config/glintefy
 
 # Config file: only owner can read/write
-chmod 600 ~/.config/btx-fix-mcp/config.toml
+chmod 600 ~/.config/glintefy/config.toml
 
 # Verify
-ls -la ~/.config/btx-fix-mcp/
+ls -la ~/.config/glintefy/
 # Should show: drwx------ (dir) and -rw------- (file)
 ```
 
@@ -370,17 +370,17 @@ ls -la ~/.config/btx-fix-mcp/
 **Fix**:
 ```bash
 # Check environment variable
-echo $BTX_FIX_MCP_ANTHROPIC_API_KEY
+echo $GLINTEFY_ANTHROPIC_API_KEY
 
 # Check config file
-cat ~/.config/btx-fix-mcp/config.toml | grep anthropic_api_key
+cat ~/.config/glintefy/config.toml | grep anthropic_api_key
 
 # Set via environment
-export BTX_FIX_MCP_ANTHROPIC_API_KEY="sk-ant-api-03-your-key"
+export GLINTEFY_ANTHROPIC_API_KEY="sk-ant-api-03-your-key"
 
 # Or add to config
-mkdir -p ~/.config/btx-fix-mcp
-echo 'anthropic_api_key = "sk-ant-api-03-your-key"' >> ~/.config/btx-fix-mcp/config.toml
+mkdir -p ~/.config/glintefy
+echo 'anthropic_api_key = "sk-ant-api-03-your-key"' >> ~/.config/glintefy/config.toml
 ```
 
 ### Error: "anthropic package required"
@@ -391,8 +391,8 @@ echo 'anthropic_api_key = "sk-ant-api-03-your-key"' >> ~/.config/btx-fix-mcp/con
 ```bash
 pip install anthropic
 
-# Or install with btx-fix-mcp extras
-pip install btx-fix-mcp[llm]  # If we add this extra
+# Or install with glintefy extras
+pip install glintefy[llm]  # If we add this extra
 ```
 
 ### LLM Features Not Working
@@ -403,14 +403,14 @@ pip install btx-fix-mcp[llm]  # If we add this extra
 ```bash
 # Check feature flags
 python << 'EOF'
-from btx_fix_mcp.config import get_config
+from glintefy.config import get_config
 config = get_config()
 print("LLM enabled:", config.get("llm", {}).get("enable_internal_llm"))
 print("Features:", config.get("llm", {}).get("features", {}))
 EOF
 
 # Enable in config
-cat >> ~/.config/btx-fix-mcp/config.toml << 'EOF'
+cat >> ~/.config/glintefy/config.toml << 'EOF'
 [llm]
 enable_internal_llm = true
 
@@ -428,11 +428,11 @@ EOF
 ```json
 {
   "mcpServers": {
-    "btx-review": {
+    "glintefy-review": {
       "command": "python",
-      "args": ["-m", "btx_fix_mcp", "serve"],
+      "args": ["-m", "glintefy", "serve"],
       "env": {
-        "BTX_FIX_MCP_ANTHROPIC_API_KEY": "sk-ant-api-03-your-key"
+        "GLINTEFY_ANTHROPIC_API_KEY": "sk-ant-api-03-your-key"
       }
     }
   }
@@ -444,7 +444,7 @@ EOF
 ### Track Usage
 
 ```python
-from btx_fix_mcp.subservers.common.llm_client import InternalLLMClient
+from glintefy.subservers.common.llm_client import InternalLLMClient
 
 client = InternalLLMClient()
 
@@ -458,7 +458,7 @@ print(f"Estimated cost: ${summary['estimated_cost_usd']:.4f}")
 ### Set Budget Limits
 
 ```toml
-# ~/.config/btx-fix-mcp/config.toml
+# ~/.config/glintefy/config.toml
 [llm]
 # Limit max tokens per operation type
 max_tokens_classification = 10   # Very cheap (~$0.0001 per call)
@@ -475,12 +475,12 @@ generate_commit_messages = true  # Cheap (50 tokens with Haiku)
 
 ## Summary: No Settings Shared
 
-| Setting | Claude Desktop (Caller) | MCP Server (btx-review) |
+| Setting | Claude Desktop (Caller) | MCP Server (glintefy-review) |
 |---------|------------------------|-------------------------|
 | **API Key** | User's personal key | **Separate server key** ❗ |
 | **Model** | User's choice | Server's config (sonnet/haiku) |
 | **Token Budget** | User's account | Server's account |
-| **Settings** | Claude Desktop config | `~/.config/btx-fix-mcp/` |
+| **Settings** | Claude Desktop config | `~/.config/glintefy/` |
 | **Conversation** | User's chat history | No access to chat |
 | **Context** | User's context window | Separate API calls |
 

@@ -105,9 +105,9 @@ COVERAGE=on make test        # force coverage and generate coverage.xml/codecov.
 ### Versioning & Metadata
 
 - Single source of truth for package metadata is `pyproject.toml` (`[project]`).
-- The library reads its own installed metadata at runtime via `importlib.metadata` (see `src/btx_fix_mcp/__init__conf__.py`).
+- The library reads its own installed metadata at runtime via `importlib.metadata` (see `src/glintefy/__init__conf__.py`).
 - Do not duplicate the version in code; bump only `pyproject.toml` and update `CHANGELOG.md`.
-- Console script name is discovered from entry points; defaults to `btx_fix_mcp`.
+- Console script name is discovered from entry points; defaults to `glintefy`.
 
 ### Dependency Auditing
 

@@ -1,11 +1,11 @@
 [project]
-name = "btx_fix_mcp"
-version = "2.0.1"
+name = "glintefy"
+version = "3.0.0"
 description = "MCP servers for code review and automated fixing"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
-    "mcp>=1.22.0",
+    "mcp>=1.23.1",
     "bandit>=1.9.2",
     "radon>=6.0.1",
     "pytest>=9.0.1",
@@ -13,7 +13,7 @@ dependencies = [
     "pyyaml>=6.0.3",
     "jinja2>=3.1.6",
     "rich-click>=1.9.4",
-    "lib-layered-config>=3.0.0",
+    "lib-layered-config>=4.0.0",
     "pydantic>=2.12.5",
 ]
 license = { text = "MIT" }
@@ -30,9 +30,9 @@ classifiers = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/bitranox/btx_fix_mcp"
-Repository = "https://github.com/bitranox/btx_fix_mcp.git"
-Issues = "https://github.com/bitranox/btx_fix_mcp/issues"
+Homepage = "https://github.com/bitranox/glintefy"
+Repository = "https://github.com/bitranox/glintefy.git"
+Issues = "https://github.com/bitranox/glintefy/issues"
 
 [project.optional-dependencies]
 dev = [
@@ -49,29 +49,28 @@ dev = [
   # codecov-cli pins: click<8.3.0, responses==0.21.*, test-results-parser==0.6.0
   "codecov-cli>=11.2.5",
   # pip-audit pins: cyclonedx-python-lib<10
-  "pip-audit>=2.9.0",
-  "textual>=6.6.0",
+  "pip-audit>=2.10.0",
+  "textual>=6.7.1",
   "import-linter>=2.7",
   "setuptools>=80.9.0"
 ]
 # Analysis tools installed in isolated venv by tools_venv module
-# These are NOT installed with pip install btx_fix_mcp
-# Instead, they're installed on-demand in ~/.cache/btx-fix-mcp/tools-venv/
+# These are NOT installed with pip install glintefy
+# Instead, they're installed on-demand in ~/.cache/glintefy/tools-venv/
 tools = [
   "ruff>=0.14.7",
   "mypy>=1.19.0",
-  "pylint>=4.0.3",
+  "pylint>=4.0.4",
   "vulture>=2.14",
   "interrogate>=1.7.0",
-  "beartype>=0.22.6",
+  "beartype>=0.22.8",
   # radon pins: mando<0.8
   "radon>=6.0.1",
   "bandit>=1.9.2",
 ]
 
 [project.scripts]
-btx_fix_mcp = "btx_fix_mcp.cli:main"
-bitranox-template-py-cli = "btx_fix_mcp.cli:main"
+glintefy = "glintefy.cli:main"
 
 [build-system]
 requires = ["hatchling>=1.28.0"]
@@ -80,8 +79,8 @@ build-backend = "hatchling.build"
 
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/btx_fix_mcp"]
-include = ["src/btx_fix_mcp/py.typed"]
+packages = ["src/glintefy"]
+include = ["src/glintefy/py.typed"]
 
 [tool.ruff]
 line-length = 160
@@ -137,7 +136,7 @@ ignore-vulns = ["GHSA-4xh5-x5gv-qwph", "PYSEC-2022-42969"]
 
 [tool.pytest.ini_options]
 # Coverage disabled by default due to Python 3.14 sqlite lock issues
-# Run with: pytest --cov=src/btx_fix_mcp --cov-report=term-missing
+# Run with: pytest --cov=src/glintefy --cov-report=term-missing
 addopts = ["-v"]
 pythonpath = ["src"]
 testpaths = ["tests"]
@@ -156,7 +155,7 @@ markers = [
 branch = true
 parallel = false
 data_file = ".coverage.unit"
-source = ["src/btx_fix_mcp"]
+source = ["src/glintefy"]
 
 [tool.coverage.report]
 omit = [
@@ -199,12 +198,12 @@ coverage-report-file = "coverage.xml"
 src-path = "src"
 
 [tool.importlinter]
-root_package = "btx_fix_mcp"
+root_package = "glintefy"
 
 [[tool.importlinter.contracts]]
 name = "CLI depends on behaviors only"
 type = "layers"
 layers = [
-  "btx_fix_mcp.cli",
-  "btx_fix_mcp.behaviors",
+  "glintefy.cli",
+  "glintefy.behaviors",
 ]

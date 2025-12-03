@@ -73,7 +73,7 @@ Parent Process (Cache Analyzer)
 
 ### 1. SourcePatcher Utility
 
-**File:** `src/btx_fix_mcp/subservers/review/cache/source_patcher.py`
+**File:** `src/glintefy/subservers/review/cache/source_patcher.py`
 
 ```python
 class SourcePatcher:
@@ -122,7 +122,7 @@ class SourcePatcher:
 
 ### 2. Updated BatchScreener
 
-**File:** `src/btx_fix_mcp/subservers/review/cache/batch_screener.py`
+**File:** `src/glintefy/subservers/review/cache/batch_screener.py`
 
 ```python
 class BatchScreener:
@@ -165,7 +165,7 @@ class BatchScreener:
 
 ### 3. Updated IndividualValidator
 
-**File:** `src/btx_fix_mcp/subservers/review/cache/individual_validator.py`
+**File:** `src/glintefy/subservers/review/cache/individual_validator.py`
 
 ```python
 class IndividualValidator:

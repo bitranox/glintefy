@@ -15,7 +15,7 @@ This document summarizes the complete implementation and how users can leverage 
 
 ### 1. Static Code Analysis (Default Mode)
 
-**Location:** `src/btx_fix_mcp/subservers/review/cache/batch_screener.py`
+**Location:** `src/glintefy/subservers/review/cache/batch_screener.py`
 
 **Method:** `_analyze_cache_usage_statically()`
 
@@ -55,11 +55,11 @@ This document summarizes the complete implementation and how users can leverage 
 
 ### 2. Profiling Data Mode (Optional)
 
-**Location:** `src/btx_fix_mcp/subservers/review/cache_subserver.py:216-234`
+**Location:** `src/glintefy/subservers/review/cache_subserver.py:216-234`
 
 **How it works:**
 1. User profiles their application with `cProfile`
-2. Saves profiling data to: `LLM-CONTEXT/btx_fix_mcp/review/perf/test_profile.prof`
+2. Saves profiling data to: `LLM-CONTEXT/glintefy/review/perf/test_profile.prof`
 3. Cache analysis detects the profiling data automatically
 4. Uses real cache statistics (`cache_info()`) if available
 5. Falls back to static analysis if no runtime data exists
@@ -138,13 +138,13 @@ python profile_my_app.py
 **Added commands:**
 ```bash
 python scripts/profile_application.py          # Profile application (test suite)
-python -m btx_fix_mcp review cache   # Run cache analysis
+python -m glintefy review cache   # Run cache analysis
 ```
 
 **Integration:**
 ```bash
 # Full workflow
-python scripts/profile_application.py && python -m btx_fix_mcp review cache
+python scripts/profile_application.py && python -m glintefy review cache
 ```
 
 ---
@@ -194,7 +194,7 @@ python scripts/profile_application.py && python -m btx_fix_mcp review cache
 
 ### Hybrid Analysis Approach
 
-**Location:** `src/btx_fix_mcp/subservers/review/cache/batch_screener.py:272-417`
+**Location:** `src/glintefy/subservers/review/cache/batch_screener.py:272-417`
 
 The `evaluate_existing_caches()` method implements a **smart hybrid approach**:
 
@@ -228,7 +228,7 @@ else:
 
 ### User Instructions in Reports
 
-**Location:** `src/btx_fix_mcp/subservers/review/cache_subserver.py:413-445`
+**Location:** `src/glintefy/subservers/review/cache_subserver.py:413-445`
 
 Reports now include contextual instructions:
 
@@ -254,7 +254,7 @@ cp docs/examples/profile_my_app_template.py profile_my_app.py
 python profile_my_app.py
 
 # 2. Run cache analysis with profiling data
-python -m btx_fix_mcp review cache
+python -m glintefy review cache
 ```
 
 📚 **See full guide:** `docs/cache_profiling_guide.md`
@@ -268,7 +268,7 @@ python -m btx_fix_mcp review cache
 
 **Step 1:** Run initial analysis (static)
 ```bash
-python -m btx_fix_mcp review cache
+python -m glintefy review cache
 ```
 
 **Result:** Gets estimates, sees instructions for profiling
@@ -295,12 +295,12 @@ python profile_my_app.py
 ```
 Running workload...
 ✓ Workload complete
-✓ Profiling data saved to: LLM-CONTEXT/btx_fix_mcp/review/perf/test_profile.prof
+✓ Profiling data saved to: LLM-CONTEXT/glintefy/review/perf/test_profile.prof
 ```
 
 **Step 4:** Re-run analysis (with profiling)
 ```bash
-python -m btx_fix_mcp review cache
+python -m glintefy review cache
 ```
 
 **Result:** Now sees:
@@ -317,7 +317,7 @@ And gets accurate hit rates!
 ## File Structure
 
 ```
-btx_fix_mcp/
+glintefy/
 ├── docs/
 │   ├── cache_profiling_README.md            ← Documentation index
 │   ├── cache_profiling_guide.md             ← Full guide (20 min)
@@ -329,11 +329,11 @@ btx_fix_mcp/
 ├── scripts/
 │   └── profile_application.py               ← Profiling script
 │
-├── src/btx_fix_mcp/subservers/review/cache/
+├── src/glintefy/subservers/review/cache/
 │   ├── batch_screener.py                    ← Static analysis + hybrid logic
 │   └── cache_subserver.py                   ← Loads profiling data
 │
-└── LLM-CONTEXT/btx_fix_mcp/review/
+└── LLM-CONTEXT/glintefy/review/
     ├── perf/
     │   └── test_profile.prof                ← Profiling data (INPUT)
     └── cache/
@@ -393,7 +393,7 @@ btx_fix_mcp/
 
 1. **Quick Start:** Read [cache_profiling_quick_reference.md](cache_profiling_quick_reference.md)
 2. **Profile App:** Use `scripts/profile_application.py` or template
-3. **Analyze:** Run `python -m btx_fix_mcp review cache`
+3. **Analyze:** Run `python -m glintefy review cache`
 4. **Optimize:** Apply recommendations from results
 
 ---

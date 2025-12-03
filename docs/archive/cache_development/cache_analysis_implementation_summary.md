@@ -8,7 +8,7 @@
 
 ## 🎯 Overview
 
-Successfully implemented the **Cache Analysis Sub-Server** for btx_fix_mcp using the hybrid batch-screening + individual-validation approach.
+Successfully implemented the **Cache Analysis Sub-Server** for glintefy using the hybrid batch-screening + individual-validation approach.
 
 ### Architecture: Hybrid Evidence-Based Approach
 
@@ -22,7 +22,7 @@ Pure Function Detection    →   Cross-Reference        →    Screening        
 
 ## 📁 Files Created
 
-### Core Cache Module (`src/btx_fix_mcp/subservers/review/cache/`)
+### Core Cache Module (`src/glintefy/subservers/review/cache/`)
 
 | File | LOC | Purpose |
 |------|-----|---------|
@@ -45,27 +45,27 @@ Pure Function Detection    →   Cross-Reference        →    Screening        
 
 ## 🔧 Integration Points
 
-### 1. ReviewMCPServer (`src/btx_fix_mcp/servers/review.py`)
+### 1. ReviewMCPServer (`src/glintefy/servers/review.py`)
 
 **Added:**
-- Import: `from btx_fix_mcp.subservers.review.cache import CacheSubServer`
+- Import: `from glintefy.subservers.review.cache import CacheSubServer`
 - Method: `run_cache()` (lines 343-398)
 - MCP tool integration via dispatch pattern
 
-### 2. Tool Definitions (`src/btx_fix_mcp/servers/review_tools.py`)
+### 2. Tool Definitions (`src/glintefy/servers/review_tools.py`)
 
 **Added:**
 - Import: `CACHE_MINDSET`
 - Function: `_cache_tool_definition()`
 - Tool registration in `get_review_tool_definitions()`
 
-### 3. Tool Handlers (`src/btx_fix_mcp/servers/review_handlers.py`)
+### 3. Tool Handlers (`src/glintefy/servers/review_handlers.py`)
 
 **Added:**
 - Handler: `_handle_cache()`
 - Dispatch entry: `"review_cache": _handle_cache`
 
-### 4. Configuration (`src/btx_fix_mcp/defaultconfig.toml`)
+### 4. Configuration (`src/glintefy/defaultconfig.toml`)
 
 **Added:**
 ```toml
@@ -82,7 +82,7 @@ traits = ["skeptical", "evidence-driven", "data-obsessed"]
 # ... approach, questions, judgment
 ```
 
-### 5. Mindsets (`src/btx_fix_mcp/subservers/common/mindsets.py`)
+### 5. Mindsets (`src/glintefy/subservers/common/mindsets.py`)
 
 **Added:**
 - Constant: `CACHE_MINDSET = "cache"`
@@ -138,7 +138,7 @@ Phase 2: Individual Validation
 
 Automatically infers Python module paths for import:
 ```python
-src/btx_fix_mcp/config.py  →  btx_fix_mcp.config
+src/glintefy/config.py  →  glintefy.config
 ```
 
 ---
@@ -176,10 +176,10 @@ recommendations = [r for r in validation_results if r.recommendation == "APPLY"]
 ```json
 [
   {
-    "file": "src/btx_fix_mcp/config.py",
+    "file": "src/glintefy/config.py",
     "function": "parse_config",
     "line": 45,
-    "module": "btx_fix_mcp.config",
+    "module": "glintefy.config",
     "decorator": "@lru_cache(maxsize=128)",
     "speedup_percent": 21.5,
     "hit_rate_percent": 85.3,
@@ -238,16 +238,16 @@ recommendations = [r for r in validation_results if r.recommendation == "APPLY"]
 **Test Workflow:**
 ```bash
 # 1. Run scope analysis
-python -m btx_fix_mcp review scope --mode=full
+python -m glintefy review scope --mode=full
 
 # 2. Run perf analysis (generates profiling data)
-python -m btx_fix_mcp review perf
+python -m glintefy review perf
 
 # 3. Run cache analysis (uses profiling data)
-python -m btx_fix_mcp review cache
+python -m glintefy review cache
 
 # 4. Review recommendations
-cat LLM-CONTEXT/btx_fix_mcp/review/cache/cache_recommendations.json
+cat LLM-CONTEXT/glintefy/review/cache/cache_recommendations.json
 ```
 
 ---
@@ -287,7 +287,7 @@ cat LLM-CONTEXT/btx_fix_mcp/review/cache/cache_recommendations.json
 
 ```python
 from pathlib import Path
-from btx_fix_mcp.servers.review import ReviewMCPServer
+from glintefy.servers.review import ReviewMCPServer
 
 server = ReviewMCPServer(repo_path=Path("."))
 

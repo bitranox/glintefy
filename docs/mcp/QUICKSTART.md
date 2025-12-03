@@ -1,19 +1,19 @@
 # MCP Server Quickstart
 
-Set up btx_fix_mcp as an MCP server for Claude Desktop in 5 minutes.
+Set up glintefy as an MCP server for Claude Desktop in 5 minutes.
 
 ## What is MCP?
 
-MCP (Model Context Protocol) allows Claude Desktop to interact with external tools. With btx_fix_mcp as an MCP server, you can ask Claude to review your code directly.
+MCP (Model Context Protocol) allows Claude Desktop to interact with external tools. With glintefy as an MCP server, you can ask Claude to review your code directly.
 
 ## Installation
 
 ```bash
 # Install the package
-pip install btx_fix_mcp
+pip install glintefy
 
 # Or with uv
-uv pip install btx_fix_mcp
+uv pip install glintefy
 ```
 
 ## Configure Claude Desktop
@@ -33,9 +33,9 @@ Edit the config file:
 ```json
 {
   "mcpServers": {
-    "btx-review": {
+    "glintefy-review": {
       "command": "python",
-      "args": ["-m", "btx_fix_mcp.servers.review"],
+      "args": ["-m", "glintefy.servers.review"],
       "cwd": "/path/to/your/project"
     }
   }
@@ -77,7 +77,7 @@ Once configured, you can ask Claude:
 
 **You:** Review the code quality of this project
 
-**Claude:** I'll run a comprehensive code quality analysis using the btx-review server.
+**Claude:** I'll run a comprehensive code quality analysis using the glintefy-review server.
 
 *[Uses review_all tool]*
 
@@ -94,7 +94,7 @@ Would you like me to help fix any of these issues?
 ### Server Not Found
 
 Check that:
-1. Package is installed: `pip show btx_fix_mcp`
+1. Package is installed: `pip show glintefy`
 2. Python path is correct in config
 3. Claude Desktop was restarted
 

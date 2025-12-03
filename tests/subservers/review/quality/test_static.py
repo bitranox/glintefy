@@ -7,8 +7,8 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from btx_fix_mcp.subservers.review.quality.analyzer_results import RuffDiagnostic, StaticResults
-from btx_fix_mcp.subservers.review.quality.static import StaticAnalyzer
+from glintefy.subservers.review.quality.analyzer_results import RuffDiagnostic, StaticResults
+from glintefy.subservers.review.quality.static import StaticAnalyzer
 
 
 @pytest.fixture

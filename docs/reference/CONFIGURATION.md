@@ -1,19 +1,19 @@
 # Configuration Reference
 
-Complete reference for all btx_fix_mcp configuration options.
+Complete reference for all glintefy configuration options.
 
 ## Configuration Priority
 
 Settings are loaded from (lowest to highest priority):
 
 1. `defaultconfig.toml` (bundled with package)
-2. `~/.config/btx-fix-mcp/config.toml` (user config)
-3. Environment variables (`BTX_FIX_MCP_*`)
+2. `~/.config/glintefy/config.toml` (user config)
+3. Environment variables (`GLINTEFY_*`)
 4. Constructor parameters (Python API)
 
 ## Configuration File
 
-Create `~/.config/btx-fix-mcp/config.toml`:
+Create `~/.config/glintefy/config.toml`:
 
 ```toml
 [review.quality]
@@ -26,12 +26,12 @@ severity_threshold = "medium"
 
 ## Environment Variables
 
-Pattern: `BTX_FIX_MCP___{SECTION}__{KEY}` (triple underscore after prefix, double underscore between sections)
+Pattern: `GLINTEFY___{SECTION}__{KEY}` (triple underscore after prefix, double underscore between sections)
 
 ```bash
-export BTX_FIX_MCP___REVIEW__QUALITY__COMPLEXITY_THRESHOLD=15
-export BTX_FIX_MCP___REVIEW__SECURITY__SEVERITY_THRESHOLD=medium
-export BTX_FIX_MCP___GENERAL__TIMEOUTS__TOOL_LONG=300
+export GLINTEFY___REVIEW__QUALITY__COMPLEXITY_THRESHOLD=15
+export GLINTEFY___REVIEW__SECURITY__SEVERITY_THRESHOLD=medium
+export GLINTEFY___GENERAL__TIMEOUTS__TOOL_LONG=300
 ```
 
 ---
@@ -299,7 +299,7 @@ vuln_scan = 240                       # Dependency vulnerability scanning
 ## Python API Configuration
 
 ```python
-from btx_fix_mcp.subservers.review.quality import QualitySubServer
+from glintefy.subservers.review.quality import QualitySubServer
 
 # Override via constructor
 quality = QualitySubServer(

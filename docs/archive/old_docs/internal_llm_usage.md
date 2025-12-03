@@ -21,7 +21,7 @@ MCP servers can use LLMs internally for classification, analysis, and result ver
                   │ Tool results: {"status": "SUCCESS", ...}
                   ▼
 ┌─────────────────────────────────────────────────────────────┐
-│ btx-review MCP Server                                       │
+│ glintefy-review MCP Server                                       │
 │                                                              │
 │  ┌────────────────────────────────────────────────────────┐ │
 │  │ ReviewMCPServer                                        │ │
@@ -72,7 +72,7 @@ MCP servers can use LLMs internally for classification, analysis, and result ver
 **Use Case**: Classify code issues by severity, category, or fixability
 
 ```python
-# src/btx_fix_mcp/subservers/common/llm_client.py
+# src/glintefy/subservers/common/llm_client.py
 
 from anthropic import Anthropic
 from typing import Literal
@@ -94,7 +94,7 @@ class InternalLLMClient:
         """
         self.client = Anthropic(api_key=api_key)
         self.model = model
-        self.logger = get_mcp_logger("btx_fix_mcp.llm_client")
+        self.logger = get_mcp_logger("glintefy.llm_client")
 
     def classify_issue_severity(
         self,
@@ -273,7 +273,7 @@ Add to `defaultconfig.toml`:
 # Enable internal LLM usage for analysis enhancement
 enable_internal_llm = false
 
-# Anthropic API key (or set BTX_FIX_MCP_ANTHROPIC_API_KEY env var)
+# Anthropic API key (or set GLINTEFY_ANTHROPIC_API_KEY env var)
 # Leave empty to read from environment
 anthropic_api_key = ""
 
@@ -308,9 +308,9 @@ analyze_patterns = false        # Pattern analysis (experimental)
 ### QualitySubServer with LLM Enhancement
 
 ```python
-# src/btx_fix_mcp/subservers/review/quality/__init__.py
+# src/glintefy/subservers/review/quality/__init__.py
 
-from btx_fix_mcp.subservers.common.llm_client import InternalLLMClient
+from glintefy.subservers.common.llm_client import InternalLLMClient
 
 class QualitySubServer(BaseSubServer):
     def __init__(self, ..., enable_llm: bool | None = None):
@@ -475,7 +475,7 @@ result = SubServerResult(
 
 ### API Key Management
 ```toml
-# ~/.config/btx-fix-mcp/config.toml
+# ~/.config/glintefy/config.toml
 [llm]
 # NEVER commit API keys to git!
 anthropic_api_key = "sk-ant-..."
@@ -483,7 +483,7 @@ anthropic_api_key = "sk-ant-..."
 
 Or use environment variable:
 ```bash
-export BTX_FIX_MCP_ANTHROPIC_API_KEY="sk-ant-..."
+export GLINTEFY_ANTHROPIC_API_KEY="sk-ant-..."
 ```
 
 ### Code Privacy
@@ -516,7 +516,7 @@ class MockLLMClient:
 @pytest.fixture
 def mock_llm_client(monkeypatch):
     monkeypatch.setattr(
-        "btx_fix_mcp.subservers.common.llm_client.InternalLLMClient",
+        "glintefy.subservers.common.llm_client.InternalLLMClient",
         MockLLMClient,
     )
 ```

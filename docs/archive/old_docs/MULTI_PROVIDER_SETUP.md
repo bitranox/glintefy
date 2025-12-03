@@ -21,7 +21,7 @@ The internal LLM client supports **multiple providers**, so you're **not locked 
 ###Configuration
 
 ```toml
-# ~/.config/btx-fix-mcp/config.toml
+# ~/.config/glintefy/config.toml
 [llm]
 enable_internal_llm = true
 provider = "anthropic"  # This is the default
@@ -30,7 +30,7 @@ provider = "anthropic"  # This is the default
 model = "claude-3-5-sonnet-20241022"  # Complex reasoning
 fast_model = "claude-3-5-haiku-20241022"  # Quick classification
 
-# API key (or use BTX_FIX_MCP_ANTHROPIC_API_KEY env var)
+# API key (or use GLINTEFY_ANTHROPIC_API_KEY env var)
 anthropic_api_key = "sk-ant-api-03-YOUR-KEY"
 
 [llm.features]
@@ -45,7 +45,7 @@ generate_commit_messages = true
 ### Setup
 ```bash
 # Get API key from: https://console.anthropic.com/settings/keys
-export BTX_FIX_MCP_ANTHROPIC_API_KEY="sk-ant-api-03-YOUR-KEY"
+export GLINTEFY_ANTHROPIC_API_KEY="sk-ant-api-03-YOUR-KEY"
 ```
 
 ## Provider #2: OpenAI
@@ -55,7 +55,7 @@ export BTX_FIX_MCP_ANTHROPIC_API_KEY="sk-ant-api-03-YOUR-KEY"
 ### Configuration
 
 ```toml
-# ~/.config/btx-fix-mcp/config.toml
+# ~/.config/glintefy/config.toml
 [llm]
 enable_internal_llm = true
 provider = "openai"
@@ -64,7 +64,7 @@ provider = "openai"
 model = "gpt-4o"  # High quality
 fast_model = "gpt-4o-mini"  # Fast and cheap
 
-# API key (or use BTX_FIX_MCP_OPENAI_API_KEY env var)
+# API key (or use GLINTEFY_OPENAI_API_KEY env var)
 openai_api_key = "sk-proj-YOUR-KEY"
 
 [llm.features]
@@ -79,7 +79,7 @@ generate_commit_messages = true
 ### Setup
 ```bash
 # Get API key from: https://platform.openai.com/api-keys
-export BTX_FIX_MCP_OPENAI_API_KEY="sk-proj-YOUR-KEY"
+export GLINTEFY_OPENAI_API_KEY="sk-proj-YOUR-KEY"
 
 # Or use standard OpenAI env var
 export OPENAI_API_KEY="sk-proj-YOUR-KEY"
@@ -127,7 +127,7 @@ ollama list
 ### Configuration
 
 ```toml
-# ~/.config/btx-fix-mcp/config.toml
+# ~/.config/glintefy/config.toml
 [llm]
 enable_internal_llm = true
 provider = "ollama"
@@ -168,7 +168,7 @@ ollama run llama3.2:3b "Classify severity: high complexity"
 
 # Test from Python
 python << 'EOF'
-from btx_fix_mcp.subservers.common.llm_client import InternalLLMClient
+from glintefy.subservers.common.llm_client import InternalLLMClient
 
 client = InternalLLMClient(provider="ollama", fast_model="llama3.2:3b")
 
@@ -205,7 +205,7 @@ EOF
 ### Configuration
 
 ```toml
-# ~/.config/btx-fix-mcp/config.toml
+# ~/.config/glintefy/config.toml
 [llm]
 enable_internal_llm = true
 provider = "openai-compatible"
@@ -273,7 +273,7 @@ docker-compose up -d
 ### Configuration
 
 ```toml
-# ~/.config/btx-fix-mcp/config.toml
+# ~/.config/glintefy/config.toml
 [llm]
 enable_internal_llm = true
 provider = "openai-compatible"
@@ -313,7 +313,7 @@ generate_commit_messages = true
 
 ```bash
 # Switch to Ollama (local, free)
-cat > ~/.config/btx-fix-mcp/config.toml << 'EOF'
+cat > ~/.config/glintefy/config.toml << 'EOF'
 [llm]
 enable_internal_llm = true
 provider = "ollama"
@@ -321,8 +321,8 @@ fast_model = "llama3.2:3b"
 EOF
 
 # Switch to OpenAI
-export BTX_FIX_MCP_OPENAI_API_KEY="sk-proj-YOUR-KEY"
-cat > ~/.config/btx-fix-mcp/config.toml << 'EOF'
+export GLINTEFY_OPENAI_API_KEY="sk-proj-YOUR-KEY"
+cat > ~/.config/glintefy/config.toml << 'EOF'
 [llm]
 enable_internal_llm = true
 provider = "openai"
@@ -334,14 +334,14 @@ EOF
 
 ```bash
 # Use Ollama for this project (free for experiments)
-cat > .btx-fix-mcp.toml << 'EOF'
+cat > .glintefy.toml << 'EOF'
 [llm]
 provider = "ollama"
 model = "qwen2.5-coder:7b"
 EOF
 
 # Or use Anthropic for production project
-cat > .btx-fix-mcp.toml << 'EOF'
+cat > .glintefy.toml << 'EOF'
 [llm]
 provider = "anthropic"
 model = "claude-3-5-sonnet-20241022"
@@ -380,7 +380,7 @@ ollama pull llama3.2:3b
 👉 **Use OpenAI** - Cheapest cloud option
 ```bash
 # gpt-4o-mini is only $0.15/1M input tokens
-export BTX_FIX_MCP_OPENAI_API_KEY="..."
+export GLINTEFY_OPENAI_API_KEY="..."
 ```
 
 ### Production (Large)
@@ -394,17 +394,17 @@ docker-compose up vllm
 👉 **Use Anthropic Claude** - Best reasoning
 ```bash
 # Claude Sonnet 3.5 for complex analysis
-export BTX_FIX_MCP_ANTHROPIC_API_KEY="..."
+export GLINTEFY_ANTHROPIC_API_KEY="..."
 ```
 
 ## Environment Variables
 
 | Provider | Primary Env Var | Fallback Env Var |
 |----------|----------------|------------------|
-| Anthropic | `BTX_FIX_MCP_ANTHROPIC_API_KEY` | `ANTHROPIC_API_KEY` |
-| OpenAI | `BTX_FIX_MCP_OPENAI_API_KEY` | `OPENAI_API_KEY` |
+| Anthropic | `GLINTEFY_ANTHROPIC_API_KEY` | `ANTHROPIC_API_KEY` |
+| OpenAI | `GLINTEFY_OPENAI_API_KEY` | `OPENAI_API_KEY` |
 | Ollama | (none - uses base_url) | - |
-| OpenAI-compatible | `BTX_FIX_MCP_API_KEY` | - |
+| OpenAI-compatible | `GLINTEFY_API_KEY` | - |
 
 ## Troubleshooting
 

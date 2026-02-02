@@ -181,5 +181,5 @@ uv.lock
 LLM-CONTEXT/
 
 .claude/
-.devcontainer/
+# .devcontainer/ # needed for github codespaces
 .qlty/

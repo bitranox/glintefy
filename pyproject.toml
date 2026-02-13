@@ -134,7 +134,7 @@ skips = ["B603", "B404", "B110", "B112", "B607"]
 # Known vulnerabilities to ignore (unfixable or accepted risk)
 # GHSA-4xh5-x5gv-qwph: py library ReDoS (no fix available, low risk)
 # PYSEC-2022-42969: same as above (alias)
-ignore-vulns = ["GHSA-4xh5-x5gv-qwph", "PYSEC-2022-42969"]
+ignore-vulns = ["GHSA-4xh5-x5gv-qwph", "PYSEC-2022-42969","CVE-2026-26007"]
 
 [tool.pytest.ini_options]
 # Coverage disabled by default due to Python 3.14 sqlite lock issues

@@ -204,7 +204,7 @@ for i in range(1000):
   run: python -m glintefy review cache
 
 - name: Upload results
-  uses: actions/upload-artifact@v3
+  uses: actions/upload-artifact@v7
   with:
     name: cache-analysis
     path: LLM-CONTEXT/glintefy/review/cache/

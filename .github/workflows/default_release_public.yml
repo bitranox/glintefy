@@ -9,12 +9,44 @@ on:
   workflow_dispatch: {}
 
 jobs:
-  build-and-publish:
+  build:
     runs-on: ubuntu-latest
     permissions:
       contents: read
+    env:
+      UV_LINK_MODE: "copy"
     steps:
       - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.14'
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v7
+        with:
+          enable-cache: true
+          prune-cache: false
+
+      - name: Build artifacts
+        run: uv build
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v7
+        with:
+          name: dist
+          path: dist/*
+
+      - name: Prune uv cache
+        continue-on-error: true
+        run: uv cache prune --ci
+
+  publish:
+    needs: build
+    runs-on: ubuntu-latest
+    environment: pypi
+    permissions:
+      contents: read
+    steps:
       - name: Verify PyPI token is set
         run: |
           if [ -z "${{ secrets.PYPI_API_TOKEN }}" ]; then
@@ -22,29 +54,16 @@ jobs:
             echo "See: https://docs.github.com/en/actions/security-guides/using-secrets-in-github-actions"
             exit 1
           fi
-      - uses: actions/setup-python@v7
+
+      - name: Download artifacts
+        uses: actions/download-artifact@v8
         with:
-          python-version: '3.13'
-          cache: 'pip'
-          cache-dependency-path: 'pyproject.toml'
-      - name: Install uv
-        uses: astral-sh/setup-uv@v7
-        with:
-          enable-cache: true
-      - name: Build artifacts
-        run: |
-          python -m pip install --upgrade pip
-          uv pip install build --system
-          python -m build
+          name: dist
+          path: dist/
+
       - name: Publish to PyPI
-        # Use the rolling major tag to get latest Twine/standards support (e.g., Core Metadata 2.4)
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
           password: ${{ secrets.PYPI_API_TOKEN }}
           attestations: false
           skip-existing: true
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v6
-        with:
-          name: dist
-          path: dist/*

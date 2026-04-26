@@ -1,6 +1,6 @@
 [project]
 name = "glintefy"
-version = "3.0.3"
+version = "3.0.4"
 description = "MCP servers for code review and automated fixing"
 readme = "README.md"
 requires-python = ">=3.13"
@@ -23,12 +23,22 @@ keywords = ["logging", "rich", "cli", "terminal", "ansi"]
 classifiers = [
   "Programming Language :: Python :: 3",
   "Programming Language :: Python :: 3 :: Only",
-  "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
   "License :: OSI Approved :: MIT License",
   "Environment :: Console",
   "Operating System :: OS Independent",
   "Typing :: Typed",
 ]
+
+# System packages required for CI runners (read by GitHub Actions workflow template)
+# Format: "apt_package_name" for Ubuntu, future: {"apt": "...", "brew": "...", "choco": "..."}
+[tool.ci]
+system-dependencies-ubuntu = []
+system-dependencies-macos = []
+system-dependencies-windows-pip = []
+system-dependencies-windows-choco = []
+# os = ["ubuntu-latest", "windows-latest", "macos-latest"]
+os = ["ubuntu-latest", "windows-latest", "macos-latest"]
 
 [project.urls]
 Homepage = "https://github.com/bitranox/glintefy"

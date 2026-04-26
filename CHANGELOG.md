@@ -3,6 +3,11 @@
 All notable changes to this project will be documented in this file following
 the [Keep a Changelog](https://keepachangelog.com/) format.
 
+## [3.0.4] - 2026-04-26
+
+### Fixed
+- Pinned `actions/setup-python` in the release workflow to `@v6` (the previous `@v7` reference does not exist and broke the PyPI publish job for `v3.0.3`).
+
 ## [3.0.3] - 2026-04-26
 
 ### Changed

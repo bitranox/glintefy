@@ -24,7 +24,7 @@ name = "glintefy"
 #: Human-readable summary shown in CLI help output.
 title = "MCP servers for code review and automated fixing"
 #: Current release version pulled from ``pyproject.toml`` by automation.
-version = "3.0.3"
+version = "3.0.4"
 #: Repository homepage presented to users.
 homepage = "https://github.com/bitranox/glintefy"
 #: Author attribution surfaced in CLI output.

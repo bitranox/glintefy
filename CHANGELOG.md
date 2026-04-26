@@ -3,6 +3,20 @@
 All notable changes to this project will be documented in this file following
 the [Keep a Changelog](https://keepachangelog.com/) format.
 
+## [3.0.3] - 2026-04-26
+
+### Changed
+- Pruned obsolete entries from `pip-audit` ignore list (`CVE-2026-26007`, `CVE-2026-4539`, `CVE-2026-25645`); affected packages have been upgraded past the vulnerable versions.
+- Updated CI/CD workflow runner image and upload action.
+- Restored `.devcontainer/` configuration; removed obsolete `.glintefy.yaml.example`.
+
+### Fixed
+- Added `CVE-2026-3219` (pip tar/ZIP archive misidentification, no fix version published) to the `pip-audit` ignore list to unblock CI.
+
+### Removed
+- Stale documentation files under `old_commands/` (`bx_review_anal_sub_cache.md`, `bx_review_anal_sub_perf.md`).
+- Snyk badge from README.
+
 ## [3.0.2] - 2025-12-15
 
 ### Fixed

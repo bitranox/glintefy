@@ -1,6 +1,6 @@
 [project]
 name = "glintefy"
-version = "3.0.2"
+version = "3.0.3"
 description = "MCP servers for code review and automated fixing"
 readme = "README.md"
 requires-python = ">=3.13"
@@ -132,10 +132,9 @@ skips = ["B603", "B404", "B110", "B112", "B607"]
 
 [tool.pip-audit]
 # Known vulnerabilities to ignore (unfixable or accepted risk)
-# GHSA-4xh5-x5gv-qwph: py library ReDoS (no fix available, low risk)
-# PYSEC-2022-42969: same as above (alias)
+# GHSA-4xh5-x5gv-qwph / PYSEC-2022-42969: py library ReDoS (no fix available, transitive test dep)
 # CVE-2026-3219: pip tar/ZIP archive misidentification (no fix version published yet, local AV)
-ignore-vulns = ["GHSA-4xh5-x5gv-qwph", "PYSEC-2022-42969","CVE-2026-26007","CVE-2026-4539", "CVE-2026-25645", "CVE-2026-3219"]
+ignore-vulns = ["GHSA-4xh5-x5gv-qwph", "PYSEC-2022-42969", "CVE-2026-3219"]
 
 [tool.pytest.ini_options]
 # Coverage disabled by default due to Python 3.14 sqlite lock issues

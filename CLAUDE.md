@@ -9,9 +9,9 @@ When starting a new session, read and apply the following system prompt files fr
 
 ### Bash-Specific Guidelines
 When working with Bash scripts:
-- use skill `bx-bash-reference` when in doubt of bash features or syntax
+- use skill `bitranox:bash-reference` when in doubt of bash features or syntax
 - `core_programming_solid.md`
-- use skill `bx-bash-clean-architecture`
+- use skill `bitranox:bash-clean-architecture`
 - `bash_clean_code.md`
 - `bash_small_functions.md`
 
@@ -19,10 +19,10 @@ When working with Bash scripts:
 When working with Python code:
 - `core_programming_solid.md`
 - `python_solid_architecture_enforcer.md`
-- use skill `bx-python-clean-architecture`
+- use skill `bitranox:python-clean-architecture`
 - `python_clean_code.md`
 - `python_small_functions_style.md`
-- use skill `bx-python-libraries-to-use`
+- use skill `bitranox:python-use-modern-libraries`
 - `python_lib_structure_template.md`
 
 ### Additional Guidelines
@@ -105,7 +105,7 @@ Follow the guidelines in `python_clean_code.md` for all Python code.
 
 ## Architecture Overview
 
-use skill `bx-python-clean-architecture` when designing and implementing features.
+use skill `bitranox:python-clean-architecture` when designing and implementing features.
 
 ## Security & Configuration
 

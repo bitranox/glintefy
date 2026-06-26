@@ -183,3 +183,6 @@ LLM-CONTEXT/
 .claude/
 # .devcontainer/ # needed for github codespaces
 .qlty/
+
+# Local, per-developer settings (Claude Code etc.) - never commit
+*.local.json
